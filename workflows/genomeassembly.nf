@@ -26,7 +26,7 @@ if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, '
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
-
+include { POLISHING   } from '../subworkflows/local/polishing'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
