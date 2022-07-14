@@ -6,17 +6,38 @@
             "base_path": "modules",
             "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
+                "bcftools/concat": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "bcftools/consensus": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "bcftools/index": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "bcftools/norm": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "bcftools/sort": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
+                "bcftools/view": {
+                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                },
                 "custom/dumpsoftwareversions": {
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
                 },
-                "fastqc": {
-                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "gatk4/mergevcfs": {
+                    "git_sha": "4199a05aeb0ec277d40cb112949bb85893310873"
                 },
                 "gunzip": {
                     "git_sha": "fa37e0662690c4ec4260dae282fbce08777503e6"
                 },
                 "multiqc": {
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                },
+                "samtools/faidx": {
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
                 }
             }
         },
