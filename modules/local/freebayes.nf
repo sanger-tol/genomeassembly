@@ -33,46 +33,23 @@ process FREEBAYES {
     def cnv_file         = cnv            ? "--cnv-map ${cnv}"             : ""
     def cov              = cov            ? "--skip-coverage ${cov}"       : ""
 
-    if (task.cpus > 1) {
-        """
-        freebayes-parallel \\
-            <(fasta_generate_regions.py $fasta_fai 10000) $task.cpus \\
-            -f $fasta \\
-            $targets_file \\
-            $samples_file \\
-            $populations_file \\
-            $cnv_file \\
-            $cov \\
-            $args \\
-            $input > ${prefix}.vcf
+    """
+    freebayes \\
+        -f $fasta \\
+        $targets_file \\
+        $samples_file \\
+        $populations_file \\
+        $cnv_file \\
+        $cov \\
+        $args \\
+        $input > ${prefix}.vcf
 
-        bgzip ${prefix}.vcf
+    bgzip ${prefix}.vcf
 
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g' )
-        END_VERSIONS
-        """
-
-    } else {
-        """
-        freebayes \\
-            -f $fasta \\
-            $targets_file \\
-            $samples_file \\
-            $populations_file \\
-            $cnv_file \\
-            $cov \\
-            $args \\
-            $input > ${prefix}.vcf
-
-        bgzip ${prefix}.vcf
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g')
-            singularity: \$(singularity --version)
-        END_VERSIONS
-        """
-    }
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g')
+        singularity: \$(singularity --version)
+    END_VERSIONS
+    """
 }
