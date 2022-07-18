@@ -13,40 +13,35 @@ include { FREEBAYES                                   } from '../../modules/loca
 include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
 include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
 
-// Check input path parameters to see if they exist
-checkPathParamList = [
-    params.bam, params.fasta, params.summary
-]
-
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
 workflow POLISHING {
+    take:
+    bam       // path: /path/to/bam
+    bam_bai   // path: /path/to/bai
+    fasta     // path: /path/to/fasta
+    fasta_fai // path: /path/to/fai
+    groups    // val: number of chunks
+    summary   // path: /path/to/longranger/summary/file
+
+    main:
     ch_versions = Channel.empty()
 
-    // Generate fai index if doesn't exists
-    fasta_fai = file(params.fasta+'.fai')
-    if ( !fasta_fai.isFile()) {
-        fasta_fai = SAMTOOLS_FAIDX([[], params.fasta]).fai.collect{it[1]}
-        ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
-    } 
-
     // Split genome into chunks
-    BED_CHUNKS (fasta_fai, params.groups)
+    BED_CHUNKS (fasta_fai, groups)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
     intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
-    chunks_ch = Channel.from(params.bam)
+    chunks_ch = Channel.from(bam)
     intervals_freebayes = chunks_ch.combine(intervals_structured)
-     .map{ bam, bed -> [[id: bed.getSimpleName()], bam, bam+".bai", [], [], bed] }
+     .map{ bam, bed -> [[id: bed.getSimpleName()], bam, bam_bai, [], [], bed] }
 
     // In case the average coverage from Longranger is provided use it for defining 
     // max coverage cut-off then scatter Freebayes over the genome chunks
-    if ( params.summary ) {
-        LONGRANGER_COVERAGE(params.summary)
+    if ( summary ) {
+        LONGRANGER_COVERAGE(summary)
         ch_versions = ch_versions.mix(LONGRANGER_COVERAGE.out.versions)
-        FREEBAYES(intervals_freebayes, params.fasta, params.fasta+".fai", [], [], [], LONGRANGER_COVERAGE.out.cov)
+        FREEBAYES(intervals_freebayes, fasta, fasta_fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
     }
     else {
-        FREEBAYES(intervals_freebayes, params.fasta, params.fasta+".fai", [], [], [], "")
+        FREEBAYES(intervals_freebayes, fasta, fasta_fai, [], [], [], "")
     }
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
     BCFTOOLS_INDEX_FB(FREEBAYES.out.vcf)
@@ -68,13 +63,18 @@ workflow POLISHING {
     ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
 
     // Normalize variants and index normalized vcf
-    BCFTOOLS_NORM(MERGE_FREEBAYES.out.vcf.map{meta, vcf -> [[id:'norm'], vcf]}, params.fasta)
+    MERGE_FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
+        .join(MERGE_FREEBAYES.out.tbi.map{ meta, tbi -> [meta.id.toString(), tbi]})
+        .map{ id, vcf, tbi -> [[ id: 'norm'], vcf, tbi ]}
+        .set{ input_norm }
+    BCFTOOLS_NORM(input_norm, fasta)
+//    BCFTOOLS_NORM(MERGE_FREEBAYES.out.vcf.map{meta, vcf -> [[id:'norm'], vcf]}, fasta)
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
     BCFTOOLS_INDEX_NORM(BCFTOOLS_NORM.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
 
     // Generate consensus fasta file    
-    ch_fasta = Channel.of([[id:'norm'], params.fasta])
+    ch_fasta = Channel.of([[id:'norm'], fasta])
     BCFTOOLS_NORM.out.vcf
         .join(BCFTOOLS_INDEX_NORM.out.tbi, by: [0], remainder: true)
         .join(ch_fasta, by: [0], remainder: true)
