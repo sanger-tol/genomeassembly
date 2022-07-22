@@ -14,33 +14,31 @@ include { LONGRANGER_COVERAGE                         } from '../../modules/loca
 
 workflow POLISHING {
     take:
-    bam       // path: /path/to/bam
-    bam_bai   // path: /path/to/bai
-    fasta     // path: /path/to/fasta
-    fasta_fai // path: /path/to/fai
-    groups    // val: number of chunks
-    summary   // path: /path/to/longranger/summary/file
+    bam_in //tuple meta, bam, bai
+    fasta_in //tuple fasta, fai
+    groups //val
+    summary //path
 
     main:
     ch_versions = Channel.empty()
-
+    meta = bam_in.collect{it[0]}
+    fasta = fasta_in.collect{it[0]}
+    fai = fasta_in.collect{it[1]}
     // Split genome into chunks
-    BED_CHUNKS (fasta_fai, groups)
+    BED_CHUNKS (fai, groups)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
     intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
-    chunks_ch = Channel.from(bam)
-    intervals_freebayes = chunks_ch.combine(intervals_structured)
-     .map{ bam, bed -> [[id: bed.getSimpleName()], bam, bam_bai, [], [], bed] }
-
+    intervals_freebayes = bam_in.combine(intervals_structured)
+     .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
     // In case the average coverage from Longranger is provided use it for defining 
     // max coverage cut-off then scatter Freebayes over the genome chunks
     if ( summary ) {
         LONGRANGER_COVERAGE(summary)
         ch_versions = ch_versions.mix(LONGRANGER_COVERAGE.out.versions)
-        FREEBAYES(intervals_freebayes, fasta, fasta_fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
+        FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
     }
     else {
-        FREEBAYES(intervals_freebayes, fasta, fasta_fai, [], [], [], "")
+        FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], [])
     }
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
     BCFTOOLS_INDEX_FB(FREEBAYES.out.vcf)
@@ -64,20 +62,21 @@ workflow POLISHING {
     // Normalize variants and index normalized vcf
     MERGE_FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
         .join(MERGE_FREEBAYES.out.tbi.map{ meta, tbi -> [meta.id.toString(), tbi]})
-        .map{ id, vcf, tbi -> [[ id: 'norm'], vcf, tbi ]}
+        .combine(bam_in)
+        .map{ id_norm, vcf, tbi, meta, bam, bai -> [meta, vcf, tbi] }
         .set{ input_norm }
     BCFTOOLS_NORM(input_norm, fasta)
-//    BCFTOOLS_NORM(MERGE_FREEBAYES.out.vcf.map{meta, vcf -> [[id:'norm'], vcf]}, fasta)
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
     BCFTOOLS_INDEX_NORM(BCFTOOLS_NORM.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
 
     // Generate consensus fasta file    
-    ch_fasta = Channel.of([[id:'norm'], fasta])
+    fasta_in.combine(bam_in)
+            .map{fasta, fai, meta, bam, bai -> [meta, fasta]}
+            .set{ch_fasta}
     BCFTOOLS_NORM.out.vcf
         .join(BCFTOOLS_INDEX_NORM.out.tbi, by: [0], remainder: true)
         .join(ch_fasta, by: [0], remainder: true)
-        .map{ meta, vcf, tbi, fa -> [[id:'consensus'], vcf, tbi, fa] }
         .set{ch_merge}
     BCFTOOLS_CONSENSUS(ch_merge)
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
