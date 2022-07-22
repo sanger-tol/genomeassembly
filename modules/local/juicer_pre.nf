@@ -1,4 +1,4 @@
-process JUICER {
+process JUICER_PRE {
     tag "$meta.id"
     label 'process_medium'
 
@@ -6,7 +6,7 @@ process JUICER {
     tuple val(meta), path(binary), path(agp), path(fai)
 
     output:
-    path "alignments_sorted.txt"
+    path "alignments_sorted.txt", emit: pairs
     
     when:
     task.ext.when == null || task.ext.when

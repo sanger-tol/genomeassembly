@@ -1,9 +1,9 @@
-//include { COOLER_CLOAD    } from './modules/nf-core/modules/cooler/cload/main.nf' 
-//include { COOLER_ZOOMIFY         } from './modules/nf-core/modules/cooler/zoomify/main.nf' 
+include { COOLER_CLOAD    } from '../../../modules/modules/cooler/cload/main.nf' 
+include { COOLER_ZOOMIFY         } from '../../../modules/modules/cooler/zoomify/main.nf' 
 //TODO: install as nf-core module  and synchronize with polishing
 include { SAMTOOLS_FAIDX } from '../../../modules/modules/samtools/faidx/main.nf'
 include { YAHS           } from '../../modules/local/yahs.nf'
-include { JUICER         } from '../../modules/local/juicer.nf'
+include { JUICER_PRE         } from '../../modules/local/juicer_pre.nf'
 include { CHROM_SIZES    } from '../../modules/local/chrom_sizes.nf'
 include { GFASTATS       } from '../../modules/local/gfastats.nf'
 
@@ -20,8 +20,6 @@ workflow SCAFFOLDING {
     ch_versions = Channel.empty()
     YAHS( [ [id: 'yahs'], bed, fasta, fasta_fai, ifbreak, 
             motif, resolutions ] )
-    YAHS.out.binary.view()
-    YAHS.out.scaffolds_agp.view()
     SAMTOOLS_FAIDX(YAHS.out.scaffolds_fasta)
     GFASTATS(YAHS.out.scaffolds_fasta)
     CHROM_SIZES(SAMTOOLS_FAIDX.out.fai.collect{it[1]})
@@ -31,7 +29,14 @@ workflow SCAFFOLDING {
         .join( ch_fasta_fai )
         .map{ meta, binary, agp, fai -> [[id:'juicer'], binary, agp, fai] }
         .set{ch_merge}
-    JUICER(ch_merge)
+    JUICER_PRE(ch_merge)
+    JUICER_PRE.out.pairs.map{ it -> [[id: 'cooler'], it, []]}
+                        .set{ch_juicer}
+    COOLER_CLOAD(ch_juicer, 1000, CHROM_SIZES.out.chrom_sizes)
+    COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> [meta, cools]}
+                         .set{ch_cool}
+    COOLER_ZOOMIFY(ch_cool)
+    //COOLER_CLOAD([[id:'yahs'], JUICER_PRE.out.pairs, fasta_fai], Channel.of(1000), CHROM_SIZES.out.chrom_sizes)
     emit:
     fasta = YAHS.out.scaffolds_fasta
 }
