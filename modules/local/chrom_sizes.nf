@@ -1,4 +1,5 @@
 process CHROM_SIZES {
+    tag "$meta.id"
     label 'process_nompi'
 
     conda (params.enable_conda ? "conda-forge::gawk=5.1.0" : null)
@@ -7,7 +8,7 @@ process CHROM_SIZES {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    path fai 
+    tuple val(meta), path(fai)
     
     output:
     path "*chrom.sizes", emit: chrom_sizes

@@ -20,7 +20,6 @@ workflow SCAFFOLDING {
     YAHS( bed_in, fasta_in, ifbreak, motif, resolutions )
     SAMTOOLS_FAIDX(YAHS.out.scaffolds_fasta)
     GFASTATS(YAHS.out.scaffolds_fasta)
-    CHROM_SIZES(SAMTOOLS_FAIDX.out.fai.collect{it[1]})
     YAHS.out.binary.map{ meta, binary -> [ 'yahs', binary ] }
         .join(YAHS.out.scaffolds_agp.map {meta, agp -> [ 'yahs', agp]})
         .join(  fasta_in.map{ fa, fai -> [ 'yahs', fai]} )
@@ -28,10 +27,11 @@ workflow SCAFFOLDING {
         .map{ yahs, binary, agp, fai, meta -> [meta, binary, agp, fai]}
         .set{ch_merge}
     JUICER_PRE(ch_merge)
-    JUICER_PRE.out.pairs.map{it -> ['juicer', it]}
+    JUICER_PRE.out.pairs.map{meta, it -> ['juicer', it]}
                         .join( bed_in.map{ meta, bed -> ['juicer', meta] })
                         .map{ juicer, it, meta -> [meta, it, []]}
                         .set{ch_juicer}
+    CHROM_SIZES(SAMTOOLS_FAIDX.out.fai)
     COOLER_CLOAD(ch_juicer, 1000, CHROM_SIZES.out.chrom_sizes)
     COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> ['cload', cools]}
                          .join( bed_in.map{ meta, bed -> ['cload', meta] })
