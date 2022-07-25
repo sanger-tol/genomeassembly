@@ -6,7 +6,8 @@ process GFASTATS {
     tuple val(meta), path(fasta)
 
     output:
-    path "*stats", emit: stats
+    tuple val(meta), path("*stats"), emit: stats
+    path "versions.yml"           , emit: versions
     
     when:
     task.ext.when == null || task.ext.when
