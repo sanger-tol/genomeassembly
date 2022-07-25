@@ -3,7 +3,11 @@ process YAHS {
     label 'process_medium'
 
     input:
-    tuple val(meta), path(bed), path(ref), path(fai), val(if_break), val(motif), val(resolutions)
+    tuple val(meta), path(bed)
+    tuple path(ref), path(fai)
+    val(if_break)
+    val(motif)
+    val(resolutions)
 
     output:
     tuple val(meta), path("yahs.out_scaffolds_final.fa"), emit: scaffolds_fasta
