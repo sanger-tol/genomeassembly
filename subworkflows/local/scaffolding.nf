@@ -9,34 +9,41 @@ include { GFASTATS       } from '../../modules/local/gfastats.nf'
 
 workflow SCAFFOLDING {
     take:  
-    bed   // path: path/to/merged.bed
-    fasta // path: path/to/contigs
-    fasta_fai   // path: path/to/fasta/index
+    bed_in  // tuple(meta, bed)
+    fasta_in   // tuple (fasta, fai)
     ifbreak // val: if/break/contigs/or/not/for/yahs
     motif // val: restriction/enzyme/motif
     resolutions // val: resolution/parameter/for/yahs
 
     main:
     ch_versions = Channel.empty()
-    YAHS( [ [id: 'yahs'], bed, fasta, fasta_fai, ifbreak, 
-            motif, resolutions ] )
+    YAHS( bed_in, fasta_in, ifbreak, motif, resolutions )
     SAMTOOLS_FAIDX(YAHS.out.scaffolds_fasta)
     GFASTATS(YAHS.out.scaffolds_fasta)
     CHROM_SIZES(SAMTOOLS_FAIDX.out.fai.collect{it[1]})
-    ch_fasta_fai = Channel.of(['yahs',fasta_fai ])
-    YAHS.out.binary.map{ meta, binary -> [ meta.id.toString(), binary] }
-        .join(YAHS.out.scaffolds_agp.map {meta, agp -> [meta.id.toString(), agp]})
-        .join( ch_fasta_fai )
-        .map{ meta, binary, agp, fai -> [[id:'juicer'], binary, agp, fai] }
+    YAHS.out.binary.map{ meta, binary -> [ 'yahs', binary ] }
+        .join(YAHS.out.scaffolds_agp.map {meta, agp -> [ 'yahs', agp]})
+        .join(  fasta_in.map{ fa, fai -> [ 'yahs', fai]} )
+        .join(bed_in.map{ meta, bed -> ['yahs', meta] })
+        .map{ yahs, binary, agp, fai, meta -> [meta, binary, agp, fai]}
         .set{ch_merge}
     JUICER_PRE(ch_merge)
-    JUICER_PRE.out.pairs.map{ it -> [[id: 'cooler'], it, []]}
+    JUICER_PRE.out.pairs.map{it -> ['juicer', it]}
+                        .join( bed_in.map{ meta, bed -> ['juicer', meta] })
+                        .map{ juicer, it, meta -> [meta, it, []]}
                         .set{ch_juicer}
     COOLER_CLOAD(ch_juicer, 1000, CHROM_SIZES.out.chrom_sizes)
-    COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> [meta, cools]}
+    COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> ['cload', cools]}
+                         .join( bed_in.map{ meta, bed -> ['cload', meta] })
+                         .map{ cload, cools, meta -> [meta, cools]}
                          .set{ch_cool}
     COOLER_ZOOMIFY(ch_cool)
-    //COOLER_CLOAD([[id:'yahs'], JUICER_PRE.out.pairs, fasta_fai], Channel.of(1000), CHROM_SIZES.out.chrom_sizes)
+
     emit:
     fasta = YAHS.out.scaffolds_fasta
+    chrom_sizes = CHROM_SIZES.out.chrom_sizes
+    stats = GFASTATS.out.stats
+    alignments_sorted = JUICER_PRE.out.pairs
+    cool = COOLER_CLOAD.out.cool
+    mcool = COOLER_ZOOMIFY.out.mcool
 }
