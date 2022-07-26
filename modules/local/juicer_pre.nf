@@ -6,7 +6,7 @@ process JUICER_PRE {
     tuple val(meta), path(binary), path(agp), path(fai)
 
     output:
-    tuple val(meta), path("alignments_sorted.txt"), emit: pairs
+    tuple val(meta), path("*alignments_sorted.txt"), emit: pairs
     path "versions.yml"           , emit: versions
     
     when:

@@ -4,6 +4,8 @@ include { COOLER_ZOOMIFY         } from '../../../modules/modules/cooler/zoomify
 include { SAMTOOLS_FAIDX } from '../../../modules/modules/samtools/faidx/main.nf'
 include { YAHS           } from '../../modules/local/yahs.nf'
 include { JUICER_PRE         } from '../../modules/local/juicer_pre.nf'
+include { PRETEXT_MAP         } from '../../modules/local/pretext_map.nf'
+include { PRETEXT_SNAPSHOT         } from '../../modules/local/pretext_snapshot.nf'
 include { CHROM_SIZES    } from '../../modules/local/chrom_sizes.nf'
 include { GFASTATS       } from '../../modules/local/gfastats.nf'
 
@@ -38,6 +40,9 @@ workflow SCAFFOLDING {
                          .map{ cload, cools, meta -> [meta, cools]}
                          .set{ch_cool}
     COOLER_ZOOMIFY(ch_cool)
+    SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> fai }.set{fai}
+    PRETEXT_MAP(JUICER_PRE.out.pairs, fai)
+    PRETEXT_SNAPSHOT(PRETEXT_MAP.out.pretext)
 
     emit:
     fasta = YAHS.out.scaffolds_fasta
@@ -46,4 +51,5 @@ workflow SCAFFOLDING {
     alignments_sorted = JUICER_PRE.out.pairs
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
+    snapshots = PRETEXT_SNAPSHOT.out.snapshot
 }
