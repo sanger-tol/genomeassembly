@@ -20,8 +20,11 @@ workflow SCAFFOLDING {
     main:
     ch_versions = Channel.empty()
     YAHS( bed_in, fasta_in, ifbreak, motif, resolutions )
+    ch_versions = ch_versions.mix(YAHS.out.versions)
     SAMTOOLS_FAIDX(YAHS.out.scaffolds_fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     GFASTATS(YAHS.out.scaffolds_fasta)
+    ch_versions = ch_versions.mix(GFASTATS.out.versions)
     YAHS.out.binary.map{ meta, binary -> [ 'yahs', binary ] }
         .join(YAHS.out.scaffolds_agp.map {meta, agp -> [ 'yahs', agp]})
         .join(  fasta_in.map{ fa, fai -> [ 'yahs', fai]} )
@@ -29,20 +32,25 @@ workflow SCAFFOLDING {
         .map{ yahs, binary, agp, fai, meta -> [meta, binary, agp, fai]}
         .set{ch_merge}
     JUICER_PRE(ch_merge)
+    ch_versions = ch_versions.mix(JUICER_PRE.out.versions)
     JUICER_PRE.out.pairs.map{meta, it -> ['juicer', it]}
                         .join( bed_in.map{ meta, bed -> ['juicer', meta] })
                         .map{ juicer, it, meta -> [meta, it, []]}
                         .set{ch_juicer}
     CHROM_SIZES(SAMTOOLS_FAIDX.out.fai)
     COOLER_CLOAD(ch_juicer, 1000, CHROM_SIZES.out.chrom_sizes)
+    ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
     COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> ['cload', cools]}
                          .join( bed_in.map{ meta, bed -> ['cload', meta] })
                          .map{ cload, cools, meta -> [meta, cools]}
                          .set{ch_cool}
     COOLER_ZOOMIFY(ch_cool)
+    ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
     SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> fai }.set{fai}
     PRETEXT_MAP(JUICER_PRE.out.pairs, fai)
+    ch_versions = ch_versions.mix(PRETEXT_MAP.out.versions)
     PRETEXT_SNAPSHOT(PRETEXT_MAP.out.pretext)
+    ch_versions = ch_versions.mix(PRETEXT_SNAPSHOT.out.versions)
 
     emit:
     fasta = YAHS.out.scaffolds_fasta
@@ -52,4 +60,5 @@ workflow SCAFFOLDING {
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXT_SNAPSHOT.out.snapshot
+    versions = ch_versions.ifEmpty(null)
 }
