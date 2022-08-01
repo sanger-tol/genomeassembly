@@ -4,6 +4,8 @@ include { COOLER_ZOOMIFY         } from '../../../modules/modules/cooler/zoomify
 include { SAMTOOLS_FAIDX } from '../../../modules/modules/samtools/faidx/main.nf'
 include { YAHS           } from '../../modules/local/yahs.nf'
 include { JUICER_PRE         } from '../../modules/local/juicer_pre.nf'
+include { JUICER_SNAPSHOT         } from '../../modules/local/juicer_snapshot.nf'
+include { JUICER_TOOLS_PRE         } from '../../modules/local/juicer_tools_pre.nf'
 include { PRETEXT_MAP         } from '../../modules/local/pretext_map.nf'
 include { PRETEXT_SNAPSHOT         } from '../../modules/local/pretext_snapshot.nf'
 include { CHROM_SIZES    } from '../../modules/local/chrom_sizes.nf'
@@ -16,7 +18,7 @@ workflow SCAFFOLDING {
     ifbreak // val: if/break/contigs/or/not/for/yahs
     motif // val: restriction/enzyme/motif
     resolutions // val: resolution/parameter/for/yahs
-
+    
     main:
     ch_versions = Channel.empty()
     YAHS( bed_in, fasta_in, ifbreak, motif, resolutions )
@@ -51,6 +53,10 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(PRETEXT_MAP.out.versions)
     PRETEXT_SNAPSHOT(PRETEXT_MAP.out.pretext)
     ch_versions = ch_versions.mix(PRETEXT_SNAPSHOT.out.versions)
+    JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
+    ch_versions = ch_versions.mix(JUICER_TOOLS_PRE.out.versions)
+    JUICER_SNAPSHOT(JUICER_TOOLS_PRE.out.hic)
+    ch_versions = ch_versions.mix(JUICER_SNAPSHOT.out.versions)
 
     emit:
     fasta = YAHS.out.scaffolds_fasta
@@ -60,5 +66,8 @@ workflow SCAFFOLDING {
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXT_SNAPSHOT.out.snapshot
+    hic = JUICER_TOOLS_PRE.out.hic
+    png = JUICER_SNAPSHOT.out.png
     versions = ch_versions.ifEmpty(null)
+
 }
