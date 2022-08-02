@@ -20,5 +20,5 @@ workflow {
     ch_summary = Channel.of(summary)
 
 
-    SCAFFOLDING (ch_bed, ch_fa, true, '', '')
+    SCAFFOLDING (ch_bed, ch_fa, true, '', '', 1000)
 }

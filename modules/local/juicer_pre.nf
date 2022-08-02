@@ -2,9 +2,9 @@ process JUICER_PRE {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::yahs:1.2a.1--h7132678_0" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?        'https://depot.galaxyproject.org/singularity/yahs:1.2a.1--h7132678_0' :
-        'quay.io/biocontainers/yahs:1.2a.1--h7132678_0' }"
+//    conda (params.enable_conda ? "bioconda::yahs:1.2a.1--h7132678_0" : null)
+//    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?        'https://depot.galaxyproject.org/singularity/yahs:1.2a.1--h7132678_0' :
+//        'quay.io/biocontainers/yahs:1.2a.1--h7132678_0' }"
 
     input:
     tuple val(meta), path(binary), path(agp), path(fai)
@@ -19,9 +19,9 @@ process JUICER_PRE {
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     """
-    juicer pre ${binary} ${agp} ${fai} ${args} | LC_ALL=C sort -k2,2d -k6,6d \\
-        --parallel=8 -S50G | awk '\$3>=0 && \$7>=0'> alignments_sorted.txt
+    juicer pre ${binary} ${agp} ${fai} ${args} | ${args2} > alignments_sorted.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

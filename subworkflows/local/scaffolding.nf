@@ -1,3 +1,4 @@
+//TODO: install as nf-core module
 include { COOLER_CLOAD    } from '../../../modules/modules/cooler/cload/main.nf' 
 include { COOLER_ZOOMIFY         } from '../../../modules/modules/cooler/zoomify/main.nf' 
 //TODO: install as nf-core module  and synchronize with polishing
@@ -18,6 +19,7 @@ workflow SCAFFOLDING {
     ifbreak // val: if/break/contigs/or/not/for/yahs
     motif // val: restriction/enzyme/motif
     resolutions // val: resolution/parameter/for/yahs
+    cool_bin  // val: cooler cload parameter 
     
     main:
     ch_versions = Channel.empty()
@@ -40,7 +42,7 @@ workflow SCAFFOLDING {
                         .map{ juicer, it, meta -> [meta, it, []]}
                         .set{ch_juicer}
     CHROM_SIZES(SAMTOOLS_FAIDX.out.fai)
-    COOLER_CLOAD(ch_juicer, 1000, CHROM_SIZES.out.chrom_sizes)
+    COOLER_CLOAD(ch_juicer, cool_bin, CHROM_SIZES.out.chrom_sizes)
     ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
     COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> ['cload', cools]}
                          .join( bed_in.map{ meta, bed -> ['cload', meta] })

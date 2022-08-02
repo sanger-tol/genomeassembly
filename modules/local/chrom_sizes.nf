@@ -19,7 +19,7 @@ process CHROM_SIZES {
 
     script:
     """
-    chrom_sizes.sh $fai > $fai".chrom.sizes"
+    cut -f1-2 $fai > \$(basename $fai).chrom.sizes
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
