@@ -29,42 +29,49 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     GFASTATS(YAHS.out.scaffolds_fasta)
     ch_versions = ch_versions.mix(GFASTATS.out.versions)
-    YAHS.out.binary.map{ meta, binary -> [ 'yahs', binary ] }
-        .join(YAHS.out.scaffolds_agp.map {meta, agp -> [ 'yahs', agp]})
-        .join(  fasta_in.map{ fa, fai -> [ 'yahs', fai]} )
-        .join(bed_in.map{ meta, bed -> ['yahs', meta] })
-        .map{ yahs, binary, agp, fai, meta -> [meta, binary, agp, fai]}
-        .set{ch_merge}
+    bed_in.map{ meta, bed -> meta}.set{ch_meta}
+
+    // Prepare contact pairs for cooler
+    YAHS.out.binary.join(YAHS.out.scaffolds_agp)
+                    .combine(fasta_in)
+                    .map{meta, binary, agp, fa, fai -> [meta, binary, agp, fai]}
+                    .set{ch_merge}
     JUICER_PRE(ch_merge)
     ch_versions = ch_versions.mix(JUICER_PRE.out.versions)
-    JUICER_PRE.out.pairs.map{meta, it -> ['juicer', it]}
-                        .join( bed_in.map{ meta, bed -> ['juicer', meta] })
-                        .map{ juicer, it, meta -> [meta, it, []]}
+    
+    // Bin contact paits
+    JUICER_PRE.out.pairs.join(bed_in)
                         .set{ch_juicer}
     CHROM_SIZES(SAMTOOLS_FAIDX.out.fai)
     COOLER_CLOAD(ch_juicer, cool_bin, CHROM_SIZES.out.chrom_sizes)
     ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
-    COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> ['cload', cools]}
-                         .join( bed_in.map{ meta, bed -> ['cload', meta] })
-                         .map{ cload, cools, meta -> [meta, cools]}
+    
+    // Generate a multi-resolution cooler file by coarsening
+    COOLER_CLOAD.out.cool.map{ meta, cool_bin, cools -> [meta, cools]}
                          .set{ch_cool}
     COOLER_ZOOMIFY(ch_cool)
     ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
+
+    // Create contact map in pretext format
     SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> fai }.set{fai}
     PRETEXT_MAP(JUICER_PRE.out.pairs, fai)
     ch_versions = ch_versions.mix(PRETEXT_MAP.out.versions)
+
     PRETEXT_SNAPSHOT(PRETEXT_MAP.out.pretext)
     ch_versions = ch_versions.mix(PRETEXT_SNAPSHOT.out.versions)
+
+    // Generate HiC Map
     JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
     ch_versions = ch_versions.mix(JUICER_TOOLS_PRE.out.versions)
+
     JUICER_SNAPSHOT(JUICER_TOOLS_PRE.out.hic)
     ch_versions = ch_versions.mix(JUICER_SNAPSHOT.out.versions)
 
     emit:
+    alignments_sorted = JUICER_PRE.out.pairs
     fasta = YAHS.out.scaffolds_fasta
     chrom_sizes = CHROM_SIZES.out.chrom_sizes
     stats = GFASTATS.out.stats
-    alignments_sorted = JUICER_PRE.out.pairs
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXT_SNAPSHOT.out.snapshot
