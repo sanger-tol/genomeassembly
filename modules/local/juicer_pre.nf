@@ -2,9 +2,10 @@ process JUICER_PRE {
     tag "$meta.id"
     label 'process_medium'
 
-//    conda (params.enable_conda ? "bioconda::yahs:1.2a.1--h7132678_0" : null)
-//    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?        'https://depot.galaxyproject.org/singularity/yahs:1.2a.1--h7132678_0' :
-//        'quay.io/biocontainers/yahs:1.2a.1--h7132678_0' }"
+    conda (params.enable_conda ? "bioconda::yahs:1.2a.2--h7132678_0" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/yahs:1.2a.2--h7132678_0' :
+        'quay.io/biocontainers/yahs:1.2a.2--h7132678_0' }"
 
     input:
     tuple val(meta), path(binary), path(agp), path(fai)
