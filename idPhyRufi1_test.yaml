@@ -3,7 +3,7 @@ samples:
       assembly:
         primary: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/working/idPhyRufi1.hifiasm.20220613/purging/purged.fa.gz 
         haplotigs: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/working/idPhyRufi1.hifiasm.20220613/purging/purged.htigs.fa.gz
-      illumina:
+      illumina_10X:
         reads: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/genomic_data/idPhyRufi1/10x/
         kmer_pref: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/genomic_data/idPhyRufi1/10x/kmer/k31/idPhyRufi1.k31
       pacbio:

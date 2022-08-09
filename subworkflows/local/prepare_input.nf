@@ -20,7 +20,7 @@ workflow PREPARE_INPUT {
         .dump( tag: 'YAML Samples' )
         .multiMap { data ->
             assembly_ch : ( data.assembly ? [ [ id: data.id ], file( data.assembly.primary, checkIfExists: true ), file( data.assembly.haplotigs, checkIfExists: true) ] : [] )
-            illumina_ch : ( data.illumina ? [ [id: data.id ], file(data.illumina.reads, checkIfExists: true), data.illumina.kmer_pref  ] : [] )
+            illumina_10X_ch : ( data.illumina_10X ? [ [id: data.id ], file(data.illumina_10X.reads, checkIfExists: true), data.illumina_10X.kmer_pref  ] : [] )
             pacbio_ch: ( data.pacbio ? [ [id: data.id ],  data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) }, data.pacbio.kmer_pref ] : [])
             hic_ch: ( data.HiC ? [ [id: data.id ],  data.HiC.reads.collect { file( it.reads, checkIfExists: true ) }, data.HiC.arima_motif ] : [])
             busco_ch : ( data.busco ? [ [id: data.id ], file(data.busco.lineages_path, checkIfExists: true), data.busco.lineage ] : [] )
@@ -30,7 +30,7 @@ workflow PREPARE_INPUT {
     assemblies = yml_input.assembly_ch.dump( tag: 'Input: Assemblies' )
     hic        = yml_input.hic_ch.dump( tag: 'Input: Hi-C' )
     hifi       = yml_input.pacbio_ch.dump( tag: 'Input: PacBio HiFi' )
-    illumina   = yml_input.illumina_ch.dump( tag: 'Input: Illumina' )
+    illumina_10X   = yml_input.illumina_10X_ch.dump( tag: 'Input: Illumina' )
     busco      = yml_input.busco_ch.dump( tag: 'Input: BUSCO lib')
 
 }
