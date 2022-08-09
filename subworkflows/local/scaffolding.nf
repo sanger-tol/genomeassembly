@@ -1,8 +1,6 @@
-//TODO: install as nf-core module
-include { COOLER_CLOAD    } from '../../../modules/modules/cooler/cload/main.nf' 
-include { COOLER_ZOOMIFY         } from '../../../modules/modules/cooler/zoomify/main.nf' 
-//TODO: install as nf-core module  and synchronize with polishing
-include { SAMTOOLS_FAIDX } from '../../../modules/modules/samtools/faidx/main.nf'
+include { COOLER_CLOAD    } from '../../modules/nf-core/modules/cooler/cload/main.nf' 
+include { COOLER_ZOOMIFY         } from '../../modules/nf-core/modules/cooler/zoomify/main.nf' 
+include { SAMTOOLS_FAIDX } from '../../modules/nf-core/modules/samtools/faidx/main.nf'
 include { YAHS           } from '../../modules/local/yahs.nf'
 include { JUICER_PRE         } from '../../modules/local/juicer_pre.nf'
 include { JUICER_SNAPSHOT         } from '../../modules/local/juicer_snapshot.nf'
