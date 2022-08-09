@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/modules/bcftools/view/main' 
 include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/modules/bcftools/consensus/main' 
 include { BCFTOOLS_NORM                               } from '../../modules/nf-core/modules/bcftools/norm/main' 
@@ -25,7 +23,10 @@ workflow POLISHING {
     fasta = fasta_in.collect{it[0]}
     fai = fasta_in.collect{it[1]}
     // Split genome into chunks
-    BED_CHUNKS (fai, groups)
+    bam_in.combine(fasta_in)
+           .map{ meta, bam, bai, fasta, fai -> [meta, fai]}
+           .set{chunks_ch}
+    BED_CHUNKS (chunks_ch, groups)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
     intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
     intervals_freebayes = bam_in.combine(intervals_structured)
