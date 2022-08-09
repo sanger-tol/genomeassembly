@@ -23,6 +23,12 @@
                 },
                 "bcftools/view": {
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+		},
+		"cooler/cload": {
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                },
+                "cooler/zoomify": {
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
                 },
                 "custom/dumpsoftwareversions": {
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
