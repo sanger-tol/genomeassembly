@@ -37,7 +37,7 @@ include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-//include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
