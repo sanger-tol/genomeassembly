@@ -19,11 +19,26 @@ workflow PREPARE_INPUT {
         .flatten()
         .dump( tag: 'YAML Samples' )
         .multiMap { data ->
-            assembly_ch : ( data.assembly ? [ [ id: data.id ], file( data.assembly.primary, checkIfExists: true ), file( data.assembly.haplotigs, checkIfExists: true) ] : [] )
-            illumina_10X_ch : ( data.illumina_10X ? [ [id: data.id ], file(data.illumina_10X.reads, checkIfExists: true), data.illumina_10X.kmer_pref  ] : [] )
-            pacbio_ch: ( data.pacbio ? [ [id: data.id ],  data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) }, data.pacbio.kmer_pref ] : [])
-            hic_ch: ( data.HiC ? [ [id: data.id ],  data.HiC.reads.collect { file( it.reads, checkIfExists: true ) }, data.HiC.arima_motif ] : [])
-            busco_ch : ( data.busco ? [ [id: data.id ], file(data.busco.lineages_path, checkIfExists: true), data.busco.lineage ] : [] )
+            assembly_ch : ( data.assembly ? [ [ id: data.id ], 
+                                                file( data.assembly.primary, checkIfExists: true ), 
+                                                file( data.assembly.haplotigs, checkIfExists: true) ] 
+                            : [] )
+            illumina_10X_ch : ( data.illumina_10X ? [ [id: data.id ], 
+                                                       file(data.illumina_10X.reads, checkIfExists: true),
+                                                       data.illumina_10X.kmer_pref ? data.illumina_10X.kmer_pref : [] ] 
+                                : [] )
+            pacbio_ch: ( data.pacbio ? [ [id: data.id ], 
+                                          data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) }, 
+                                          data.pacbio.kmer_pref ? data.pacbio.kmer_pref : [] ] 
+                        : [])
+            hic_ch: ( data.HiC ? [ [id: data.id ],  
+                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) }, 
+                                    data.HiC.arima_motif ] 
+                        : [])
+            busco_ch : ( data.busco ? [ [id: data.id ], 
+                                         file(data.busco.lineages_path, checkIfExists: true),
+                                         data.busco.lineage ] 
+                        : [] )
         }
         .set{ yml_input }
     emit:

@@ -10,27 +10,56 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
-            },
-            "fastq_1": {
-                "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
-            "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
+                "assembly": {
+                    "primary": {
                         "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                        "pattern": "^\\S+$"
                     },
-                    {
+                    "haplotigs": { 
                         "type": "string",
-                        "maxLength": 0
+                        "pattern": "^\\S+$"
                     }
-                ]
+                },
+                "illumina_10X": {
+                    "reads": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    },
+                    "kmer_pref": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    }
+                },
+                "pacbio": {
+                    "reads": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    },
+                    "kmer_pref": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    }
+                },
+                "HiC": {
+                    "reads": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    },
+                    "arima_motif": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    },
+                "busco":
+                    "lineages_path": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    },
+                    "lineage": {
+                        "type": "string",
+                        "pattern": "^\\S+$"
+                    }
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample","pacbio"]
     }
 }
