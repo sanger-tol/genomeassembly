@@ -13,11 +13,11 @@
                 "assembly": {
                     "primary": {
                         "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+\\.fa(sta)?(\\.gz)?$"
                     },
                     "haplotigs": { 
                         "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+\\.fa(sta)?(\\.gz)?$"
                     }
                 },
                 "illumina_10X": {
@@ -33,17 +33,13 @@
                 "pacbio": {
                     "reads": {
                         "type": "string",
-                        "pattern": "^\\S+$"
-                    },
-                    "kmer_pref": {
-                        "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+\\.f(asta)?\\.gz$"
                     }
                 },
                 "HiC": {
                     "reads": {
                         "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+\\.cram$"
                     },
                     "arima_motif": {
                         "type": "string",
@@ -56,7 +52,7 @@
                     },
                     "lineage": {
                         "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+_odb\\S+$"
                     }
             }
         },
