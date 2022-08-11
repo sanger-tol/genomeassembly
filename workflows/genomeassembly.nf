@@ -39,6 +39,12 @@ include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
+//
+// MODULE: Installed from sanger-tol mirror nf-core/modules
+//
+include { LONGRANGER_MKREF } from '../modules/sanger-tol/nf-core-modules/longranger/mkref/main'
+include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longranger/align/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -62,9 +68,12 @@ workflow GENOMEASSEMBLY {
 
     
     PREPARE_INPUT(ch_input)
-    PREPARE_INPUT.out.assemblies.view()
-    PREPARE_INPUT.out.illumina_10X.view()
 
+    PREPARE_INPUT.out.assemblies.map{ meta, p, h -> [meta, p] }.set{ primary_ch }
+    LONGRANGER_MKREF(primary_ch)
+    PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [meta, reads]}
+                    .set{ illumina_10X_ch }
+    LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, illumina_10X_ch.map { it[1] } )
 }
 
 /*

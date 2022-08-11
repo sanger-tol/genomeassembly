@@ -12,8 +12,23 @@
                 "fastqc": {
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
                 },
+                "gunzip": {
+                    "git_sha": "fa37e0662690c4ec4260dae282fbce08777503e6"
+                },
                 "multiqc": {
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                }
+            }
+        },
+        "sanger-tol/nf-core-modules": {
+            "base_path": "modules",
+            "git_url": "https://github.com/sanger-tol/nf-core-modules",
+            "modules": {
+                "longranger/align": {
+                    "git_sha": "6ae808410f182d3f772290a05218f03797361d40"
+                },
+                "longranger/mkref": {
+                    "git_sha": "30ad6bdfe77ab9a5c7d1a01ae83349b528057b91"
                 }
             }
         }
