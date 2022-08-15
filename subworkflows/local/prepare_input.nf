@@ -14,6 +14,8 @@ workflow PREPARE_INPUT {
     ch_input
 
     main:
+    ch_versions = Channel.empty()
+
     ch_input.map { file -> readYAML( file ) }
         .set { ymlfile }
 
@@ -47,6 +49,8 @@ workflow PREPARE_INPUT {
     .join( assembly_input.id_ch )
     .map{ blank, p, h, meta -> [ [id: meta], p, h]}
     .set { ch_fasta }
+
+    ch_versions = ch_versions.mix(GUNZIP.out.versions)
     
     ymlfile.flatten()
             .multiMap { data -> 
@@ -70,23 +74,16 @@ workflow PREPARE_INPUT {
         .set{ yml_input }
 
     emit:
-    assemblies = ch_fasta
-    hic        = yml_input.hic_ch
-    hifi       = yml_input.pacbio_ch
+    assemblies     =  ch_fasta
+    hic            = yml_input.hic_ch
+    hifi           = yml_input.pacbio_ch
     illumina_10X   = yml_input.illumina_10X_ch
-    busco      = yml_input.busco_ch
-
+    busco          = yml_input.busco_ch
+    
+    versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }
 
 
 def readYAML( yamlfile ) {
     return new Yaml().load( new FileReader( yamlfile.toString() ) ).samples
 }
-
-/*
-Notes:
-Use 
-```
-nextflow run test.nf
-```
-*/
