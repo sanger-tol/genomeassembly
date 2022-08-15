@@ -1,3 +1,7 @@
+/*
+Adapted from
+https://github.com/mahesh-panchal/genomeassembler/blob/230fa883621e45ce3d1002eb615bd5a01a68e59b/subworkflows/local/prepare_input.nf
+*/
 nextflow.enable.dsl = 2
 
 import org.yaml.snakeyaml.Yaml
