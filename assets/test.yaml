@@ -1,0 +1,19 @@
+samples:
+    - id: iVesVel2
+      assembly:
+        primary: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/working/iVesVel2.PB.asm2.purge2/purged.fa.gz
+        haplotigs: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/working/iVesVel2.PB.asm2.purge2/purged.htigs.fa.gz
+      illumina_10X:
+        reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test_iVesVel2/
+      pacbio:
+        reads: 
+            - reads: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/genomic_data/idPhyRufi1/pacbio/fasta/m64094e_210524_093354.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
+        kmer_pref: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/genomic_data/iVesVel2/pacbio/kmer/k31/iVesVel2
+      HiC:
+        reads:
+         - reads: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/genomic_data/iVesVel2/hic-dnazoo/iVesVel2_HIC11419_S29_L003_191125.cram
+        arima_motif: GATC,GANTC,CTNAG,TTAA
+      busco:
+        lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
+        lineage: insecta_odb10
+      
