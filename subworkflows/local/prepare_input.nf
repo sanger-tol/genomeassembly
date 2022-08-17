@@ -27,7 +27,7 @@ workflow PREPARE_INPUT {
             }
         .set{ assembly_input }
   
-    assembly_input.primary_ch.mix( assembly_input.haplotigs_ch )
+    assembly_input.primary_ch.concat( assembly_input.haplotigs_ch )
     .map { fasta ->
     todo = fasta.endsWith('.gz') ? 'gunzip' : 'none'
     [ ['todo':todo], fasta ]
@@ -42,7 +42,7 @@ workflow PREPARE_INPUT {
     .set { ch_asm }
 
     GUNZIP ( ch_asm.gzip ).gunzip
-    .mix ( ch_asm.geno )
+    .concat ( ch_asm.geno )
     .flatten()
     .toList()
     .map{ blank1, p, blank2, h -> [ blank1, p, h ] } 
