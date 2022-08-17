@@ -1,17 +1,17 @@
 samples:
-    - id: iVesVel2
+    - id: ilEupCent1
       assembly:
-        primary: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/working/iVesVel2.PB.asm2.purge2/purged.fa.gz
-        haplotigs: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/working/iVesVel2.PB.asm2.purge2/purged.htigs.fa.gz
+        primary: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/primary.fa
+        haplotigs: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/haplotigs.fa
       illumina_10X:
-        reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test_iVesVel2/
+        reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/10X/small/
       pacbio:
         reads: 
-            - reads: /lustre/scratch123/tol/projects/darwin/data/insects/Physocephala_rufipes/genomic_data/idPhyRufi1/pacbio/fasta/m64094e_210524_093354.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
-        kmer_pref: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/genomic_data/iVesVel2/pacbio/kmer/k31/iVesVel2
+            - reads: /lustre/scratch123/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/fasta/m64089_200201_113052.ccs.bc1008_BAK8A_OA--bc1008_BAK8A_OA.filtered.fasta.gz
+        kmer_pref: /lustre/scratch123/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/kmer/k31/ilEupCent1.k31
       HiC:
         reads:
-         - reads: /lustre/scratch123/tol/projects/darwin/data/insects/Vespa_velutina/genomic_data/iVesVel2/hic-dnazoo/iVesVel2_HIC11419_S29_L003_191125.cram
+        - reads:  /lustre/scratch123/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent2/hic-arima2/35180_1#2.cram
         arima_motif: GATC,GANTC,CTNAG,TTAA
       busco:
         lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
