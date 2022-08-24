@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ $# -ne 2 ]; then echo -e "Script to split genome into chunks.\nUsage: $0 <FAI> <NUM_CHUNKS>.\nVersion: 1.0"; exit 1; fi
+
 export FAI=$1
 export CHUNKS=$2
 

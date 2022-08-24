@@ -23,6 +23,7 @@ process LONGRANGER_COVERAGE {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         GNU Awk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
+        coverage.sh: \$(bed_chunks.sh | tail -n 1 | cut -d' ' -f2)
     END_VERSIONS
     """
 }
