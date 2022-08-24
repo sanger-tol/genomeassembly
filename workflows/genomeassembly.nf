@@ -15,6 +15,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.groups) { groups = params.groups } else { groups = 100; }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,7 +27,7 @@ if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, '
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
-include { POLISHING   } from '../subworkflows/local/polishing'
+include { POLISHING     } from '../subworkflows/local/polishing'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -66,8 +67,9 @@ workflow GENOMEASSEMBLY {
     //
     // Polishing step 1: map reads to the reference
     //
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h -> [meta, p] }.set{ primary_ch }
-    LONGRANGER_MKREF(primary_ch)
+    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
+    
+    LONGRANGER_MKREF(fasta_merged_ch)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
     PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [meta, reads]}
@@ -76,11 +78,23 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
     //
+    // Polishing step 2: apply freebayes consensus based on longranger alignments
+    //
+    LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai).set{ bam_ch }
+    PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.indices)
+                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ merged, merged_i ] }
+                                .set{ reference_ch }
+
+    POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
+    ch_versions = ch_versions.mix(POLISHING.out.versions)
+
+    //
     // MODULE: Collate versions.yml file
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
+
 }
 
 /*
