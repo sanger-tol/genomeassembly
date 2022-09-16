@@ -75,7 +75,6 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
                     .set{ illumina_10X_ch }
     LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, illumina_10X_ch )
-/*
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
     //
@@ -88,7 +87,7 @@ workflow GENOMEASSEMBLY {
 
     POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
     ch_versions = ch_versions.mix(POLISHING.out.versions)
-*/
+
     //
     // MODULE: Collate versions.yml file
     //
