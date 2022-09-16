@@ -88,11 +88,11 @@ workflow GENOMEASSEMBLY {
     POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
     ch_versions = ch_versions.mix(POLISHING.out.versions)
 
-    SPLIT_ASSEMBLY( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
+    EXTRACT_SEQUENCES( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
                         -> [ POLISHING.fasta, p_i ] )
                     .set{ polished_primary_ch } 
     
-    SPLIT_ASSEMBLY( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
+    EXTRACT_SEQUENCES( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
                         -> [ POLISHING.fasta, h_i ] )
                     .set{ polished_haplotigs_ch } 
     //
