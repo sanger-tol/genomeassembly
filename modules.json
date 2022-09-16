@@ -3,7 +3,6 @@
     "homePage": "https://github.com/sanger-tol/genomeassembly",
     "repos": {
         "nf-core/modules": {
-            "base_path": "modules",
             "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
                 "cooler/cload": {
@@ -14,54 +13,64 @@
                 },
                 "custom/dumpsoftwareversions": {
                 "bcftools/concat": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
                 "bcftools/consensus": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
                 "bcftools/index": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
                 "bcftools/norm": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
                 "bcftools/sort": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
                 "bcftools/view": {
+                    "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
-		},
-		"cooler/cload": {
+                },
+                "cooler/cload": {
+                    "branch": "master",
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
                 },
                 "cooler/zoomify": {
+                    "branch": "master",
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
                 },
                 "custom/dumpsoftwareversions": {
-                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                    "branch": "master",
+                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
                 "gatk4/mergevcfs": {
+                    "branch": "master",
                     "git_sha": "4199a05aeb0ec277d40cb112949bb85893310873"
                 },
                 "gunzip": {
+                    "branch": "master",
                     "git_sha": "fa37e0662690c4ec4260dae282fbce08777503e6"
                 },
-                "multiqc": {
-                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-                },
                 "samtools/faidx": {
-                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                    "branch": "master",
+                    "git_sha": "3eb99152cedbb7280258858e5df08478a4670696"
                 }
             }
         },
         "sanger-tol/nf-core-modules": {
-            "base_path": "modules",
-            "git_url": "https://github.com/sanger-tol/nf-core-modules",
+            "git_url": "sanger-tol/nf-core-modules",
             "modules": {
                 "longranger/align": {
-                    "git_sha": "6ae808410f182d3f772290a05218f03797361d40"
+                    "branch": "main",
+                    "git_sha": "e8fecf4de1dc93811717753c9f5d78f62020889c"
                 },
                 "longranger/mkref": {
+                    "branch": "main",
                     "git_sha": "30ad6bdfe77ab9a5c7d1a01ae83349b528057b91"
                 }
             }
