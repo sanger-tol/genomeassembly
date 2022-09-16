@@ -44,7 +44,8 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/
 //
 include { LONGRANGER_MKREF } from '../modules/sanger-tol/nf-core-modules/longranger/mkref/main'
 include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longranger/align/main'
-include { EXTRACT_SEQUENCES } from '../modules/local/extract_sequences'
+include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_PRIMARY } from '../modules/local/extract_sequences'
+include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_HAPLOTIGS } from '../modules/local/extract_sequences'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -88,13 +89,13 @@ workflow GENOMEASSEMBLY {
     POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
     ch_versions = ch_versions.mix(POLISHING.out.versions)
 
-    EXTRACT_SEQUENCES( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
-                        -> [ POLISHING.fasta, p_i ] )
-                    .set{ polished_primary_ch } 
+
+    PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [p_i]}.set{primary_index_ch}
+    EXTRACT_SEQUENCES_PRIMARY( POLISHING.out.fasta, primary_index_ch ) 
+    PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [h_i]}.set{haplotigs_index_ch}
+    EXTRACT_SEQUENCES_PRIMARY( POLISHING.out.fasta, haplotigs_index_ch ) 
     
-    EXTRACT_SEQUENCES( PREPARE_INPUT.out.indices.map{ meta, p, h, merged, p_i, h_i, merged_i } 
-                        -> [ POLISHING.fasta, h_i ] )
-                    .set{ polished_haplotigs_ch } 
+
     //
     // MODULE: Collate versions.yml file
     //
