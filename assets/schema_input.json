@@ -15,7 +15,7 @@
                         "type": "string",
                         "pattern": "^\\S+\\.fa(sta)?(\\.gz)?$"
                     },
-                    "haplotigs": { 
+                    "haplotigs": {
                         "type": "string",
                         "pattern": "^\\S+\\.fa(sta)?(\\.gz)?$"
                     }
@@ -44,8 +44,9 @@
                     "arima_motif": {
                         "type": "string",
                         "pattern": "^\\S+$"
-                    },
-                "busco":
+                    }
+                },
+                "busco": {
                     "lineages_path": {
                         "type": "string",
                         "pattern": "^\\S+$"
@@ -54,8 +55,9 @@
                         "type": "string",
                         "pattern": "^\\S+_odb\\S+$"
                     }
+                }
             }
         },
-        "required": ["sample","pacbio"]
+        "required": ["sample", "pacbio"]
     }
 }
