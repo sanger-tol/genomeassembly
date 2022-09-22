@@ -13,7 +13,7 @@ process SAMPLESHEET_CHECK {
     path '*.csv'       , emit: csv
     path "versions.yml", emit: versions
 
-    script: // This script is bundled with the pipeline, in sanger-tol/genomeassembly/bin/
+    script: // This script is bundled with the pipeline, in nf-core/sanger-tol-genomeassembly/bin/
     """
     check_samplesheet.py \\
         $samplesheet \\

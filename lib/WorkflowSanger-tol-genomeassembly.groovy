@@ -1,8 +1,8 @@
 //
-// This file holds several functions specific to the workflow/genomeassembly.nf in the sanger-tol/genomeassembly pipeline
+// This file holds several functions specific to the workflow/sanger-tol-genomeassembly.nf in the nf-core/sanger-tol-genomeassembly pipeline
 //
 
-class WorkflowGenomeassembly {
+class WorkflowSanger-tol-genomeassembly {
 
     //
     // Check and validate parameters

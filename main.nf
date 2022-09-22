@@ -1,9 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    sanger-tol/genomeassembly
+    nf-core/sanger-tol-genomeassembly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/sanger-tol/genomeassembly
+    Github : https://github.com/nf-core/sanger-tol-genomeassembly
+Website: https://nf-co.re/sanger-tol-genomeassembly
+    Slack  : https://nfcore.slack.com/channels/sanger-tol-genomeassembly
 ----------------------------------------------------------------------------------------
 */
 
@@ -31,13 +33,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GENOMEASSEMBLY } from './workflows/genomeassembly'
+include { SANGER-TOL-GENOMEASSEMBLY } from './workflows/sanger-tol-genomeassembly'
 
 //
-// WORKFLOW: Run main sanger-tol/genomeassembly analysis pipeline
+// WORKFLOW: Run main nf-core/sanger-tol-genomeassembly analysis pipeline
 //
-workflow SANGERTOL_GENOMEASSEMBLY {
-    GENOMEASSEMBLY ()
+workflow NFCORE_SANGER-TOL-GENOMEASSEMBLY {
+    SANGER-TOL-GENOMEASSEMBLY ()
 }
 
 /*
@@ -51,7 +53,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    SANGERTOL_GENOMEASSEMBLY ()
+    NFCORE_SANGER-TOL-GENOMEASSEMBLY ()
 }
 
 /*
