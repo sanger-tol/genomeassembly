@@ -1,17 +1,10 @@
 {
-    "name": "sanger-tol/genomeassembly",
-    "homePage": "https://github.com/sanger-tol/genomeassembly",
+    "name": "nf-core/sanger-tol-genomeassembly",
+    "homePage": "https://github.com/nf-core/sanger-tol-genomeassembly",
     "repos": {
         "nf-core/modules": {
             "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
-                "cooler/cload": {
-                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-                },
-                "cooler/zoomify": {
-                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-                },
-                "custom/dumpsoftwareversions": {
                 "bcftools/concat": {
                     "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"

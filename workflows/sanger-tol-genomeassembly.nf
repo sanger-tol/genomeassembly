@@ -7,7 +7,7 @@
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-WorkflowGenomeassembly.initialise(params, log)
+WorkflowSanger-tol-genomeassembly.initialise(params, log)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [ params.input ]
@@ -55,7 +55,7 @@ include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_HAPLOTIGS } from '../modules/lo
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow GENOMEASSEMBLY {
+workflow SANGER-TOL-GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
 
@@ -102,7 +102,6 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
 }
 
 /*
