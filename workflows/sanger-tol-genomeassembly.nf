@@ -17,6 +17,12 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.groups) { groups = params.groups } else { groups = 100; }
 
+if (params.motif) { motif = params.motif } else { motif = ''; }
+
+if (params.resolutions) { resolutions = params.resolutions } else { resolutions = ''; }
+
+if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
@@ -29,6 +35,7 @@ if (params.groups) { groups = params.groups } else { groups = 100; }
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 include { POLISHING     } from '../subworkflows/local/polishing'
 include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
+include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,6 +56,8 @@ include { LONGRANGER_MKREF } from '../modules/sanger-tol/nf-core-modules/longran
 include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longranger/align/main'
 include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_PRIMARY } from '../modules/local/extract_sequences'
 include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_HAPLOTIGS } from '../modules/local/extract_sequences'
+include { SAMTOOLS_FAIDX } from '../modules/nf-core/modules/samtools/faidx/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -95,26 +104,32 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
 
     PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [p_i]}.set{primary_index_ch}
     EXTRACT_SEQUENCES_PRIMARY( POLISHING.out.fasta, primary_index_ch ) 
+    ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_PRIMARY.out.versions)
+
     PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [h_i]}.set{haplotigs_index_ch}
     EXTRACT_SEQUENCES_HAPLOTIGS( POLISHING.out.fasta, haplotigs_index_ch )
+    ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_HAPLOTIGS.out.versions)
 
-    PREPARE_INPUT.out.hic.view()
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
     BWAMEM2_INDEX ( EXTRACT_SEQUENCES_PRIMARY.out.subseq )
+    ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_index = BWAMEM2_INDEX.out.index
 
 
     ALIGN_SHORT( crams_ch, ch_index, EXTRACT_SEQUENCES_PRIMARY.out.subseq.map{ meta, fasta -> [fasta]} )    
-//    ALIGN_SHORT( Channel.of([[id:"ilEupCent1", datatype:"hic", read_group:"\'@RG\\tID:ilEupCent1\\tPL:ILLUMINA\\tSM:ilEupCent1\'"], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/work/de/7c601842368d43b1f06c765c67dbc3/ilEupCent1.markdup.bam"]), Channel.of([[id:"ilEupCent1"], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/work/ac/12febb43634cc9cc688d82916c49a2/bwamem2"]), Channel.of("/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/work/e5/2b9e6a9cb53eb48ff9c5a123cc5969/primary.fa"))    
-    ALIGN_SHORT.out.bed.view() 
- 
+    ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
+
+    SAMTOOLS_FAIDX(EXTRACT_SEQUENCES_PRIMARY.out.subseq)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+
+    SAMTOOLS_FAIDX.out.fai.join(EXTRACT_SEQUENCES_PRIMARY.out.subseq)
+                    .map{ meta, fai, fasta -> [fasta, fai] }
+                    .set{ scaf_ref_ch }  
     
-  
-//    ch_bed = Channel.of([meta, bed])
-//    ch_fa = Channel.of([fasta, fasta+".fai"])
-//    SCAFFOLDING(ch_bed, ch_fa, true, '', '', 1000 )
+    SCAFFOLDING(ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     //
     // MODULE: Collate versions.yml file
