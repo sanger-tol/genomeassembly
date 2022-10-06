@@ -11,7 +11,7 @@ process EXTRACT_SEQUENCES {
     path(fai)
     
     output:
-    path "*subsequences.fasta", emit: subseq
+    tuple val(meta), path("*subsequences.fasta"), emit: subseq
     path "versions.yml", emit: versions
 
     when:

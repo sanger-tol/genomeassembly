@@ -29,6 +29,14 @@
                     "branch": "master",
                     "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
                 },
+                "bwamem2/index": {
+                    "branch": "master",
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
+                },
+                "bwamem2/mem": {
+                    "branch": "master",
+                    "git_sha": "30b04859129f5f4235accdea9fdea8f1feb23809"
+                },
                 "cooler/cload": {
                     "branch": "master",
                     "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -49,15 +57,67 @@
                     "branch": "master",
                     "git_sha": "fa37e0662690c4ec4260dae282fbce08777503e6"
                 },
+                "samtools/collate": {
+                    "branch": "master",
+                    "git_sha": "ab4c2e440d518b4815cc276cf621f89df4ffaa70"
+                },
                 "samtools/faidx": {
                     "branch": "master",
                     "git_sha": "3eb99152cedbb7280258858e5df08478a4670696"
+                },
+                "samtools/fastq": {
+                    "branch": "master",
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                },
+                "samtools/fixmate": {
+                    "branch": "master",
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                },
+                "samtools/flagstat": {
+                    "branch": "master",
+                    "git_sha": "bbb99cb8d679555cc01c98766de7869f83283545"
+                },
+                "samtools/idxstats": {
+                    "branch": "master",
+                    "git_sha": "ecece498f10b47b7c9d06f53a310cea5811b4c5f"
+                },
+                "samtools/index": {
+                    "branch": "master",
+                    "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                },
+                "samtools/markdup": {
+                    "branch": "master",
+                    "git_sha": "22e144dc63d312f0b63009c5b77b66c91afbd27c"
+                },
+                "samtools/merge": {
+                    "branch": "master",
+                    "git_sha": "d5d785b3d8b422cda9c6d84a23f629a8e9ff8cd8"
+                },
+                "samtools/sort": {
+                    "branch": "master",
+                    "git_sha": "d5d785b3d8b422cda9c6d84a23f629a8e9ff8cd8"
+                },
+                "samtools/stats": {
+                    "branch": "master",
+                    "git_sha": "f4eab7945952dc4934224309701a49913ea05ae6"
+                },
+                "samtools/view": {
+                    "branch": "master",
+                    "git_sha": "d5d785b3d8b422cda9c6d84a23f629a8e9ff8cd8"
                 }
             }
         },
         "sanger-tol/nf-core-modules": {
             "git_url": "sanger-tol/nf-core-modules",
             "modules": {
+                "bedtools/bamtobed": {
+                    "branch": "main",
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
+                },
+                "bedtools/sort": {
+                    "branch": "main",
+                    "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
+                },
                 "longranger/align": {
                     "branch": "main",
                     "git_sha": "e8fecf4de1dc93811717753c9f5d78f62020889c"
