@@ -36,7 +36,11 @@ include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 include { POLISHING     } from '../subworkflows/local/polishing'
 include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
 include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDED } from '../subworkflows/local/assembly_stats'
 
+include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_PRIMARY } from '../modules/local/extract_sequences'
+include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_HAPLOTIGS } from '../modules/local/extract_sequences'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -48,15 +52,13 @@ include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { BWAMEM2_INDEX } from '../modules/nf-core/modules/bwamem2/index/main'
+include { SAMTOOLS_FAIDX } from '../modules/nf-core/modules/samtools/faidx/main'
 
 //
 // MODULE: Installed from sanger-tol mirror nf-core/modules
 //
 include { LONGRANGER_MKREF } from '../modules/sanger-tol/nf-core-modules/longranger/mkref/main'
 include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longranger/align/main'
-include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_PRIMARY } from '../modules/local/extract_sequences'
-include { EXTRACT_SEQUENCES as EXTRACT_SEQUENCES_HAPLOTIGS } from '../modules/local/extract_sequences'
-include { SAMTOOLS_FAIDX } from '../modules/nf-core/modules/samtools/faidx/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,12 +105,22 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(POLISHING.out.versions)
 
     PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [p_i]}.set{primary_index_ch}
-    EXTRACT_SEQUENCES_PRIMARY( POLISHING.out.fasta, primary_index_ch ) 
+    POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'primary'], fasta ]}
+                        .set{ primary_ch }
+    EXTRACT_SEQUENCES_PRIMARY( primary_ch, primary_index_ch ) 
     ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_PRIMARY.out.versions)
 
     PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [h_i]}.set{haplotigs_index_ch}
-    EXTRACT_SEQUENCES_HAPLOTIGS( POLISHING.out.fasta, haplotigs_index_ch )
+    POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'haplotigs'], fasta ]}
+                        .set{ haplotigs_ch }
+    EXTRACT_SEQUENCES_HAPLOTIGS( haplotigs_ch, haplotigs_index_ch )
     ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_HAPLOTIGS.out.versions)
+
+
+    GENOME_STATISTICS_POLISHED( EXTRACT_SEQUENCES_PRIMARY.out.subseq.join(EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq), 
+                       PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
+                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+    ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
 
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
@@ -116,7 +128,6 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     BWAMEM2_INDEX ( EXTRACT_SEQUENCES_PRIMARY.out.subseq )
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_index = BWAMEM2_INDEX.out.index
-
 
     ALIGN_SHORT( crams_ch, ch_index, EXTRACT_SEQUENCES_PRIMARY.out.subseq.map{ meta, fasta -> [fasta]} )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
@@ -130,6 +141,11 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     
     SCAFFOLDING(ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+    
+    GENOME_STATISTICS_SCAFFOLDED( SCAFFOLDING.out.fasta.join( EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq ),
+                                    PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
+                                    PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]})
+    ch_versions = ch_versions.mix(GENOME_STATISTICS_SCAFFOLDED.out.versions)
 
     //
     // MODULE: Collate versions.yml file
@@ -137,6 +153,7 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
+    
 }
 
 /*

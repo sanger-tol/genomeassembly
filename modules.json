@@ -118,6 +118,10 @@
                     "branch": "main",
                     "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb"
                 },
+                "busco": {
+                    "branch": "main",
+                    "git_sha": "ebc466caacf58f81427c635bd25ed683ceaea01d"
+                },
                 "longranger/align": {
                     "branch": "main",
                     "git_sha": "e8fecf4de1dc93811717753c9f5d78f62020889c"

@@ -76,5 +76,4 @@ workflow SCAFFOLDING {
     hic = JUICER_TOOLS_PRE.out.hic
     png = JUICER_SNAPSHOT.out.png
     versions = ch_versions.ifEmpty(null)
-
 }

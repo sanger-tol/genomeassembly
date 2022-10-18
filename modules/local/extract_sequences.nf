@@ -18,9 +18,10 @@ process EXTRACT_SEQUENCES {
     task.ext.when == null || task.ext.when
 
     script:
+    def prefix = meta.prefix ?: ''
     """
     cat $fai | cut -f1 >  subseqs.lst
-    seqtk subseq $fasta subseqs.lst > subsequences.fasta
+    seqtk subseq $fasta subseqs.lst > ${prefix}.subsequences.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
