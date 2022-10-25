@@ -78,7 +78,6 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     //   
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
-    
 
     //
     // Polishing step 1: map reads to the reference

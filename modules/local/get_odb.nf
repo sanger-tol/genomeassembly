@@ -19,7 +19,7 @@ process GET_ODB {
     path("*.busco_odb.csv"), emit: csv
     path "versions.yml",     emit: versions
 
-    script: // This script is bundled with the pipeline, in sanger-tol/genomenote/bin/
+    script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     get_odb.py ${prefix} ${prefix}.busco_odb.csv

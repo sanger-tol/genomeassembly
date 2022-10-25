@@ -1,33 +1,25 @@
 process GFASTATS {
-    tag "$meta.id"
-    label 'process_medium'
+    tag "${meta.id}"
+    label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::gfastats=1.3.1" : null)
+    conda (params.enable_conda ? "bioconda::gfastats=1.3.5" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gfastats:1.3.1--hd03093a_0' :
-        'quay.io/biocontainers/gfastats:1.3.1--hd03093a_0' }"
-
+        'https://depot.galaxyproject.org/singularity/gfastats:1.3.5--hd03093a_0' :
+        'quay.io/biocontainers/gfastats:1.3.5--hd03093a_0' }"
     input:
     tuple val(meta), path(fasta)
 
     output:
-    tuple val(meta), path("*stats"), emit: stats
-    path "versions.yml"           , emit: versions
-    
-    when:
-    task.ext.when == null || task.ext.when
-
+    path("*stats"), emit: stats
+    path "versions.yml",     emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
-    gfastats ${args} ${fasta} > ${fasta}.stats
-
+    gfastats ${fasta} ${args} > ${fasta}.stats
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gfastats: \$(gfastats -v | head -n1 | cut -f2 -d' ')
+        gfatstas: \$(gfastats --version | grep gfastats | cut -d' ' -f2)
     END_VERSIONS
     """
-
-
 }
