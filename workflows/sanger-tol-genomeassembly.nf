@@ -135,7 +135,7 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
 //    GENOME_STATISTICS_SCAFFOLDED( primary_contigs_ch.join( haplotigs_ch ),
 //                                    PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
 //                                    PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]})  
-/*    BWAMEM2_INDEX ( primary_contigs_ch )
+    BWAMEM2_INDEX ( primary_contigs_ch )
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_index = BWAMEM2_INDEX.out.index
 
@@ -152,7 +152,10 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     SCAFFOLDING( ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
     
-    GENOME_STATISTICS_SCAFFOLDED( scaf_hap_ch,
+    SCAFFOLDING.out.fasta.combine(haplotigs_ch)
+                        .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
+                        .set{ stats_input_ch }
+    GENOME_STATISTICS_SCAFFOLDED(  stats_input_ch,
                                     PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
                                     PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]})
     ch_versions = ch_versions.mix(GENOME_STATISTICS_SCAFFOLDED.out.versions)
