@@ -15,6 +15,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
+
 if (params.groups) { groups = params.groups } else { groups = 100; }
 
 if (params.motif) { motif = params.motif } else { motif = ''; }
@@ -22,6 +23,8 @@ if (params.motif) { motif = params.motif } else { motif = ''; }
 if (params.resolutions) { resolutions = params.resolutions } else { resolutions = ''; }
 
 if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
+
+if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,81 +81,89 @@ workflow SANGER_TOL_GENOMEASSEMBLY {
     //   
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
+   
+    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, p] }.set{ primary_contigs_ch } 
+    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, h] }.set{ haplotigs_ch } 
 
-    //
-    // Polishing step 1: map reads to the reference
-    //
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
-    
-    LONGRANGER_MKREF(fasta_merged_ch)
-    ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
+    if ( polishing_on ) {
+        //
+        // Polishing step 1: map reads to the reference
+        //
+        PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
+        LONGRANGER_MKREF(fasta_merged_ch)
+        ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
-    PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
-                    .set{ illumina_10X_ch }
-    LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, illumina_10X_ch )
-    ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
+        PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
+                     .set{ illumina_10X_ch }
+        LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, illumina_10X_ch )
+        ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
-    //
-    // Polishing step 2: apply freebayes consensus based on longranger alignments
-    //
-    LONGRANGER_ALIGN.out.bam.join( LONGRANGER_ALIGN.out.bai ).set{ bam_ch }
-    PREPARE_INPUT.out.assemblies.join( PREPARE_INPUT.out.indices )
-                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ merged, merged_i ] }
-                                .set{ reference_ch }
+        //
+        // Polishing step 2: apply freebayes consensus based on longranger alignments
+        //
+        LONGRANGER_ALIGN.out.bam.join( LONGRANGER_ALIGN.out.bai ).set{ bam_ch }
+        PREPARE_INPUT.out.assemblies.join( PREPARE_INPUT.out.indices )
+                                    .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ merged, merged_i ] }
+                                    .set{ reference_ch }
 
-    POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
-    ch_versions = ch_versions.mix(POLISHING.out.versions)
+        POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
+        ch_versions = ch_versions.mix(POLISHING.out.versions)
 
-    PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [p_i]}.set{primary_index_ch}
-    POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'primary'], fasta ]}
-                        .set{ primary_ch }
-    EXTRACT_SEQUENCES_PRIMARY( primary_ch, primary_index_ch ) 
-    ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_PRIMARY.out.versions)
+        PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [p_i]}.set{primary_index_ch}
+        POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'primary'], fasta ]}
+                           .set{ primary_ch }
+        EXTRACT_SEQUENCES_PRIMARY( primary_ch, primary_index_ch ) 
+        ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_PRIMARY.out.versions)
 
-    PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [h_i]}.set{haplotigs_index_ch}
-    POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'haplotigs'], fasta ]}
-                        .set{ haplotigs_ch }
-    EXTRACT_SEQUENCES_HAPLOTIGS( haplotigs_ch, haplotigs_index_ch )
-    ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_HAPLOTIGS.out.versions)
+        PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [h_i]}.set{haplotigs_ch_index_ch}
+        POLISHING.out.fasta.map{ meta, fasta -> [ [ id : meta.id, prefix: 'haplotigs_ch'], fasta ]}
+                           .set{ haplotigs_ch_ch }
+        EXTRACT_SEQUENCES_HAPLOTIGS( haplotigs_ch_ch, haplotigs_ch_index_ch )
+        ch_versions = ch_versions.mix(EXTRACT_SEQUENCES_HAPLOTIGS.out.versions)
 
-
-    GENOME_STATISTICS_POLISHED( EXTRACT_SEQUENCES_PRIMARY.out.subseq.join(EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq), 
+        GENOME_STATISTICS_POLISHED( EXTRACT_SEQUENCES_PRIMARY.out.subseq.join(EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq), 
                        PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
                        PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
-    ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
+        ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
+        primary_contigs_ch = EXTRACT_SEQUENCES_PRIMARY.out.subseq
+        haplotigs_ch = EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq
+    }
 
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
-    BWAMEM2_INDEX ( EXTRACT_SEQUENCES_PRIMARY.out.subseq )
+//    GENOME_STATISTICS_SCAFFOLDED( primary_contigs_ch.join( haplotigs_ch ),
+//                                    PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
+//                                    PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]})  
+/*    BWAMEM2_INDEX ( primary_contigs_ch )
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_index = BWAMEM2_INDEX.out.index
 
-    ALIGN_SHORT( crams_ch, ch_index, EXTRACT_SEQUENCES_PRIMARY.out.subseq.map{ meta, fasta -> [fasta]} )    
+    ALIGN_SHORT( crams_ch, ch_index, primary_contigs_ch.map{ meta, fasta -> [fasta]} )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
-    SAMTOOLS_FAIDX(EXTRACT_SEQUENCES_PRIMARY.out.subseq)
+    SAMTOOLS_FAIDX( primary_contigs_ch )
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    SAMTOOLS_FAIDX.out.fai.join(EXTRACT_SEQUENCES_PRIMARY.out.subseq)
+    SAMTOOLS_FAIDX.out.fai.join( primary_contigs_ch )
                     .map{ meta, fai, fasta -> [fasta, fai] }
                     .set{ scaf_ref_ch }  
     
-    SCAFFOLDING(ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
+    SCAFFOLDING( ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
     
-    GENOME_STATISTICS_SCAFFOLDED( SCAFFOLDING.out.fasta.join( EXTRACT_SEQUENCES_HAPLOTIGS.out.subseq ),
+    GENOME_STATISTICS_SCAFFOLDED( scaf_hap_ch,
                                     PREPARE_INPUT.out.busco.map{ meta, buscodb, lineage -> buscodb},
                                     PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]})
     ch_versions = ch_versions.mix(GENOME_STATISTICS_SCAFFOLDED.out.versions)
-
+    
     //
     // MODULE: Collate versions.yml file
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-    
+ 
 }
 
 /*

@@ -15,7 +15,7 @@ include { MERQURYFK_MERQURYFK } from '../../modules/local/merquryfk'
 workflow GENOME_STATISTICS {
     take:
     assembly               // channel: [ meta, primary, haplotigs ]
-    lineage_db             // channel: /path/to/buscoDB
+    lineage_db             // channel: /path/to/buscoDB] 
     kmer                   // channel: [ meta, [ /path/to/kmer/kNN ] ]
 
     main:
@@ -28,7 +28,9 @@ workflow GENOME_STATISTICS {
     GFASTATS( primary_ch )
     ch_versions = ch_versions.mix(GFASTATS.out.versions.first())
 
-    GET_ODB ( primary_ch )
+    assembly.map{ meta, primary, haplotigs -> [meta, meta.id] }.view()
+
+    GET_ODB ( assembly.map{ meta, primary, haplotigs -> [meta, meta.id] } )
     ch_versions = ch_versions.mix(GET_ODB.out.versions.first())
 
     // BUSCO
@@ -42,11 +44,10 @@ workflow GENOME_STATISTICS {
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:
-    BUSCO   = BUSCO.out.short_summaries_json // meta, path("short_summary.*.json")
-    MERQURY_COMPLETENESS = MERQURYFK_MERQURYFK.out.stats // meta, stats
-    MERQURY_QV = MERQURYFK_MERQURYFK.out.qv // meta, qv
-    ASSEMBLY_STATS = GFASTATS.out.stats // path("*.stats")
-
+    busco   = BUSCO.out.short_summaries_json // meta, path("short_summary.*.json")
+    merquryk_completeness = MERQURYFK_MERQURYFK.out.stats // meta, stats
+    merquryk_qv = MERQURYFK_MERQURYFK.out.qv // meta, qv
+    assembly_stats = GFASTATS.out.stats // path("*.stats")
     versions = ch_versions   
 }
 

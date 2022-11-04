@@ -13,16 +13,15 @@ process GET_ODB {
         'https://depot.galaxyproject.org/singularity/requests:2.26.0' :
         'quay.io/biocontainers/requests:2.26.0' }"
     input:
-    tuple val(meta), path(fasta)
+    tuple val(meta), val(tolid)
 
     output:
     path("*.busco_odb.csv"), emit: csv
     path "versions.yml",     emit: versions
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    get_odb.py ${prefix} ${prefix}.busco_odb.csv
+    get_odb.py ${tolid} ${tolid}.busco_odb.csv
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         get_odb.py: \$(get_odb.py --version | cut -d' ' -f2)
