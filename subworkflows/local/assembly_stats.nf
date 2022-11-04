@@ -28,8 +28,6 @@ workflow GENOME_STATISTICS {
     GFASTATS( primary_ch )
     ch_versions = ch_versions.mix(GFASTATS.out.versions.first())
 
-    assembly.map{ meta, primary, haplotigs -> [meta, meta.id] }.view()
-
     GET_ODB ( assembly.map{ meta, primary, haplotigs -> [meta, meta.id] } )
     ch_versions = ch_versions.mix(GET_ODB.out.versions.first())
 
