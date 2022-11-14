@@ -9,13 +9,12 @@
 
 include { GFASTATS            } from '../../modules/local/gfastats'
 include { BUSCO               } from '../../modules/sanger-tol/nf-core-modules/busco/main'
-include { GET_ODB             } from '../../modules/local/get_odb'
 include { MERQURYFK_MERQURYFK } from '../../modules/local/merquryfk'
 
 workflow GENOME_STATISTICS {
     take:
     assembly               // channel: [ meta, primary, haplotigs ]
-    lineage_db             // channel: /path/to/buscoDB] 
+    lineage             // channel: [ meta, /path/to/buscoDB, lineage ] 
     kmer                   // channel: [ meta, [ /path/to/kmer/kNN ] ]
 
     main:
@@ -28,12 +27,11 @@ workflow GENOME_STATISTICS {
     GFASTATS( primary_ch )
     ch_versions = ch_versions.mix(GFASTATS.out.versions.first())
 
-    GET_ODB ( assembly.map{ meta, primary, haplotigs -> [meta, meta.id] } )
-    ch_versions = ch_versions.mix(GET_ODB.out.versions.first())
-
     // BUSCO
-    ch_lineage = GET_ODB.out.csv.splitCsv().map { row -> row[1] }
-    BUSCO ( assembly.map{ meta, primary, haplotigs -> [meta, primary]}, ch_lineage, lineage_db, [] )
+    BUSCO ( assembly.map{ meta, primary, haplotigs -> [meta, primary]}, 
+            lineage.map{ meta, lineage_db, ch_lineage -> ch_lineage },
+            lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
+            [] )
     ch_versions = ch_versions.mix(BUSCO.out.versions.first())
     
     // MerquryFK
