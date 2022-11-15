@@ -1,4 +1,7 @@
 //
+// Based on https://github.com/sanger-tol/readmapping/blob/5a2657f5274a2c436b3896497a1322f2557bd9a8/subworkflows/local/convert_stats.nf
+// from Sanger readmapping pipeline by @priyanka-surana
+//
 // Convert BAM to CRAM, create index and calculate statistics
 //
 

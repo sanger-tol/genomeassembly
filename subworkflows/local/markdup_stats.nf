@@ -1,4 +1,7 @@
 //
+// Based on https://github.com/sanger-tol/readmapping/blob/5a2657f5274a2c436b3896497a1322f2557bd9a8/subworkflows/local/markdup_stats.nf
+// from Sanger readmapping pipeline by @priyanka-surana
+//
 // Merge and Markdup all alignments at specimen level
 // Convert to CRAM and calculate statistics
 //
@@ -23,11 +26,6 @@ workflow MARKDUP_STATS {
 
     // Collect all BWAMEM2 output by sample name
     SAMTOOLS_SORT.out.bam
-//    .map { meta, bam ->
-//    new_meta = meta.clone()
-//    new_meta.id = new_meta.id.split('_')[0..-2].join('_')
-//    [ [id: new_meta.id, datatype: new_meta.datatype] , bam ]
-//    }
     .groupTuple(by: [0])
     .set { ch_bams }
 
