@@ -25,13 +25,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SANGER-TOL-GENOMEASSEMBLY } from './workflows/sanger-tol-genomeassembly'
+include { SANGER_TOL_GENOMEASSEMBLY } from './workflows/sanger-tol-genomeassembly'
 
 //
 // WORKFLOW: Run main nf-core/sanger-tol-genomeassembly analysis pipeline
 //
-workflow NFCORE_SANGER-TOL-GENOMEASSEMBLY {
-    SANGER-TOL-GENOMEASSEMBLY ()
+workflow NFCORE_SANGER_TOL_GENOMEASSEMBLY {
+    SANGER_TOL_GENOMEASSEMBLY ()
 }
 
 /*
@@ -45,7 +45,7 @@ workflow NFCORE_SANGER-TOL-GENOMEASSEMBLY {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_SANGER-TOL-GENOMEASSEMBLY ()
+    NFCORE_SANGER_TOL_GENOMEASSEMBLY ()
 }
 
 /*

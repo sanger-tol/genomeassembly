@@ -6,9 +6,6 @@
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
-// Validate input parameters
-WorkflowSanger-tol-genomeassembly.initialise(params, log)
-
 // Check input path parameters to see if they exist
 def checkPathParamList = [ params.input ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
@@ -54,7 +51,7 @@ include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longran
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow SANGER-TOL-GENOMEASSEMBLY {
+workflow SANGER_TOL_GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
 
