@@ -1,4 +1,4 @@
-# nf-core/sanger-tol-genomeassembly: Output
+# sanger-tol/genomeassembly: Output
 
 ## Introduction
 

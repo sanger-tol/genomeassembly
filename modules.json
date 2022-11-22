@@ -1,6 +1,6 @@
 {
-    "name": "nf-core/sanger-tol-genomeassembly",
-    "homePage": "https://github.com/nf-core/sanger-tol-genomeassembly",
+    "name": "sanger-tol/genomeassembly",
+    "homePage": "https://github.com/sanger-tol/genomeassembly",
     "repos": {
         "nf-core/modules": {
             "git_url": "https://github.com/nf-core/modules.git",

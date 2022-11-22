@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the main.nf workflow in the nf-core/sanger-tol-genomeassembly pipeline
+// This file holds several functions specific to the main.nf workflow in the sanger-tol/genomeassembly pipeline
 //
 
 class WorkflowMain {
