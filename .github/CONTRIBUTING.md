@@ -9,8 +9,6 @@ Please use the pre-filled template to save time.
 However, don't be put off by this template - other more general issues and suggestions are welcome!
 Contributions to the code are even more welcome ;)
 
-> If you need help using or modifying sanger-tol/genomeassembly then the best place to ask is on the nf-core Slack [#sanger-tol-genomeassembly](https://nfcore.slack.com/channels/sanger-tol-genomeassembly) channel ([join our Slack here](https://nf-co.re/join/slack)).
-
 ## Contribution workflow
 
 If you'd like to write some code for sanger-tol/genomeassembly, the standard workflow is as follows:
@@ -54,7 +52,7 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 ## Getting help
 
-For further information/help, please consult the [sanger-tol/genomeassembly documentation](https://nf-co.re/sanger-tol-genomeassembly/usage) and don't hesitate to get in touch on the nf-core Slack [#sanger-tol-genomeassembly](https://nfcore.slack.com/channels/sanger-tol-genomeassembly) channel ([join our Slack here](https://nf-co.re/join/slack)).
+For further information/help, please consult the [sanger-tol/genomeassembly documentation](https://nf-co.re/sanger-tol-genomeassembly/usage).
 
 ## Pipeline contribution conventions
 
