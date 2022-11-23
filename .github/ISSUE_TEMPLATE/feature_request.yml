@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the nf-core/sanger-tol-genomeassembly pipeline
+description: Suggest an idea for the sanger-tol/genomeassembly pipeline
 labels: enhancement
 body:
   - type: textarea
