@@ -51,7 +51,7 @@ include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longran
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow SANGER_TOL_GENOMEASSEMBLY {
+workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
 
