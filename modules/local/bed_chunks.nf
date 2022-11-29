@@ -7,9 +7,9 @@ process BED_CHUNKS {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    tuple val(meta), path(fai) 
+    tuple val(meta), path(fai)
     val chunks
-    
+
     output:
     path "*bed", emit: coords
     path "versions.yml", emit: versions

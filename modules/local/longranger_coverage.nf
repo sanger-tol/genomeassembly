@@ -7,8 +7,8 @@ process LONGRANGER_COVERAGE {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    path summary 
-    
+    path summary
+
     output:
     env cov, emit: cov
     path "versions.yml", emit: versions

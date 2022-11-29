@@ -7,8 +7,8 @@ process FASTA_CONCAT {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    tuple val(meta), path(primary), path(haplotigs) 
-    
+    tuple val(meta), path(primary), path(haplotigs)
+
     output:
     tuple val(meta), path("*fa"), emit: fasta_merged
     path "versions.yml", emit: versions
