@@ -1,4 +1,6 @@
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+# ![sanger-tol/genomeassembly](docs/images/sanger-tol-genomeassembly_logo_light.png#gh-light-mode-only) ![sanger-tol/genomeassembly](docs/images/sanger-tol-genomeassembly_logo_dark.png#gh-dark-mode-only)
+
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sanger-tol-genomeassembly/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -33,7 +35,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
-   ```console
+   ```bash
    nextflow run sanger-tol/genomeassembly -profile test,YOURPROFILE --outdir <OUTDIR>
    ```
 
@@ -48,13 +50,13 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
    <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
 
-   ```console
+   ```bash
    nextflow run sanger-tol/genomeassembly --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 ## Credits
 
-sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova.
+sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova based on the ToL Genome Engine procedures.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
@@ -73,7 +75,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
-This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
+You can cite the `nf-core` publication as follows:
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
 >

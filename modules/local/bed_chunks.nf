@@ -1,5 +1,5 @@
 process BED_CHUNKS {
-    label 'process_nompi'
+    label 'process_single'
 
     conda (params.enable_conda ? "conda-forge::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,9 +7,9 @@ process BED_CHUNKS {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    tuple val(meta), path(fai) 
+    tuple val(meta), path(fai)
     val chunks
-    
+
     output:
     path "*bed", emit: coords
     path "versions.yml", emit: versions

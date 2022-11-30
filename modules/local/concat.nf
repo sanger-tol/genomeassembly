@@ -1,5 +1,5 @@
 process FASTA_CONCAT {
-    label 'process_nompi'
+    label 'process_single'
 
     conda (params.enable_conda ? "conda-forge::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,8 +7,8 @@ process FASTA_CONCAT {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    tuple val(meta), path(primary), path(haplotigs) 
-    
+    tuple val(meta), path(primary), path(haplotigs)
+
     output:
     tuple val(meta), path("*fa"), emit: fasta_merged
     path "versions.yml", emit: versions

@@ -25,6 +25,7 @@ Content-Disposition: inline; filename="sanger-tol-genomeassembly_logo_light.png"
     flatten().
     join( '\n' ) %>
 
+
 <%
 if (mqcFile){
 def mqcFileObj = new File("$mqcFile")
