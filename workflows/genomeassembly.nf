@@ -64,7 +64,7 @@ workflow GENOMEASSEMBLY {
     //
     // Polishing step 1: map reads to the reference
     //
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
+/*    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
     
     LONGRANGER_MKREF(fasta_merged_ch)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
@@ -79,10 +79,15 @@ workflow GENOMEASSEMBLY {
     //
     LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai).set{ bam_ch }
     PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.indices)
-                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ merged, merged_i ] }
+                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ meta, merged, merged_i ] }
                                 .set{ reference_ch }
-
-    POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
+*/
+    PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
+                    .set{ illumina_10X_ch }
+    PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.indices)
+                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ meta, merged, merged_i ] }
+                                .set{ reference_ch }
+    POLISHING(reference_ch, illumina_10X_ch, groups)    
     ch_versions = ch_versions.mix(POLISHING.out.versions)
 
     //
