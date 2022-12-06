@@ -14,6 +14,7 @@ process FREEBAYES {
     path samples
     path populations
     path cnv
+    val  cov
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -30,6 +31,7 @@ process FREEBAYES {
     def samples_file     = samples        ? "--samples ${samples}"         : ""
     def populations_file = populations    ? "--populations ${populations}" : ""
     def cnv_file         = cnv            ? "--cnv-map ${cnv}"             : ""
+    def cov              = cov            ? "--skip-coverage ${cov}"       : ""
 
     """
     freebayes \\
@@ -38,6 +40,7 @@ process FREEBAYES {
         $samples_file \\
         $populations_file \\
         $cnv_file \\
+        $cov \\
         $args \\
         $input > ${prefix}.vcf
 

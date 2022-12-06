@@ -35,7 +35,8 @@
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "1630b6b4479515fe2a577652cbccf75864fb7822"
+                        "git_sha": "1630b6b4479515fe2a577652cbccf75864fb7822",
+                        "patch": "modules/nf-core/freebayes/freebayes.diff"
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
