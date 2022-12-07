@@ -6,7 +6,7 @@ include { BCFTOOLS_SORT                               } from '../../modules/nf-c
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/bcftools/index/main'     
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/bcftools/index/main'     
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-core/gatk4/mergevcfs/main'
-include { FREEBAYES                                   } from '../../modules/local/freebayes' 
+include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main' 
 include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
 include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
 include { LONGRANGER_MKREF } from '../../modules/local/longranger/mkref/main'
