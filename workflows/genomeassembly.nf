@@ -34,13 +34,7 @@ include { POLISHING     } from '../subworkflows/local/polishing'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
-
-//
-// MODULE: Installed from sanger-tol mirror nf-core/modules
-//
-include { LONGRANGER_MKREF } from '../modules/sanger-tol/nf-core-modules/longranger/mkref/main'
-include { LONGRANGER_ALIGN } from '../modules/sanger-tol/nf-core-modules/longranger/align/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,28 +55,12 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
 
-    //
-    // Polishing step 1: map reads to the reference
-    //
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, merged] }.set{ fasta_merged_ch }
-    
-    LONGRANGER_MKREF(fasta_merged_ch)
-    ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
-
     PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
                     .set{ illumina_10X_ch }
-    LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, illumina_10X_ch )
-    ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
-
-    //
-    // Polishing step 2: apply freebayes consensus based on longranger alignments
-    //
-    LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai).set{ bam_ch }
     PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.indices)
-                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ merged, merged_i ] }
+                                .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ meta, merged, merged_i ] }
                                 .set{ reference_ch }
-
-    POLISHING(bam_ch, reference_ch, groups, LONGRANGER_ALIGN.out.csv.collect{it[1]} )    
+    POLISHING(reference_ch, illumina_10X_ch, groups)    
     ch_versions = ch_versions.mix(POLISHING.out.versions)
 
     //

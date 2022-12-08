@@ -1,46 +1,59 @@
-include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/modules/bcftools/view/main' 
-include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/modules/bcftools/consensus/main' 
-include { BCFTOOLS_NORM                               } from '../../modules/nf-core/modules/bcftools/norm/main' 
-include { BCFTOOLS_CONCAT                             } from '../../modules/nf-core/modules/bcftools/concat/main' 
-include { BCFTOOLS_SORT                               } from '../../modules/nf-core/modules/bcftools/sort/main'     
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/modules/bcftools/index/main'     
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/modules/bcftools/index/main'     
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { FREEBAYES                                   } from '../../modules/local/freebayes' 
+include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/bcftools/view/main' 
+include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/bcftools/consensus/main' 
+include { BCFTOOLS_NORM                               } from '../../modules/nf-core/bcftools/norm/main' 
+include { BCFTOOLS_CONCAT                             } from '../../modules/nf-core/bcftools/concat/main' 
+include { BCFTOOLS_SORT                               } from '../../modules/nf-core/bcftools/sort/main'     
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/bcftools/index/main'     
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/bcftools/index/main'     
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-core/gatk4/mergevcfs/main'
+include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main' 
 include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
 include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
+include { LONGRANGER_MKREF } from '../../modules/local/longranger/mkref/main'
+include { LONGRANGER_ALIGN } from '../../modules/local/longranger/align/main'
 
 workflow POLISHING {
     take:
-    bam_in //tuple meta, bam, bai
-    fasta_in //tuple fasta, fai
-    groups //val
-    summary //path
+    fasta_in  //tuple meta, fasta, fai
+    reads_10X // file
+    groups    //val
 
     main:
     ch_versions = Channel.empty()
-    meta = bam_in.collect{it[0]}
-    fasta = fasta_in.collect{it[0]}
-    fai = fasta_in.collect{it[1]}
+
+    //
+    // Polishing step 1: map reads to the reference
+    //
+    fasta_in.map{ meta, fasta, fai -> [meta, fasta] }
+            .set{ fasta_ch }
+    LONGRANGER_MKREF(fasta_ch)
+    ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
+
+    LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, reads_10X )
+    ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
+
+    //
+    // Polishing step 2: apply freebayes consensus based on longranger alignments
+    //
     // Split genome into chunks
-    bam_in.combine(fasta_in)
-           .map{ meta, bam, bai, fasta, fai -> [meta, fai]}
+    fasta_in.map{ meta, fasta, fai -> [meta, fai] }
            .set{chunks_ch}
     BED_CHUNKS (chunks_ch, groups)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
     intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
-    intervals_freebayes = bam_in.combine(intervals_structured)
+    LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
+                            .set{ bam_ch }
+    intervals_freebayes = bam_ch.combine(intervals_structured)
      .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
     // In case the average coverage from Longranger is provided use it for defining 
     // max coverage cut-off then scatter Freebayes over the genome chunks
-    if ( summary ) {
-        LONGRANGER_COVERAGE(summary)
-        ch_versions = ch_versions.mix(LONGRANGER_COVERAGE.out.versions)
-        FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
-    }
-    else {
-        FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], [])
-    }
+    fasta = fasta_in.collect{it[1]}
+    fai = fasta_in.collect{it[2]}
+    LONGRANGER_ALIGN.out.csv.collect{it[1]}
+                            .set{summary}
+    LONGRANGER_COVERAGE(summary)
+    ch_versions = ch_versions.mix(LONGRANGER_COVERAGE.out.versions)
+    FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
     BCFTOOLS_INDEX_FB(FREEBAYES.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_FB.out.versions)
@@ -63,8 +76,8 @@ workflow POLISHING {
     // Normalize variants and index normalized vcf
     MERGE_FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
         .join(MERGE_FREEBAYES.out.tbi.map{ meta, tbi -> [meta.id.toString(), tbi]})
-        .combine(bam_in)
-        .map{ id_norm, vcf, tbi, meta, bam, bai -> [meta, vcf, tbi] }
+        .combine(fasta_in)
+        .map{ id_norm, vcf, tbi, meta, fasta, fai -> [meta, vcf, tbi] }
         .set{ input_norm }
     BCFTOOLS_NORM(input_norm, fasta)
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
@@ -72,12 +85,9 @@ workflow POLISHING {
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
 
     // Generate consensus fasta file    
-    fasta_in.combine(bam_in)
-            .map{fasta, fai, meta, bam, bai -> [meta, fasta]}
-            .set{ch_fasta}
     BCFTOOLS_NORM.out.vcf
         .join(BCFTOOLS_INDEX_NORM.out.tbi, by: [0], remainder: true)
-        .join(ch_fasta, by: [0], remainder: true)
+        .join(fasta_ch, by: [0], remainder: true)
         .set{ch_merge}
     BCFTOOLS_CONSENSUS(ch_merge)
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)

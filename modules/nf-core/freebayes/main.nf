@@ -1,11 +1,11 @@
 process FREEBAYES {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::freebayes:1.3.1" : null)
+    conda (params.enable_conda ? "bioconda::freebayes=1.3.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/freebayes:1.3.1--py37h56106d0_0' :
-        'quay.io/biocontainers/freebayes:1.3.1--py37h56106d0_0' }"
+        'https://depot.galaxyproject.org/singularity/freebayes:1.3.6--hbfe0e7f_2' :
+        'quay.io/biocontainers/freebayes:1.3.6--hbfe0e7f_2' }"
 
     input:
     tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)
@@ -48,8 +48,7 @@ process FREEBAYES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g')
-        singularity: \$(singularity --version)
+        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g' )
     END_VERSIONS
     """
 }
