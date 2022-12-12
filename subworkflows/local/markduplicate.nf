@@ -4,11 +4,11 @@
 //
 // Merge BAM files and mark duplicates
 //
-include { SAMTOOLS_MERGE    } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SAMTOOLS_COLLATE  } from '../../modules/nf-core/modules/samtools/collate/main'
-include { SAMTOOLS_FIXMATE  } from '../../modules/nf-core/modules/samtools/fixmate/main'
-include { SAMTOOLS_SORT     } from '../../modules/nf-core/modules/samtools/sort/main'
-include { SAMTOOLS_MARKDUP  } from '../../modules/nf-core/modules/samtools/markdup/main'
+include { SAMTOOLS_MERGE    } from '../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_COLLATE  } from '../../modules/nf-core/samtools/collate/main'
+include { SAMTOOLS_FIXMATE  } from '../../modules/nf-core/samtools/fixmate/main'
+include { SAMTOOLS_SORT     } from '../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_MARKDUP  } from '../../modules/nf-core/samtools/markdup/main'
 
 workflow MARKDUPLICATE {
     take:

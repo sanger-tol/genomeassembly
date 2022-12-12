@@ -5,12 +5,12 @@
 // Merge and Markdup all alignments at specimen level
 // Convert to CRAM and calculate statistics
 //
-include { SAMTOOLS_SORT } from '../../modules/nf-core/modules/samtools/sort/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MARKDUP } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_SORT } from '../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MARKDUP } from '../../modules/nf-core/samtools/view/main'
 include { MARKDUPLICATE } from '../../subworkflows/local/markduplicate'
 include { CONVERT_STATS } from '../../subworkflows/local/convert_stats'
-include { BEDTOOLS_BAMTOBED } from '../../modules/sanger-tol/nf-core-modules/bedtools/bamtobed/main'
-include { BEDTOOLS_SORT } from '../../modules/sanger-tol/nf-core-modules/bedtools/sort/main'
+include { BEDTOOLS_BAMTOBED } from '../../modules/nf-core/bedtools/bamtobed/main'
+include { BEDTOOLS_SORT } from '../../modules/nf-core/bedtools/sort/main'
 
 workflow MARKDUP_STATS {
     take:
@@ -35,8 +35,8 @@ workflow MARKDUP_STATS {
 
     // Convert merged BAM to CRAM and calculate indices and statistics
     ch_stat = MARKDUPLICATE.out.bam.map { meta, bam -> [ meta, bam, [] ] }
-   
-    SAMTOOLS_VIEW_MARKDUP ( ch_stat, fasta )
+  
+    SAMTOOLS_VIEW_MARKDUP ( ch_stat, fasta, [] )
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MARKDUP.out.versions)
 
     BEDTOOLS_BAMTOBED( SAMTOOLS_VIEW_MARKDUP.out.bam )

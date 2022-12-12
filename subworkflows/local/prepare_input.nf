@@ -88,7 +88,7 @@ workflow PREPARE_INPUT {
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) }, 
                                           data.pacbio.kmer_pref ? data.pacbio.kmer_pref : [] ] 
                         : [])
-            hic_ch: ( data.HiC ? [ [id: data.id ],  
+            hic_ch: ( data.HiC ? [ [id: data.id, datatype: "hic", read_group: "\'@RG\\tID:" + data.id  + "\\tPL:ILLUMINA" + "\\tSM:" + data.id + "\'" ],  
                                     data.HiC.reads.collect { file( it.reads, checkIfExists: true ) }, 
                                     data.HiC.arima_motif ] 
                         : [])
