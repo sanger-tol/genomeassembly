@@ -31,11 +31,8 @@
                     },
                     "bedtools/bamtobed": {
                         "branch": "master",
-                        "git_sha": "219bbdaf9d08043a66f2b531609c1e8e4ac89021"
-                    },
-                    "bedtools/sort": {
-                        "branch": "master",
-                        "git_sha": "4bb1d4e362a38642e877afe41aaf58ded9e56c86"
+                        "git_sha": "219bbdaf9d08043a66f2b531609c1e8e4ac89021",
+                        "patch": "modules/nf-core/bedtools/bamtobed/bedtools-bamtobed.diff"
                     },
                     "bwamem2/index": {
                         "branch": "master",

@@ -5,12 +5,12 @@
 // Merge and Markdup all alignments at specimen level
 // Convert to CRAM and calculate statistics
 //
-include { SAMTOOLS_SORT } from '../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_SORT     } from '../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MARKDUP } from '../../modules/nf-core/samtools/view/main'
-include { MARKDUPLICATE } from '../../subworkflows/local/markduplicate'
-include { CONVERT_STATS } from '../../subworkflows/local/convert_stats'
+include { MARKDUPLICATE     } from '../../subworkflows/local/markduplicate'
+include { CONVERT_STATS     } from '../../subworkflows/local/convert_stats'
 include { BEDTOOLS_BAMTOBED } from '../../modules/nf-core/bedtools/bamtobed/main'
-include { BEDTOOLS_SORT } from '../../modules/nf-core/bedtools/sort/main'
+include { GNU_SORT as BED_SORT } from '../../modules/local/gnu_sort'
 
 workflow MARKDUP_STATS {
     take:
@@ -42,14 +42,14 @@ workflow MARKDUP_STATS {
     BEDTOOLS_BAMTOBED( SAMTOOLS_VIEW_MARKDUP.out.bam )
     ch_versions = ch_versions.mix(BEDTOOLS_BAMTOBED.out.versions)
 
-    BEDTOOLS_SORT( BEDTOOLS_BAMTOBED.out.bed, "sorted.bed" )
-    ch_versions = ch_versions.mix(BEDTOOLS_SORT.out.versions)
+    BED_SORT( BEDTOOLS_BAMTOBED.out.bed )
+    ch_versions = ch_versions.mix(BED_SORT.out.versions)
 
     CONVERT_STATS ( ch_stat, fasta )
     ch_versions = ch_versions.mix(CONVERT_STATS.out.versions)
 
     emit:
-    bed = BEDTOOLS_SORT.out.sorted
+    bed = BED_SORT.out.bed
     cram = CONVERT_STATS.out.cram
     crai = CONVERT_STATS.out.crai
     stats = CONVERT_STATS.out.stats
