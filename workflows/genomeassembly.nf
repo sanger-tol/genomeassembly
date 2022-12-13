@@ -40,7 +40,6 @@ include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { SEQTK_SUBSEQ } from '../modules/nf-core/seqtk/subseq/main'
-include { BWAMEM2_INDEX } from '../modules/nf-core/bwamem2/index/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -85,11 +84,7 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
-    BWAMEM2_INDEX ( primary_contigs_ch )
-    ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-    ch_index = BWAMEM2_INDEX.out.index
-
-    ALIGN_SHORT( crams_ch, ch_index, primary_contigs_ch.map{ meta, fasta -> [ fasta ]} )    
+    ALIGN_SHORT( crams_ch, primary_contigs_ch.map{ meta, fasta -> [ fasta ] } )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
     //

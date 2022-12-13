@@ -8,11 +8,11 @@
 include { SAMTOOLS_FASTQ } from '../../modules/nf-core/samtools/fastq/main'
 include { BWAMEM2_MEM    } from '../../modules/nf-core/bwamem2/mem/main'
 include { MARKDUP_STATS  } from '../../subworkflows/local/markdup_stats'
+include { BWAMEM2_INDEX  } from '../../modules/nf-core/bwamem2/index/main'
 
 workflow ALIGN_SHORT {
     take:
     reads // channel: [ val(meta), [ datafile ] ]
-    index // channel: [ val(meta), /path/to/bwamem2/ ]
     fasta // channel: /path/to/fasta
 
     main:
@@ -22,8 +22,14 @@ workflow ALIGN_SHORT {
     SAMTOOLS_FASTQ ( reads )
     ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions.first())
 
+    reads.combine( fasta )
+         .map{ meta, reads, fasta -> [ meta, fasta ] }
+         .set{ fasta_ch }
+    BWAMEM2_INDEX ( fasta_ch )
+    ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
+
     // Align Fastq to Genome
-    BWAMEM2_MEM ( SAMTOOLS_FASTQ.out.fastq, index, [] )
+    BWAMEM2_MEM ( SAMTOOLS_FASTQ.out.fastq, BWAMEM2_INDEX.out.index, [] )
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
     // Merge, markdup, convert, and stats
