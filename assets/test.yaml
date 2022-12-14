@@ -8,10 +8,10 @@ samples:
     pacbio:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/fasta/m64089_200201_113052.ccs.bc1008_BAK8A_OA--bc1008_BAK8A_OA.filtered.fasta.gz
-      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/kmer/k31/ilEupCent1.k31
+      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/kmer/k31/
     HiC:
       reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent2/hic-arima2/35180_1#2.cram
+        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/hic.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
       lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
