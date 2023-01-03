@@ -42,6 +42,14 @@
                         "branch": "master",
                         "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4"
                     },
+                    "cooler/cload": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "cooler/zoomify": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"

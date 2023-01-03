@@ -14,6 +14,12 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.groups) { groups = params.groups } else { groups = 100; }
 
+if (params.motif) { motif = params.motif } else { motif = ''; }
+
+if (params.resolutions) { resolutions = params.resolutions } else { resolutions = ''; }
+
+if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
+
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 
 /*
@@ -26,6 +32,7 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 //
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 include { POLISHING     } from '../subworkflows/local/polishing'
+include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
 
@@ -34,6 +41,7 @@ include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -86,6 +94,20 @@ workflow GENOMEASSEMBLY {
 
     ALIGN_SHORT( crams_ch, primary_contigs_ch.map{ meta, fasta -> [ fasta ] } )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
+
+    SAMTOOLS_FAIDX( primary_contigs_ch )
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+
+    SAMTOOLS_FAIDX.out.fai.join( primary_contigs_ch )
+                    .map{ meta, fai, fasta -> [fasta, fai] }
+                    .set{ scaf_ref_ch }  
+
+    SCAFFOLDING( ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+
+    SCAFFOLDING.out.fasta.combine(haplotigs_ch)
+                        .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
+                        .set{ stats_input_ch }
 
     //
     // MODULE: Collate versions.yml file
