@@ -13,7 +13,7 @@ process PRETEXT_SNAPSHOT {
     output:
     tuple val(meta), path("*snapshots/*png"),  emit: snapshot
     path "versions.yml"           , emit: versions
-    
+
     when:
     task.ext.when == null || task.ext.when
 

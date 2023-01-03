@@ -14,7 +14,7 @@ process PRETEXT_MAP {
     output:
     tuple val(meta), path("*pretext"), emit: pretext
     path "versions.yml"           , emit: versions
-    
+
     when:
     task.ext.when == null || task.ext.when
 

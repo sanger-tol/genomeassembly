@@ -26,15 +26,15 @@ process YAHS {
     script:
     def args = task.ext.args ?: ''
     def break_param = if_break ? '' : ' --no-contig-ec'
-    def motif_param = motif ? ' -e ${motif} ' : '' 
+    def motif_param = motif ? ' -e ${motif} ' : ''
     def resolutions_param = resolutions ? ' -r ${resolutions} ' : ''
     """
     yahs ${break_param} \\
-         ${motif_param} \\
-         ${resolutions_param} \\
-         $args \\
-         $ref \\
-         $bed > out.log 
+        ${motif_param} \\
+        ${resolutions_param} \\
+        $args \\
+        $ref \\
+        $bed > out.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
