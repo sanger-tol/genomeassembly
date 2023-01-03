@@ -13,7 +13,7 @@ process JUICER_PRE {
     output:
     tuple val(meta), path("*alignments_sorted.txt"), emit: pairs
     path "versions.yml"           , emit: versions
- 
+
     when:
     task.ext.when == null || task.ext.when
 

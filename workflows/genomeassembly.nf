@@ -97,13 +97,6 @@ workflow GENOMEASSEMBLY {
     ALIGN_SHORT( crams_ch, hic_ref_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
-//    SAMTOOLS_FAIDX( primary_contigs_ch )
-//    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
-
-//    SAMTOOLS_FAIDX.out.fai.join( primary_contigs_ch )
-//                    .map{ meta, fasta -> fasta }
-//                    .set{ scaf_ref_ch }  
-
     SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, true, motif, resolutions, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 

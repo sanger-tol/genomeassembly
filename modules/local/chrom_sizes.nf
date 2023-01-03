@@ -9,7 +9,7 @@ process CHROM_SIZES {
 
     input:
     tuple val(meta), path(fai)
-    
+
     output:
     path "*chrom.sizes", emit: chrom_sizes
     path "versions.yml", emit: versions
