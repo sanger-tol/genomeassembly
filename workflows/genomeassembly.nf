@@ -92,17 +92,19 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
-    ALIGN_SHORT( crams_ch, primary_contigs_ch.map{ meta, fasta -> [ fasta ] } )    
+    primary_contigs_ch.map{ meta, fasta -> [ fasta ] }
+                      .set{ hic_ref_ch }
+    ALIGN_SHORT( crams_ch, hic_ref_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
-    SAMTOOLS_FAIDX( primary_contigs_ch )
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+//    SAMTOOLS_FAIDX( primary_contigs_ch )
+//    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    SAMTOOLS_FAIDX.out.fai.join( primary_contigs_ch )
-                    .map{ meta, fai, fasta -> [fasta, fai] }
-                    .set{ scaf_ref_ch }  
+//    SAMTOOLS_FAIDX.out.fai.join( primary_contigs_ch )
+//                    .map{ meta, fasta -> fasta }
+//                    .set{ scaf_ref_ch }  
 
-    SCAFFOLDING( ALIGN_SHORT.out.bed, scaf_ref_ch, true, motif, resolutions, cool_bin )
+    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, true, motif, resolutions, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)
