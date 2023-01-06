@@ -6,10 +6,11 @@ include { YAHS             } from '../../modules/local/yahs.nf'
 include { JUICER_PRE       } from '../../modules/local/juicer_pre.nf'
 include { JUICER_SNAPSHOT  } from '../../modules/local/juicer_snapshot.nf'
 include { JUICER_TOOLS_PRE } from '../../modules/local/juicer_tools_pre.nf'
-include { PRETEXT_MAP      } from '../../modules/local/pretext_map.nf'
+include { PREPARE_PRETEXTMAP_INPUT      } from '../../modules/local/prepare_pretext_input.nf'
+include { PRETEXTMAP       } from '../../modules/nf-core/pretextmap/main.nf'
 include { PRETEXT_SNAPSHOT } from '../../modules/local/pretext_snapshot.nf'
 include { CHROM_SIZES      } from '../../modules/local/chrom_sizes.nf'
-include { GFASTATS         } from '../../modules/local/gfastats.nf'
+include { GFASTATS         } from '../../modules/nf-core/gfastats/main.nf'
 
 workflow SCAFFOLDING {
     take:  
@@ -31,7 +32,7 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(YAHS.out.versions)
     SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta)
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
-    GFASTATS(YAHS.out.scaffolds_fasta)
+    GFASTATS(YAHS.out.scaffolds_fasta, "fasta", [], [], [], [], [], [])
     ch_versions = ch_versions.mix(GFASTATS.out.versions)
     bed_in.map{ meta, bed -> meta}.set{ch_meta}
 
@@ -59,10 +60,12 @@ workflow SCAFFOLDING {
 
     // Create contact map in pretext format
     SCAFFOLDS_FAIDX.out.fai.map{ meta, fai -> fai }.set{fai}
-    PRETEXT_MAP(JUICER_PRE.out.pairs, fai)
-    ch_versions = ch_versions.mix(PRETEXT_MAP.out.versions)
+    PREPARE_PRETEXTMAP_INPUT(JUICER_PRE.out.pairs, fai)
+    ch_versions = ch_versions.mix(PREPARE_PRETEXTMAP_INPUT.out.versions)
+    PRETEXTMAP(PREPARE_PRETEXTMAP_INPUT.out.pairs, [])
+    ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
 
-    PRETEXT_SNAPSHOT(PRETEXT_MAP.out.pretext)
+    PRETEXT_SNAPSHOT(PRETEXTMAP.out.pretext)
     ch_versions = ch_versions.mix(PRETEXT_SNAPSHOT.out.versions)
 
     // Generate HiC Map
@@ -76,7 +79,7 @@ workflow SCAFFOLDING {
     alignments_sorted = JUICER_PRE.out.pairs
     fasta = YAHS.out.scaffolds_fasta
     chrom_sizes = CHROM_SIZES.out.chrom_sizes
-    stats = GFASTATS.out.stats
+    stats = GFASTATS.out.assembly_summary
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXT_SNAPSHOT.out.snapshot
