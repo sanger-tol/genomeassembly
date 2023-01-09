@@ -14,10 +14,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.groups) { groups = params.groups } else { groups = 100; }
 
-if (params.motif) { motif = params.motif } else { motif = ''; }
-
-if (params.resolutions) { resolutions = params.resolutions } else { resolutions = ''; }
-
 if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
@@ -97,7 +93,7 @@ workflow GENOMEASSEMBLY {
     ALIGN_SHORT( crams_ch, hic_ref_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
-    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, true, motif, resolutions, cool_bin )
+    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)

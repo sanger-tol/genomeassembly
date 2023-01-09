@@ -131,6 +131,10 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "patch": "modules/nf-core/seqtk/subseq/seqtk-subseq.diff"
+                    },
+                    "yahs": {
+                        "branch": "master",
+                        "git_sha": "6afb5da96cd522a046c23c5f22c76de7c0c60248"
                     }
                 }
             }

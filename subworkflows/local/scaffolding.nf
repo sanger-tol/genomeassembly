@@ -1,8 +1,8 @@
 include { COOLER_CLOAD     } from '../../modules/nf-core/cooler/cload/main.nf' 
 include { COOLER_ZOOMIFY   } from '../../modules/nf-core/cooler/zoomify/main.nf' 
 include { SAMTOOLS_FAIDX  as CONTIGS_FAIDX    } from '../../modules/nf-core/samtools/faidx/main.nf'
-include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX } from '../../modules/nf-core/samtools/faidx/main.nf'
-include { YAHS             } from '../../modules/local/yahs.nf'
+include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX  } from '../../modules/nf-core/samtools/faidx/main.nf'
+include { YAHS             } from '../../modules/nf-core/yahs/main'
 include { JUICER_PRE       } from '../../modules/local/juicer_pre.nf'
 include { JUICER_SNAPSHOT  } from '../../modules/local/juicer_snapshot.nf'
 include { JUICER_TOOLS_PRE } from '../../modules/local/juicer_tools_pre.nf'
@@ -16,9 +16,6 @@ workflow SCAFFOLDING {
     take:  
     bed_in   // tuple(meta, bed)
     fasta_in // tuple(meta, fasta)
-    ifbreak  // val: if/break/contigs/or/not/for/yahs
-    motif    // val: restriction/enzyme/motif
-    resolutions // val: resolution/parameter/for/yahs
     cool_bin  // val: cooler cload parameter 
     
     main:
@@ -26,9 +23,12 @@ workflow SCAFFOLDING {
     CONTIGS_FAIDX( fasta_in )
     ch_versions = ch_versions.mix(CONTIGS_FAIDX.out.versions)
     CONTIGS_FAIDX.out.fai.join( fasta_in )
-                    .map{ meta, fai, fasta -> [fasta, fai] }
-                    .set{ scaf_ref_ch }
-    YAHS( bed_in, scaf_ref_ch, ifbreak, motif, resolutions )
+                    .map{ meta, fai, fasta -> fasta }
+                    .set{ scaf_ref }
+    CONTIGS_FAIDX.out.fai.join( fasta_in )
+                    .map{ meta, fai, fasta -> fai }
+                    .set{ scaf_ref_fai }
+    YAHS( bed_in, scaf_ref, scaf_ref_fai )
     ch_versions = ch_versions.mix(YAHS.out.versions)
     SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta)
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
@@ -38,7 +38,8 @@ workflow SCAFFOLDING {
 
     // Prepare contact pairs for cooler
     YAHS.out.binary.join(YAHS.out.scaffolds_agp)
-                    .combine(scaf_ref_ch)
+                    .combine(scaf_ref)
+                    .combine(scaf_ref_fai)
                     .map{meta, binary, agp, fa, fai -> [meta, binary, agp, fai]}
                     .set{ch_merge}
     JUICER_PRE(ch_merge)
