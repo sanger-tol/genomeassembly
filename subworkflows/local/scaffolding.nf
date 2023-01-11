@@ -4,7 +4,6 @@ include { SAMTOOLS_FAIDX  as CONTIGS_FAIDX    } from '../../modules/nf-core/samt
 include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX  } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS             } from '../../modules/nf-core/yahs/main'
 include { JUICER_PRE       } from '../../modules/local/juicer_pre.nf'
-include { JUICER_SNAPSHOT  } from '../../modules/local/juicer_snapshot.nf'
 include { JUICER_TOOLS_PRE } from '../../modules/local/juicer_tools_pre.nf'
 include { PREPARE_PRETEXTMAP_INPUT      } from '../../modules/local/prepare_pretext_input.nf'
 include { PRETEXTMAP       } from '../../modules/nf-core/pretextmap/main.nf'
@@ -73,9 +72,6 @@ workflow SCAFFOLDING {
     JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
     ch_versions = ch_versions.mix(JUICER_TOOLS_PRE.out.versions)
 
-    JUICER_SNAPSHOT(JUICER_TOOLS_PRE.out.hic)
-    ch_versions = ch_versions.mix(JUICER_SNAPSHOT.out.versions)
-
     emit:
     alignments_sorted = JUICER_PRE.out.pairs
     fasta = YAHS.out.scaffolds_fasta
@@ -85,6 +81,5 @@ workflow SCAFFOLDING {
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXT_SNAPSHOT.out.snapshot
     hic = JUICER_TOOLS_PRE.out.hic
-    png = JUICER_SNAPSHOT.out.png
     versions = ch_versions.ifEmpty(null)
 }
