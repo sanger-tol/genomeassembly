@@ -23,7 +23,7 @@ process PREPARE_PRETEXTMAP_INPUT {
     def args = task.ext.args ?: ''
     """
     prepare_pretext.sh $fai $pairs | gzip -c > $meta.id".pairs.gz"
-   
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         GNU Awk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
