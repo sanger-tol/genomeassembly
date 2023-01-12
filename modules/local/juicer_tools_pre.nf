@@ -2,11 +2,11 @@ process JUICER_TOOLS_PRE {
     tag "$meta.id"
     label 'process_medium'
 
-//    conda (params.enable_conda ? "bioconda::java-jdk=8.0.112" : null)
-//    container "${ workflow.containerEngine == 'singularity' &&
-//                    !task.ext.singularity_pull_docker_container ?
-//        'https://depot.galaxyproject.org/singularity/java-jdk:8.0.112--1' :
-//        'quay.io/biocontainers/java-jdk:8.0.112--1' }"
+    conda (params.enable_conda ? "bioconda::java-jdk=8.0.112" : null)
+    container "${ workflow.containerEngine == 'singularity' &&
+                    !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/java-jdk:8.0.112--1' :
+        'quay.io/biocontainers/java-jdk:8.0.112--1' }"
 
     input:
     tuple val(meta), path(pairs)
