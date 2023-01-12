@@ -7,7 +7,7 @@ include { JUICER_PRE       } from '../../modules/local/juicer_pre.nf'
 include { JUICER_TOOLS_PRE } from '../../modules/local/juicer_tools_pre.nf'
 include { PREPARE_PRETEXTMAP_INPUT      } from '../../modules/local/prepare_pretext_input.nf'
 include { PRETEXTMAP       } from '../../modules/nf-core/pretextmap/main.nf'
-include { PRETEXT_SNAPSHOT } from '../../modules/local/pretext_snapshot.nf'
+include { PRETEXTSNAPSHOT  } from '../../modules/nf-core/pretextsnapshot/main'
 include { CHROM_SIZES      } from '../../modules/local/chrom_sizes.nf'
 include { GFASTATS         } from '../../modules/nf-core/gfastats/main.nf'
 
@@ -65,8 +65,8 @@ workflow SCAFFOLDING {
     PRETEXTMAP(PREPARE_PRETEXTMAP_INPUT.out.pairs, [])
     ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
 
-    PRETEXT_SNAPSHOT(PRETEXTMAP.out.pretext)
-    ch_versions = ch_versions.mix(PRETEXT_SNAPSHOT.out.versions)
+    PRETEXTSNAPSHOT(PRETEXTMAP.out.pretext)
+    ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
 
     // Generate HiC Map
     JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
@@ -79,7 +79,7 @@ workflow SCAFFOLDING {
     stats = GFASTATS.out.assembly_summary
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
-    snapshots = PRETEXT_SNAPSHOT.out.snapshot
+    snapshots = PRETEXTSNAPSHOT.out.image
     hic = JUICER_TOOLS_PRE.out.hic
     versions = ch_versions.ifEmpty(null)
 }
