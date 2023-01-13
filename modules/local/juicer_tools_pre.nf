@@ -15,7 +15,7 @@ process JUICER_TOOLS_PRE {
 
     output:
     tuple val(meta), path("*hic"), emit: hic
-    path "versions.yml"           , emit: versions
+    path "versions.yml"          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

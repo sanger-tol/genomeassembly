@@ -11,7 +11,7 @@ process FASTA_CONCAT {
 
     output:
     tuple val(meta), path("*fa"), emit: fasta_merged
-    path "versions.yml", emit: versions
+    path "versions.yml"         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

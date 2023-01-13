@@ -45,6 +45,7 @@ workflow POLISHING {
                             .set{ bam_ch }
     intervals_freebayes = bam_ch.combine(intervals_structured)
      .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
+
     // In case the average coverage from Longranger is provided use it for defining 
     // max coverage cut-off then scatter Freebayes over the genome chunks
     fasta = fasta_in.collect{it[1]}

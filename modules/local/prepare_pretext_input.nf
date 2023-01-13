@@ -13,7 +13,7 @@ process PREPARE_PRETEXTMAP_INPUT {
 
     output:
     tuple val(meta), path("*pairs.gz"), emit: pairs
-    path "versions.yml"           , emit: versions
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

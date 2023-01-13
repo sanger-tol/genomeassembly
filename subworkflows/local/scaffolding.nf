@@ -44,7 +44,7 @@ workflow SCAFFOLDING {
     JUICER_PRE(ch_merge)
     ch_versions = ch_versions.mix(JUICER_PRE.out.versions)
     
-    // Bin contact paits
+    // Bin contact pairs
     JUICER_PRE.out.pairs.join(bed_in)
                         .combine(Channel.of(cool_bin))
                         .set{ch_juicer}

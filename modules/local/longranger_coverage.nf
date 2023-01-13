@@ -10,7 +10,7 @@ process LONGRANGER_COVERAGE {
     path summary
 
     output:
-    env cov, emit: cov
+    env cov            ,emit: cov
     path "versions.yml", emit: versions
 
     when:

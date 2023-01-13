@@ -1,3 +1,7 @@
+// Special wrapper for Juicer tools pre tool 
+// https://github.com/aidenlab/juicer
+// provided by YAHS
+
 process JUICER_PRE {
     tag "$meta.id"
     label 'process_medium'
@@ -12,7 +16,7 @@ process JUICER_PRE {
 
     output:
     tuple val(meta), path("*alignments_sorted.txt"), emit: pairs
-    path "versions.yml"           , emit: versions
+    path "versions.yml"                            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
