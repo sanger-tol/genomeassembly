@@ -74,6 +74,8 @@ workflow GENOMEASSEMBLY {
                                     .set{ reference_ch }
         POLISHING(reference_ch, illumina_10X_ch, groups)    
         ch_versions = ch_versions.mix(POLISHING.out.versions)
+
+        // Separate the primary and alternative contigs again after polishing
         PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, p_i]}.set{primary_index_ch}
         KEEP_SEQNAMES(primary_index_ch)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES.out.versions)
@@ -88,6 +90,7 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
+    // Map HiC data to the primary assembly
     primary_contigs_ch.map{ meta, fasta -> [ fasta ] }
                       .set{ hic_ref_ch }
     ALIGN_SHORT( crams_ch, hic_ref_ch )    
