@@ -1,4 +1,4 @@
-// Special wrapper for Juicer tools pre tool 
+// Special wrapper for Juicer tools pre tool
 // https://github.com/aidenlab/juicer
 // provided by YAHS
 
