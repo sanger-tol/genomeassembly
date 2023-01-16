@@ -42,9 +42,17 @@
                         "branch": "master",
                         "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4"
                     },
+                    "cooler/cload": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "cooler/zoomify": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
                     "freebayes": {
                         "branch": "master",
@@ -53,15 +61,27 @@
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "c25943553f62be5f907e3c12c42eaf0a1b40746d"
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "gfastats": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "pretextmap": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "pretextsnapshot": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
                     "samtools/collate": {
                         "branch": "master",
@@ -69,7 +89,7 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01"
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
                     "samtools/fastq": {
                         "branch": "master",
@@ -115,6 +135,10 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "patch": "modules/nf-core/seqtk/subseq/seqtk-subseq.diff"
+                    },
+                    "yahs": {
+                        "branch": "master",
+                        "git_sha": "6afb5da96cd522a046c23c5f22c76de7c0c60248"
                     }
                 }
             }

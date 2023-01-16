@@ -10,7 +10,7 @@ process LONGRANGER_ALIGN {
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used when using longranger. Please use singularity."
     }
-    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:${version}"
+    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c1"
 
     input:
     tuple val(meta), path(reference)

@@ -10,7 +10,7 @@ process KEEP_SEQNAMES {
     tuple val(meta), path(fai)
 
     output:
-    path "*seq.lst", emit: seqlist
+    path "*seq.lst"    , emit: seqlist
     path "versions.yml", emit: versions
 
     when:

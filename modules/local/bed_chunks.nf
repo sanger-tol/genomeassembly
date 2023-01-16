@@ -11,7 +11,7 @@ process BED_CHUNKS {
     val chunks
 
     output:
-    path "*bed", emit: coords
+    path "*bed"        , emit: coords
     path "versions.yml", emit: versions
 
     when:

@@ -45,6 +45,7 @@ workflow POLISHING {
                             .set{ bam_ch }
     intervals_freebayes = bam_ch.combine(intervals_structured)
      .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
+
     // In case the average coverage from Longranger is provided use it for defining 
     // max coverage cut-off then scatter Freebayes over the genome chunks
     fasta = fasta_in.collect{it[1]}
@@ -70,7 +71,8 @@ workflow POLISHING {
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
 
     // Merge vcf files into one
-    MERGE_FREEBAYES(BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [[id: 'merged'], vcf]}.groupTuple(), [])
+    MERGE_FREEBAYES(BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [[id: 'merged'], vcf]}.groupTuple(), 
+                    BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [meta, []] })
     ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
 
     // Normalize variants and index normalized vcf

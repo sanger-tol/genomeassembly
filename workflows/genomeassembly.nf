@@ -14,6 +14,8 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.groups) { groups = params.groups } else { groups = 100; }
 
+if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
+
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 
 /*
@@ -26,6 +28,7 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 //
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 include { POLISHING     } from '../subworkflows/local/polishing'
+include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
 
@@ -34,6 +37,7 @@ include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -70,6 +74,8 @@ workflow GENOMEASSEMBLY {
                                     .set{ reference_ch }
         POLISHING(reference_ch, illumina_10X_ch, groups)    
         ch_versions = ch_versions.mix(POLISHING.out.versions)
+
+        // Separate the primary and alternative contigs again after polishing
         PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, p_i]}.set{primary_index_ch}
         KEEP_SEQNAMES(primary_index_ch)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES.out.versions)
@@ -84,8 +90,18 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
-    ALIGN_SHORT( crams_ch, primary_contigs_ch.map{ meta, fasta -> [ fasta ] } )    
+    // Map HiC data to the primary assembly
+    primary_contigs_ch.map{ meta, fasta -> [ fasta ] }
+                      .set{ hic_ref_ch }
+    ALIGN_SHORT( crams_ch, hic_ref_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
+
+    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+
+    SCAFFOLDING.out.fasta.combine(haplotigs_ch)
+                        .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
+                        .set{ stats_input_ch }
 
     //
     // MODULE: Collate versions.yml file
