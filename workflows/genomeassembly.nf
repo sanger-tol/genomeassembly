@@ -33,7 +33,7 @@ include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_s
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT } from '../subworkflows/local/align_short'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED   } from '../subworkflows/local/assembly_stats'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDED } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,6 +126,9 @@ workflow GENOMEASSEMBLY {
                         .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
                         .set{ stats_input_ch }
 
+    GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
+                       PREPARE_INPUT.out.busco,
+                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
     //
     // MODULE: Collate versions.yml file
     //
