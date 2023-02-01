@@ -40,11 +40,11 @@ workflow GENOME_STATISTICS {
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:
-    busco   = BUSCO.out.short_summaries_json // meta, path("short_summary.*.json")
-    merquryk_completeness = MERQURYFK_MERQURYFK.out.stats // meta, stats
-    merquryk_qv = MERQURYFK_MERQURYFK.out.qv // meta, qv
-    assembly_stats = GFASTATS.out.assembly_summary // path("*.assembly_summary")
-    versions = ch_versions   
+    busco                 = BUSCO.out.short_summaries_json // meta, path("short_summary.*.json")
+    merquryk_completeness = MERQURYFK_MERQURYFK.out.stats  // meta, stats
+    merquryk_qv           = MERQURYFK_MERQURYFK.out.qv     // meta, qv
+    assembly_stats        = GFASTATS.out.assembly_summary  // path("*.assembly_summary")
+    versions              = ch_versions   
 }
 
 
