@@ -31,7 +31,7 @@ include { POLISHING     } from '../subworkflows/local/polishing'
 include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
-include { ALIGN_SHORT } from '../subworkflows/local/align_short'
+include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED   } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
