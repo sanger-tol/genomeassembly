@@ -8,8 +8,8 @@
 //
 
 include { GFASTATS            } from '../../modules/nf-core/gfastats/main'
-include { BUSCO               } from '../../modules//nf-core/busco/main'
-include { MERQURYFK_MERQURYFK } from '../../modules/local/merquryfk'
+include { BUSCO               } from '../../modules/nf-core/busco/main'
+include { MERQURYFK_MERQURYFK } from '../../modules/nf-core/merquryfk/merquryfk/main'
 
 workflow GENOME_STATISTICS {
     take:

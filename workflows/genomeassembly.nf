@@ -103,7 +103,6 @@ workflow GENOMEASSEMBLY {
                             .set{ haplotigs_contigs_ch }
 
         // Check genome stats for polished pri and alt
-        primary_contigs_ch.join(haplotigs_contigs_ch).view()
         GENOME_STATISTICS_POLISHED( primary_contigs_ch.join(haplotigs_contigs_ch), 
                        PREPARE_INPUT.out.busco,
                        PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
