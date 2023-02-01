@@ -46,7 +46,7 @@ include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY } from '../modules/nf-core/seqtk/subseq/main'
+include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY   } from '../modules/nf-core/seqtk/subseq/main'
 include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS } from '../modules/nf-core/seqtk/subseq/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
