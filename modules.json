@@ -77,8 +77,7 @@
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
-                        "git_sha": "c62b41a07a00fee11ec73e2a0d4a1aec771a742b",
-                        "patch": "modules/nf-core/merquryfk/merquryfk/merquryfk-merquryfk.diff"
+                        "git_sha": "7f59e5730106cb4c246e2122f0fd1ccc637fa4ce"
                     },
                     "multiqc": {
                         "branch": "master",
