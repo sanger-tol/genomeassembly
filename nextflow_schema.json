@@ -39,6 +39,28 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "genome": {
+                    "type": "string",
+                    "default": "None"
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "default": "s3://ngi-igenomes/igenomes"
+                },
+                "igenomes_ignore": {
+                    "type": "boolean"
+                },
+                "cool_bin": {
+                    "type": "integer",
+                    "default": 100
+                },
+                "polishing_on": {
+                    "type": "boolean"
+                },
+                "groups": {
+                    "type": "integer",
+                    "default": 10
                 }
             }
         },

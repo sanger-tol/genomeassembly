@@ -34,6 +34,10 @@
                         "git_sha": "219bbdaf9d08043a66f2b531609c1e8e4ac89021",
                         "patch": "modules/nf-core/bedtools/bamtobed/bedtools-bamtobed.diff"
                     },
+                    "busco": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
                     "bwamem2/index": {
                         "branch": "master",
                         "git_sha": "f849bac4c13fef0f6b7fc66e34565aa07ea4c6a7"
@@ -70,6 +74,10 @@
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+                    },
+                    "merquryfk/merquryfk": {
+                        "branch": "master",
+                        "git_sha": "7f59e5730106cb4c246e2122f0fd1ccc637fa4ce"
                     },
                     "multiqc": {
                         "branch": "master",

@@ -1,1 +1,21 @@
 repository_type: pipeline
+lint:
+  files_exist:
+    - assets/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_dark.png
+  files_unchanged:
+    - LICENSE
+    - .github/CONTRIBUTING.md
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/linting.yml
+    - assets/sendmail_template.txt
+    - docs/README.md
+    - lib/NfcoreTemplate.groovy
+    - .prettierignore
+  multiqc_config:
+    - report_comment
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage

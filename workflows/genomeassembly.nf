@@ -29,8 +29,11 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
 include { POLISHING     } from '../subworkflows/local/polishing'
 include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
-include { KEEP_SEQNAMES } from '../modules/local/keep_seqnames'
+include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
+include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED   } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +46,8 @@ include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { SEQTK_SUBSEQ } from '../modules/nf-core/seqtk/subseq/main'
+include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY   } from '../modules/nf-core/seqtk/subseq/main'
+include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS } from '../modules/nf-core/seqtk/subseq/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -76,15 +80,33 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(POLISHING.out.versions)
 
         // Separate the primary and alternative contigs again after polishing
+        // Separate primary contigs
         PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, p_i]}.set{primary_index_ch}
-        KEEP_SEQNAMES(primary_index_ch)
-        ch_versions = ch_versions.mix(KEEP_SEQNAMES.out.versions)
+        KEEP_SEQNAMES_PRIMARY(primary_index_ch)
+        ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
         POLISHING.out.fasta.map{ meta, f -> f }
                            .set{ polished_fasta }
-        SEQTK_SUBSEQ(polished_fasta, KEEP_SEQNAMES.out.seqlist)
+        SEQTK_SUBSEQ_PRIMARY(polished_fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
+        ch_versions = ch_versions.mix(SEQTK_SUBSEQ_PRIMARY.out.versions)
         POLISHING.out.fasta.map{ meta, f -> meta }
-                            .combine(SEQTK_SUBSEQ.out.sequences)
+                            .combine(SEQTK_SUBSEQ_PRIMARY.out.sequences)
                             .set{ primary_contigs_ch }
+        
+        // Separate alt contigs
+        PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, h_i]}.set{haplotigs_index_ch}
+        KEEP_SEQNAMES_HAPLOTIGS(haplotigs_index_ch)
+        ch_versions = ch_versions.mix(KEEP_SEQNAMES_HAPLOTIGS.out.versions)
+        SEQTK_SUBSEQ_HAPLOTIGS(polished_fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
+        ch_versions = ch_versions.mix(SEQTK_SUBSEQ_HAPLOTIGS.out.versions)
+        POLISHING.out.fasta.map{ meta, f -> meta }
+                            .combine(SEQTK_SUBSEQ_HAPLOTIGS.out.sequences)
+                            .set{ haplotigs_contigs_ch }
+
+        // Check genome stats for polished pri and alt
+        GENOME_STATISTICS_POLISHED( primary_contigs_ch.join(haplotigs_contigs_ch), 
+                       PREPARE_INPUT.out.busco,
+                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+        ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
     }
     
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
@@ -103,6 +125,9 @@ workflow GENOMEASSEMBLY {
                         .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
                         .set{ stats_input_ch }
 
+    GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
+                       PREPARE_INPUT.out.busco,
+                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
     //
     // MODULE: Collate versions.yml file
     //
