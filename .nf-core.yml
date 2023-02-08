@@ -15,7 +15,7 @@ lint:
     - lib/NfcoreTemplate.groovy
     - .prettierignore
   multiqc_config:
-    - assets/multiqc_config.yml
+    - report_comment
   nextflow_config:
     - manifest.name
     - manifest.homePage
