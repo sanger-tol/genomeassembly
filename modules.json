@@ -79,6 +79,11 @@
                         "branch": "master",
                         "git_sha": "7f59e5730106cb4c246e2122f0fd1ccc637fa4ce"
                     },
+                    "minimap2/align": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "patch": "modules/nf-core/minimap2/align/minimap2-align.diff"
+                    },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"

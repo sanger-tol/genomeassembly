@@ -26,13 +26,14 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
-include { POLISHING     } from '../subworkflows/local/polishing'
-include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
+include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
+include { PURGE_DUPS      } from '../subworkflows/local/purge_dups'
+include { POLISHING       } from '../subworkflows/local/polishing'
+include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
-include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
-include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED   } from '../subworkflows/local/assembly_stats'
+include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
 /*
@@ -69,7 +70,14 @@ workflow GENOMEASSEMBLY {
 
     PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, p] }.set{ primary_contigs_ch } 
     PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, h] }.set{ haplotigs_ch } 
+   
+    //TODO: add haplotigs into input 
+    PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.hifi)
+                                .map{ meta, p, h, merged, reads, kmer_pref -> [meta, reads, p ]}
+                                .set{ purge_dups_input }
+    PURGE_DUPS( purge_dups_input )
 
+/*
     if ( polishing_on ) {
         PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
                         .set{ illumina_10X_ch }
@@ -134,7 +142,7 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
+*/
 }
 
 /*
