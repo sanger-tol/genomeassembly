@@ -16,6 +16,12 @@ include { PURGEDUPS_GETSEQS                         } from "../../modules/local/
 include { PURGEDUPS_PBCSTAT                         } from "../../modules/local/purge_dups/pbcstat"
 include { PURGEDUPS_SPLITFA                         } from "../../modules/local/purge_dups/splitfa"
 include { PURGEDUPS_PURGEDUPS                       } from "../../modules/local/purge_dups/purgedups"
+include { GET_CALCUTS_PARAMS                        } from "../../modules/local/get_calcuts_params"
+
+include { CAT_CAT                                   } from "../../modules/nf-core/cat/cat/main"
+include { FASTK_FASTK                               } from "../../modules/nf-core/fastk/fastk/main"
+include { FASTK_HISTEX                              } from '../../modules/nf-core/fastk/histex/main'
+include { GENESCOPEFK                               } from "../../modules/nf-core/genescopefk/main"
 
 workflow PURGE_DUPS {
 
@@ -24,15 +30,17 @@ workflow PURGE_DUPS {
 
     main:
     reads_plus_assembly_ch
-        .flatMap { meta, reads, assembly -> reads instanceof List ? reads.collect{ [ meta + [ single_end: true ], it, assembly ] } : [ [ meta + [ single_end: true ], reads, assembly ] ] }
+        .flatMap { meta, reads, assembly -> reads instanceof List ? reads.collect{ [ meta + [ single_end: true], it, assembly ] } : [ [ meta + [ single_end: true], reads, assembly ] ] }
         .multiMap { meta, reads, assembly -> 
             reads_ch: [ meta, reads ]
             assembly_ch: assembly
         }
         .set { input }
+
     reads_plus_assembly_ch
         .map { meta, reads, assembly -> [ meta, assembly ] }
         .set { assembly_ch }
+
     // Map pacbio reads
     MINIMAP2_ALIGN_READS(
         input.reads_ch,
@@ -43,8 +51,17 @@ workflow PURGE_DUPS {
         false  // no split index
     )
     PURGEDUPS_PBCSTAT( MINIMAP2_ALIGN_READS.out.paf.groupTuple() )
-    PURGEDUPS_CALCUTS( PURGEDUPS_PBCSTAT.out.stat )
-    // TODO:: Cutoffs can likely be estimated from genescope model output.
+    CAT_CAT( input.reads_ch )
+    CAT_CAT.out.file_out.map{ meta, path -> path.renameTo(path.getParent() + '/' + path.getBaseName() + '.fa.gz'); 
+                                            [meta, path.getParent() + '/' + path.getBaseName() + '.fa.gz'] }
+                        .set{ reads_merged_ch }
+    FASTK_FASTK( reads_merged_ch )
+    FASTK_HISTEX( FASTK_FASTK.out.hist )
+    GENESCOPEFK ( FASTK_HISTEX.out.hist )
+    GET_CALCUTS_PARAMS( GENESCOPEFK.out.model )
+    GET_CALCUTS_PARAMS.out.cutoffs.view()
+
+    PURGEDUPS_CALCUTS( PURGEDUPS_PBCSTAT.out.stat, GET_CALCUTS_PARAMS.out.cutoffs )
 
     // Split assembly and do self alignment
     PURGEDUPS_SPLITFA( assembly_ch )
@@ -58,7 +75,6 @@ workflow PURGE_DUPS {
         idx_num
     )
     
-
     // TODO: Check the output from here
     PURGEDUPS_PURGEDUPS(
         PURGEDUPS_PBCSTAT.out.basecov

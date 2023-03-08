@@ -14,6 +14,7 @@ process PURGEDUPS_CALCUTS {
 
     input:
     tuple val(meta), path(stat)
+    val cutoffs
 
     output:
     tuple val(meta), path("*.cutoffs")    , emit: cutoff
@@ -27,7 +28,7 @@ process PURGEDUPS_CALCUTS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    calcuts $args $stat > ${prefix}.cutoffs 2> ${prefix}.calcuts.log
+    calcuts $args $cutoffs $stat > ${prefix}.cutoffs 2> ${prefix}.calcuts.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
