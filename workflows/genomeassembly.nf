@@ -27,7 +27,9 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
-include { PURGE_DUPS      } from '../subworkflows/local/purge_dups'
+include { GENOMESCOPE_MODEL } from '../subworkflows/local/genomescope_model'
+include { PURGE_DUPS as PURGE_DUPS_PRI      } from '../subworkflows/local/purge_dups'
+include { PURGE_DUPS as PURGE_DUPS_ALT      } from '../subworkflows/local/purge_dups'
 include { POLISHING       } from '../subworkflows/local/polishing'
 include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
@@ -42,6 +44,7 @@ include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
+include { CAT_CAT as CAT_CAT_HAPLOTIGS } from "../modules/nf-core/cat/cat/main"
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -68,14 +71,32 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
 
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, p] }.set{ primary_contigs_ch } 
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, h] }.set{ haplotigs_ch } 
-   
-    //TODO: add haplotigs into input 
-    PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.hifi)
-                                .map{ meta, p, h, merged, reads, kmer_pref -> [meta, reads, p ]}
-                                .set{ purge_dups_input }
-    PURGE_DUPS( purge_dups_input )
+    PREPARE_INPUT.out.primary_asm.map{ meta, p, p_idx -> [meta, p] }.set{ primary_contigs_ch } 
+    PREPARE_INPUT.out.haplotigs_asm.map{ meta, h, h_idx -> [meta, h] }.set{ haplotigs_ch } 
+    PREPARE_INPUT.out.hifi.map{meta, reads, kmer_pref -> [meta, reads ]}.set{ reads_ch }
+
+    GENOMESCOPE_MODEL(reads_ch)   
+
+   //TODO: add haplotigs into input 
+    primary_contigs_ch.join(PREPARE_INPUT.out.hifi)
+                      .join(GENOMESCOPE_MODEL.out.model)
+                      .map{ meta, p, reads, kmer_pref, m -> [meta, reads, p, m ]}
+                      .set{ purge_dups_input }
+   PURGE_DUPS_PRI( purge_dups_input )
+
+    
+    haplotigs_ch.join( PURGE_DUPS_PRI.out.alt )
+                    .map{ meta, h, h_purged -> [meta, [h, h_purged]]}
+                    .set{ haplotigs_to_merge }
+    
+    CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
+    CAT_CAT_HAPLOTIGS.out.file_out.join(PREPARE_INPUT.out.hifi)
+                                  .join(GENOMESCOPE_MODEL.out.model)  
+                                  .map{ meta, h, reads, kmer_pref, m -> [meta, reads, h, m]}
+                                  .set{ purge_dups_haploitgs_input }
+
+    purge_dups_haploitgs_input.view()
+    PURGE_DUPS_ALT( purge_dups_haploitgs_input )
 
 /*
     if ( polishing_on ) {

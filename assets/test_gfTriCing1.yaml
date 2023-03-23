@@ -1,0 +1,18 @@
+samples:
+  - id: gfTriCing1
+    assembly:
+      primary: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hifiasm.20221205/gfTriCing1.p_ctg.fa.gz
+      haplotigs: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hifiasm.20221205/gfTriCing1.a_ctg.fa.gz
+    illumina_10X:
+      reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/ 
+    pacbio:
+      reads:
+        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hicanu.20221205/gfTriCing1.trimmedReads.fasta.gz
+      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/genomic_data/gfTriCing1/pacbio/kmer/k31/gfTriCing1.k31
+    HiC:
+      reads:
+        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/genomic_data/gfTriCing1/hic-arima2/46142_2#8.cram
+      arima_motif: GATC,GANTC,CTNAG,TTAA
+    busco:
+      lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
+      lineage: fungi_odb10

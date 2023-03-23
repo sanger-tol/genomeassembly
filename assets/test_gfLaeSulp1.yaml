@@ -1,17 +1,17 @@
 samples:
   - id: gfLaeSulp1
     assembly:
-      primary: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/purging/purged.fa.gz
-      haplotigs: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/purging/purged.htigs.fa.gz
+      primary: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/gfLaeSulp1.p_ctg.fa.gz
+      haplotigs: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/gfLaeSulp1.a_ctg.fa.gz
     illumina_10X:
-      reads: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/
+      reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/
     pacbio:
       reads:
-        - reads: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
-      kmer_pref: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/kmer/k31/gfLaeSulp1.k31
+        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
+      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/kmer/k31/gfLaeSulp1.k31
     HiC:
       reads:
-        - reads: /lustre/scratch123/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
+        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
       lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
