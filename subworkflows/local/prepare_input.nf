@@ -126,7 +126,6 @@ workflow PREPARE_INPUT {
     emit:
     primary_asm    = primary_asm
     haplotigs_asm  = haplotigs_asm
-//    merged_asm     = merged_asm
     hic            = yml_input.hic_ch
     hifi           = yml_input.pacbio_ch
     illumina_10X   = yml_input.illumina_10X_ch

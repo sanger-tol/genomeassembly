@@ -112,6 +112,27 @@
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
                     },
+                    "purgedups/calcuts": {
+                        "branch": "master",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "patch": "modules/nf-core/purgedups/calcuts/purgedups-calcuts.diff"
+                    },
+                    "purgedups/getseqs": {
+                        "branch": "master",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b"
+                    },
+                    "purgedups/pbcstat": {
+                        "branch": "master",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b"
+                    },
+                    "purgedups/purgedups": {
+                        "branch": "master",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b"
+                    },
+                    "purgedups/splitfa": {
+                        "branch": "master",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b"
+                    },
                     "samtools/collate": {
                         "branch": "master",
                         "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01"

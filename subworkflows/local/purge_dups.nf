@@ -8,14 +8,15 @@ https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8
  * https://github.com/dfguan/purge_dups
  */
 
-// TODO:: purgedups are no on nf-core
 include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_READS    } from "../../modules/nf-core/minimap2/align/main"
 include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY } from "../../modules/nf-core/minimap2/align/main"
-include { PURGEDUPS_CALCUTS                         } from "../../modules/local/purge_dups/calcuts"
-include { PURGEDUPS_GETSEQS                         } from "../../modules/local/purge_dups/getseqs"
-include { PURGEDUPS_PBCSTAT                         } from "../../modules/local/purge_dups/pbcstat"
-include { PURGEDUPS_SPLITFA                         } from "../../modules/local/purge_dups/splitfa"
-include { PURGEDUPS_PURGEDUPS                       } from "../../modules/local/purge_dups/purgedups"
+
+include { PURGEDUPS_CALCUTS                         } from '../../modules/nf-core/purgedups/calcuts/main'
+include { PURGEDUPS_GETSEQS                         } from '../../modules/nf-core/purgedups/getseqs/main'
+include { PURGEDUPS_PBCSTAT                         } from '../../modules/nf-core/purgedups/pbcstat/main'
+include { PURGEDUPS_PURGEDUPS                       } from '../../modules/nf-core/purgedups/purgedups/main'
+include { PURGEDUPS_SPLITFA                         } from '../../modules/nf-core/purgedups/splitfa/main'
+
 include { GET_CALCUTS_PARAMS                        } from "../../modules/local/get_calcuts_params"
 
 workflow PURGE_DUPS {
@@ -63,7 +64,6 @@ workflow PURGE_DUPS {
         idx_num
     )
     
-    // TODO: Check the output from here
     PURGEDUPS_PURGEDUPS(
         PURGEDUPS_PBCSTAT.out.basecov
             .join( PURGEDUPS_CALCUTS.out.cutoff )
@@ -73,9 +73,7 @@ workflow PURGE_DUPS {
 
     PURGEDUPS_GETSEQS( minimal_assembly_ch.join( PURGEDUPS_PURGEDUPS.out.bed ) )
 
-    // TODO: Mix haplotigs back into haplotig set / Verify alternate contigs.
-
     emit:
     pri = PURGEDUPS_GETSEQS.out.purged
-    alt = PURGEDUPS_GETSEQS.out.haplotype
+    alt = PURGEDUPS_GETSEQS.out.haplotigs
 }
