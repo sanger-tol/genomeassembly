@@ -1,22 +1,19 @@
-/*
-Copied from
-https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8396857a8ee418bf86188fc59/modules/local/purgedups/splitfa.nf
-*/
-process PURGEDUPS_SPLITFA {
+process PURGEDUPS_GETSEQS {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::purge_dups=1.2.6" : null)
+    conda "bioconda::purge_dups=1.2.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/purge_dups:1.2.6--h7132678_0':
         'quay.io/biocontainers/purge_dups:1.2.6--h7132678_0' }"
 
     input:
-    tuple val(meta), path(assembly)
+    tuple val(meta), path(assembly), path(bed)
 
     output:
-    tuple val(meta), path("*.split.fasta"), emit: split_fasta
-    path "versions.yml"                   , emit: versions
+    tuple val(meta), path("*.hap.fa")   , emit: haplotigs
+    tuple val(meta), path("*.purged.fa"), emit: purged
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,7 +22,11 @@ process PURGEDUPS_SPLITFA {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    split_fa $args $assembly > ${prefix}.split.fasta
+    get_seqs \\
+        $args \\
+        -e $bed \\
+        -p $prefix \\
+        $assembly
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

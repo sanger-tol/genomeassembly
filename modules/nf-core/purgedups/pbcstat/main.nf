@@ -1,24 +1,19 @@
-/*
-Copied from
-https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8396857a8ee418bf86188fc59/modules/local/purgedups/getseqs.nf
-*/
-
-process PURGEDUPS_GETSEQS {
+process PURGEDUPS_PBCSTAT {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::purge_dups=1.2.6" : null)
+    conda "bioconda::purge_dups=1.2.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/purge_dups:1.2.6--h7132678_0':
         'quay.io/biocontainers/purge_dups:1.2.6--h7132678_0' }"
 
     input:
-    tuple val(meta), path(assembly), path(bed)
+    tuple val(meta), path(paf_alignment)
 
     output:
-    tuple val(meta), path("*.hap.fa")   , emit: haplotype
-    tuple val(meta), path("*.purged.fa"), emit: purged
-    path "versions.yml"                 , emit: versions
+    tuple val(meta), path("*.PB.stat")    , emit: stat
+    tuple val(meta), path("*.PB.base.cov"), emit: basecov
+    path "versions.yml"                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,11 +22,11 @@ process PURGEDUPS_GETSEQS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    get_seqs \\
+    pbcstat \\
         $args \\
-        -e $bed \\
-        -p $prefix \\
-        $assembly
+        $paf_alignment
+
+    for PBFILE in PB.*; do mv \$PBFILE ${prefix}.\$PBFILE; done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
