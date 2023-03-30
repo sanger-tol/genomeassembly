@@ -1,5 +1,5 @@
 //
-// Based on https://github.com/sanger-tol/readmapping/blob/5a2657f5274a2c436b3896497a1322f2557bd9a8/subworkflows/local/markdup_stats.nf
+// Based on https://github.com/sanger-tol/readmapping/blob/9121ae2458f24e8fff6337a2f90e7ace1416b27f/subworkflows/local/markdup_stats.nf
 // from Sanger readmapping pipeline by @priyanka-surana
 //
 // Merge and Markdup all alignments at specimen level
@@ -15,7 +15,7 @@ include { GNU_SORT as BED_SORT } from '../../modules/local/gnu_sort'
 workflow MARKDUP_STATS {
     take:
     aln // channel: [ val(meta), [ sam ] ]
-    fasta // channel: /path/to/fasta
+    fasta // channel: [ val(meta), /path/to/fasta ]
 
     main:
     ch_versions = Channel.empty()
@@ -34,9 +34,15 @@ workflow MARKDUP_STATS {
     ch_versions = ch_versions.mix(MARKDUPLICATE.out.versions)
 
     // Convert merged BAM to CRAM and calculate indices and statistics
-    ch_stat = MARKDUPLICATE.out.bam.map { meta, bam -> [ meta, bam, [] ] }
-  
-    SAMTOOLS_VIEW_MARKDUP ( ch_stat, fasta, [] )
+    MARKDUPLICATE.out.bam
+    | map { meta, bam -> [ meta, bam, [] ] }
+    | set { ch_stat }
+
+    fasta
+    | map { meta, file -> file }
+    | set { ch_fasta }
+ 
+    SAMTOOLS_VIEW_MARKDUP ( ch_stat, ch_fasta, [] )
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MARKDUP.out.versions)
 
     BEDTOOLS_BAMTOBED( SAMTOOLS_VIEW_MARKDUP.out.bam )
@@ -44,8 +50,12 @@ workflow MARKDUP_STATS {
 
     BED_SORT( BEDTOOLS_BAMTOBED.out.bed )
     ch_versions = ch_versions.mix(BED_SORT.out.versions)
+    
+    fasta
+    | map { meta, file -> file }
+    | set { ch_fasta }
 
-    CONVERT_STATS ( ch_stat, fasta )
+    CONVERT_STATS ( ch_stat, ch_fasta )
     ch_versions = ch_versions.mix(CONVERT_STATS.out.versions)
 
     emit:

@@ -23,6 +23,7 @@ workflow PURGE_DUPS {
 
     take:
     reads_plus_assembly_ch     // [ meta, [reads], [assembly], [model] ], where reads are the pacbio files, and assembly is the primary and alternate asms
+    prefix  // [ prefix ] prefix for the output files
 
     main:
     reads_plus_assembly_ch
@@ -71,7 +72,10 @@ workflow PURGE_DUPS {
             .join( MINIMAP2_ALIGN_ASSEMBLY.out.paf )
     ) 
 
-    PURGEDUPS_GETSEQS( minimal_assembly_ch.join( PURGEDUPS_PURGEDUPS.out.bed ) )
+    minimal_assembly_ch.join( PURGEDUPS_PURGEDUPS.out.bed )
+                       .map { meta, assembly, bed -> [[id:meta.id, prefix:prefix], assembly, bed] }
+                       .set { ch_getseqs_input }
+    PURGEDUPS_GETSEQS( ch_getseqs_input )
 
     emit:
     pri = PURGEDUPS_GETSEQS.out.purged

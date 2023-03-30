@@ -77,11 +77,12 @@ workflow GENOMEASSEMBLY {
                       .join(GENOMESCOPE_MODEL.out.model)
                       .map{ meta, p, reads, kmer_pref, m -> [meta, reads, p, m ]}
                       .set{ purge_dups_input }
-    PURGE_DUPS_PRI( purge_dups_input )
-    primary_contigs_ch = PURGE_DUPS_PRI.out.pri
+    PURGE_DUPS_PRI( purge_dups_input, 'primary' )
+    PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+                          .set{ primary_contigs_ch }
     
-    haplotigs_ch.join( PURGE_DUPS_PRI.out.alt )
-                    .map{ meta, h, h_purged -> [meta, [h, h_purged]]}
+    haplotigs_ch.combine( PURGE_DUPS_PRI.out.alt )
+                    .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
                     .set{ haplotigs_to_merge }
     
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
@@ -90,9 +91,11 @@ workflow GENOMEASSEMBLY {
                                   .map{ meta, h, reads, kmer_pref, m -> [meta, reads, h, m]}
                                   .set{ purge_dups_haploitgs_input }
 
-    PURGE_DUPS_ALT( purge_dups_haploitgs_input )
+    PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
 
-    PURGE_DUPS_PRI.out.pri.join(PURGE_DUPS_ALT.out.pri).set{ purged_pri_alt_ch }
+    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                          .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                          .set{ purged_pri_alt_ch }
     CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
     SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
     CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
@@ -137,13 +140,15 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
+//    primary_contigs_ch = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-iyVesGerm1-230329//63/eae1161758f038c9bfb24d9d65d555/primary.purged.fa"])
     // Map HiC data to the primary assembly
-    primary_contigs_ch.map{ meta, fasta -> [ fasta ] }
-                      .set{ hic_ref_ch }
-    ALIGN_SHORT( crams_ch, hic_ref_ch )    
+    ALIGN_SHORT( primary_contigs_ch, crams_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
     SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
+//    bed = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-hicmapping-230329/97/e9afae113da5a875c4ab50c63eac1a/iyVesGerm1.sorted.bed"])
+//    bed = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-hicmapping-230329/b4/138e3b5761220eecbded0d533defdd/test.bed"])
+//    SCAFFOLDING( bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)

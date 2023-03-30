@@ -1,5 +1,5 @@
 //
-// Based on https://github.com/sanger-tol/readmapping/blob/5a2657f5274a2c436b3896497a1322f2557bd9a8/subworkflows/local/align_short.nf
+// Based on https://github.com/sanger-tol/readmapping/blob/9121ae2458f24e8fff6337a2f90e7ace1416b27f/subworkflows/local/align_short.nf
 // from Sanger readmapping pipeline by @priyanka-surana
 //
 // Align short read (HiC and Illumina) data against the genome
@@ -12,24 +12,21 @@ include { BWAMEM2_INDEX  } from '../../modules/nf-core/bwamem2/index/main'
 
 workflow ALIGN_SHORT {
     take:
-    reads // channel: [ val(meta), [ datafile ] ]
-    fasta // channel: /path/to/fasta
+    fasta    // channel: [ val(meta), /path/to/fasta ]
+    reads    // channel: [ val(meta), /path/to/datafile ]
 
     main:
     ch_versions = Channel.empty()
 
     // Convert from CRAM to FASTQ
-    SAMTOOLS_FASTQ ( reads )
+    SAMTOOLS_FASTQ ( reads, true )
     ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions.first())
 
-    reads.combine( fasta )
-         .map{ meta, reads, fasta -> [ meta, fasta ] }
-         .set{ fasta_ch }
-    BWAMEM2_INDEX ( fasta_ch )
+    BWAMEM2_INDEX ( fasta )
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
 
     // Align Fastq to Genome
-    BWAMEM2_MEM ( SAMTOOLS_FASTQ.out.fastq, BWAMEM2_INDEX.out.index, [] )
+    BWAMEM2_MEM ( SAMTOOLS_FASTQ.out.interleaved, BWAMEM2_INDEX.out.index, [] )
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
     // Merge, markdup, convert, and stats
