@@ -78,18 +78,6 @@ workflow PREPARE_INPUT {
     .set { ch_asm_hap_fasta }
     ch_versions = ch_versions.mix(GUNZIP_HAP.out.versions)
 
-    //  Merge primary and haplotigs for polishing
-//    FASTA_CONCAT ( ch_fasta )
-//    ch_fasta.join(FASTA_CONCAT.out.fasta_merged)
-//            .set{ ch_fasta_merged }
-//    ch_versions = ch_versions.mix(FASTA_CONCAT.out.versions)
-
-//    ch_fasta_merged.multiMap{ it -> 
-//            primary: [it[0], it[1]]
-//            haplotigs: [it[0], it[2]]
-//            merged: [it[0], it[3]]}
-//            .set{ch_fasta_separated}
-
     // Index all fasta files
     SAMTOOLS_FAIDX_PRIMARY( ch_asm_pri_fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_PRIMARY.out.versions)    

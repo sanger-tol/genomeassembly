@@ -140,20 +140,18 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
-//    primary_contigs_ch = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-iyVesGerm1-230329//63/eae1161758f038c9bfb24d9d65d555/primary.purged.fa"])
     // Map HiC data to the primary assembly
     ALIGN_SHORT( primary_contigs_ch, crams_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
     SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
-//    bed = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-hicmapping-230329/97/e9afae113da5a875c4ab50c63eac1a/iyVesGerm1.sorted.bed"])
-//    bed = Channel.of([[id:"iyVesGerm1"],"/lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/dev/genomeassembly/workdir-hicmapping-230329/b4/138e3b5761220eecbded0d533defdd/test.bed"])
-//    SCAFFOLDING( bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)
                         .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
                         .set{ stats_input_ch }
+
+
 
     GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
                        PREPARE_INPUT.out.busco,
@@ -164,7 +162,6 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
 }
 
 /*
