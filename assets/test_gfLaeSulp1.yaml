@@ -14,5 +14,5 @@ samples:
         - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
-      lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
+      lineages_path: /lustre/scratch123/tol/resources/busco/v5/
       lineage: fungi_odb10

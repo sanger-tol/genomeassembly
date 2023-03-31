@@ -14,5 +14,5 @@ samples:
         - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
-      lineages_path: /lustre/scratch123/tol/resources/busco/v5/lineages
+      lineages_path: /lustre/scratch123/tol/resources/busco/v5/
       lineage: insecta_odb10
