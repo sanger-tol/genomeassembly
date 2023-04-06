@@ -34,14 +34,14 @@ workflow PREPARE_INPUT {
 
     // Prepare primary  
     assembly_input.primary_ch.map { fasta ->
-    todo = fasta.endsWith('.gz') ? 'gunzip' : 'none'
-    [ ['todo':todo], fasta ]
+    effect = fasta.endsWith('.gz') ? 'gunzip' : 'none'
+    [ ['effect':effect], fasta ]
     }
     .branch {
         meta, fasta ->
-        gzip : meta.todo == "gunzip"
+        gzip : meta.effect == "gunzip"
             return [ [:], fasta ]
-        geno : meta.todo == "none"
+        geno : meta.effect == "none"
             return [ [:], fasta ]
     }
     .set { ch_asm }
@@ -55,16 +55,16 @@ workflow PREPARE_INPUT {
     .set { ch_asm_pri_fasta }
     ch_versions = ch_versions.mix(GUNZIP_PRI.out.versions)
 
-    // Prepare primary  
+    // Prepare haplotigs 
     assembly_input.haplotigs_ch.map { fasta ->
-    todo = fasta.endsWith('.gz') ? 'gunzip' : 'none'
-    [ ['todo':todo], fasta ]
+    effect = fasta.endsWith('.gz') ? 'gunzip' : 'none'
+    [ ['effect':effect], fasta ]
     }
     .branch {
         meta, fasta ->
-        gzip : meta.todo == "gunzip"
+        gzip : meta.effect == "gunzip"
             return [ [:], fasta ]
-        geno : meta.todo == "none"
+        geno : meta.effect == "none"
             return [ [:], fasta ]
     }
     .set { ch_asm_hap }

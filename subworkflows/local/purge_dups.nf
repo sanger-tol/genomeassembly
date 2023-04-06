@@ -27,7 +27,7 @@ workflow PURGE_DUPS {
 
     main:
     reads_plus_assembly_ch
-        .flatMap { meta, reads, assembly, model -> reads instanceof List ? reads.collect{ [ meta, it, assembly, model ] } : [ [ meta, reads, assembly, model ] ] }
+        .flatMap { meta, reads, assembly, model -> reads instanceof List ? reads.collect{ [ meta, reads, assembly, model ] } : [ [ meta, reads, assembly, model ] ] }
         .multiMap { meta, reads, assembly, model -> 
             reads_ch: [ meta, reads ]
             assembly_ch: assembly
