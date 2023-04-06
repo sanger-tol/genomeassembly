@@ -4,7 +4,7 @@ samples:
       primary: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hifiasm.20221205/gfTriCing1.p_ctg.fa.gz
       haplotigs: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hifiasm.20221205/gfTriCing1.a_ctg.fa.gz
     illumina_10X:
-      reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/ 
+      reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/
     pacbio:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Tricholoma_cingulatum/working/gfTriCing1.hicanu.20221205/gfTriCing1.trimmedReads.fasta.gz
