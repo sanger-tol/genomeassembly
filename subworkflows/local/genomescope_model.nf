@@ -23,6 +23,8 @@ workflow GENOMESCOPE_MODEL {
 
     emit:
     model = GENESCOPEFK.out.model
+    hist = FASTK_FASTK.out.hist
+    ktab = FASTK_FASTK.out.ktab
 
 }
 

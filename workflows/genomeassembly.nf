@@ -69,14 +69,13 @@ workflow GENOMEASSEMBLY {
 
     PREPARE_INPUT.out.primary_asm.map{ meta, p, p_idx -> [meta, p] }.set{ primary_contigs_ch } 
     PREPARE_INPUT.out.haplotigs_asm.map{ meta, h, h_idx -> [meta, h] }.set{ haplotigs_ch } 
-    PREPARE_INPUT.out.hifi.map{meta, reads, kmer_pref -> [meta, reads ]}.set{ reads_ch }
+    PREPARE_INPUT.out.hifi.set{ reads_ch }
 
     GENOMESCOPE_MODEL(reads_ch)   
 
-    primary_contigs_ch.join(PREPARE_INPUT.out.hifi)
-                      .join(GENOMESCOPE_MODEL.out.model)
-                      .map{ meta, p, reads, kmer_pref, m -> [meta, reads, p, m ]}
-                      .set{ purge_dups_input }
+    reads_ch.join(primary_contigs_ch)
+            .join(GENOMESCOPE_MODEL.out.model)
+            .set{ purge_dups_input }
     PURGE_DUPS_PRI( purge_dups_input, 'primary' )
     PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
                           .set{ primary_contigs_ch }
@@ -86,10 +85,9 @@ workflow GENOMEASSEMBLY {
                     .set{ haplotigs_to_merge }
     
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
-    CAT_CAT_HAPLOTIGS.out.file_out.join(PREPARE_INPUT.out.hifi)
-                                  .join(GENOMESCOPE_MODEL.out.model)  
-                                  .map{ meta, h, reads, kmer_pref, m -> [meta, reads, h, m]}
-                                  .set{ purge_dups_haploitgs_input }
+    reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
+            .join(GENOMESCOPE_MODEL.out.model)
+            .set{ purge_dups_haploitgs_input }
 
     PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
 
@@ -132,7 +130,9 @@ workflow GENOMEASSEMBLY {
         // Check genome stats for polished pri and alt
         GENOME_STATISTICS_POLISHED( primary_contigs_ch.join(haplotigs_contigs_ch), 
                        PREPARE_INPUT.out.busco,
-                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+        )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
 
     }
@@ -151,11 +151,11 @@ workflow GENOMEASSEMBLY {
                         .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
                         .set{ stats_input_ch }
 
-
-
     GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
                        PREPARE_INPUT.out.busco,
-                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+    )
     //
     // MODULE: Collate versions.yml file
     //

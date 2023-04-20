@@ -8,10 +8,9 @@ samples:
     pacbio:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/1000_reads.fasta
-      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/insects/Eupithecia_centaureata/genomic_data/ilEupCent1/pacbio/kmer/k31/
     HiC:
       reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/hic.cram
+        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/hic.01.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
       lineages_path: /lustre/scratch123/tol/resources/busco/v5/
