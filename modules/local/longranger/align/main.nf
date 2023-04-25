@@ -7,9 +7,6 @@ process LONGRANGER_ALIGN {
 
     def version = '2.2.2-c1'
 
-    if (params.enable_conda) {
-        exit 1, "Conda environments cannot be used when using longranger. Please use singularity."
-    }
     container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c1"
 
     input:

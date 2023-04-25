@@ -32,6 +32,8 @@ process GFASTATS {
     def ibed = include_bed ? "--include-bed $include_bed" : ""
     def ebed = exclude_bed ? "--exclude-bed $exclude_bed" : ""
     def sak  = instructions ? "--swiss-army-knife $instructions" : ""
+    def gs = genome_size ?: ""
+    def tg = target ?: ""
     """
     gfastats \\
         $args \\
@@ -42,8 +44,8 @@ process GFASTATS {
         $sak \\
         --out-format ${prefix}.${out_fmt}.gz \\
         $assembly \\
-        $genome_size \\
-        $target \\
+        $gs \\
+        $tg \\
         > ${prefix}.assembly_summary
 
     cat <<-END_VERSIONS > versions.yml

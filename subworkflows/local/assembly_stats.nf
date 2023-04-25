@@ -15,7 +15,8 @@ workflow GENOME_STATISTICS {
     take:
     assembly               // channel: [ meta, primary, haplotigs ]
     lineage                // channel: [ meta, /path/to/buscoDB, lineage ] 
-    kmer                   // channel: [ meta, [ /path/to/kmer/kNN ] ]
+    hist                   // channel: [meta, fastk_hist files]
+    ktab                   // channel: [meta, fastk_ktab files]
 
     main:
     ch_versions = Channel.empty()
@@ -35,7 +36,7 @@ workflow GENOME_STATISTICS {
     ch_versions = ch_versions.mix(BUSCO.out.versions.first())
     
     // MerquryFK
-    ch_merq = GrabFiles(kmer).combine(assembly).map { meta, hist, ktab, meta2, primary, haplotigs -> [ meta, hist, ktab, primary, haplotigs ] }
+    hist.join(ktab).join(assembly).set{ ch_merq }
     MERQURYFK_MERQURYFK ( ch_merq )
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 

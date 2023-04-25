@@ -1,0 +1,22 @@
+Changes in module 'nf-core/purgedups/calcuts'
+--- modules/nf-core/purgedups/calcuts/main.nf
++++ modules/nf-core/purgedups/calcuts/main.nf
+@@ -9,6 +9,7 @@
+ 
+     input:
+     tuple val(meta), path(stat)
++    val cutoffs
+ 
+     output:
+     tuple val(meta), path("*.cutoffs")    , emit: cutoff
+@@ -22,7 +23,7 @@
+     def args = task.ext.args ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     """
+-    calcuts $args $stat > ${prefix}.cutoffs 2> ${prefix}.calcuts.log
++    calcuts $args $cutoffs $stat > ${prefix}.cutoffs 2> ${prefix}.calcuts.log
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+
+************************************************************

@@ -26,21 +26,21 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_INPUT } from '../subworkflows/local/prepare_input'
-include { POLISHING     } from '../subworkflows/local/polishing'
-include { SCAFFOLDING   } from '../subworkflows/local/scaffolding'
+include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
+include { GENOMESCOPE_MODEL } from '../subworkflows/local/genomescope_model'
+include { PURGE_DUPS as PURGE_DUPS_PRI      } from '../subworkflows/local/purge_dups'
+include { PURGE_DUPS as PURGE_DUPS_ALT      } from '../subworkflows/local/purge_dups'
+include { POLISHING       } from '../subworkflows/local/polishing'
+include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
-include { ALIGN_SHORT   } from '../subworkflows/local/align_short'
-include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED   } from '../subworkflows/local/assembly_stats'
+include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-include { SAMTOOLS_FAIDX   } from '../modules/nf-core/samtools/faidx/main.nf'
+include { CAT_CAT as CAT_CAT_HAPLOTIGS } from "../modules/nf-core/cat/cat/main"
+include { CAT_CAT as CAT_CAT_PURGEDUPS } from "../modules/nf-core/cat/cat/main"
+include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS   }  from '../modules/nf-core/samtools/faidx/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -67,22 +67,48 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
 
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, p] }.set{ primary_contigs_ch } 
-    PREPARE_INPUT.out.assemblies.map{ meta, p, h, merged -> [meta, h] }.set{ haplotigs_ch } 
+    PREPARE_INPUT.out.primary_asm.map{ meta, p, p_idx -> [meta, p] }.set{ primary_contigs_ch } 
+    PREPARE_INPUT.out.haplotigs_asm.map{ meta, h, h_idx -> [meta, h] }.set{ haplotigs_ch } 
+    PREPARE_INPUT.out.hifi.set{ reads_ch }
+
+    GENOMESCOPE_MODEL(reads_ch)   
+
+    reads_ch.join(primary_contigs_ch)
+            .join(GENOMESCOPE_MODEL.out.model)
+            .set{ purge_dups_input }
+    PURGE_DUPS_PRI( purge_dups_input, 'primary' )
+    PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+                          .set{ primary_contigs_ch }
+    
+    haplotigs_ch.combine( PURGE_DUPS_PRI.out.alt )
+                    .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
+                    .set{ haplotigs_to_merge }
+    
+    CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
+    reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
+            .join(GENOMESCOPE_MODEL.out.model)
+            .set{ purge_dups_haploitgs_input }
+
+    PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
+
+    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                          .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                          .set{ purged_pri_alt_ch }
+    CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
+    SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
+    CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
+                                  .set{ reference_ch }
 
     if ( polishing_on ) {
-        PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads]}
+        PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads] }
                         .set{ illumina_10X_ch }
-        PREPARE_INPUT.out.assemblies.join(PREPARE_INPUT.out.indices)
-                                    .map{ meta, p, h, merged, p_i, h_i, merged_i -> [ meta, merged, merged_i ] }
-                                    .set{ reference_ch }
+        
         POLISHING(reference_ch, illumina_10X_ch, groups)    
         ch_versions = ch_versions.mix(POLISHING.out.versions)
 
         // Separate the primary and alternative contigs again after polishing
         // Separate primary contigs
-        PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, p_i]}.set{primary_index_ch}
-        KEEP_SEQNAMES_PRIMARY(primary_index_ch)
+        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS_PRI.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
         POLISHING.out.fasta.map{ meta, f -> f }
                            .set{ polished_fasta }
@@ -93,8 +119,7 @@ workflow GENOMEASSEMBLY {
                             .set{ primary_contigs_ch }
         
         // Separate alt contigs
-        PREPARE_INPUT.out.indices.map{ meta, p_i, h_i, merged_i -> [meta, h_i]}.set{haplotigs_index_ch}
-        KEEP_SEQNAMES_HAPLOTIGS(haplotigs_index_ch)
+        KEEP_SEQNAMES_HAPLOTIGS(PURGE_DUPS_ALT.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_HAPLOTIGS.out.versions)
         SEQTK_SUBSEQ_HAPLOTIGS(polished_fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_HAPLOTIGS.out.versions)
@@ -105,17 +130,18 @@ workflow GENOMEASSEMBLY {
         // Check genome stats for polished pri and alt
         GENOME_STATISTICS_POLISHED( primary_contigs_ch.join(haplotigs_contigs_ch), 
                        PREPARE_INPUT.out.busco,
-                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+        )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
+
     }
     
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
     // Map HiC data to the primary assembly
-    primary_contigs_ch.map{ meta, fasta -> [ fasta ] }
-                      .set{ hic_ref_ch }
-    ALIGN_SHORT( crams_ch, hic_ref_ch )    
+    ALIGN_SHORT( primary_contigs_ch, crams_ch )    
     ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
 
     SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
@@ -127,14 +153,15 @@ workflow GENOMEASSEMBLY {
 
     GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
                        PREPARE_INPUT.out.busco,
-                       PREPARE_INPUT.out.hifi.map{ meta, reads, kmerdb -> [meta, kmerdb]} )
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+    )
     //
     // MODULE: Collate versions.yml file
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
 }
 
 /*
