@@ -102,7 +102,7 @@ workflow GENOMEASSEMBLY {
     PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
 
     PURGE_DUPS_ALT.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
-                        set{ haplotigs_ch }
+                        .set{ haplotigs_ch }
     GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch), 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
