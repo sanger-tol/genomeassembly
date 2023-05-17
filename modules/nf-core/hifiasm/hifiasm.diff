@@ -1,0 +1,46 @@
+Changes in module 'nf-core/hifiasm'
+--- modules/nf-core/hifiasm/main.nf
++++ modules/nf-core/hifiasm/main.nf
+@@ -4,8 +4,8 @@
+ 
+     conda "bioconda::hifiasm=0.18.5"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/hifiasm:0.18.5--h5b5514e_0' :
+-        'quay.io/biocontainers/hifiasm:0.18.5--h5b5514e_0' }"
++        'https://depot.galaxyproject.org/singularity/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' :
++        'quay.io/biocontainers/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' }"
+ 
+     input:
+     tuple val(meta), path(reads)
+@@ -13,6 +13,7 @@
+     path  maternal_kmer_dump
+     path  hic_read1
+     path  hic_read2
++    path  hic_reads_cram
+ 
+     output:
+     tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
+@@ -22,8 +23,10 @@
+     tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
+     tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
+     tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
+-    tuple val(meta), path("*.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
+-    tuple val(meta), path("*.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
++    tuple val(meta), path("*.asm.hic.p_ctg.gfa")   , emit: hic_primary_contigs  , optional: true
++    tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
++    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
++    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
+     path  "versions.yml"                       , emit: versions
+ 
+     when:
+@@ -32,6 +35,8 @@
+     script:
+     def args = task.ext.args ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
++    def hic_read1 = hic_reads_cram ? "<( samtools cat $hic_reads_cram | samtools fastq -n -f0x40 -F0xB00 )" : ""
++    def hic_read2 = hic_reads_cram ? "<( samtools cat $hic_reads_cram | samtools fastq -n -f0x80 -F0xB00 )" : ""
+     if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
+         error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
+     } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {
+
+************************************************************

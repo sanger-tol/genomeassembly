@@ -36,7 +36,11 @@ workflow GENOME_STATISTICS {
     ch_versions = ch_versions.mix(BUSCO.out.versions.first())
     
     // MerquryFK
-    hist.join(ktab).join(assembly).set{ ch_merq }
+    hist.join(ktab).join(assembly)
+                    .map{ meta, hist, ktab, primary, hap -> 
+                            hap.size() ? [ meta, hist, ktab, primary, hap ] :
+                                [ meta, hist, ktab, primary, [] ] } 
+                    .set{ ch_merq }
     MERQURYFK_MERQURYFK ( ch_merq )
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 

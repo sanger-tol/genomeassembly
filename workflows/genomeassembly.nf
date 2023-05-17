@@ -27,6 +27,7 @@ if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
+include { RAW_ASSEMBLY    } from '../subworkflows/local/raw_assembly' 
 include { GENOMESCOPE_MODEL } from '../subworkflows/local/genomescope_model'
 include { PURGE_DUPS as PURGE_DUPS_PRI      } from '../subworkflows/local/purge_dups'
 include { PURGE_DUPS as PURGE_DUPS_ALT      } from '../subworkflows/local/purge_dups'
@@ -35,6 +36,8 @@ include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
@@ -66,14 +69,21 @@ workflow GENOMEASSEMBLY {
     //   
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
+    
+    PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
+    PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
 
-    PREPARE_INPUT.out.primary_asm.map{ meta, p, p_idx -> [meta, p] }.set{ primary_contigs_ch } 
-    PREPARE_INPUT.out.haplotigs_asm.map{ meta, h, h_idx -> [meta, h] }.set{ haplotigs_ch } 
-    PREPARE_INPUT.out.hifi.set{ reads_ch }
+    GENOMESCOPE_MODEL( hifi_reads_ch )   
 
-    GENOMESCOPE_MODEL(reads_ch)   
-
-    reads_ch.join(primary_contigs_ch)
+    RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch )
+    RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
+    RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
+    GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch), 
+                       PREPARE_INPUT.out.busco,
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+    )
+    hifi_reads_ch.join(primary_contigs_ch)
             .join(GENOMESCOPE_MODEL.out.model)
             .set{ purge_dups_input }
     PURGE_DUPS_PRI( purge_dups_input, 'primary' )
@@ -85,21 +95,29 @@ workflow GENOMEASSEMBLY {
                     .set{ haplotigs_to_merge }
     
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
-    reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
+    hifi_reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
             .join(GENOMESCOPE_MODEL.out.model)
             .set{ purge_dups_haploitgs_input }
 
     PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
 
-    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                          .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
-                          .set{ purged_pri_alt_ch }
-    CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-    SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
-    CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
-                                  .set{ reference_ch }
+    PURGE_DUPS_ALT.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+                        set{ haplotigs_ch }
+    GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch), 
+                       PREPARE_INPUT.out.busco,
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+    )
 
     if ( polishing_on ) {
+        PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                              .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                          .set{ purged_pri_alt_ch }
+        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
+        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
+        CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
+                                  .set{ reference_ch }
+
         PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads] }
                         .set{ illumina_10X_ch }
         
@@ -162,6 +180,7 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
+
 }
 
 /*
