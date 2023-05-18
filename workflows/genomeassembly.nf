@@ -146,13 +146,15 @@ workflow GENOMEASSEMBLY {
                             .set{ haplotigs_contigs_ch }
 
         // Check genome stats for polished pri and alt
-        GENOME_STATISTICS_POLISHED( primary_contigs_ch.join(haplotigs_contigs_ch), 
+        primary_contigs_ch.join(haplotigs_contigs_ch)
+                        .map{ meta, pri, alt -> [[id:meta.id], pri, alt]}
+                        .set{ polished_asm_stats_input_ch }
+        GENOME_STATISTICS_POLISHED( polished_asm_stats_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
         )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
-
     }
     
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
