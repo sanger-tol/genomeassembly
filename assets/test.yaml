@@ -1,13 +1,13 @@
 samples:
   - id: idTesTol1
     illumina_10X:
-      reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/assembly_test/dataset/10x_10000/
+      reads: /lustre/scratch123/tol/resources/nextflow/test-data/Test_tolasm/genomic_data/idTesTol1/10x/
     pacbio:
       reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/assembly_test/dataset/HiFi.reads.398.extra.fasta
+        - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Test_tolasm/genomic_data/idTesTol1/pacbio/fasta/HiFi.reads.398.extra.fasta
     HiC:
       reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/assembly_test/dataset/41741_2#7.sub.cram
+        - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Test_tolasm/genomic_data/idTesTol1/hic-arima2/41741_2#7.sub.cram
       arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
       lineage: bacteria_odb10

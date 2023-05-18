@@ -16,9 +16,9 @@ process GFA_TO_FASTA {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    prefix=\$(basename $gfa .gfa)
-    awk '/^S/{print ">"\$2;print \$3}' $gfa > \${prefix}.fa
+    awk '/^S/{print ">"\$2;print \$3}' $gfa > ${prefix}.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

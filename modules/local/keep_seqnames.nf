@@ -7,7 +7,7 @@ process KEEP_SEQNAMES {
         'ubuntu:20.04' }"
 
     input:
-    tuple val(meta), path(fa)
+    tuple val(meta), path(fasta)
 
     output:
     path "*seq.lst"    , emit: seqlist
@@ -19,7 +19,7 @@ process KEEP_SEQNAMES {
     script:
     def prefix = meta.prefix ?: ''
     """
-    grep '>' $fa | cut -f1 | sed 's/>//' > seq.lst
+    grep '>' $fasta | cut -f1 | sed 's/>//' > seq.lst
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cut: \$(cut --version | head -n 1 | awk '{print \$NF}')
