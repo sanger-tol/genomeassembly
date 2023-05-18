@@ -1,5 +1,5 @@
 samples:
-  - id: odSpoLacu1
+  - id: idTesTol1
     illumina_10X:
       reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/assembly_test/dataset/10x_10000/
     pacbio:

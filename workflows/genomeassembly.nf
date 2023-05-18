@@ -12,7 +12,7 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.groups) { groups = params.groups } else { groups = 100; }
+if (params.bed_chunks_polishing) { bed_chunks_polishing = params.bed_chunks_polishing } else { bed_chunks_polishing = 100; }
 
 if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
@@ -121,7 +121,7 @@ workflow GENOMEASSEMBLY {
         PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads] }
                         .set{ illumina_10X_ch }
         
-        POLISHING(reference_ch, illumina_10X_ch, groups)    
+        POLISHING(reference_ch, illumina_10X_ch, bed_chunks_polishing)
         ch_versions = ch_versions.mix(POLISHING.out.versions)
 
         // Separate the primary and alternative contigs again after polishing

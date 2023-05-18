@@ -9,7 +9,6 @@ include { PREPARE_PRETEXTMAP_INPUT      } from '../../modules/local/prepare_pret
 include { PRETEXTMAP       } from '../../modules/nf-core/pretextmap/main.nf'
 include { PRETEXTSNAPSHOT  } from '../../modules/nf-core/pretextsnapshot/main'
 include { CHROM_SIZES      } from '../../modules/local/chrom_sizes.nf'
-include { GFASTATS         } from '../../modules/nf-core/gfastats/main.nf'
 
 workflow SCAFFOLDING {
     take:  
@@ -31,8 +30,6 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(YAHS.out.versions)
     SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta)
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
-    GFASTATS(YAHS.out.scaffolds_fasta, "fasta", [], [], [], [], [], [])
-    ch_versions = ch_versions.mix(GFASTATS.out.versions)
     bed_in.map{ meta, bed -> meta}.set{ch_meta}
 
     // Prepare contact pairs for cooler
@@ -76,7 +73,6 @@ workflow SCAFFOLDING {
     alignments_sorted = JUICER_PRE.out.pairs
     fasta = YAHS.out.scaffolds_fasta
     chrom_sizes = CHROM_SIZES.out.chrom_sizes
-    stats = GFASTATS.out.assembly_summary
     cool = COOLER_CLOAD.out.cool
     mcool = COOLER_ZOOMIFY.out.mcool
     snapshots = PRETEXTSNAPSHOT.out.image

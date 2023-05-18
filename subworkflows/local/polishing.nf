@@ -16,7 +16,7 @@ workflow POLISHING {
     take:
     fasta_in  //tuple meta, fasta, fai
     reads_10X // file
-    groups    //val
+    bed_chunks_polishing    //val
 
     main:
     ch_versions = Channel.empty()
@@ -38,7 +38,7 @@ workflow POLISHING {
     // Split genome into chunks
     fasta_in.map{ meta, fasta, fai -> [meta, fai] }
            .set{chunks_ch}
-    BED_CHUNKS (chunks_ch, groups)
+    BED_CHUNKS (chunks_ch, bed_chunks_polishing)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
     intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
     LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
