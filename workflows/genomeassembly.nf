@@ -17,6 +17,7 @@ if (params.bed_chunks_polishing) { bed_chunks_polishing = params.bed_chunks_poli
 if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
+if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,6 +38,7 @@ include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_s
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
 include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
@@ -75,7 +77,7 @@ workflow GENOMEASSEMBLY {
 
     GENOMESCOPE_MODEL( hifi_reads_ch )   
 
-    RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch )
+    RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch, hifiasm_hic_on )
     RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
     RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
     GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch), 
@@ -83,6 +85,15 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
+
+    if ( hifiasm_hic_on ) {
+        GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.primary_hic_contigs
+                                    .join(RAW_ASSEMBLY.out.alternate_hic_contigs), 
+                           PREPARE_INPUT.out.busco,
+                           GENOMESCOPE_MODEL.out.hist,
+                           GENOMESCOPE_MODEL.out.ktab
+        )
+    }
     hifi_reads_ch.join(primary_contigs_ch)
             .join(GENOMESCOPE_MODEL.out.model)
             .set{ purge_dups_input }
