@@ -33,8 +33,10 @@ workflow GENOME_STATISTICS {
     GFASTATS_HAP( haplotigs_ch, 'fasta', [], [], [], [], [], [] )
 
     // BUSCO
-    BUSCO ( assembly.map{ meta, primary, haplotigs -> [meta, primary]}, 
-            lineage.map{ meta, lineage_db, ch_lineage -> ch_lineage },
+    BUSCO ( assembly.join(lineage)
+                    .map{ meta, primary, haplotigs, lineage_db, lineage_name -> 
+                            [[id:meta.id, lineage:lineage_name], primary]}, 
+            lineage.map{ meta, lineage_db, lineage_name -> lineage_name } ,
             lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
             [] )
     ch_versions = ch_versions.mix(BUSCO.out.versions.first())
