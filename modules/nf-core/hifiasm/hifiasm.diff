@@ -1,9 +1,15 @@
 Changes in module 'nf-core/hifiasm'
 --- modules/nf-core/hifiasm/main.nf
 +++ modules/nf-core/hifiasm/main.nf
-@@ -4,8 +4,8 @@
+@@ -2,10 +2,13 @@
+     tag "$meta.id"
+     label 'process_high'
  
-     conda "bioconda::hifiasm=0.18.5"
+-    conda "bioconda::hifiasm=0.18.5"
++    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
++        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
++    }
++
      container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
 -        'https://depot.galaxyproject.org/singularity/hifiasm:0.18.5--h5b5514e_0' :
 -        'quay.io/biocontainers/hifiasm:0.18.5--h5b5514e_0' }"
@@ -12,7 +18,7 @@ Changes in module 'nf-core/hifiasm'
  
      input:
      tuple val(meta), path(reads)
-@@ -13,6 +13,7 @@
+@@ -13,6 +16,7 @@
      path  maternal_kmer_dump
      path  hic_read1
      path  hic_read2
@@ -20,7 +26,7 @@ Changes in module 'nf-core/hifiasm'
  
      output:
      tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
-@@ -22,8 +23,10 @@
+@@ -22,8 +26,10 @@
      tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
      tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
      tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
@@ -33,7 +39,7 @@ Changes in module 'nf-core/hifiasm'
      path  "versions.yml"                       , emit: versions
  
      when:
-@@ -32,6 +35,8 @@
+@@ -32,6 +38,8 @@
      script:
      def args = task.ext.args ?: ''
      def prefix = task.ext.prefix ?: "${meta.id}"

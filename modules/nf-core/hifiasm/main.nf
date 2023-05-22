@@ -2,7 +2,10 @@ process HIFIASM {
     tag "$meta.id"
     label 'process_high'
 
-    conda "bioconda::hifiasm=0.18.5"
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' :
         'quay.io/biocontainers/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' }"
