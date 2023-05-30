@@ -139,9 +139,7 @@ workflow GENOMEASSEMBLY {
         // Separate primary contigs
         KEEP_SEQNAMES_PRIMARY(PURGE_DUPS_PRI.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
-        POLISHING.out.fasta.map{ meta, f -> f }
-                           .set{ polished_fasta }
-        SEQTK_SUBSEQ_PRIMARY(polished_fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
+        SEQTK_SUBSEQ_PRIMARY(POLISHING.out.fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_PRIMARY.out.versions)
         POLISHING.out.fasta.map{ meta, f -> meta }
                             .combine(SEQTK_SUBSEQ_PRIMARY.out.sequences)
@@ -150,7 +148,7 @@ workflow GENOMEASSEMBLY {
         // Separate alt contigs
         KEEP_SEQNAMES_HAPLOTIGS(PURGE_DUPS_ALT.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_HAPLOTIGS.out.versions)
-        SEQTK_SUBSEQ_HAPLOTIGS(polished_fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
+        SEQTK_SUBSEQ_HAPLOTIGS(POLISHING.out.fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_HAPLOTIGS.out.versions)
         POLISHING.out.fasta.map{ meta, f -> meta }
                             .combine(SEQTK_SUBSEQ_HAPLOTIGS.out.sequences)

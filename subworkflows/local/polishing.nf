@@ -69,10 +69,12 @@ workflow POLISHING {
     input_sort = BCFTOOLS_VIEW.out.vcf.map{ meta, vcf -> [ [id: meta.id.toString()+'_sorted'], vcf ]}
     BCFTOOLS_SORT(input_sort)
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
-
+    
     // Merge vcf files into one
-    MERGE_FREEBAYES(BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [[id: 'merged'], vcf]}.groupTuple(), 
-                    BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [meta, []] })
+    meta_ch = fasta_in.collect{it[0]}
+    MERGE_FREEBAYES(BCFTOOLS_SORT.out.vcf.combine(fasta_in)
+                        .map{ meta, vcf, meta_fin, fa, fai -> [[id: meta_fin.id], vcf]}.groupTuple(),
+                    [ [id:'merged'], [] ] )
     ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
 
     // Normalize variants and index normalized vcf
@@ -90,7 +92,8 @@ workflow POLISHING {
     BCFTOOLS_NORM.out.vcf
         .join(BCFTOOLS_INDEX_NORM.out.tbi, by: [0], remainder: true)
         .join(fasta_ch, by: [0], remainder: true)
-        .set{ch_merge}
+        .set{ ch_merge }
+    //ch_merge.view()
     BCFTOOLS_CONSENSUS(ch_merge)
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
