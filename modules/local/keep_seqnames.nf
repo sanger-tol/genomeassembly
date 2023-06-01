@@ -20,6 +20,7 @@ process KEEP_SEQNAMES {
     def prefix = meta.prefix ?: ''
     """
     grep '>' $fasta | cut -f1 | sed 's/>//' > seq.lst
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cut: \$(cut --version | head -n 1 | awk '{print \$NF}')
