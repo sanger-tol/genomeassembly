@@ -17,7 +17,6 @@ process GET_CALCUTS_PARAMS {
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = meta.prefix ?: ''
     """
     cutoffs=`get_calcuts_params_from_model_fk.py $model_fk`
 

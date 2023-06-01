@@ -1,0 +1,14 @@
+samples:
+  - id: gsMetZobe1
+    illumina_10X:
+      reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/gsMetZobe1/10x/
+    pacbio:
+      reads:
+        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/gsMetZobe1/pacbio/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
+    HiC:
+      reads:
+        - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/gsMetZobe1/hic-arima/35528_4#7.cram
+      arima_motif: GATC,GANTC,CTNAG,TTAA
+    busco:
+      lineages_path: /lustre/scratch123/tol/resources/busco/v5/
+      lineage: fungi_odb10

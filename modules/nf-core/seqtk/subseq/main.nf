@@ -8,7 +8,7 @@ process SEQTK_SUBSEQ {
         'quay.io/biocontainers/seqtk:1.3--h5bf99c6_3' }"
 
     input:
-    path sequences
+    tuple val(meta), path(sequences)
     path filter_list
 
     output:

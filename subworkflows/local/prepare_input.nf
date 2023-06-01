@@ -34,7 +34,7 @@ workflow PREPARE_INPUT {
 
     // Prepare primary  
     assembly_input.primary_ch.map { fasta ->
-    effect = fasta.endsWith('.gz') ? 'gunzip' : 'none'
+    effect = fasta ? fasta.endsWith('.gz') ? 'gunzip' : 'none' : 'empty'
     [ ['effect':effect], fasta ]
     }
     .branch {
@@ -43,6 +43,8 @@ workflow PREPARE_INPUT {
             return [ [:], fasta ]
         geno : meta.effect == "none"
             return [ [:], fasta ]
+        empty : meta.effect == "empty"
+            return []
     }
     .set { ch_asm }
 
@@ -57,7 +59,7 @@ workflow PREPARE_INPUT {
 
     // Prepare haplotigs 
     assembly_input.haplotigs_ch.map { fasta ->
-    effect = fasta.endsWith('.gz') ? 'gunzip' : 'none'
+    effect = fasta ? fasta.endsWith('.gz') ? 'gunzip' : 'none' : 'empty'
     [ ['effect':effect], fasta ]
     }
     .branch {
@@ -66,6 +68,8 @@ workflow PREPARE_INPUT {
             return [ [:], fasta ]
         geno : meta.effect == "none"
             return [ [:], fasta ]
+        empty : meta.effect == "empty"
+            return []
     }
     .set { ch_asm_hap }
 
@@ -100,11 +104,11 @@ workflow PREPARE_INPUT {
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) } ]
                         : [])
             hic_ch: ( data.HiC ? [ [id: data.id, datatype: "hic", read_group: "\'@RG\\tID:" + data.id  + "\\tPL:ILLUMINA" + "\\tSM:" + data.id + "\'" ],  
-                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) }, 
+                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) },
                                     data.HiC.arima_motif ] 
                         : [])
             busco_ch : ( data.busco ? [ [id: data.id ], 
-                                         file(data.busco.lineages_path, checkIfExists: true),
+                                         data.busco.lineages_path ? file(data.busco.lineages_path, checkIfExists: true) : [],
                                          data.busco.lineage ] 
                         : [] )
         }
