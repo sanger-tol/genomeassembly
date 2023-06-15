@@ -15,3 +15,7 @@ samples:
     busco:
       lineages_path: /lustre/scratch123/tol/resources/busco/v5/
       lineage: insecta_odb10
+    mito:
+      species: Vespula germanica
+      min_length: 15000
+      code: 5

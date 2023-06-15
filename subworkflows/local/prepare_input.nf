@@ -111,6 +111,7 @@ workflow PREPARE_INPUT {
                                          data.busco.lineages_path ? file(data.busco.lineages_path, checkIfExists: true) : [],
                                          data.busco.lineage ] 
                         : [] )
+            mito_ch : ( data.mito ? [ [id: data.id ], '\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\""] : [])
         }
         .set{ yml_input }
 
@@ -121,6 +122,7 @@ workflow PREPARE_INPUT {
     hifi           = yml_input.pacbio_ch
     illumina_10X   = yml_input.illumina_10X_ch
     busco          = yml_input.busco_ch
+    mito           = yml_input.mito_ch
     
     versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 
