@@ -95,9 +95,8 @@ workflow GENOMEASSEMBLY {
         )
     }
     hifi_reads_ch.join(primary_contigs_ch)
-            .join(GENOMESCOPE_MODEL.out.model)
             .set{ purge_dups_input }
-    PURGE_DUPS_PRI( purge_dups_input, 'primary' )
+    PURGE_DUPS_PRI( purge_dups_input, GENOMESCOPE_MODEL.out.model, 'primary' )
     PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
                           .set{ primary_contigs_ch }
     
@@ -107,10 +106,9 @@ workflow GENOMEASSEMBLY {
     
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge } 
     hifi_reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
-            .join(GENOMESCOPE_MODEL.out.model)
             .set{ purge_dups_haploitgs_input }
 
-    PURGE_DUPS_ALT( purge_dups_haploitgs_input, 'haplotigs' )
+    PURGE_DUPS_ALT( purge_dups_haploitgs_input, GENOMESCOPE_MODEL.out.model, 'haplotigs' )
 
     PURGE_DUPS_ALT.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
                         .set{ haplotigs_ch }

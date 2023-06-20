@@ -22,16 +22,16 @@ include { GET_CALCUTS_PARAMS                        } from "../../modules/local/
 workflow PURGE_DUPS {
 
     take:
-    reads_plus_assembly_ch     // [ meta, [reads], [assembly], [model] ], where reads are the pacbio files, and assembly is the primary and alternate asms
+    reads_plus_assembly_ch     // [ meta, [reads], [assembly] ], where reads are the pacbio files, and assembly is the primary and alternate asms
+    model
     prefix  // [ prefix ] prefix for the output files
 
     main:
     reads_plus_assembly_ch
-        .flatMap { meta, reads, assembly, model -> reads instanceof List ? reads.collect{ [ meta, reads, assembly, model ] } : [ [ meta, reads, assembly, model ] ] }
-        .multiMap { meta, reads, assembly, model -> 
+        .flatMap { meta, reads, assembly -> reads instanceof List ? reads.collect{ [ meta, reads, assembly ] } : [ [ meta, reads, assembly ] ] }
+        .multiMap { meta, reads, assembly -> 
             reads_ch: [ meta, reads ]
             assembly_ch: assembly
-            model_ch: [ meta, model ] 
         }
         .set { input }
 
@@ -46,13 +46,17 @@ workflow PURGE_DUPS {
     )
     PURGEDUPS_PBCSTAT( MINIMAP2_ALIGN_READS.out.paf.groupTuple() )
     
-    GET_CALCUTS_PARAMS( input.model_ch )
-
-    PURGEDUPS_CALCUTS( PURGEDUPS_PBCSTAT.out.stat, GET_CALCUTS_PARAMS.out.cutoffs )
+    if (model) { 
+        GET_CALCUTS_PARAMS( model )
+        PURGEDUPS_CALCUTS( PURGEDUPS_PBCSTAT.out.stat, GET_CALCUTS_PARAMS.out.cutoffs )
+    }
+    else {
+        PURGEDUPS_CALCUTS( PURGEDUPS_PBCSTAT.out.stat )
+    }
 
     // Split assembly and do self alignment
     reads_plus_assembly_ch
-        .map { meta, reads, assembly, model -> [ meta, assembly ] }
+        .map { meta, reads, assembly  -> [ meta, assembly ] }
         .set { minimal_assembly_ch }
     PURGEDUPS_SPLITFA( minimal_assembly_ch )
     minimal_assembly_ch.map{ meta, asm -> Math.ceil(asm.size()/1e9).round() }.set{ idx_num }
@@ -73,7 +77,8 @@ workflow PURGE_DUPS {
     ) 
 
     minimal_assembly_ch.join( PURGEDUPS_PURGEDUPS.out.bed )
-                       .map { meta, assembly, bed -> [[id:meta.id, prefix:prefix], assembly, bed] }
+                       .map { meta, assembly, bed -> prefix ? [[id:meta.id, prefix:prefix], assembly, bed] :
+                                                    prefix ? [[id:meta.id], assembly, bed] }
                        .set { ch_getseqs_input }
     PURGEDUPS_GETSEQS( ch_getseqs_input )
 
