@@ -28,8 +28,8 @@ workflow MITO {
 //                       MITOHIFI_FINDMITOREFERENCE.out.gb,
 //                       code)    
     
-   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], [], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-c/ilDeiPorc1.contigs.fa"],
-//   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-r/ilDeiPorc1.reads.fa", []],
+//   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], [], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-c/ilDeiPorc1.contigs.fa"],
+   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-r/ilDeiPorc1.reads.fa", []],
                        MITOHIFI_FINDMITOREFERENCE.out.fasta,
                        MITOHIFI_FINDMITOREFERENCE.out.gb,
                        code)    

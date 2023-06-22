@@ -4,8 +4,8 @@ process MITOHIFI_MITOHIFI {
 
     // Docker image available at the biocontainers Dockerhub
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://biocontainers/mitohifi:2.2_cv1':
-        'docker.io/biocontainers/mitohifi:2.2_cv1' }"
+        'docker://ghcr.io/marcelauliano/mitohifi:master':
+        'ghcr.io/marcelauliano/mitohifi:master' }"
 
     input:
     tuple val(meta), path(reads), path(contigs)
