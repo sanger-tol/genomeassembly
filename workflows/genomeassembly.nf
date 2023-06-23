@@ -73,10 +73,11 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
     
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
-    PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
 
     GENOMESCOPE_MODEL( hifi_reads_ch )   
 
+    PREPARE_INPUT.out.hic.map{meta, reads -> reads}
+                         .set{ hic_reads_ch }
     RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch, hifiasm_hic_on )
     RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
     RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
@@ -165,13 +166,10 @@ workflow GENOMEASSEMBLY {
         )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
     }
-    
-    PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
-                         .set{ crams_ch }
 
     // Map HiC data to the primary assembly
     HIC_MAPPING ( primary_contigs_ch,
-                  crams_ch)
+                  PREPARE_INPUT.out.hic )
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
     SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )

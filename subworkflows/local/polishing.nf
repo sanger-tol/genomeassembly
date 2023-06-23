@@ -9,8 +9,8 @@ include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-c
 include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main' 
 include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
 include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
-include { LONGRANGER_MKREF } from '../../modules/local/longranger/mkref/main'
-include { LONGRANGER_ALIGN } from '../../modules/local/longranger/align/main'
+include { LONGRANGER_MKREF                            } from '../../modules/local/longranger/mkref/main'
+include { LONGRANGER_ALIGN                            } from '../../modules/local/longranger/align/main'
 
 workflow POLISHING {
     take:

@@ -6,12 +6,12 @@ nextflow.enable.dsl = 2
 
 import org.yaml.snakeyaml.Yaml
 
-include { GUNZIP as GUNZIP_PRI }  from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_HAP }  from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_PRI                       }  from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_HAP                       }  from '../../modules/nf-core/gunzip/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PRIMARY   }  from '../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_HAPLOTIGS }  from '../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_MERGED    }  from '../../modules/nf-core/samtools/faidx/main'
-include { FASTA_CONCAT }  from '../../modules/local/concat'
+include { FASTA_CONCAT                               }  from '../../modules/local/concat'
 
 workflow PREPARE_INPUT {
 
@@ -104,8 +104,7 @@ workflow PREPARE_INPUT {
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) } ]
                         : [])
             hic_ch: ( data.HiC ? [ [id: data.id ],  
-                                    file(data.HiC.reads,  checkIfExists: true),
-                                    data.HiC.arima_motif ] 
+                                    file(data.HiC.reads,  checkIfExists: true) ] 
                         : [])
             busco_ch : ( data.busco ? [ [id: data.id ], 
                                          data.busco.lineages_path ? file(data.busco.lineages_path, checkIfExists: true) : [],

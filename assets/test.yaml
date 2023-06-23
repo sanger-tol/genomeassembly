@@ -7,6 +7,5 @@ samples:
         - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
     HiC:
       reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/
-      arima_motif: GATC,GANTC,CTNAG,TTAA
     busco:
       lineage: bacteria_odb10

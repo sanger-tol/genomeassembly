@@ -5,12 +5,12 @@
 // Merge and Markdup all alignments at specimen level
 // Convert to CRAM and calculate statistics
 //
-include { SAMTOOLS_SORT     } from '../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MARKDUP } from '../../modules/nf-core/samtools/view/main'
-include { MARKDUPLICATE     } from '../../subworkflows/local/markduplicate'
-include { CONVERT_STATS     } from '../../subworkflows/local/convert_stats'
-include { BEDTOOLS_BAMTOBED } from '../../modules/nf-core/bedtools/bamtobed/main'
-include { GNU_SORT as BED_SORT } from '../../modules/local/gnu_sort'
+include { SAMTOOLS_SORT                           } from '../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MARKDUP  } from '../../modules/nf-core/samtools/view/main'
+include { MARKDUPLICATE                           } from '../../subworkflows/local/markduplicate'
+include { CONVERT_STATS                           } from '../../subworkflows/local/convert_stats'
+include { BEDTOOLS_BAMTOBED                       } from '../../modules/nf-core/bedtools/bamtobed/main'
+include { GNU_SORT as BED_SORT                    } from '../../modules/local/gnu_sort'
 
 workflow MARKDUP_STATS {
     take:

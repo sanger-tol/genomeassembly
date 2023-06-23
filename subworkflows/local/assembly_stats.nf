@@ -7,10 +7,10 @@
 // https://github.com/sanger-tol/genomenote/blob/383f23e6b7a89f9aad6b85c8f7320b5c5825de73/subworkflows/local/genome_statistics.nf
 //
 
-include { GFASTATS as GFASTATS_PRI } from '../../modules/nf-core/gfastats/main'
-include { GFASTATS as GFASTATS_HAP } from '../../modules/nf-core/gfastats/main'
-include { BUSCO               } from '../../modules/nf-core/busco/main'
-include { MERQURYFK_MERQURYFK } from '../../modules/nf-core/merquryfk/merquryfk/main'
+include { GFASTATS as GFASTATS_PRI  } from '../../modules/nf-core/gfastats/main'
+include { GFASTATS as GFASTATS_HAP  } from '../../modules/nf-core/gfastats/main'
+include { BUSCO                     } from '../../modules/nf-core/busco/main'
+include { MERQURYFK_MERQURYFK       } from '../../modules/nf-core/merquryfk/merquryfk/main'
 
 workflow GENOME_STATISTICS {
     take:
