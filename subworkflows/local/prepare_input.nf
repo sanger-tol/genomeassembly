@@ -103,8 +103,8 @@ workflow PREPARE_INPUT {
             pacbio_ch: ( data.pacbio ? [ [id: data.id ], 
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) } ]
                         : [])
-            hic_ch: ( data.HiC ? [ [id: data.id, datatype: "hic", read_group: "\'@RG\\tID:" + data.id  + "\\tPL:ILLUMINA" + "\\tSM:" + data.id + "\'" ],  
-                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) },
+            hic_ch: ( data.HiC ? [ [id: data.id ],  
+                                    file(data.HiC.reads,  checkIfExists: true),
                                     data.HiC.arima_motif ] 
                         : [])
             busco_ch : ( data.busco ? [ [id: data.id ], 

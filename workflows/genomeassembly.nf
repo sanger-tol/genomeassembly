@@ -36,7 +36,7 @@ include { POLISHING       } from '../subworkflows/local/polishing'
 include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
-include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
+include { HIC_MAPPING     } from '../subworkflows/local/hic_mapping'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/assembly_stats'
@@ -170,10 +170,11 @@ workflow GENOMEASSEMBLY {
                          .set{ crams_ch }
 
     // Map HiC data to the primary assembly
-    ALIGN_SHORT( primary_contigs_ch, crams_ch )    
-    ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
+    HIC_MAPPING ( primary_contigs_ch,
+                  crams_ch)
+    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
-    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
+    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)
