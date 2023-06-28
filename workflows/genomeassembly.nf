@@ -29,7 +29,7 @@ if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hif
 //
 include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
 include { RAW_ASSEMBLY    } from '../subworkflows/local/raw_assembly' 
-include { MITO            } from '../subworkflows/local/mito' 
+include { ORGANELLES            } from '../subworkflows/local/organelles' 
 include { GENOMESCOPE_MODEL } from '../subworkflows/local/genomescope_model'
 include { PURGE_DUPS as PURGE_DUPS_PRI      } from '../subworkflows/local/purge_dups'
 include { PURGE_DUPS as PURGE_DUPS_ALT      } from '../subworkflows/local/purge_dups'
@@ -75,9 +75,8 @@ workflow GENOMEASSEMBLY {
     
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
  
-    MITO(hifi_reads_ch, [], PREPARE_INPUT.out.mito)
 
-/*    PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
+    PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
 
     GENOMESCOPE_MODEL( hifi_reads_ch )   
 
@@ -123,12 +122,13 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
+    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                        .set{ purged_pri_alt_ch }
+    CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
+    ORGANELLES(hifi_reads_ch, CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
 
     if ( polishing_on ) {
-        PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                              .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
-                          .set{ purged_pri_alt_ch }
-        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
         SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
         CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
                                   .set{ reference_ch }
@@ -195,7 +195,6 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-*/
 }
 
 /*
