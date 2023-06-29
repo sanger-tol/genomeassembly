@@ -1,12 +1,12 @@
-include { MITOHIFI_FINDMITOREFERENCE } from '../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS } from '../../modules/local/mitohifi'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_ASM   } from '../../modules/local/mitohifi'
+include { MITOHIFI_FINDMITOREFERENCE                    } from '../../modules/nf-core/mitohifi/findmitoreference/main'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS  } from '../../modules/local/mitohifi'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_ASM    } from '../../modules/local/mitohifi'
 
 workflow ORGANELLES {
     take:
-    hifi_reads // channel: [ val(meta), datafile  ]
-    contigs // channel: [ val(meta), datafile ] 
-    mito_info // channel: [ val(meta), val(species), val(min_length), val(code), val(email) ]
+    hifi_reads  // channel: [ val(meta), datafile  ]
+    contigs     // channel: [ val(meta), datafile ] 
+    mito_info   // channel: [ val(meta), val(species), val(min_length), val(code), val(email) ]
 
     main:
     ch_versions = Channel.empty()
@@ -16,7 +16,6 @@ workflow ORGANELLES {
     mito_info.map{ meta, species, min_length, code, email -> code}.set{code}
     mito_info.map{ meta, species, min_length, code, email -> email}.set{email}
     MITOHIFI_FINDMITOREFERENCE(species, email, min_length)
-//    MITOHIFI_FINDMITOREFERENCE("\"Deilephila porcellus\"", email, min_length)
 
     // TODO: concat reads
     if ( hifi_reads ) {
@@ -32,11 +31,6 @@ workflow ORGANELLES {
                         code)    
     }
     
-//   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], [], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-c/ilDeiPorc1.contigs.fa"],
-//   MITOHIFI_MITOHIFI(  [[id:"ilDeiPorc1"], "/lustre/scratch124/tol/projects/darwin/users/kk16/development/mitohifi/mito-datasets/animal-ilDeiPorc1-r/ilDeiPorc1.reads.fa", []],
- //                      MITOHIFI_FINDMITOREFERENCE.out.fasta,
- //                      MITOHIFI_FINDMITOREFERENCE.out.gb,
- //                      code)    
     emit:
 
     fasta_ref = MITOHIFI_FINDMITOREFERENCE.out.fasta
