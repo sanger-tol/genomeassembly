@@ -44,8 +44,6 @@ workflow HIC_MAPPING {
     GENERATE_CRAM_CSV ( get_reads_input )
     ch_versions         = ch_versions.mix(GENERATE_CRAM_CSV.out.versions)
 
-
-
     //
     // LOGIC: organise all parametres into a channel for CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT
     //
@@ -58,12 +56,12 @@ workflow HIC_MAPPING {
                                         id: cram_id.id
                                         ], 
                                     file(cram_info[0]),
-                                    cram_info[1],
-                                    cram_info[2],
-                                    cram_info[3],
-                                    cram_info[4],
-                                    cram_info[5],
-                                    cram_info[6],
+                                    cram_info[1], // crai path
+                                    cram_info[2], // chunk starting position
+                                    cram_info[3], // chunk end position
+                                    cram_info[4], // basename
+                                    cram_info[5], // the number of chunk
+                                    cram_info[6], // rgline
                                     bwa_path.toString() + '/' + ref_dir.toString().split('/')[-1])                          
                             }
 
