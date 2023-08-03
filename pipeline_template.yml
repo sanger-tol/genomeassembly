@@ -1,2 +1,3 @@
 prefix: sanger-tol
-skip: []
+skip:
+  - igenomes
