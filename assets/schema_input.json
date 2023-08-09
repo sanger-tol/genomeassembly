@@ -46,9 +46,6 @@
                 }
             }
         },
-        "required": [
-            "dataset",
-            "busco"
-        ]
+        "required": ["dataset", "busco"]
     }
-} 
+}

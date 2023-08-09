@@ -1,14 +1,14 @@
 repository_type: pipeline
 lint:
   files_exist:
-  - assets/nf-core-genomeassembly_logo_light.png
-  - docs/images/nf-core-genomeassembly_logo_light.png
-  - docs/images/nf-core-genomeassembly_logo_dark.png
-  - .github/ISSUE_TEMPLATE/config.yml
-  - .github/workflows/awstest.yml
-  - .github/workflows/awsfulltest.yml
+    - assets/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_dark.png
+    - .github/ISSUE_TEMPLATE/config.yml
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
   nextflow_config:
-  - manifest.name
-  - manifest.homePage
+    - manifest.name
+    - manifest.homePage
   multiqc_config:
-  - report_comment
+    - report_comment

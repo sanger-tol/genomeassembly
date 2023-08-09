@@ -1,13 +1,13 @@
-samples:
-  - id: baUndUnlc1
-    illumina_10X:
-      reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
-    pacbio:
-      reads:
-        - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
-    HiC:
-      reads:
-        - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
-      arima_motif: GATC,GANTC,CTNAG,TTAA
-    busco:
-      lineage: bacteria_odb10
+dataset:
+  id: baUndUnlc1
+  illumina_10X:
+    reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
+  pacbio:
+    reads:
+      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  HiC:
+    reads:
+      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
+hic_motif: GATC,GANTC,CTNAG,TTAA
+busco:
+  lineage: bacteria_odb10
