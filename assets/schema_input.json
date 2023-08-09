@@ -1,36 +1,54 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/sanger-tol/genomeassembly/master/assets/schema_input.json",
+    "$id": "https://github.com/sanger-tol/genomeassembly/blob/main/assets/schema_input.json",
     "title": "sanger-tol/genomeassembly pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
-            },
-            "fastq_1": {
-                "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
-            "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
+            "dataset": {
+                "type": "object",
+                "properties": {
+                    "id": {
                         "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                        "errorMessage": "Sample name (ToLID) must be provided and cannot contain spaces"
                     },
-                    {
+                    "illumina_10X": {
                         "type": "string",
-                        "maxLength": 0
+                        "errorMessage": "Path to folder containing 10X fastq reads and indices"
+                    },
+                    "pacbio": {
+                        "type": "array",
+                        "errorMessage": "Paths to HiFi reads in fasta format"
+                    },
+                    "HiC": {
+                        "type": "array",
+                        "errorMessage": "Path to HiC reads in cram format"
                     }
-                ]
+                }
+            },
+            "arima_motif": {
+                "type": "string",
+                "errorMessage": "Comma-separated list of restriction enzymes"
+            },
+            "busco": {
+                "type": "object",
+                "properties": {
+                    "lineage_path": {
+                        "type": "string",
+                        "errorMessage": "Path to directory containing lineages folder"
+                    },
+                    "lineage": {
+                        "type": "string",
+                        "errorMessage": "busco lineage to run"
+                    }
+                }
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": [
+            "dataset",
+            "busco"
+        ]
     }
-}
+} 
