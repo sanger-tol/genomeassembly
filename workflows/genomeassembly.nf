@@ -29,10 +29,6 @@ if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hif
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,7 +74,6 @@ include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS } from '../modules/nf-core/seqt
 */
 
 // Info required for completion email and summary
-def multiqc_report = []
 
 workflow GENOMEASSEMBLY {
 
@@ -220,7 +215,7 @@ workflow GENOMEASSEMBLY {
 
 workflow.onComplete {
     if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, null)
     }
     NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) {

@@ -1,7 +1,6 @@
 repository_type: pipeline
 lint:
   files_exist:
-  - CODE_OF_CONDUCT.md
   - assets/nf-core-genomeassembly_logo_light.png
   - docs/images/nf-core-genomeassembly_logo_light.png
   - docs/images/nf-core-genomeassembly_logo_dark.png
