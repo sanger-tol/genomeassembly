@@ -11,7 +11,6 @@
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
 
 ## Usage
@@ -50,11 +49,11 @@ Currently, it is advised to run the pipeline with docker or singularity as a sma
 sanger-tol/genomeassembly was originally written by Ksenia Krasheninnikova.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
+
 <li>@mcshane - For the original implementation of the genomeassembly pipeline </li>
 <li>@priyanka-surana - For code reviews and code support</li>
 <li>@mahesh-panchal - For nextflow implementation of the purge_dups pipeline that was re-used here,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as well as for the implementation of input parsing subworkflow which was further adapted for the current pipeline</li>
-
 
 ## Contributions and Support
 
@@ -63,7 +62,8 @@ If you would like to contribute to this pipeline, please see the [contributing g
 ## Citations
 
 <!-- TODO Citation -->
-If you use  sanger-tol/genomeassembly for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX)
+
+If you use sanger-tol/genomeassembly for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX)
 
 ### Tools
 
