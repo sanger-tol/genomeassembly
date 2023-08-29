@@ -7,6 +7,14 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+  files_unchanged:
+    - .github/workflows/linting.yml
+    - .github/CONTRIBUTING.md
+    - LICENSE
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - assets/sendmail_template.txt
+    - lib/NfcoreTemplate.groovy
+    - .prettierignore
   nextflow_config:
     - manifest.name
     - manifest.homePage
