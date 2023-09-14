@@ -44,7 +44,7 @@ Currently, it is advised to run the pipeline with docker or singularity as a sma
 
 ## Credits
 
-sanger-tol/genomeassembly was originally written by Ksenia Krasheninnikova.
+sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova based on the ToL Genome Engine procedures.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
