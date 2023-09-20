@@ -8,7 +8,7 @@ samples:
     HiC:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/gsMetZobe1/hic-arima/35528_4#7.cram
-      arima_motif: GATC,GANTC,CTNAG,TTAA
-    busco:
-      lineages_path: /lustre/scratch123/tol/resources/busco/v5/
-      lineage: fungi_odb10
+arima_motif: GATC,GANTC,CTNAG,TTAA
+busco:
+  lineages_path: /lustre/scratch123/tol/resources/busco/v5/
+  lineage: fungi_odb10

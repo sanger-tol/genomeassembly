@@ -50,10 +50,6 @@ These tests are run both with the latest available version of `Nextflow` and als
 - Fix the bug, and bump version (X.Y.Z+1).
 - A PR should be made on `master` from patch to directly this particular bug.
 
-## Getting help
-
-For further information/help, please consult the [sanger-tol/genomeassembly documentation](https://nf-co.re/sanger-tol-genomeassembly/usage).
-
 ## Pipeline contribution conventions
 
 To make the sanger-tol/genomeassembly code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
@@ -99,3 +95,19 @@ If you are using a new feature from core Nextflow, you may bump the minimum requ
 ### Images and figures
 
 For overview images and other documents we follow the nf-core [style guidelines and examples](https://nf-co.re/developers/design_guidelines).
+
+## GitHub Codespaces
+
+This repo includes a devcontainer configuration which will create a GitHub Codespaces for Nextflow development! This is an online developer environment that runs in your browser, complete with VSCode and a terminal.
+
+To get started:
+
+- Open the repo in [Codespaces](https://github.com/sanger-tol/genomeassembly/codespaces)
+- Tools installed
+  - nf-core
+  - Nextflow
+
+Devcontainer specs:
+
+- [DevContainer config](.devcontainer/devcontainer.json)
+- [Dockerfile](.devcontainer/Dockerfile)

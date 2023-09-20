@@ -83,7 +83,9 @@ workflow POLISHING {
         .combine(fasta_in)
         .map{ id_norm, vcf, tbi, meta, fasta, fai -> [meta, vcf, tbi] }
         .set{ input_norm }
-    BCFTOOLS_NORM(input_norm, fasta)
+    fasta_in.map{ meta, fasta, fai -> [meta, fasta] }
+            .set{ fasta_meta_ch }
+    BCFTOOLS_NORM(input_norm, fasta_meta_ch)
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
     BCFTOOLS_INDEX_NORM(BCFTOOLS_NORM.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
