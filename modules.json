@@ -22,7 +22,7 @@
                     },
                     "bcftools/norm": {
                         "branch": "master",
-                        "git_sha": "bcad95fb35e567ad25840d3297c3e17eff211a3a",
+                        "git_sha": "0435e4eebc94e53721c194b2d5d06f455a79e407",
                         "installed_by": ["modules"]
                     },
                     "bcftools/sort": {
@@ -37,7 +37,7 @@
                     },
                     "bedtools/bamtobed": {
                         "branch": "master",
-                        "git_sha": "1d48427957205cb6acf1ffe330bd35b6bb8baa90",
+                        "git_sha": "9e51255c4f8ec69fb6ccf68593392835f14fecb8",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/bedtools/bamtobed/bedtools-bamtobed.diff"
                     },
@@ -68,7 +68,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "7101db4432d3268b7fcb5b8f75fa0a022dc5561b",
+                        "git_sha": "76cc4938c1f6ea5c7d83fed1eeffc146787f9543",
                         "installed_by": ["modules"]
                     },
                     "fastk/fastk": {
@@ -79,6 +79,11 @@
                     "fastk/histex": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "installed_by": ["modules"]
+                    },
+                    "fastqc": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
@@ -111,6 +116,7 @@
                     "hifiasm": {
                         "branch": "master",
                         "git_sha": "07b737b47d33d8d980e5e0c09736764f450980a3",
+                        "installed_by": ["modules"],
                         "patch": "modules/nf-core/hifiasm/hifiasm.diff"
                     },
                     "merquryfk/merquryfk": {
@@ -123,11 +129,6 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/minimap2/align/minimap2-align.diff"
-                    },
-                    "multiqc": {
-                        "branch": "master",
-                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
-                        "installed_by": ["modules"]
                     },
                     "pretextmap": {
                         "branch": "master",
