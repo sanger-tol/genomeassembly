@@ -38,8 +38,8 @@ process HIFIASM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def hic_read1 = hic_reads_cram ? "for f in $hic_reads_cram/*cram; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done" : ""
-    def hic_read2 = hic_reads_cram ? "for f in $hic_reads_cram/*cram; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done" : ""
+    def hic_read1 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done" : ""
+    def hic_read2 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done" : ""
     if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
         error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
     } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {

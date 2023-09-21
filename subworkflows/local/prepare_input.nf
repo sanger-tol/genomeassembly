@@ -42,8 +42,7 @@ workflow PREPARE_INPUT {
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) } ]
                         : [])
             hic_ch: ( data.HiC ? [ [id: data.id, datatype: "hic", read_group: "\'@RG\\tID:" + data.id  + "\\tPL:ILLUMINA" + "\\tSM:" + data.id + "\'" ],  
-                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) },
-                                    ] 
+                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) } ] 
                         : [])
         }
         .set{ dataset_ch }
