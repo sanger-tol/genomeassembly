@@ -1,11 +1,11 @@
 //
-// Copied from https://github.com/sanger-tol/treeval/blob/80554a803903183613d49690d5770eeadb3c42c9/modules/local/generate_cram_csv.nf
+// Copied from https://github.com/sanger-tol/treeval/blob/28309b7a1faf3aee5627f497c7cfa62d12ac65b8/modules/local/generate_cram_csv.nf
 // from Sanger TOL treeval pipeline
 //
 
 process GENERATE_CRAM_CSV {
     tag "${meta.id}"
-    label "process_low"
+    label 'process_low'
 
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

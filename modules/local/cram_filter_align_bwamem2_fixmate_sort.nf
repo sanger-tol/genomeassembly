@@ -27,6 +27,7 @@ process CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT {
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
     def args4 = task.ext.args4 ?: ''
+    def args5 = task.ext.args5 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     // Please be aware one of the tools here required mem = 28 * reference size!!!
     """
@@ -34,7 +35,8 @@ process CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT {
         samtools fastq ${args1} | \\
         bwa-mem2 mem -p ${bwaprefix} -t${task.cpus} -5SPCp -H'${rglines}' - | \\
         samtools fixmate ${args3} - - | \\
-        samtools sort ${args4} -@${task.cpus} -T ${base}_${chunkid}_sort_tmp -o ${prefix}_${base}_${chunkid}_mem.bam -
+        samtools view -bh ${args4} - | \\
+        samtools sort ${args5} -@${task.cpus} -T ${base}_${chunkid}_sort_tmp -o ${prefix}_${base}_${chunkid}_mem.bam -
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

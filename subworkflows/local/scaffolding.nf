@@ -18,7 +18,7 @@ workflow SCAFFOLDING {
     
     main:
     ch_versions = Channel.empty()
-    CONTIGS_FAIDX( fasta_in )
+    CONTIGS_FAIDX( fasta_in, [[],[]] )
     ch_versions = ch_versions.mix(CONTIGS_FAIDX.out.versions)
     CONTIGS_FAIDX.out.fai.join( fasta_in )
                     .map{ meta, fai, fasta -> fasta }
@@ -28,7 +28,7 @@ workflow SCAFFOLDING {
                     .set{ scaf_ref_fai }
     YAHS( bed_in, scaf_ref, scaf_ref_fai )
     ch_versions = ch_versions.mix(YAHS.out.versions)
-    SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta)
+    SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta, [[],[]])
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
     bed_in.map{ meta, bed -> meta}.set{ch_meta}
 
