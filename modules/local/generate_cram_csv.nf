@@ -1,5 +1,5 @@
 //
-// Copied from https://github.com/sanger-tol/treeval/blob/28309b7a1faf3aee5627f497c7cfa62d12ac65b8/modules/local/generate_cram_csv.nf
+// Based on https://github.com/sanger-tol/treeval/blob/28309b7a1faf3aee5627f497c7cfa62d12ac65b8/modules/local/generate_cram_csv.nf
 // from Sanger TOL treeval pipeline
 //
 
@@ -13,7 +13,7 @@ process GENERATE_CRAM_CSV {
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
-    tuple val(meta), path(crampath)
+    tuple val(meta), path(crampaths, stageAs: "?/*")
 
 
     output:
@@ -23,7 +23,7 @@ process GENERATE_CRAM_CSV {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    generate_cram_csv.sh $crampath >> ${prefix}_cram.csv
+    generate_cram_csv.sh $crampaths >> ${prefix}_cram.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

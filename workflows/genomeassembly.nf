@@ -138,7 +138,7 @@ workflow GENOMEASSEMBLY {
                               .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
                           .set{ purged_pri_alt_ch }
         CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
+        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
         CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
                                   .set{ reference_ch }
 
@@ -154,7 +154,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
         SEQTK_SUBSEQ_PRIMARY(POLISHING.out.fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_PRIMARY.out.versions)
-        POLISHING.out.fasta.map{ meta, f -> meta }
+        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
                             .combine(SEQTK_SUBSEQ_PRIMARY.out.sequences)
                             .set{ primary_contigs_ch }
         
@@ -163,7 +163,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_HAPLOTIGS.out.versions)
         SEQTK_SUBSEQ_HAPLOTIGS(POLISHING.out.fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_HAPLOTIGS.out.versions)
-        POLISHING.out.fasta.map{ meta, f -> meta }
+        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
                             .combine(SEQTK_SUBSEQ_HAPLOTIGS.out.sequences)
                             .set{ haplotigs_contigs_ch }
 

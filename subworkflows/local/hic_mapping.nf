@@ -39,6 +39,7 @@ workflow HIC_MAPPING {
         .map { meta, ref, hic_reads_path ->
                 tuple([ id: meta.id, single_end: true], hic_reads_path) }
         .set { get_reads_input }
+
     //
     // MODULE: generate a cram csv file containing the required parametres for CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT
     //
