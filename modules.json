@@ -48,12 +48,7 @@
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
-                    },
-                    "bwamem2/mem": {
-                        "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
                         "installed_by": ["modules"]
                     },
                     "cat/cat": {
@@ -178,12 +173,7 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
-                    },
-                    "samtools/fastq": {
-                        "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/fixmate": {
@@ -208,12 +198,12 @@
                     },
                     "samtools/markdup": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "9e51255c4f8ec69fb6ccf68593392835f14fecb8",
                         "installed_by": ["modules"]
                     },
                     "samtools/merge": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
                         "installed_by": ["modules"]
                     },
                     "samtools/sort": {

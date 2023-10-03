@@ -1,7 +1,7 @@
-include { CAT_CAT as CAT_CAT_READS                  } from "../../modules/nf-core/cat/cat/main"
-include { FASTK_FASTK                               } from "../../modules/nf-core/fastk/fastk/main"
-include { FASTK_HISTEX                              } from '../../modules/nf-core/fastk/histex/main'
-include { GENESCOPEFK                               } from "../../modules/nf-core/genescopefk/main"
+include { CAT_CAT as CAT_CAT_READS   } from "../../modules/nf-core/cat/cat/main"
+include { FASTK_FASTK                } from "../../modules/nf-core/fastk/fastk/main"
+include { FASTK_HISTEX               } from '../../modules/nf-core/fastk/histex/main'
+include { GENESCOPEFK                } from "../../modules/nf-core/genescopefk/main"
 
 workflow GENOMESCOPE_MODEL {
 

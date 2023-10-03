@@ -26,7 +26,7 @@ workflow CONVERT_STATS {
     // Index CRAM file
     SAMTOOLS_INDEX ( SAMTOOLS_VIEW.out.cram )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
-
+    
     // Combine CRAM and CRAI into one channel
     SAMTOOLS_VIEW.out.cram
     .join(SAMTOOLS_INDEX.out.crai, by: [0], remainder: true)
