@@ -136,16 +136,12 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.ktab
     )
     PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
     CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
     ORGANELLES(hifi_reads_ch, CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
 
     if ( polishing_on ) {
-        PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                              .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
-                          .set{ purged_pri_alt_ch }
-        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
         SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
         CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
                                   .set{ reference_ch }
