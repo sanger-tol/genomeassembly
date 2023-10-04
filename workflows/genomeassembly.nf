@@ -6,18 +6,29 @@
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
+// Validate input parameters
+WorkflowGenomeassembly.initialise(params, log)
+
+// TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
 def checkPathParamList = [ params.input ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = Channel.of(file(params.input)) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+
 if (params.bed_chunks_polishing) { bed_chunks_polishing = params.bed_chunks_polishing } else { bed_chunks_polishing = 100; }
 
 if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CONFIG FILES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,23 +48,26 @@ include { POLISHING       } from '../subworkflows/local/polishing'
 include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
-include { ALIGN_SHORT     } from '../subworkflows/local/align_short'
+include { HIC_MAPPING     } from '../subworkflows/local/hic_mapping'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
 
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT NF-CORE MODULES/SUBWORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 include { CAT_CAT as CAT_CAT_HAPLOTIGS } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_PURGEDUPS } from "../modules/nf-core/cat/cat/main"
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS   }  from '../modules/nf-core/samtools/faidx/main'
 
-//
-// MODULE: Installed directly from nf-core/modules
-//
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY   } from '../modules/nf-core/seqtk/subseq/main'
 include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS } from '../modules/nf-core/seqtk/subseq/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -61,7 +75,6 @@ include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS } from '../modules/nf-core/seqt
 */
 
 // Info required for completion email and summary
-def multiqc_report = []
 
 workflow GENOMEASSEMBLY {
 
@@ -72,7 +85,7 @@ workflow GENOMEASSEMBLY {
     //   
     PREPARE_INPUT(ch_input)
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
-    
+        
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
  
 
@@ -129,7 +142,11 @@ workflow GENOMEASSEMBLY {
     ORGANELLES(hifi_reads_ch, CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
 
     if ( polishing_on ) {
-        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out )
+        PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                              .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
+                          .set{ purged_pri_alt_ch }
+        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
+        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
         CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
                                   .set{ reference_ch }
 
@@ -145,7 +162,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
         SEQTK_SUBSEQ_PRIMARY(POLISHING.out.fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_PRIMARY.out.versions)
-        POLISHING.out.fasta.map{ meta, f -> meta }
+        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
                             .combine(SEQTK_SUBSEQ_PRIMARY.out.sequences)
                             .set{ primary_contigs_ch }
         
@@ -154,7 +171,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_HAPLOTIGS.out.versions)
         SEQTK_SUBSEQ_HAPLOTIGS(POLISHING.out.fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
         ch_versions = ch_versions.mix(SEQTK_SUBSEQ_HAPLOTIGS.out.versions)
-        POLISHING.out.fasta.map{ meta, f -> meta }
+        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
                             .combine(SEQTK_SUBSEQ_HAPLOTIGS.out.sequences)
                             .set{ haplotigs_contigs_ch }
 
@@ -169,15 +186,15 @@ workflow GENOMEASSEMBLY {
         )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
     }
-    
+
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
     // Map HiC data to the primary assembly
-    ALIGN_SHORT( primary_contigs_ch, crams_ch )    
-    ch_versions = ch_versions.mix(ALIGN_SHORT.out.versions)
+    HIC_MAPPING ( primary_contigs_ch,crams_ch )
+    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
-    SCAFFOLDING( ALIGN_SHORT.out.bed, primary_contigs_ch, cool_bin )
+    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     SCAFFOLDING.out.fasta.combine(haplotigs_ch)
@@ -205,9 +222,12 @@ workflow GENOMEASSEMBLY {
 
 workflow.onComplete {
     if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, null)
     }
     NfcoreTemplate.summary(workflow, params, log)
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

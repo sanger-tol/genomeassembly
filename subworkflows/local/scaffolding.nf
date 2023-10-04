@@ -1,14 +1,14 @@
-include { COOLER_CLOAD     } from '../../modules/nf-core/cooler/cload/main.nf' 
-include { COOLER_ZOOMIFY   } from '../../modules/nf-core/cooler/zoomify/main.nf' 
+include { COOLER_CLOAD                        } from '../../modules/nf-core/cooler/cload/main.nf' 
+include { COOLER_ZOOMIFY                      } from '../../modules/nf-core/cooler/zoomify/main.nf' 
 include { SAMTOOLS_FAIDX  as CONTIGS_FAIDX    } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX  } from '../../modules/nf-core/samtools/faidx/main.nf'
-include { YAHS             } from '../../modules/nf-core/yahs/main'
-include { JUICER_PRE       } from '../../modules/local/juicer_pre.nf'
-include { JUICER_TOOLS_PRE } from '../../modules/local/juicer_tools_pre.nf'
-include { PREPARE_PRETEXTMAP_INPUT      } from '../../modules/local/prepare_pretext_input.nf'
-include { PRETEXTMAP       } from '../../modules/nf-core/pretextmap/main.nf'
-include { PRETEXTSNAPSHOT  } from '../../modules/nf-core/pretextsnapshot/main'
-include { CHROM_SIZES      } from '../../modules/local/chrom_sizes.nf'
+include { YAHS                                } from '../../modules/nf-core/yahs/main'
+include { JUICER_PRE                          } from '../../modules/local/juicer_pre.nf'
+include { JUICER_TOOLS_PRE                    } from '../../modules/local/juicer_tools_pre.nf'
+include { PREPARE_PRETEXTMAP_INPUT            } from '../../modules/local/prepare_pretext_input.nf'
+include { PRETEXTMAP                          } from '../../modules/nf-core/pretextmap/main.nf'
+include { PRETEXTSNAPSHOT                     } from '../../modules/nf-core/pretextsnapshot/main'
+include { CHROM_SIZES                         } from '../../modules/local/chrom_sizes.nf'
 
 workflow SCAFFOLDING {
     take:  
@@ -18,7 +18,7 @@ workflow SCAFFOLDING {
     
     main:
     ch_versions = Channel.empty()
-    CONTIGS_FAIDX( fasta_in )
+    CONTIGS_FAIDX( fasta_in, [[],[]] )
     ch_versions = ch_versions.mix(CONTIGS_FAIDX.out.versions)
     CONTIGS_FAIDX.out.fai.join( fasta_in )
                     .map{ meta, fai, fasta -> fasta }
@@ -28,7 +28,7 @@ workflow SCAFFOLDING {
                     .set{ scaf_ref_fai }
     YAHS( bed_in, scaf_ref, scaf_ref_fai )
     ch_versions = ch_versions.mix(YAHS.out.versions)
-    SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta)
+    SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta, [[],[]])
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
     bed_in.map{ meta, bed -> meta}.set{ch_meta}
 
