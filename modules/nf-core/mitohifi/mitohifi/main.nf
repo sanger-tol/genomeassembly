@@ -2,10 +2,9 @@ process MITOHIFI_MITOHIFI {
     tag "$meta.id"
     label 'process_high'
 
-    // Docker image available at the biocontainers Dockerhub
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://ghcr.io/marcelauliano/mitohifi:master':
-        'ghcr.io/marcelauliano/mitohifi:master' }"
+
+    // Docker image available at the project github repository
+    container 'ghcr.io/marcelauliano/mitohifi:master'
 
     input:
     tuple val(meta), path(reads), path(contigs)
@@ -15,9 +14,9 @@ process MITOHIFI_MITOHIFI {
 
     output:
     tuple val(meta), path("*fasta")                          , emit: fasta
+    tuple val(meta), path("*contigs_stats.tsv")              , emit: stats
     tuple val(meta), path("*gb")                             , emit: gb, optional: true
     tuple val(meta), path("*gff")                            , emit: gff, optional: true
-    tuple val(meta), path("*contigs_stats.tsv")              , emit: stats
     tuple val(meta), path("*all_potential_contigs.fa")       , emit: all_potential_contigs, optional: true
     tuple val(meta), path("*contigs_annotations.png")        , emit: contigs_annotations, optional: true
     tuple val(meta), path("*contigs_circularization")        , emit: contigs_circularization, optional: true
@@ -36,23 +35,32 @@ process MITOHIFI_MITOHIFI {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        exit 1, "MitoHiFi module does not support Conda. Please use Docker / Singularity instead."
+    }
+
     def args = task.ext.args ?: ''
-    if ((reads)) {
+    def run_type = reads ? "-r ${reads}" :
+                    contigs ? "-c ${contigs}" :
+                    exit("Reads or contigs must be specified")
     """
-    mitohifi.py -r ${reads} -f ${ref_fa} -g ${ref_gb} -o ${mito_code} -t $task.cpus ${args}
+    mitohifi.py ${run_type} -f ${ref_fa} -g ${ref_gb} -o ${mito_code} -t $task.cpus ${args}
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//' )
     END_VERSIONS
     """
-    }
-    else if ((contigs)) {
+
+    stub:
     """
-    mitohifi.py -c ${contigs} -f ${ref_fa} -g ${ref_gb} -o ${mito_code} -t $task.cpus ${args}
+    touch final_mitogenome.fasta
+    touch final_mitogenome.fasta
+    touch contigs_stats.tsv
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//' )
+        mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//')
     END_VERSIONS
-        """
-    }
+    """
 }

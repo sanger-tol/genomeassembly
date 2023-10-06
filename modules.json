@@ -140,11 +140,6 @@
                         "git_sha": "02c3c39e3d57bf77183e563598bae2ec1ec11cb1",
                         "installed_by": ["modules"]
                     },
-                    "multiqc": {
-                        "branch": "master",
-                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
-                        "installed_by": ["modules"]
-                    },
                     "pretextmap": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
