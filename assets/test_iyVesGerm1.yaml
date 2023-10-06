@@ -4,10 +4,10 @@ dataset:
     reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/nextflow/sanger-tol-genomeassembly/test/10X_iyVesGerm1
   pacbio:
     reads:
-      -  reads: /lustre/scratch124/tol/projects/darwin/data/insects/Vespula_germanica/genomic_data/iyVesGerm1/pacbio/fasta/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.filtered.fasta.gz
+      - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Vespula_germanica/genomic_data/iyVesGerm1/pacbio/fasta/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.filtered.fasta.gz
   HiC:
     reads:
-     - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram
+      - reads: /lustre/scratch124/tol/projects/darwin/data/insects/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineages_path: /lustre/scratch123/tol/resources/busco/v5/
