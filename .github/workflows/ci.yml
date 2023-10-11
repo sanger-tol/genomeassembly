@@ -36,8 +36,8 @@ jobs:
           version: "${{ matrix.NXF_VER }}"
 
       - name: Download test data
-            run: |
-                curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
+        run: |
+          curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
 
       - name: Run pipeline with test data
         run: |
