@@ -1,13 +1,13 @@
 dataset:
   id: baUndUnlc1
   illumina_10X:
-    reads: /home/runner/work/genomeassembly/genomessembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
+    reads: /home/runner/work/genomeassembly/genomeassembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
   pacbio:
     reads:
-      - reads: /home/runner/work/genomeassembly/genomessembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+      - reads: /home/runner/work/genomeassembly/genomeassembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
   HiC:
     reads:
-      - reads: /home/runner/work/genomeassembly/genomessembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
+      - reads: /home/runner/work/genomeassembly/genomeassembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineage: bacteria_odb10
