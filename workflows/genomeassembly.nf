@@ -23,6 +23,7 @@ if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
+if ('organelles_on' in params.keySet() && !params.organelles_on) {  organelles_on = false } else { organelles_on = true; }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -139,7 +140,11 @@ workflow GENOMEASSEMBLY {
                         .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
     CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-    ORGANELLES(hifi_reads_ch, CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
+    if ( organelles_on ) {
+        if ( !polishing_on ) {
+            ORGANELLES(hifi_reads_ch, CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
+        }
+    }
 
     if ( polishing_on ) {
         SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
@@ -151,6 +156,10 @@ workflow GENOMEASSEMBLY {
         
         POLISHING(reference_ch, illumina_10X_ch, bed_chunks_polishing)
         ch_versions = ch_versions.mix(POLISHING.out.versions)
+        
+        if ( organelles_on ) {
+            ORGANELLES(hifi_reads_ch, POLISHING.out.fasta, PREPARE_INPUT.out.mito)
+        }
 
         // Separate the primary and alternative contigs again after polishing
         // Separate primary contigs
