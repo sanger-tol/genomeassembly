@@ -4,7 +4,7 @@ process GET_CALCUTS_PARAMS {
     conda "conda-forge::python"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/python:3' :
-        'python:3' }"
+        'biocontainers/python:3.9' }"
 
     input:
     tuple val(meta), path(model_fk)
