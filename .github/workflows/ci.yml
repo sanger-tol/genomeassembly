@@ -41,4 +41,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker -c conf/hifiasm.config--outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker -c conf/hifiasm.config --outdir ./results
