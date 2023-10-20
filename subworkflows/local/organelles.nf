@@ -19,14 +19,6 @@ workflow ORGANELLES {
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
                    code)    
-    /*
-    if ( contigs ) {
-        MITOHIFI_MITOHIFI_ASM( contigs.map{meta, contigs -> [meta, [], contigs]}, 
-                        MITOHIFI_FINDMITOREFERENCE.out.fasta,
-                        MITOHIFI_FINDMITOREFERENCE.out.gb,
-                        code)    
-    }
-    */
     emit:
 
     versions = ch_versions
