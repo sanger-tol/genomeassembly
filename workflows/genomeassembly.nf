@@ -166,7 +166,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(POLISHING.out.versions)
         
         if ( organelles_on ) {
-            ORGANELLES(POLISHING.out.fasta, PREPARE_INPUT.out.mito)
+            ORGANELLES_CONTIGS(POLISHING.out.fasta, PREPARE_INPUT.out.mito)
         }
 
         // Separate the primary and alternative contigs again after polishing

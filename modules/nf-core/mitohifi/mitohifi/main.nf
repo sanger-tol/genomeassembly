@@ -41,12 +41,16 @@ process MITOHIFI_MITOHIFI {
     }
 
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: '' 
+    def args2 = task.ext.args2 ?: ''
     def script_input = args2.equals("-r") ? "-r ${input}" :
                 args2.equals("-c") ? "-c ${input}" :
                 exit("-r for reads or -c for contigs must be specified")
     """
-    mitohifi.py ${script_input} -f ${ref_fa} -g ${ref_gb} -o ${mito_code} -t $task.cpus ${args}
+    mitohifi.py ${script_input} \\
+        -f ${ref_fa} \\
+        -g ${ref_gb} \\
+        -o ${mito_code} \\
+        -t $task.cpus ${args}
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//' )
