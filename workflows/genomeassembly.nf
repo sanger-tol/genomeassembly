@@ -23,6 +23,7 @@ if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
+if ('organelles_on' in params.keySet() && !params.organelles_on) {  organelles_on = false } else { organelles_on = true; }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -40,6 +41,8 @@ if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hif
 //
 include { PREPARE_INPUT   } from '../subworkflows/local/prepare_input'
 include { RAW_ASSEMBLY    } from '../subworkflows/local/raw_assembly' 
+include { ORGANELLES as ORGANELLES_READS } from '../subworkflows/local/organelles' 
+include { ORGANELLES as ORGANELLES_CONTIGS } from '../subworkflows/local/organelles' 
 include { GENOMESCOPE_MODEL } from '../subworkflows/local/genomescope_model'
 include { PURGE_DUPS as PURGE_DUPS_PRI      } from '../subworkflows/local/purge_dups'
 include { PURGE_DUPS as PURGE_DUPS_ALT      } from '../subworkflows/local/purge_dups'
@@ -59,6 +62,7 @@ include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflo
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { CAT_CAT as CAT_CAT_MITOHIFI_READS  } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_HAPLOTIGS } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_PURGEDUPS } from "../modules/nf-core/cat/cat/main"
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS   }  from '../modules/nf-core/samtools/faidx/main'
@@ -86,9 +90,16 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
         
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
+ 
+
     PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
 
     GENOMESCOPE_MODEL( hifi_reads_ch )   
+
+    if ( organelles_on ) {
+        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
+        ORGANELLES_READS(CAT_CAT_MITOHIFI_READS.out.file_out, PREPARE_INPUT.out.mito)
+    }
 
     RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch, hifiasm_hic_on )
     RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
@@ -132,12 +143,18 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
+    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
+                        .set{ purged_pri_alt_ch }
+
+    CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
+    if ( organelles_on ) {
+        if ( !polishing_on ) {
+            ORGANELLES_CONTIGS(CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
+        }
+    }
 
     if ( polishing_on ) {
-        PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                              .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [meta_pri, [purged_pri, purged_alt]]}
-                          .set{ purged_pri_alt_ch }
-        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
         SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
         CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
                                   .set{ reference_ch }
@@ -147,6 +164,10 @@ workflow GENOMEASSEMBLY {
         
         POLISHING(reference_ch, illumina_10X_ch, bed_chunks_polishing)
         ch_versions = ch_versions.mix(POLISHING.out.versions)
+        
+        if ( organelles_on ) {
+            ORGANELLES_CONTIGS(POLISHING.out.fasta, PREPARE_INPUT.out.mito)
+        }
 
         // Separate the primary and alternative contigs again after polishing
         // Separate primary contigs
@@ -178,7 +199,6 @@ workflow GENOMEASSEMBLY {
         )
         ch_versions = ch_versions.mix(GENOME_STATISTICS_POLISHED.out.versions)
     }
-
     PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
                          .set{ crams_ch }
 
@@ -204,7 +224,6 @@ workflow GENOMEASSEMBLY {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
 }
 
 /*

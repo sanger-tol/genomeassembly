@@ -27,6 +27,7 @@ workflow PREPARE_INPUT {
     ymlfile.multiMap{ data -> 
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
+        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\""] : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
     }
     .set{ ch_yml_data }
@@ -59,11 +60,12 @@ workflow PREPARE_INPUT {
             .set{ busco_ch }
 
     emit:
+
     hic            = hic_ch
     hifi           = dataset_ch.pacbio_ch
     illumina_10X   = dataset_ch.illumina_10X_ch
     busco          = busco_ch
-    
+    mito           = ch_yml_data.mito 
     versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }
 

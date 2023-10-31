@@ -130,6 +130,22 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/minimap2/align/minimap2-align.diff"
                     },
+                    "mitohifi/findmitoreference": {
+                        "branch": "master",
+                        "git_sha": "f52220e84bfc16a8616a5bb3d6f5bc67d601bdce",
+                        "installed_by": ["modules"]
+                    },
+                    "mitohifi/mitohifi": {
+                        "branch": "master",
+                        "git_sha": "c607e74f7aa72eb7cb7cc0a1454f97d3907e8d84",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/mitohifi/mitohifi/mitohifi-mitohifi.diff"
+                    },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
+                        "installed_by": ["modules"]
+                    },
                     "pretextmap": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",

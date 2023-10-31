@@ -11,3 +11,7 @@ dataset:
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineage: bacteria_odb10
+mito:
+  species: Caradrina clavipalpis
+  min_length: 15000
+  code: 5
