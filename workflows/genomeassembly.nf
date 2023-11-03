@@ -87,11 +87,12 @@ workflow GENOMEASSEMBLY {
     // SUBWORKFLOW: Read in yaml, validate and prepare for further steps
     //   
     PREPARE_INPUT(ch_input)
+    PREPARE_INPUT.out.hifi.view()
+    PREPARE_INPUT.out.hic.view()
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
         
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
  
-
     PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
 
     GENOMESCOPE_MODEL( hifi_reads_ch )   
@@ -101,7 +102,7 @@ workflow GENOMEASSEMBLY {
         ORGANELLES_READS(CAT_CAT_MITOHIFI_READS.out.file_out, PREPARE_INPUT.out.mito)
     }
 
-    RAW_ASSEMBLY( hifi_reads_ch , hic_reads_ch, hifiasm_hic_on )
+    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on )
     RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
     RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
     GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch), 
