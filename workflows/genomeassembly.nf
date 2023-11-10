@@ -23,7 +23,7 @@ if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
-if ('organelles_on' in params.keySet() && !params.organelles_on) {  organelles_on = false } else { organelles_on = true; }
+if (params.organelles_on) { organelles_on = params.organelles_on } else { organelles_on = false; }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES

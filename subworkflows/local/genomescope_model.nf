@@ -12,13 +12,37 @@ workflow GENOMESCOPE_MODEL {
     reads.flatMap { meta, reads -> reads instanceof List ? reads.collect{ [ meta, it ] } : [ [ meta, reads ] ] }
                     .set{ reads_ch }
 
+    //
+    // MODULE: MERGE ALL READS IN ONE FILE
     CAT_CAT_READS( reads_ch )
-    CAT_CAT_READS.out.file_out.map{ meta, reads -> reads.getName().endsWith('gz') ? [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa.gz'] : [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa'] }
-                     .set{ reads_merged_ch }
+    //
+
+    //
+    // LOGIC: KEEP THE CORRECT EXTENSION
+    //
+    CAT_CAT_READS.out.file_out.map{ meta, reads -> reads.getName().endsWith('gz') 
+                                    ? [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa.gz'] : [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa'] }
+                            .set{ reads_merged_ch }
+
+    //
+    // LOGIC: MAKE SURE MERGED READS HAVE THE PROPER EXTENTION
+    //
     CAT_CAT_READS.out.file_out.join(reads_merged_ch)
                             .map{ meta, reads_old, reads_new -> reads_old.renameTo(reads_new); }
+
+    //
+    // MODULE: GENERATE KMER DATABASE
+    //
     FASTK_FASTK( reads_merged_ch )
+
+    //
+    // MODULE: KEEP THE KMERS HISTOGRAM
+    //
     FASTK_HISTEX( FASTK_FASTK.out.hist )
+
+    //
+    // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
+    //
     GENESCOPEFK ( FASTK_HISTEX.out.hist )
 
     emit:
