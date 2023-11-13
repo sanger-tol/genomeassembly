@@ -18,54 +18,112 @@ workflow SCAFFOLDING {
     
     main:
     ch_versions = Channel.empty()
+
+    //
+    // MODULE: INDEX INPUT ASSEMBLY
+    //
     CONTIGS_FAIDX( fasta_in, [[],[]] )
     ch_versions = ch_versions.mix(CONTIGS_FAIDX.out.versions)
+
+    //
+    // LOGIC: SEPARATE INPUT CHANNELS FOR YAHS
+    //
     CONTIGS_FAIDX.out.fai.join( fasta_in )
                     .map{ meta, fai, fasta -> fasta }
                     .set{ scaf_ref }
     CONTIGS_FAIDX.out.fai.join( fasta_in )
                     .map{ meta, fai, fasta -> fai }
                     .set{ scaf_ref_fai }
+
+    //
+    // MODULE: PERFORM SCAAFFOLDING WITH YAHS
+    //
     YAHS( bed_in, scaf_ref, scaf_ref_fai )
     ch_versions = ch_versions.mix(YAHS.out.versions)
+
+    //
+    // MODULE: INDEX SCAFFOLDS
+    //
     SCAFFOLDS_FAIDX(YAHS.out.scaffolds_fasta, [[],[]])
     ch_versions = ch_versions.mix(SCAFFOLDS_FAIDX.out.versions)
+
+    //
+    // LOGIC: KEEP META
+    //
     bed_in.map{ meta, bed -> meta}.set{ch_meta}
 
-    // Prepare contact pairs for cooler
+    //
+    // LOGIC: PREPARE CONTACT PAIRS FOR COOLER
+    //
     YAHS.out.binary.join(YAHS.out.scaffolds_agp)
                     .combine(scaf_ref)
                     .combine(scaf_ref_fai)
                     .map{meta, binary, agp, fa, fai -> [meta, binary, agp, fai]}
                     .set{ch_merge}
+
+    //
+    // MODULE: PREPARE INPUT FOR COOLER
+    //
     JUICER_PRE(ch_merge)
     ch_versions = ch_versions.mix(JUICER_PRE.out.versions)
     
-    // Bin contact pairs
+    //
+    // LOGIC: BIN CONTACT PAIRS
+    //
     JUICER_PRE.out.pairs.join(bed_in)
                         .combine(Channel.of(cool_bin))
                         .set{ch_juicer}
+
+    //
+    // MODULE: GENERATE SCAFFOLD SIZES
+    //
     CHROM_SIZES(SCAFFOLDS_FAIDX.out.fai)
+    ch_versions = ch_versions.mix(CHROM_SIZES.out.versions)
+
+    //
+    // MODULE: GENERATE A MULTI-RESOLUTION COOLER FILE BY COARSENING
+    //
     COOLER_CLOAD(ch_juicer, CHROM_SIZES.out.chrom_sizes)
     ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
     
-    // Generate a multi-resolution cooler file by coarsening
+    //
+    // LOGIC: REFACTOR CHANNEL FOR ZOOMIFY
+    //
     COOLER_CLOAD.out.cool.map{ meta, cools, cool_bin-> [meta, cools]}
                          .set{ch_cool}
+
+    //
+    //  MODULE: ZOOM COOL TO MCOOL
+    //
     COOLER_ZOOMIFY(ch_cool)
     ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
 
-    // Create contact map in pretext format
+    //
+    // LOGIC: EXTRACT INDEX FILE
+    //
     SCAFFOLDS_FAIDX.out.fai.map{ meta, fai -> fai }.set{fai}
+
+    //
+    // MODULE: COMBINE SCAFFOLDS SIZES AND PAIRS FOR PRETEXT
+    //
     PREPARE_PRETEXTMAP_INPUT(JUICER_PRE.out.pairs, fai)
     ch_versions = ch_versions.mix(PREPARE_PRETEXTMAP_INPUT.out.versions)
+
+    //
+    // MODULE: GENERATE PRETEXT MAP FROM UPDATED PAIRS
+    //
     PRETEXTMAP(PREPARE_PRETEXTMAP_INPUT.out.pairs, [])
     ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
 
+    //
+    // MODULE: GENERATE PNG FROM STANDARD PRETEXT
+    //
     PRETEXTSNAPSHOT(PRETEXTMAP.out.pretext)
     ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
 
-    // Generate HiC Map
+    //
+    // MODULE: GEBERATE HIC MAP
+    //
     JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
     ch_versions = ch_versions.mix(JUICER_TOOLS_PRE.out.versions)
 
