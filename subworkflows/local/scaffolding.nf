@@ -122,18 +122,13 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
 
     //
-    // MODULE: GEBERATE HIC MAP
+    // MODULE: GENERATE HIC MAP
     //
     JUICER_TOOLS_PRE(JUICER_PRE.out.pairs, CHROM_SIZES.out.chrom_sizes, 'yahs_scaffolds')
     ch_versions = ch_versions.mix(JUICER_TOOLS_PRE.out.versions)
 
     emit:
-    alignments_sorted = JUICER_PRE.out.pairs
     fasta = YAHS.out.scaffolds_fasta
-    chrom_sizes = CHROM_SIZES.out.chrom_sizes
-    cool = COOLER_CLOAD.out.cool
-    mcool = COOLER_ZOOMIFY.out.mcool
-    snapshots = PRETEXTSNAPSHOT.out.image
-    hic = JUICER_TOOLS_PRE.out.hic
+
     versions = ch_versions.ifEmpty(null)
 }
