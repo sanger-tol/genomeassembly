@@ -87,8 +87,6 @@ workflow GENOMEASSEMBLY {
     // SUBWORKFLOW: Read in yaml, validate and prepare for further steps
     //   
     PREPARE_INPUT(ch_input)
-    PREPARE_INPUT.out.hifi.view()
-    PREPARE_INPUT.out.hic.view()
     ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
         
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
