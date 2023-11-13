@@ -1,0 +1,14 @@
+Changes in module 'nf-core/pretextsnapshot'
+--- modules/nf-core/pretextsnapshot/main.nf
++++ modules/nf-core/pretextsnapshot/main.nf
+@@ -19,7 +19,7 @@
+ 
+     script:
+     def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
++    def prefix = task.ext.prefix ?: "${meta.id}."
+     """
+     PretextSnapshot \\
+         $args \\
+
+************************************************************
