@@ -134,11 +134,6 @@ workflow HIC_MAPPING {
 
     emit:
     bed = BAMTOBED_SORT.out.sorted_bed
-    cram = CONVERT_STATS.out.cram
-    crai = CONVERT_STATS.out.crai
-    stats = CONVERT_STATS.out.stats
-    idxstats = CONVERT_STATS.out.idxstats
-    flagstat = CONVERT_STATS.out.flagstat
 
     versions = ch_versions
 

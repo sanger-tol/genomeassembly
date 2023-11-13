@@ -5,9 +5,7 @@
 # from Sanger TOL treeval pipeline
 #
 
-#cram_path=$1
 chunkn=0
-#for cram in ${cram_path}/*.cram; do
 for cram in "$@"; do
 
     rgline=$(samtools view -H $cram|grep "RG"|sed 's/\t/\\t/g'|sed "s/'//g")
