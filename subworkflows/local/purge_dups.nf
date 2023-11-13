@@ -82,7 +82,7 @@ workflow PURGE_DUPS {
     // MODULE: SPLIT ASSEMLBY
     //
     PURGEDUPS_SPLITFA( minimal_assembly_ch )
-    ch_versions = ch_versions.mix(.out.versions)
+    ch_versions = ch_versions.mix(PURGEDUPS_SPLITFA.out.versions)
 
     //
     // LOGIC: ESTIMATE THE SIZE OF THE INDEX
