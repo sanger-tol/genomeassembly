@@ -1,5 +1,5 @@
-include { MITOHIFI_FINDMITOREFERENCE                    } from '../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI } from '../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_FINDMITOREFERENCE } from '../../modules/nf-core/mitohifi/findmitoreference/main'
+include { MITOHIFI_MITOHIFI          } from '../../modules/nf-core/mitohifi/mitohifi/main'
 
 workflow ORGANELLES {
     take:
