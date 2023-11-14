@@ -152,7 +152,7 @@ workflow POLISHING {
             .set{ fasta_meta_ch }
 
     //
-    // MODULE: LEFT-ALIGN NORMALIZE INDELS
+    // MODULE: LEFT-ALIGN AND NORMALIZE INDELS
     //
     BCFTOOLS_NORM(input_norm, fasta_meta_ch)
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
