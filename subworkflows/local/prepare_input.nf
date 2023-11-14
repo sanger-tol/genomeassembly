@@ -21,9 +21,15 @@ workflow PREPARE_INPUT {
     main:
     ch_versions = Channel.empty()
 
+    //
+    // LOAD YAML
+    //
     Channel.of(ch_input).map { file -> readYAML( file ) }
         .set { ymlfile }
     
+    //
+    // LOGIC: DIVIDE INPUT INTO BLOCKS BY SEMANTICS
+    //
     ymlfile.multiMap{ data -> 
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
@@ -32,6 +38,9 @@ workflow PREPARE_INPUT {
     }
     .set{ ch_yml_data }
 
+    //
+    // LOGIC: DIVIDE DATASET INTO BLOCKS BY DATATYPE
+    //
     ch_yml_data.dataset.flatten()  
             .multiMap { data -> 
             id_ch : (data.id ? [id: data.id] : [])
@@ -48,9 +57,15 @@ workflow PREPARE_INPUT {
         }
         .set{ dataset_ch }
 
+    //
+    // LOGIC: ADD HIC MOTIF TO DATASET HIC CHANNEL
+    //
     dataset_ch.hic_ch.combine(ch_yml_data.hic_motif)
                      .set{ hic_ch }
 
+    //
+    // LOGIC: REFACTOR BUSCO CHANNEL TO ADD META
+    //
     dataset_ch.id_ch.combine (
         ch_yml_data.busco.flatten()
                 .map { data -> [
