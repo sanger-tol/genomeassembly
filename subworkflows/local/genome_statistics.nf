@@ -22,17 +22,32 @@ workflow GENOME_STATISTICS {
     main:
     ch_versions = Channel.empty()
 
+    //
+    // LOGIC: SEPARATE PRIMARY INTO A CHANNEL
+    //
     assembly.map{ meta, primary, haplotigs -> [meta, primary] }
         .set{ primary_ch }
 
+    //
+    // MODULE: RUN GFASTATS ON PRIMARY ASSEMBLY
+    //
     GFASTATS_PRI( primary_ch, 'fasta', [], [], [], [], [], [] )
     ch_versions = ch_versions.mix(GFASTATS_PRI.out.versions.first())
     
+    //
+    // LOGIC: SEPARATE HAP INTO A CHANNEL
+    //
     assembly.map{ meta, primary, haplotigs -> [meta, haplotigs] }
         .set{ haplotigs_ch }
+
+    //
+    // MODULE: RUN GFASTATS ON HAPLOTIGS
+    //
     GFASTATS_HAP( haplotigs_ch, 'fasta', [], [], [], [], [], [] )
 
-    // BUSCO
+    //
+    // MODULE: RUN BUSCO ON PRIMARY ASSEMBLY
+    //
     BUSCO ( primary_ch.join(lineage)
                     .map{ meta, primary, lineage_db, lineage_name -> 
                             [[id:meta.id, lineage:lineage_name], primary]}, 
@@ -41,21 +56,22 @@ workflow GENOME_STATISTICS {
             [] )
     ch_versions = ch_versions.mix(BUSCO.out.versions.first())
     
-    // MerquryFK
+    //
+    // LOGIC: JOIN ASSEMBLY AND KMER DATABASE INPUT
+    //
     hist.join(ktab).join(assembly)
                     .map{ meta, hist, ktab, primary, hap -> 
                             hap.size() ? [ meta, hist, ktab, primary, hap ] :
                                 [ meta, hist, ktab, primary, [] ] } 
                     .set{ ch_merq }
+    
+    //
+    // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
+    //
     MERQURYFK_MERQURYFK ( ch_merq )
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:
-    busco                     = BUSCO.out.short_summaries_json // meta, path("short_summary.*.json")
-    merquryk_completeness     = MERQURYFK_MERQURYFK.out.stats  // meta, stats
-    merquryk_qv               = MERQURYFK_MERQURYFK.out.qv     // meta, qv
-    assembly_stats_pri        = GFASTATS_PRI.out.assembly_summary  // path("*.assembly_summary")
-    assembly_stats_alt        = GFASTATS_HAP.out.assembly_summary  // path("*.assembly_summary")
     versions                  = ch_versions   
 }
 

@@ -51,11 +51,11 @@ include { SCAFFOLDING     } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS } from '../modules/local/keep_seqnames'
 include { HIC_MAPPING     } from '../subworkflows/local/hic_mapping'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/assembly_stats'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC  } from '../subworkflows/local/assembly_stats'
-include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/assembly_stats'
-include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/assembly_stats'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/assembly_stats'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW  } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC  } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED  } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/genome_statistics'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
