@@ -9,14 +9,17 @@ workflow GENOMESCOPE_MODEL {
     reads // [meta, [reads]] 
 
     main: 
+    ch_versions = Channel.empty()
+
     reads.flatMap { meta, reads -> reads instanceof List ? reads.collect{ [ meta, it ] } : [ [ meta, reads ] ] }
                     .set{ reads_ch }
 
     //
     // MODULE: MERGE ALL READS IN ONE FILE
-    CAT_CAT_READS( reads_ch )
     //
-
+    CAT_CAT_READS( reads_ch )
+    ch_versions = ch_versions.mix(CAT_CAT_READS.out.versions)
+    
     //
     // LOGIC: KEEP THE CORRECT EXTENSION
     //
@@ -34,21 +37,25 @@ workflow GENOMESCOPE_MODEL {
     // MODULE: GENERATE KMER DATABASE
     //
     FASTK_FASTK( reads_merged_ch )
+    ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
     //
     // MODULE: KEEP THE KMERS HISTOGRAM
     //
     FASTK_HISTEX( FASTK_FASTK.out.hist )
+    ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
     //
     // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
     //
-    GENESCOPEFK ( FASTK_HISTEX.out.hist )
+    GENESCOPEFK( FASTK_HISTEX.out.hist )
+    ch_versions = ch_versions.mix(GENESCOPEFK.out.versions)
 
     emit:
     model = GENESCOPEFK.out.model
     hist = FASTK_FASTK.out.hist
     ktab = FASTK_FASTK.out.ktab
-
+    
+    versions = ch_versions
 }
 

@@ -371,6 +371,7 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
+
     //
     // MODULE: Collate versions.yml file
     //

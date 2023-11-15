@@ -28,7 +28,7 @@ workflow PURGE_DUPS {
     ch_versions = Channel.empty()
 
     //
-    // LOGIC: TRANSFROM INPUT DATA STRUCTURE
+    // LOGIC: TRANSFORM INPUT DATA STRUCTURE
     //
     reads_plus_assembly_ch
         .flatMap { meta, reads, assembly, model -> reads instanceof List ? reads.collect{ [ meta, reads, assembly, model ] } : [ [ meta, reads, assembly, model ] ] }
