@@ -11,6 +11,7 @@ include { GUNZIP as GUNZIP_HAP                       }  from '../../modules/nf-c
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PRIMARY   }  from '../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_HAPLOTIGS }  from '../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_MERGED    }  from '../../modules/nf-core/samtools/faidx/main'
+
 include { FASTA_CONCAT                               }  from '../../modules/local/concat'
 
 workflow PREPARE_INPUT {

@@ -10,7 +10,6 @@ https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8
 
 include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_READS    } from "../../modules/nf-core/minimap2/align/main"
 include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY } from "../../modules/nf-core/minimap2/align/main"
-
 include { PURGEDUPS_CALCUTS                         } from '../../modules/nf-core/purgedups/calcuts/main'
 include { PURGEDUPS_GETSEQS                         } from '../../modules/nf-core/purgedups/getseqs/main'
 include { PURGEDUPS_PBCSTAT                         } from '../../modules/nf-core/purgedups/pbcstat/main'

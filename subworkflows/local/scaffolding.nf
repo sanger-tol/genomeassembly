@@ -3,11 +3,12 @@ include { COOLER_ZOOMIFY                      } from '../../modules/nf-core/cool
 include { SAMTOOLS_FAIDX  as CONTIGS_FAIDX    } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX  } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS                                } from '../../modules/nf-core/yahs/main'
+include { PRETEXTMAP                          } from '../../modules/nf-core/pretextmap/main.nf'
+include { PRETEXTSNAPSHOT                     } from '../../modules/nf-core/pretextsnapshot/main'
+
 include { JUICER_PRE                          } from '../../modules/local/juicer_pre.nf'
 include { JUICER_TOOLS_PRE                    } from '../../modules/local/juicer_tools_pre.nf'
 include { PREPARE_PRETEXTMAP_INPUT            } from '../../modules/local/prepare_pretext_input.nf'
-include { PRETEXTMAP                          } from '../../modules/nf-core/pretextmap/main.nf'
-include { PRETEXTSNAPSHOT                     } from '../../modules/nf-core/pretextsnapshot/main'
 include { CHROM_SIZES                         } from '../../modules/local/chrom_sizes.nf'
 
 workflow SCAFFOLDING {

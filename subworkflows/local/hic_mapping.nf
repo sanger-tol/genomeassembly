@@ -11,6 +11,7 @@ include { BWAMEM2_INDEX                                       } from '../../modu
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_HIC_MAPPING        } from '../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_HIC_MAPPING        } from '../../modules/nf-core/samtools/merge/main'
 include { SAMTOOLS_MARKDUP as SAMTOOLS_MARKDUP_HIC_MAPPING    } from '../../modules/nf-core/samtools/markdup/main'
+
 include { BAMTOBED_SORT                                       } from '../../modules/local/bamtobed_sort'
 include { GENERATE_CRAM_CSV                                   } from '../../modules/local/generate_cram_csv'
 include { CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT              } from '../../modules/local/cram_filter_align_bwamem2_fixmate_sort'
