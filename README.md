@@ -38,237 +38,6 @@ On release, automated continuous integration tests run the pipeline on a full-si
 13. Run scaffolding for primary contigs based on results of [12].
 14. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [13].
 
-<img src="https://github.com/sanger-tol/genomeassembly/blob/00b25ef50f548fa6f9f3a349a45343f3fd025257/genome_assembly_pipeline.png" height="1200">
-
-## Workflow output summary
-
-```bash
-test
-├── hifiasm
-│   ├── baUndUnlc1.asm.a_ctg.assembly_summary
-│   ├── baUndUnlc1.asm.a_ctg.fa
-│   ├── baUndUnlc1.asm.a_ctg.gfa
-│   ├── baUndUnlc1.asm.ec.bin
-│   ├── baUndUnlc1.asm.ovlp.reverse.bin
-│   ├── baUndUnlc1.asm.ovlp.source.bin
-│   ├── baUndUnlc1.asm.p_ctg.assembly_summary
-│   ├── baUndUnlc1.asm.p_ctg.fa
-│   ├── baUndUnlc1.asm.p_ctg.gfa
-│   ├── baUndUnlc1.asm.p_utg.gfa
-│   ├── baUndUnlc1.asm.r_utg.gfa
-│   ├── baUndUnlc1.p_ctg.bacteria_odb10.busco
-│   │   ├── baUndUnlc1-bacteria_odb10-busco
-│   │   ├── baUndUnlc1-bacteria_odb10-busco.batch_summary.txt
-│   │   ├── short_summary.specific.bacteria_odb10.baUndUnlc1.asm.p_ctg.fa.json
-│   │   └── short_summary.specific.bacteria_odb10.baUndUnlc1.asm.p_ctg.fa.txt
-│   ├── baUndUnlc1.p_ctg.ccs.merquryk
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.a_ctg_only.bed
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.a_ctg.qv
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.a_ctg.spectra-cn.fl.png
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.a_ctg.spectra-cn.ln.png
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.a_ctg.spectra-cn.st.png
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.p_ctg_only.bed
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.p_ctg.qv
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.p_ctg.spectra-cn.fl.png
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.p_ctg.spectra-cn.ln.png
-│   │   ├── baUndUnlc1.baUndUnlc1.asm.p_ctg.spectra-cn.st.png
-│   │   ├── baUndUnlc1.completeness.stats
-│   │   ├── baUndUnlc1.qv
-│   │   ├── baUndUnlc1.spectra-asm.fl.png
-│   │   ├── baUndUnlc1.spectra-asm.ln.png
-│   │   └── baUndUnlc1.spectra-asm.st.png
-│   ├── polishing
-│   │   ├── baUndUnlc1
-│   │   ├── baUndUnlc1.consensus.fa
-│   │   ├── baUndUnlc1.polished.bacteria_odb10.busco
-│   │   ├── baUndUnlc1.polished.ccs.merquryk
-│   │   ├── chunks
-│   │   ├── haplotigs.assembly_summary
-│   │   ├── haplotigs.fa
-│   │   ├── merged.vcf.gz
-│   │   ├── merged.vcf.gz.tbi
-│   │   ├── primary.assembly_summary
-│   │   ├── primary.fa
-│   │   ├── refdata-baUndUnlc1
-│   │   └── vcf
-│   ├── purging
-│   │   ├── baUndUnlc1.purged.bacteria_odb10.busco
-│   │   ├── baUndUnlc1.purged.ccs.merquryk
-│   │   ├── coverage
-│   │   ├── coverage.htigs
-│   │   ├── purged.assembly_summary
-│   │   ├── purged.fa
-│   │   ├── purged.htigs.assembly_summary
-│   │   ├── purged.htigs.fa
-│   │   ├── purge_dups
-│   │   ├── purge_dups.htigs
-│   │   ├── seqs
-│   │   ├── seqs.htigs
-│   │   ├── split_aln
-│   │   └── split_aln.htigs
-│   └── scaffolding
-│       ├── baUndUnlc1.baUndUnlc1_scaffolds_final.ccs.merquryk
-│       ├── baUndUnlc1.cram.crai
-│       ├── baUndUnlc1.flagstat
-│       ├── baUndUnlc1.idxstats
-│       ├── baUndUnlc1.markdup.bam
-│       ├── baUndUnlc1.sorted.bed
-│       ├── baUndUnlc1.stats
-│       └── yahs
-├── hifiasm-hic
-│   ├── baUndUnlc1.asm.ec.bin
-│   ├── baUndUnlc1.asm.hic.a_ctg.assembly_summary
-│   ├── baUndUnlc1.asm.hic.a_ctg.fa
-│   ├── baUndUnlc1.asm.hic.a_ctg.gfa
-│   ├── baUndUnlc1.asm.hic.hap1.p_ctg.gfa
-│   ├── baUndUnlc1.asm.hic.hap2.p_ctg.gfa
-│   ├── baUndUnlc1.asm.hic.p_ctg.assembly_summary
-│   ├── baUndUnlc1.asm.hic.p_ctg.fa
-│   ├── baUndUnlc1.asm.hic.p_ctg.gfa
-│   ├── baUndUnlc1.asm.hic.p_utg.gfa
-│   ├── baUndUnlc1.asm.hic.r_utg.gfa
-│   ├── baUndUnlc1.asm.ovlp.reverse.bin
-│   └── baUndUnlc1.asm.ovlp.source.bin
-├── kmer
-│   ├── baUndUnlc1_fk.hist
-│   ├── baUndUnlc1_fk.ktab
-│   ├── baUndUnlc1.hist
-│   ├── baUndUnlc1_linear_plot.png
-│   ├── baUndUnlc1_log_plot.png
-│   ├── baUndUnlc1_model.txt
-│   ├── baUndUnlc1_summary.txt
-│   ├── baUndUnlc1_transformed_linear_plot.png
-│   └── baUndUnlc1_transformed_log_plot.png
-└── pipeline_info
-    ├── execution_report_2023-05-24_16-09-38.html
-    ├── execution_timeline_2023-05-24_16-09-38.html
-    ├── execution_trace_2023-05-24_16-00-56.txt
-    ├── execution_trace_2023-05-24_16-09-38.txt
-    ├── pipeline_dag_2023-05-24_16-09-38.html
-    └── software_versions.yml
-```
-
-## Subworkflows input summary
-
-PREPARE_INPUT</p>
-
-- <code>ch_input</code> - [YAML file](input_yaml) with definition of the dataset: <code>channel: datafile(yaml)</code>
-
-GENOMESCOPE_MODEL</p>
-
-- <code>reads</code> - Paths to reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
-
-RAW_ASSEMBLY</p>
-
-- <code>hifi_reads</code> - List of files containing paths to HiFi reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
-- <code>hic_reads</code> - List of files containing paths to HiC reads: <code>channel: [ datafile(cram) ]</code>
-- <code>hifiasm_hic_on</code> - Switch on/off HiC mode <code>val: Boolean</code>
-
-PURGE_DUPS
-
-- <code>reads_plus_assembly_ch</code> - Paths to HiFi reads, primary asm, haplotigs, genomescope model: <code>channel: [ val(meta), [ datafile(reads) ], [ datafile(pri), datafile(alt) ], datafile(model) ]</code>
-- <code>prefix</code> - prefix for the output files: <code>channel: val(prefix)</code>
-
-POLISHING
-
-- <code>fasta_in</code> - Assembly in FASTA format with index file: <code>channel: [ val(meta), datafile(fasta), datafile(fai) ]</code>
-- <code>reads_10X</code> - Path to folder with Illumina 10X FASTQ files and indices: <code>channel: datafile(path) </code>
-- <code>bed_chunks_polishing</code> - Number of chunks to split fasta: <code>val: Int</code>
-
-ALIGN_SHORT
-
-- <code>fasta</code> - Primary contigs: <code>channel: [ val(meta), datafile(fasta) ]</code>
-- <code>reads</code> - HiC reads in CRAM format <code>channel: [ val(meta), [ datafile(cram) ] ]</code>
-
-SCAFFOLDING
-
-- <code>bed_in</code> - Alignments coordinates after markdup: <code>channel: [ val(meta), datafile(bed) ]</code>
-- <code>fasta_in</code> - Alignments coordinates after markdup: <code>channel: datafile(fasta) </code>
-- <code>cool_bin</code> - Bin size for cooler: <code>val(cool_bin)</code>
-
-GENOME_STATISTICS
-
-- <code>assembly</code> - Primary contigs and haplotigs(optional): <code>channel: [ val(meta), datafile(pri), datafile(alt) ]</code>
-- <code>lineage</code> - Paths to BUSCO database (optional) and name of the BUSCO dataset: <code>channel: [ val(meta), datafile(path), val(lineage) ]</code>
-- <code>hist</code> - FASTK .hist file: <code>channel: [ val(meta), datafile(hist) ]</code>
-- <code>ktab</code> - FASTK .ktab file: <code>channel: [ val(meta), datafile(ktab) ]</code>
-
-## Subworkflows output summary
-
-PREPARE_INPUT</p>
-
-- <code>hifi</code> - paths to HiFi reads
-- <code>hic</code> - paths to HiC reads, meta contains read group used for reaad mapping
-- <code>illumina_10X</code> - paths to the folder with 10X reads
-- <code>busco</code> - path to the BUSCO database (optional), name of the ODB lineage (bacteria_odb10)
-- <code>primary_asm</code> - primary assembly and its indices in case provided (currently not used down the pipeline)
-- <code>haplotigs_asm</code> - haplotigs assembly and its indices in case provided (currently not used down the pipeline)
-
-GENOMESCOPE_MODEL</p>
-
-- <code>model</code> - genomescope model
-- <code>hist</code> - FASTK kmer histogram
-- <code>ktab</code> - FASTK kmer table
-
-RAW_ASSEMBLY</p>
-
-- <code>raw_unitigs</code> - hifiasm raw unitigs in GFA format
-- <code>source_overlaps</code> - hifiasm binary database of overlaps
-- <code>reverse_overlaps</code> - hifiasm binary database of RC overlaps
-- <code>corrected_reads</code> - hifiasm binary database of corrected reads
-- <code>primary_contigs_gfa</code> - hifiasm primary contigs in GFA format
-- <code>alternate_contigs_gfa</code> - hifiasm haplotigs in GFA format
-- <code>processed_unitigs</code> - hifiasm processed unitigs in GFA format
-- <code>primary_hic_contigs_gfa</code> - hifiasm contigs produced with integration of HiC data (in GFA format)
-- <code>alternate_hic_contigs_gfa</code> - hifiasm haplotigs produced with integration of HiC data (in GFA format)
-- <code>phased_hic_contigs_hap1_gfa</code> - fully phased first haplotype
-- <code>phased_hic_contigs_hap2_gfa</code> - fully phased another haplotype
-- <code>primary_contigs</code> - primary contigs <code>primary_contigs_gfa</code> in FASTA format
-- <code>alternate_contigs</code> - haplotigs <code>alternate_contigs_gfa</code> in FASTA format
-- <code>primary_hic_contigs</code> - primary contigs <code>primary_hic_contigs_gfa</code> in FASTA format
-- <code>alternate_hic_contigs</code> - haplotigs <code>alternate_hic_contigs_gfa</code> in FASTA format
-
-[Hifiasm documentation](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html) contains more details
-
-PURGE_DUPS
-
-- <code>pri</code> - purged primary contigs
-- <code>alt</code> - purged haplotigs
-
-POLISHING
-
-- <code>fasta</code> - polished contigs
-- <code>versions</code> - versions for software used in analysis
-
-ALIGN_SHORT
-
-- <code>bed</code> bed file of alignments after merging and markduplicates
-- <code>cram</code> cram representation of alignments
-- <code>crai</code> index for <code>cram</code>
-- <code>stats</code> output of samtools stats
-- <code>idxstats</code> output of samtools stats idxstats
-- <code>flagstat</code> output of samtools stats flagstat
-
-SCAFFOLDING
-
-- <code>alignments_sorted</code> output of JUICER_PRE - text file of pairs of alignmnents coordinates suitable for JUICER
-- <code>fasta</code> - final scaffolds
-- <code>chrom_sizes</code> - sizes of scaffolds
-- <code>cool</code> - path to .cool file from COOLER_CLOAD
-- <code>mcool</code> - path to .mcool file from COOLER_ZOOMIFY
-- <code>snapshots</code> - image of pretext map
-- <code>hic</code> - contact map in .hic format
-- <code>versions</code> - versions for software used in analysis
-
-GENOME_STATISTICS
-
-- <code>busco</code> - busco summary in json format
-- <code>merquryk_completeness</code> text file of merqury completeness score
-- <code>merquryk_qv</code> text file of merqury qv score
-- <code>assembly_stats_pri</code> assembly stats for the primary assembly
-- <code>assembly_stats_alt</code> assembly stats for haplotigs (if provided)
-- <code>versions</code> - versions for software used in analysis
-
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
@@ -283,10 +52,7 @@ GENOME_STATISTICS
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
 
-   > - The pipeline comes with config profiles called `docker`, `singularity`, `podman`, `shifter`, `charliecloud` and `conda` which instruct the pipeline to use the named tool for software management. For example, `-profile test,docker`.
-   > - Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
-   > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
-   > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
+Further documentation about the pipeline can be found in the following files: usage, parameters and output.
 
 4. Start running your own analysis!
 
@@ -302,13 +68,13 @@ sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-@priyanka-surana for nextflow implementation of HiC mapping pipeline, extensive guidance, code review, and brilliant suggestions.
+@priyanka-surana for the code review, brilliant coding suggestions, and help with pushing this pipeline forward through development.
 
-@mcshane and @c-zhou for designing and implementing original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou)
+@mcshane and @c-zhou for designing and implementing original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou).
 
-@mahesh-panchal for nextflow implementation of the purging pipeline, code review and the valuable suggestions for the input subworkflow
+@muffato for help with nf-core code and troubleshooting, code review and valuable suggestions at the different stages of pipeline development.
 
-@muffato for code review and suggestions about versioning
+@mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
