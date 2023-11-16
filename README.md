@@ -33,14 +33,14 @@ While the steps are described in a sequential order, many of them can be execute
 6. If <code>hifiasm_hic_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [5].
 7. Run purging subworkflow on the primary contigs from [3], i.e. produce the purged assembly and a set of haplotigs. Consider the purged contigs as the primary assembly for further steps.
 8. Take haplotigs from [7], merge with haplotigs from [3] and run purging subworkfllow on it. Discard the contigs that were purged away, continue with the purged haplotigs as a representation of the haplotig assembly.
-10. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for the primary and haplotigs from [7] and [8].
-11. If <code>polishing_on</code> option is set, map Illumina 10X reads to the joined primary and alt contigs.
-12. If <code>polishing_on</code> option is set, polish initial assembly based on the aligment produced in [11]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
-13. If <code>polishing_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [12].
-14. Run organelles subworkflow on the joined primary and haplotigs contigs.
-15. Map HiC data onto primary contigs.
-16. Run scaffolding for primary contigs based on results in [15].
-17. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [16].
+9. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for the primary and haplotigs from [7] and [8].
+10. If <code>polishing_on</code> option is set, map Illumina 10X reads to the joined primary and alt contigs.
+11. If <code>polishing_on</code> option is set, polish initial assembly based on the aligment produced in [11]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
+12. If <code>polishing_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [12].
+13. Run organelles subworkflow on the joined primary and haplotigs contigs.
+14. Map HiC data onto primary contigs.
+15. Run scaffolding for primary contigs based on results in [15].
+16. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [16].
 
 ## Usage
 
@@ -53,9 +53,10 @@ Currently, it is advised to run the pipeline with docker or singularity as some 
 
 To run the pipeline use a command-line:
 
-   ```bash
-   nextflow run sanger-tol/genomeassembly -profile singularity,YOURPROFILE --outdir <OUTDIR>
-   ```
+```bash
+nextflow run sanger-tol/genomeassembly -profile singularity,YOURPROFILE --outdir <OUTDIR>
+```
+
 For more details on how to run the pipeline and interprete the results see [usage](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/usage.md) and [output](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/output.md) sections of the documentation.
 
 ## Credits

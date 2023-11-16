@@ -89,7 +89,6 @@ The subworkflow relies on kmer coverage model to identify coverage thresholds. F
   - <code>\*.hifiasm..\*/polishing/refdata-*</code>
     - Longranger assembly indices
 
-
 </details>
 
 This subworkflow uses read mapping of the Illumina 10X short read data to fix short errors in primary contigs and haplotigs.</p>
