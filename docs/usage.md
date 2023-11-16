@@ -4,9 +4,10 @@
 
 ## Introduction
 
-## Workflow input 
+## Workflow input
 
 ### Parameters summary
+
 <details markdown="1">
   <summary>Details</summary>
   
@@ -22,12 +23,13 @@ Workflow accepts the following parameters:
 </details>
 
 ### Full samplesheet
+
 The input dataset is described in YAML format which states for "Yet Another Markdown Language". It is a human readable file which contains information
-about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs, 
+about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs,
 BUSCO lineage, mitochondrial code etc. For more information see [Input YAML definition](#input_yaml_definition)
 
 ### <a name="input_yaml_definition"></a> Input YAML definition
-  
+
 - <code>dataset.id</code>
   - is used as the sample id throughout the pipeline. ToLID should be used in ToL datasets.</p>
 - <code>dataset.illumina_10X.reads</code>
@@ -39,18 +41,18 @@ BUSCO lineage, mitochondrial code etc. For more information see [Input YAML defi
 - <code>dataset.hic_motif</code>
   - is a comma-separated list of restriction sites. The pipeline was tested with the Arima dataset, but it's should be alright to use it with the other HiC libraries
 - <code>dataset.busco.lineage</code>
-  - specifies the name of the BUSCO dataset (i.e. bacteria_odb10). </p> 
+  - specifies the name of the BUSCO dataset (i.e. bacteria_odb10). </p>
 - <code>dataset.busco.lineage_path</code>
-  - is an optional field containing the path to the folder with pre-downloaded BUSCO lineages. </p> 
+  - is an optional field containing the path to the folder with pre-downloaded BUSCO lineages. </p>
 - <code>dataset.mito.species</code>
-  - is the latin name of the species to look for the mitogenome reference in the organelles subworkflow. Normally this parameter will contain the latin name of the species whose genome is being assembled. </p> 
+  - is the latin name of the species to look for the mitogenome reference in the organelles subworkflow. Normally this parameter will contain the latin name of the species whose genome is being assembled. </p>
 - <code>dataset.mito.min_length</code>
-  - sets the minimal length of the mito, can be 15Kb. </p> 
+  - sets the minimal length of the mito, can be 15Kb. </p>
 - <code>dataset.mito.code</code>
   - is a mitochondrial code for the mitogenome annotation. See [here](https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi) for reference.
 
-
 ### <a name="input_yaml_example"></a> An example of the input YAML
+
 <details markdown="1">
   <summary>Details</summary>
   
@@ -76,7 +78,6 @@ mito:
 ```
 </details>
 
-  
 ## Usage
 
 ### Local testing
@@ -95,14 +96,16 @@ cd genomeassembly/
 sed -i "s|/home/runner/work/genomeassembly/genomeassembly|${GENOMEASSEMBLY_TEST_DATA}|" assets/test_github.yaml
 nextflow run main.nf -profile test_github,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
 ```
+
 These command line steps will download and decompress the test data first, then download the pipeline and modify YAML so that it matches dataset location in your file system.
-The last command line runs the test.  
+The last command line runs the test.
 
 You should now be able to run the pipeline as you see fit.
 
 </details>
 
 ### Running the pipeline
+
 The typical command for running the pipeline is as follows:
 
 ```console

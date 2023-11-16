@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document describes the output produced by the genomeassembly pipeline. 
+This document describes the output produced by the genomeassembly pipeline.
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
@@ -12,12 +12,12 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) DSL2.
 
-  
 ### PREPARE_INPUT
-Here the input YAML is being processed. This subworkflow generates the input channels used as by the other subworkflows.</p> 
 
+Here the input YAML is being processed. This subworkflow generates the input channels used as by the other subworkflows.</p>
 
 ### GENOMESCOPE_MODEL
+
 <details markdown="1">
   <summary>Output files</summary>
   
@@ -32,12 +32,12 @@ Here the input YAML is being processed. This subworkflow generates the input cha
   
 </details>
 
-This subworkflow generates a KMER database and coverage model used in [PURGE_DUPS](#purge_dups) and [GENOME_STATISTICS](#genome_statistics) </p> 
+This subworkflow generates a KMER database and coverage model used in [PURGE_DUPS](#purge_dups) and [GENOME_STATISTICS](#genome_statistics) </p>
 
 ![Subworkflow for kmer profile](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/genomescope_model.png)
 
-  
 ### RAW_ASSEMBLY
+
 <details markdown="1">
   <summary>Output files</summary>
   
@@ -50,13 +50,13 @@ This subworkflow generates a KMER database and coverage model used in [PURGE_DUP
   
 </details>
 
-This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the input HiFi reads then raw contigs are converted from GFA into FASTA format, this assembly is due to purging, polishing (optional) and scaffolding further down the pipeline. 
-In case hifiasm HiC mode is switched on, it is performed as an extra step with results stored in hifiasm-hic folder.</p> 
+This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the input HiFi reads then raw contigs are converted from GFA into FASTA format, this assembly is due to purging, polishing (optional) and scaffolding further down the pipeline.
+In case hifiasm HiC mode is switched on, it is performed as an extra step with results stored in hifiasm-hic folder.</p>
 
 ![Raw assembly subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/raw_assembly.png)
 
-
 ### PURGE_DUPS
+
 <details markdown="1">
   <summary>Output files</summary>
   
@@ -70,7 +70,8 @@ In case hifiasm HiC mode is switched on, it is performed as an extra step with r
 
 Retained haplotype is identified in primary assembly. The alternate contigs are updated correspondingly.
 The subworkflow relies on kmer coverage model to identify coverage thresholds. For more details see [purge_dups](https://github.com/dfguan/purge_dups)
-</p> 
+
+</p>
 
 ![Subworkflow for purging haplotigs](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/purge_dups.png)
 
@@ -87,11 +88,11 @@ The subworkflow relies on kmer coverage model to identify coverage thresholds. F
     - index file
   - <code>\*.hifiasm..\*/polishing/refdata-*</code>
     - Longranger assembly indices
-      
+
 
 </details>
 
-This subworkflow uses read mapping of the Illumina 10X short read data to fix short errors in primary contigs and haplotigs.</p> 
+This subworkflow uses read mapping of the Illumina 10X short read data to fix short errors in primary contigs and haplotigs.</p>
 
 ![Subworkflow for purging haplotigs](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/polishing.png)
 
@@ -106,10 +107,9 @@ This subworkflow uses read mapping of the Illumina 10X short read data to fix sh
     - final read mapping bam with mapped reads  
 </details>
 
-This subworkflow implements alignment of the Illumina HiC short reads to the primary assembly. Uses [`CONVERT_STATS`](#convert_stats) as internal subworkflow to calculate read mapping stats.</p> 
+This subworkflow implements alignment of the Illumina HiC short reads to the primary assembly. Uses [`CONVERT_STATS`](#convert_stats) as internal subworkflow to calculate read mapping stats.</p>
 
 ![HiC mapping subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/hic-mapping.png)
-
 
 ### CONVERT_STATS
 
@@ -123,9 +123,10 @@ This subworkflow implements alignment of the Illumina HiC short reads to the pri
     - output of samtools flagstat  
 </details>
 
-This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](hic_mapping) subworkflow.</p> 
+This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](hic_mapping) subworkflow.</p>
 
 ### SCAFFOLDING
+
 <details markdown="1">
   <summary>Output files</summary>
   
@@ -143,7 +144,7 @@ This subworkflow produces statistcs for a bam file containing read mapping. It i
     - Pretext snapshot
 
 </details>
-The subworkflow performs scaffolding of the primary contigs using HiC mapping generated in [`HIC_MAPPING`](hic_mapping). It also performs some postprocessing steps such as generating cooler and pretext files</p> 
+The subworkflow performs scaffolding of the primary contigs using HiC mapping generated in [`HIC_MAPPING`](hic_mapping). It also performs some postprocessing steps such as generating cooler and pretext files</p>
 
 ![Scaffolding subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/scaffolding.png)
 
@@ -152,16 +153,16 @@ The subworkflow performs scaffolding of the primary contigs using HiC mapping ge
 <details markdown="1">
   <summary>Output files</summary>
 
-  - <code>.*.assembly_summary</code>
-    - numeric statistics for pri and alt sequences
-  - <code>.*ccs.merquryk</code>
-    - folder with merqury plots and kmer statistics
-  - <code>.*busco</code>
-    - folder with BUSCO results
-  
+- <code>.\*.assembly_summary</code>
+  - numeric statistics for pri and alt sequences
+- <code>.\*ccs.merquryk</code>
+  - folder with merqury plots and kmer statistics
+- <code>.\*busco</code>
+  - folder with BUSCO results
+
 </details>
 
-This subworkflow is used to evaluate the quality of sequences. It is performed after the intermidate steps, such as raw assembly generation, purging and polishing, and also at the end of the pipeline when scaffolds are produced.</p> 
+This subworkflow is used to evaluate the quality of sequences. It is performed after the intermidate steps, such as raw assembly generation, purging and polishing, and also at the end of the pipeline when scaffolds are produced.</p>
 
 ![Genome statistics subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/genome_statistics.png)
 
@@ -170,17 +171,17 @@ This subworkflow is used to evaluate the quality of sequences. It is performed a
 <details markdown="1">
   <summary>Output files</summary>
 
-  - <code>\*.hifiasm.\*/mito..*/final_mitogenome.fasta</code>
-    - organelle assembly
-  - <code>\*.hifiasm.\*/mito..*/final_mitogenome.[gb,gff]</code>
-    - organelle gene annotation
-  - <code>\*.hifiasm.\*/mito..*/contigs_stats.tsv</code>
-    - summary of mitochondrial findings
-  - output also includes other output files produced by MitoHiFi
-  
+- <code>\*.hifiasm.\*/mito..\*/final_mitogenome.fasta</code>
+  - organelle assembly
+- <code>\*.hifiasm.\*/mito..\*/final_mitogenome.[gb,gff]</code>
+  - organelle gene annotation
+- <code>\*.hifiasm.\*/mito..\*/contigs_stats.tsv</code>
+  - summary of mitochondrial findings
+- output also includes other output files produced by MitoHiFi
+
 </details>
 
-This subworkflow implements assembly of organelles. In the main pipeline it is called twice - for assembling mitochondrion from HiFi reads and as an alternative it runs identification of the mitochondrion for the genome assembly </p> 
+This subworkflow implements assembly of organelles. In the main pipeline it is called twice - for assembling mitochondrion from HiFi reads and as an alternative it runs identification of the mitochondrion for the genome assembly </p>
 
 ![Organelles subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/documentation/docs/images/v1/organelles.png)
 

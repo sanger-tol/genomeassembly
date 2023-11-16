@@ -10,7 +10,7 @@
 
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
 
-**sanger-tol/genomeassembly** is a bioinformatics pipeline for a genome assembly for HiFi, Illumina 10x (optional), and HiC  data. It performs the following steps: raw assembly, purging from haplotigs, optional polishing, and scaffolding.
+**sanger-tol/genomeassembly** is a bioinformatics pipeline for a genome assembly for HiFi, Illumina 10x (optional), and HiC data. It performs the following steps: raw assembly, purging from haplotigs, optional polishing, and scaffolding.
 
 Original assembly of HiFi reads is performed using [hifiasm](https://hifiasm.readthedocs.io) assembler in two modes - original and using HiC data (optional). Then assembly is purged from alternative haplotigs using [purge_dups](https://github.com/dfguan/purge_dups). Next optional step is polishing of the purged assembly using Illumina 10X read sequencing. 10X reads are mapped to the full assembly (purged + haplotigs) using [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and polishing is implemented using [Freebayes](https://github.com/freebayes/freebayes). HiC reads are further mapped with [bwamem2](https://github.com/bwa-mem2/bwa-mem2) to the primary contigs, which are further scaffolded with [YaHS](https://github.com/c-zhou/yahs) using the provided Hi-C data.
 Polished and scaffolded assemblies are evaluated using [GFASTATS](https://github.com/vgl-hub/gfastats), [BUSCO](https://busco.ezlab.org/) and [MERQURY.FK](https://github.com/thegenemyers/MERQURY.FK)
@@ -40,9 +40,8 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 <img src="https://github.com/sanger-tol/genomeassembly/blob/00b25ef50f548fa6f9f3a349a45343f3fd025257/genome_assembly_pipeline.png" height="1200">
 
-
-
 ## Workflow output summary
+
 ```bash
 test
 ├── hifiasm
@@ -150,108 +149,125 @@ test
 ```
 
 ## Subworkflows input summary
+
 PREPARE_INPUT</p>
-* <code>ch_input</code> - [YAML file](input_yaml) with definition of the dataset: <code>channel: datafile(yaml)</code> 
+
+- <code>ch_input</code> - [YAML file](input_yaml) with definition of the dataset: <code>channel: datafile(yaml)</code>
 
 GENOMESCOPE_MODEL</p>
-* <code>reads</code> - Paths to reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
+
+- <code>reads</code> - Paths to reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
 
 RAW_ASSEMBLY</p>
-* <code>hifi_reads</code> - List of files containing paths to HiFi reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
-* <code>hic_reads</code> - List of files containing paths to HiC reads: <code>channel: [ datafile(cram) ]</code>
-* <code>hifiasm_hic_on</code> - Switch on/off HiC mode <code>val: Boolean</code>
+
+- <code>hifi_reads</code> - List of files containing paths to HiFi reads: <code>channel: [ val(meta), [ datafile(path) ] ]</code>
+- <code>hic_reads</code> - List of files containing paths to HiC reads: <code>channel: [ datafile(cram) ]</code>
+- <code>hifiasm_hic_on</code> - Switch on/off HiC mode <code>val: Boolean</code>
 
 PURGE_DUPS
-* <code>reads_plus_assembly_ch</code>  - Paths to HiFi reads, primary asm, haplotigs, genomescope model: <code>channel: [ val(meta), [ datafile(reads) ], [ datafile(pri), datafile(alt) ], datafile(model) ]</code>
-* <code>prefix</code> - prefix for the output files: <code>channel: val(prefix)</code>
+
+- <code>reads_plus_assembly_ch</code> - Paths to HiFi reads, primary asm, haplotigs, genomescope model: <code>channel: [ val(meta), [ datafile(reads) ], [ datafile(pri), datafile(alt) ], datafile(model) ]</code>
+- <code>prefix</code> - prefix for the output files: <code>channel: val(prefix)</code>
 
 POLISHING
-* <code>fasta_in</code>  - Assembly in FASTA format with index file: <code>channel: [ val(meta), datafile(fasta), datafile(fai) ]</code>
-* <code>reads_10X</code> - Path to folder with Illumina 10X FASTQ files and indices: <code>channel: datafile(path) </code>
-* <code>bed_chunks_polishing</code>  - Number of chunks to split fasta: <code>val: Int</code>
+
+- <code>fasta_in</code> - Assembly in FASTA format with index file: <code>channel: [ val(meta), datafile(fasta), datafile(fai) ]</code>
+- <code>reads_10X</code> - Path to folder with Illumina 10X FASTQ files and indices: <code>channel: datafile(path) </code>
+- <code>bed_chunks_polishing</code> - Number of chunks to split fasta: <code>val: Int</code>
 
 ALIGN_SHORT
-* <code>fasta</code> - Primary contigs: <code>channel: [ val(meta), datafile(fasta) ]</code>
-* <code>reads</code> - HiC reads in CRAM format <code>channel: [ val(meta), [ datafile(cram) ] ]</code>
+
+- <code>fasta</code> - Primary contigs: <code>channel: [ val(meta), datafile(fasta) ]</code>
+- <code>reads</code> - HiC reads in CRAM format <code>channel: [ val(meta), [ datafile(cram) ] ]</code>
 
 SCAFFOLDING
-* <code>bed_in</code> - Alignments coordinates after markdup: <code>channel: [ val(meta), datafile(bed) ]</code>
-* <code>fasta_in</code> - Alignments coordinates after markdup: <code>channel: datafile(fasta) </code>
-* <code>cool_bin</code> - Bin size for cooler: <code>val(cool_bin)</code>
+
+- <code>bed_in</code> - Alignments coordinates after markdup: <code>channel: [ val(meta), datafile(bed) ]</code>
+- <code>fasta_in</code> - Alignments coordinates after markdup: <code>channel: datafile(fasta) </code>
+- <code>cool_bin</code> - Bin size for cooler: <code>val(cool_bin)</code>
 
 GENOME_STATISTICS
-* <code>assembly</code> - Primary contigs and haplotigs(optional): <code>channel: [ val(meta), datafile(pri), datafile(alt) ]</code>
-* <code>lineage</code> - Paths to BUSCO database (optional) and name of the BUSCO dataset: <code>channel: [ val(meta), datafile(path), val(lineage) ]</code> 
-* <code>hist</code> - FASTK .hist file: <code>channel: [ val(meta), datafile(hist) ]</code>
-* <code>ktab</code> - FASTK .ktab file: <code>channel: [ val(meta), datafile(ktab) ]</code>
 
+- <code>assembly</code> - Primary contigs and haplotigs(optional): <code>channel: [ val(meta), datafile(pri), datafile(alt) ]</code>
+- <code>lineage</code> - Paths to BUSCO database (optional) and name of the BUSCO dataset: <code>channel: [ val(meta), datafile(path), val(lineage) ]</code>
+- <code>hist</code> - FASTK .hist file: <code>channel: [ val(meta), datafile(hist) ]</code>
+- <code>ktab</code> - FASTK .ktab file: <code>channel: [ val(meta), datafile(ktab) ]</code>
 
 ## Subworkflows output summary
+
 PREPARE_INPUT</p>
-* <code>hifi</code> - paths to HiFi reads
-* <code>hic</code> - paths to HiC reads, meta contains read group used for reaad mapping
-* <code>illumina_10X</code> - paths to the folder with 10X reads
-* <code>busco</code> - path to the BUSCO database (optional), name of the ODB lineage (bacteria_odb10)
-* <code>primary_asm</code> - primary assembly and its indices in case provided (currently not used down the pipeline)
-* <code>haplotigs_asm</code> - haplotigs assembly and its indices in case provided (currently not used down the pipeline)
+
+- <code>hifi</code> - paths to HiFi reads
+- <code>hic</code> - paths to HiC reads, meta contains read group used for reaad mapping
+- <code>illumina_10X</code> - paths to the folder with 10X reads
+- <code>busco</code> - path to the BUSCO database (optional), name of the ODB lineage (bacteria_odb10)
+- <code>primary_asm</code> - primary assembly and its indices in case provided (currently not used down the pipeline)
+- <code>haplotigs_asm</code> - haplotigs assembly and its indices in case provided (currently not used down the pipeline)
 
 GENOMESCOPE_MODEL</p>
-* <code>model</code> - genomescope model
-* <code>hist</code> - FASTK kmer histogram
-* <code>ktab</code> - FASTK kmer table
-    
-RAW_ASSEMBLY</p>
-* <code>raw_unitigs</code> - hifiasm raw unitigs in GFA format
-* <code>source_overlaps</code> - hifiasm binary database of overlaps
-* <code>reverse_overlaps</code> - hifiasm binary database of RC overlaps
-* <code>corrected_reads</code> - hifiasm binary database of corrected reads
-* <code>primary_contigs_gfa</code> - hifiasm primary contigs in GFA format
-* <code>alternate_contigs_gfa</code> - hifiasm haplotigs in GFA format
-* <code>processed_unitigs</code> - hifiasm processed unitigs in GFA format    
-* <code>primary_hic_contigs_gfa</code> - hifiasm contigs produced with integration of HiC data (in GFA format)
-* <code>alternate_hic_contigs_gfa</code> - hifiasm haplotigs produced with integration of HiC data (in GFA format)
-* <code>phased_hic_contigs_hap1_gfa</code> - fully phased first haplotype 
-* <code>phased_hic_contigs_hap2_gfa</code> - fully phased another haplotype
-* <code>primary_contigs</code> - primary contigs <code>primary_contigs_gfa</code> in FASTA format 
-* <code>alternate_contigs</code> - haplotigs <code>alternate_contigs_gfa</code> in FASTA format 
-* <code>primary_hic_contigs</code> - primary contigs <code>primary_hic_contigs_gfa</code> in FASTA format
-* <code>alternate_hic_contigs</code> - haplotigs <code>alternate_hic_contigs_gfa</code> in FASTA format
 
-[Hifiasm documentation](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html) contains more details 
+- <code>model</code> - genomescope model
+- <code>hist</code> - FASTK kmer histogram
+- <code>ktab</code> - FASTK kmer table
+
+RAW_ASSEMBLY</p>
+
+- <code>raw_unitigs</code> - hifiasm raw unitigs in GFA format
+- <code>source_overlaps</code> - hifiasm binary database of overlaps
+- <code>reverse_overlaps</code> - hifiasm binary database of RC overlaps
+- <code>corrected_reads</code> - hifiasm binary database of corrected reads
+- <code>primary_contigs_gfa</code> - hifiasm primary contigs in GFA format
+- <code>alternate_contigs_gfa</code> - hifiasm haplotigs in GFA format
+- <code>processed_unitigs</code> - hifiasm processed unitigs in GFA format
+- <code>primary_hic_contigs_gfa</code> - hifiasm contigs produced with integration of HiC data (in GFA format)
+- <code>alternate_hic_contigs_gfa</code> - hifiasm haplotigs produced with integration of HiC data (in GFA format)
+- <code>phased_hic_contigs_hap1_gfa</code> - fully phased first haplotype
+- <code>phased_hic_contigs_hap2_gfa</code> - fully phased another haplotype
+- <code>primary_contigs</code> - primary contigs <code>primary_contigs_gfa</code> in FASTA format
+- <code>alternate_contigs</code> - haplotigs <code>alternate_contigs_gfa</code> in FASTA format
+- <code>primary_hic_contigs</code> - primary contigs <code>primary_hic_contigs_gfa</code> in FASTA format
+- <code>alternate_hic_contigs</code> - haplotigs <code>alternate_hic_contigs_gfa</code> in FASTA format
+
+[Hifiasm documentation](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html) contains more details
 
 PURGE_DUPS
-* <code>pri</code> - purged primary contigs
-* <code>alt</code> - purged haplotigs
+
+- <code>pri</code> - purged primary contigs
+- <code>alt</code> - purged haplotigs
 
 POLISHING
-* <code>fasta</code> - polished contigs
-* <code>versions</code> - versions for software used in analysis
+
+- <code>fasta</code> - polished contigs
+- <code>versions</code> - versions for software used in analysis
 
 ALIGN_SHORT
-* <code>bed</code> bed file of alignments after merging and markduplicates
-* <code>cram</code> cram representation of alignments
-* <code>crai</code> index for <code>cram</code>
-* <code>stats</code> output of samtools stats 
-* <code>idxstats</code> output of samtools stats idxstats
-* <code>flagstat</code> output of samtools stats flagstat
+
+- <code>bed</code> bed file of alignments after merging and markduplicates
+- <code>cram</code> cram representation of alignments
+- <code>crai</code> index for <code>cram</code>
+- <code>stats</code> output of samtools stats
+- <code>idxstats</code> output of samtools stats idxstats
+- <code>flagstat</code> output of samtools stats flagstat
 
 SCAFFOLDING
-* <code>alignments_sorted</code> output of JUICER_PRE - text file of pairs of alignmnents coordinates suitable for JUICER
-* <code>fasta</code> - final scaffolds
-* <code>chrom_sizes</code> - sizes of scaffolds
-* <code>cool</code> - path to .cool file from COOLER_CLOAD
-* <code>mcool</code> - path to .mcool file from COOLER_ZOOMIFY
-* <code>snapshots</code> - image of pretext map
-* <code>hic</code> - contact map in .hic format
-* <code>versions</code> - versions for software used in analysis
+
+- <code>alignments_sorted</code> output of JUICER_PRE - text file of pairs of alignmnents coordinates suitable for JUICER
+- <code>fasta</code> - final scaffolds
+- <code>chrom_sizes</code> - sizes of scaffolds
+- <code>cool</code> - path to .cool file from COOLER_CLOAD
+- <code>mcool</code> - path to .mcool file from COOLER_ZOOMIFY
+- <code>snapshots</code> - image of pretext map
+- <code>hic</code> - contact map in .hic format
+- <code>versions</code> - versions for software used in analysis
 
 GENOME_STATISTICS
-* <code>busco</code> - busco summary in json format
-* <code>merquryk_completeness</code> text file of merqury completeness score
-* <code>merquryk_qv</code> text file of merqury qv score
-* <code>assembly_stats_pri</code> assembly stats for the primary assembly
-* <code>assembly_stats_alt</code>  assembly stats for haplotigs (if provided)
-* <code>versions</code> - versions for software used in analysis
+
+- <code>busco</code> - busco summary in json format
+- <code>merquryk_completeness</code> text file of merqury completeness score
+- <code>merquryk_qv</code> text file of merqury qv score
+- <code>assembly_stats_pri</code> assembly stats for the primary assembly
+- <code>assembly_stats_alt</code> assembly stats for haplotigs (if provided)
+- <code>versions</code> - versions for software used in analysis
 
 ## Quick Start
 
@@ -284,17 +300,15 @@ GENOME_STATISTICS
 
 sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova.
 
-
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 @priyanka-surana for nextflow implementation of HiC mapping pipeline, extensive guidance, code review, and brilliant suggestions.
 
-@mcshane and @c-zhou for designing and implementing original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou)  
+@mcshane and @c-zhou for designing and implementing original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou)
 
 @mahesh-panchal for nextflow implementation of the purging pipeline, code review and the valuable suggestions for the input subworkflow
 
 @muffato for code review and suggestions about versioning
-
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
