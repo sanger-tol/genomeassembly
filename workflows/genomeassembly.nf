@@ -234,17 +234,9 @@ workflow GENOMEASSEMBLY {
     CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
 
     //
-    // LOGIC: IF THE ORGANELLES FLAG IS SWITCHED ON AND POLISHING IS NOT DONE
-    //        WE ARE READY TO RUN ORGANELLES SUBWORKFLOW ON CONTIGS
+    // LOGIC: DEFINE MERGED ASSEMBLY
     //
-    if ( organelles_on ) {
-        if ( !polishing_on ) {
-            //
-            // SUBWORKFLOW: INDETIFY MITO IN THE ASSEMBLY CONTIGS
-            // 
-            ORGANELLES_CONTIGS(CAT_CAT_PURGEDUPS.out.file_out, PREPARE_INPUT.out.mito)
-        }
-    }
+    merged_pri_alt = CAT_CAT_PURGEDUPS.out.file_out
 
     if ( polishing_on ) {
         //
@@ -270,17 +262,11 @@ workflow GENOMEASSEMBLY {
         //
         POLISHING(reference_ch, illumina_10X_ch, bed_chunks_polishing)
         ch_versions = ch_versions.mix(POLISHING.out.versions)
-        
+   
         //
-        // LOGIC: IF THE ORGANELLES FLAG SWITCHED ON IT IS THE TIME TO RUN 
-        //        MITOHIFI ON THE CONTIGS 
-        //
-        if ( organelles_on ) {
-            //
-            // SUBWORKFLOW: IDENTIFY MITOCHONDRIA ON THE POLISHED CONTIGS
-            //
-            ORGANELLES_CONTIGS(POLISHING.out.fasta, PREPARE_INPUT.out.mito)
-        }
+        // LOGIC: UPDATE MERGED ASSEMBLY
+        // 
+        merged_pri_alt = POLISHING.out.fasta   
 
         //
         // MODULE: EXTRACT THE NAMES OF THE PRIMARY CONTIGS
@@ -335,6 +321,12 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
         )
+    }
+    if ( organelles_on ) {
+        //
+        // SUBWORKFLOW: INDETIFY MITO IN THE ASSEMBLY CONTIGS
+        // 
+        ORGANELLES_CONTIGS(merged_pri_alt, PREPARE_INPUT.out.mito)
     }
 
     //
