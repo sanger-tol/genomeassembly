@@ -23,20 +23,25 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
+While the steps are described in a sequential order, many of them can be executed as parallel jobs.
+
 1. Parse and transform the input into the required data structures.
-2. Run hifiasm in original mode.
-3. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [2].
-4. If <code>hifiasm_hic_on</code> option is set, run hifiasm in HiC mode.
-5. If <code>hifiasm_hic_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [4].
-6. Purge primary contigs from [2], count produced primary contigs as the primary assembly.
-7. Take haplotigs from [6], merge with haplotigs from [2] and purge, count produced primary contigs as assembly haplotigs.
-8. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for primary and haplotigs from [6] and [7].
-9. If <code>polishing_on</code> option is set, map provided 10X Illumina reads to the joined primary and alternative contigs.
-10. If <code>polishing_on</code> option is set, polish initial assembly based on aligment produced in [6], then separate polished primary and hapltoigs.
-11. If <code>polishing_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [10].
-12. Map HiC data onto primary contigs.
-13. Run scaffolding for primary contigs based on results of [12].
-14. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [13].
+2. Run organnels subworkflow on the HiFi reads.
+3. Run hifiasm in the original mode.
+4. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [3].
+5. If <code>hifiasm_hic_on</code> option is set, run hifiasm in HiC mode.
+6. If <code>hifiasm_hic_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [5].
+7. Purge primary contigs from [3], i.e. produce the purged assembly and a set of haplotigs. Consider the purged contigs as the primary assembly for further steps.
+8. Take haplotigs from [7], merge with haplotigs from [3] and purge again. Discard the purhed contigs, continue with the purged haplotigs as representation of the alternative assembly further on.
+9. If not <code>polishing_on</code> run organelles subwrokflow on the joined purged contigs and haplotigs.
+10. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for primary and haplotigs from [8] and [9].
+11. If <code>polishing_on</code> option is set, map Illumina 10X reads to the joined primary and alternative contigs.
+12. If <code>polishing_on</code> option is set, polish initial assembly based on aligment produced in [8], then separate polished primary and hapltoigs.
+13. If <code>polishing_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [12].
+14. If <code>polishing_on</code> run organelles subwrokflow on the joined polished contigs and haplotigs.
+15. Map HiC data onto primary contigs.
+16. Run scaffolding for primary contigs based on results of [15].
+17. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [16].
 
 ## Quick Start
 
