@@ -25,47 +25,38 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 While the steps are described in a sequential order, many of them can be executed as parallel jobs.
 
-1. Parse and transform the input into the required data structures.
+1. Parse the input into channels.
 2. Run organnels subworkflow on the HiFi reads.
 3. Run hifiasm in the original mode.
 4. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [3].
 5. If <code>hifiasm_hic_on</code> option is set, run hifiasm in HiC mode.
 6. If <code>hifiasm_hic_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [5].
-7. Purge primary contigs from [3], i.e. produce the purged assembly and a set of haplotigs. Consider the purged contigs as the primary assembly for further steps.
-8. Take haplotigs from [7], merge with haplotigs from [3] and purge again. Discard the purhed contigs, continue with the purged haplotigs as representation of the alternative assembly further on.
-9. If not <code>polishing_on</code> run organelles subwrokflow on the joined purged contigs and haplotigs.
-10. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for primary and haplotigs from [8] and [9].
-11. If <code>polishing_on</code> option is set, map Illumina 10X reads to the joined primary and alternative contigs.
-12. If <code>polishing_on</code> option is set, polish initial assembly based on aligment produced in [8], then separate polished primary and hapltoigs.
+7. Run purging subworkflow on the primary contigs from [3], i.e. produce the purged assembly and a set of haplotigs. Consider the purged contigs as the primary assembly for further steps.
+8. Take haplotigs from [7], merge with haplotigs from [3] and run purging subworkfllow on it. Discard the contigs that were purged away, continue with the purged haplotigs as a representation of the haplotig assembly.
+10. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for the primary and haplotigs from [7] and [8].
+11. If <code>polishing_on</code> option is set, map Illumina 10X reads to the joined primary and alt contigs.
+12. If <code>polishing_on</code> option is set, polish initial assembly based on the aligment produced in [11]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
 13. If <code>polishing_on</code> option is set, produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [12].
-14. If <code>polishing_on</code> run organelles subwrokflow on the joined polished contigs and haplotigs.
+14. Run organelles subworkflow on the joined primary and haplotigs contigs.
 15. Map HiC data onto primary contigs.
-16. Run scaffolding for primary contigs based on results of [15].
+16. Run scaffolding for primary contigs based on results in [15].
 17. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [16].
 
-## Quick Start
+## Usage
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
+> **Note**
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
+> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
+> with `-profile test` before running the workflow on actual data.
 
-2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
+Currently, it is advised to run the pipeline with docker or singularity as some modules do not have a conda env associated with them.
 
-3. Download the pipeline and test it on a minimal dataset with a single command:
+To run the pipeline use a command-line:
 
-   ```console
-   nextflow run sanger-tol/genomeassembly -profile test,YOURPROFILE --outdir <OUTDIR>
+   ```bash
+   nextflow run sanger-tol/genomeassembly -profile singularity,YOURPROFILE --outdir <OUTDIR>
    ```
-
-   Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
-
-Further documentation about the pipeline can be found in the following files: usage, parameters and output.
-
-4. Start running your own analysis!
-
-   <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
-
-   ```console
-   nextflow run sanger-tol/genomeassembly --input sample_dataset.yaml --outdir <OUTDIR> --polishing_on true -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-   ```
+For more details on how to run the pipeline and interprete the results see [usage](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/usage.md) and [output](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/output.md) sections of the documentation.
 
 ## Credits
 
@@ -73,11 +64,13 @@ sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-@priyanka-surana for the code review, brilliant coding suggestions, and help with pushing this pipeline forward through development.
+@priyanka-surana for the code review, very helpful coding suggestions, and assistance with pushing this pipeline forward through development.
 
-@mcshane and @c-zhou for designing and implementing original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou).
+@mcshane and @c-zhou for the design and implementation of the original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou).
 
-@muffato for help with nf-core code and troubleshooting, code review and valuable suggestions at the different stages of pipeline development.
+TreeVal team Damon-Lee Pointon (@DLBPointon), Yumi Sims (@yumisims) and William Eagles (@weaglesBio) for implementation of the hic-mapping pipeline.
+
+@muffato for help with nf-core integration, dealing with infrastructure and troubleshooting, for the code reviews and valuable suggestions at the different stages of the pipeline development.
 
 @mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
 
