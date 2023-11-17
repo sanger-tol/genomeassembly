@@ -34,7 +34,7 @@ Here the input YAML is being processed. This subworkflow generates the input cha
 
 This subworkflow generates a KMER database and coverage model used in [PURGE_DUPS](#purge_dups) and [GENOME_STATISTICS](#genome_statistics) </p>
 
-![Subworkflow for kmer profile](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/genomescope_model.png)
+![Subworkflow for kmer profile](images/v1/genomescope_model.png)
 
 ### RAW_ASSEMBLY
 
@@ -53,7 +53,7 @@ This subworkflow generates a KMER database and coverage model used in [PURGE_DUP
 This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the input HiFi reads then raw contigs are converted from GFA into FASTA format, this assembly is due to purging, polishing (optional) and scaffolding further down the pipeline.
 In case hifiasm HiC mode is switched on, it is performed as an extra step with results stored in hifiasm-hic folder.</p>
 
-![Raw assembly subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/raw_assembly.png)
+![Raw assembly subworkflow](images/v1/raw_assembly.png)
 
 ### PURGE_DUPS
 
@@ -73,7 +73,7 @@ The subworkflow relies on kmer coverage model to identify coverage thresholds. F
 
 </p>
 
-![Subworkflow for purging haplotigs](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/purge_dups.png)
+![Subworkflow for purging haplotigs](images/v1/purge_dups.png)
 
 ### POLISHING
 
@@ -93,7 +93,7 @@ The subworkflow relies on kmer coverage model to identify coverage thresholds. F
 
 This subworkflow uses read mapping of the Illumina 10X short read data to fix short errors in primary contigs and haplotigs.</p>
 
-![Subworkflow for purging haplotigs](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/polishing.png)
+![Subworkflow for purging haplotigs](images/v1/polishing.png)
 
 ### HIC_MAPPING
 
@@ -108,7 +108,7 @@ This subworkflow uses read mapping of the Illumina 10X short read data to fix sh
 
 This subworkflow implements alignment of the Illumina HiC short reads to the primary assembly. Uses [`CONVERT_STATS`](#convert_stats) as internal subworkflow to calculate read mapping stats.</p>
 
-![HiC mapping subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/hic-mapping.png)
+![HiC mapping subworkflow](images/v1/hic-mapping.png)
 
 ### CONVERT_STATS
 
@@ -145,7 +145,7 @@ This subworkflow produces statistcs for a bam file containing read mapping. It i
 </details>
 The subworkflow performs scaffolding of the primary contigs using HiC mapping generated in [`HIC_MAPPING`](hic_mapping). It also performs some postprocessing steps such as generating cooler and pretext files</p>
 
-![Scaffolding subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/scaffolding.png)
+![Scaffolding subworkflow](images/v1/scaffolding.png)
 
 ### GENOME_STATISTICS
 
@@ -163,7 +163,7 @@ The subworkflow performs scaffolding of the primary contigs using HiC mapping ge
 
 This subworkflow is used to evaluate the quality of sequences. It is performed after the intermidate steps, such as raw assembly generation, purging and polishing, and also at the end of the pipeline when scaffolds are produced.</p>
 
-![Genome statistics subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/genome_statistics.png)
+![Genome statistics subworkflow](images/v1/genome_statistics.png)
 
 ### ORGANELLES
 
@@ -182,7 +182,7 @@ This subworkflow is used to evaluate the quality of sequences. It is performed a
 
 This subworkflow implements assembly of organelles. In the main pipeline it is called twice - for assembling mitochondrion from HiFi reads and as an alternative it runs identification of the mitochondrion for the genome assembly </p>
 
-![Organelles subworkflow](https://raw.githubusercontent.com/sanger-tol/genomeassembly/docs_and_code_review/docs/images/v1/organelles.png)
+![Organelles subworkflow](images/v1/organelles.png)
 
 ### Pipeline information
 
