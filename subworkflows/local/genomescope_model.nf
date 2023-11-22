@@ -11,20 +11,17 @@ workflow GENOMESCOPE_MODEL {
     main: 
     ch_versions = Channel.empty()
 
-    reads.flatMap { meta, reads -> reads instanceof List ? reads.collect{ [ meta, it ] } : [ [ meta, reads ] ] }
-                    .set{ reads_ch }
-
     //
     // MODULE: MERGE ALL READS IN ONE FILE
     //
-    CAT_CAT_READS( reads_ch )
+    CAT_CAT_READS( reads )
     ch_versions = ch_versions.mix(CAT_CAT_READS.out.versions)
     
     //
     // LOGIC: KEEP THE CORRECT EXTENSION
     //
-    CAT_CAT_READS.out.file_out.map{ meta, reads -> reads.getName().endsWith('gz') 
-                                    ? [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa.gz'] : [meta, reads.getParent().toString() + '/' + reads.getBaseName().toString() + '.fa'] }
+    CAT_CAT_READS.out.file_out.map{ meta, reads_ch -> reads_ch.getName().endsWith('gz')
+                                    ? [meta, reads_ch.getParent().toString() + '/' + reads_ch.getBaseName().toString() + '.fa.gz'] : [meta, reads_ch.getParent().toString() + '/' + reads_ch.getBaseName().toString() + '.fa'] }
                             .set{ reads_merged_ch }
 
     //
