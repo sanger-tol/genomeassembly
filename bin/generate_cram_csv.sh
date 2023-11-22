@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#    Copyright (C) 2022-2023 Genome Research Ltd.
 #
 # Based on https://github.com/sanger-tol/treeval/blob/80554a803903183613d49690d5770eeadb3c42c9/bin/generate_cram_csv.sh
 # from Sanger TOL treeval pipeline
