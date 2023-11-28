@@ -15,7 +15,7 @@ Polished and scaffolded assemblies are evaluated using [GFASTATS](https://github
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-On release,  automated continuous integration tests run the pipeline on a small dataset, and a test on a full-sized dataset is run on the Sanger HPC. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets on an HPC, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
+On release, automated continuous integration tests run the pipeline on a small dataset, and a test on a full-sized dataset is run on the Sanger HPC. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets on an HPC, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
 
 ## Pipeline summary
 
@@ -26,15 +26,15 @@ While the steps are described in a sequential order, many of them can be execute
 3. Run hifiasm in the original mode.
 4. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [3].
 5. If <code>hifiasm_hic_on</code> option is set
-    1. run hifiasm in HiC mode.
-    2. produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [5i].
+   1. run hifiasm in HiC mode.
+   2. produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [5i].
 6. Run purging subworkflow on the primary contigs from [3], i.e. produce the purged assembly and a set of haplotigs. Consider the purged contigs as the primary assembly for further steps.
 7. Take haplotigs from [6], merge with haplotigs from [3] and run purging subworkfllow on it. Discard the contigs that were purged away, continue with the purged haplotigs as a representation of the haplotig assembly.
 8. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for the primary and haplotigs from [6] and [7].
 9. If <code>polishing_on</code>
-    1. Illumina 10X reads to the joined primary and alt contigs.
-    2. polish initial assembly based on the aligment produced in [9i]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
-    3. produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [9ii].
+   1. Illumina 10X reads to the joined primary and alt contigs.
+   2. polish initial assembly based on the aligment produced in [9i]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
+   3. produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [9ii].
 10. Run organelles subworkflow on the joined primary and haplotigs contigs.
 11. Map HiC data onto primary contigs.
 12. Run scaffolding for primary contigs.
@@ -72,7 +72,6 @@ TreeVal team Damon-Lee Pointon (@DLBPointon), Yumi Sims (@yumisims) and William 
 @muffato for help with nf-core integration, dealing with infrastructure and troubleshooting, for the code reviews and valuable suggestions at the different stages of the pipeline development.
 
 @mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
-
 
 ## Contributions and Support
 
