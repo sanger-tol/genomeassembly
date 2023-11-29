@@ -114,6 +114,7 @@ This subworkflow implements alignment of the Illumina HiC short reads to the pri
 
 <details markdown="1">
   <summary>Output files</summary>
+  
   - <code>\*.hifiasm..\*/scaffolding/.*.stats</code>
     - output of samtools stats 
   - <code>\*.hifiasm..\*/scaffolding/.*.idxstats</code>
@@ -122,7 +123,7 @@ This subworkflow implements alignment of the Illumina HiC short reads to the pri
     - output of samtools flagstat  
 </details>
 
-This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](hic_mapping) subworkflow.</p>
+This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](#hic_mapping) subworkflow.</p>
 
 ### SCAFFOLDING
 
