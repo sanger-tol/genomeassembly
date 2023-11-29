@@ -56,7 +56,7 @@ BUSCO lineage, mitochondrial code etc. For more information see [Input YAML defi
 <details markdown="1">
   <summary>Details</summary>
   
-Example is based on [test.yaml](https://github.com/sanger-tol/genomeassembly/blob/814f6cd30e29a95e1abaea7a434bd1b445f8f63b/assets/test.yaml).
+Example is based on [test.yaml](test.yaml).
 ```yaml
 dataset:
   id: baUndUnlc1

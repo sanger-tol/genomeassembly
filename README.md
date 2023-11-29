@@ -55,7 +55,7 @@ To run the pipeline use a command-line:
 nextflow run sanger-tol/genomeassembly -profile singularity,YOURPROFILE --outdir <OUTDIR>
 ```
 
-For more details on how to run the pipeline and interprete the results see [usage](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/usage.md) and [output](https://github.com/sanger-tol/genomeassembly/blob/dev/docs/output.md) sections of the documentation.
+For more details on how to run the pipeline and interprete the results see [usage](usage.md) and [output](output.md) sections of the documentation.
 
 ## Credits
 
