@@ -73,6 +73,8 @@ TreeVal team Damon-Lee Pointon (@DLBPointon), Yumi Sims (@yumisims) and William 
 
 @mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
 
+@gq1 for the code review and valuable suggestions.
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
