@@ -15,7 +15,7 @@ Polished and scaffolded assemblies are evaluated using [GFASTATS](https://github
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-On release, automated continuous integration tests run the pipeline on a small dataset, and a test on a full-sized dataset is run on the Sanger HPC. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets on an HPC, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the LSF infrastructure. This ensures that the pipeline runs on LSF, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
 
 ## Pipeline summary
 
