@@ -57,7 +57,7 @@ BUSCO lineage, mitochondrial code etc. For more information see [Input YAML defi
   <summary>Details</summary>
   
 Example is based on [test.yaml](https://github.com/sanger-tol/genomeassembly/blob/814f6cd30e29a95e1abaea7a434bd1b445f8f63b/assets/test.yaml).
-```bash
+```yaml
 dataset:
   id: baUndUnlc1
   illumina_10X:
@@ -188,7 +188,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/sanger-tol/blobtoolkit/blob/56906ffb5737e4b985797bb5fb4b9c94cfe69600/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](../conf/base.config#L18)  it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
