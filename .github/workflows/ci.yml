@@ -42,4 +42,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker -c conf/hifiasm_test.config --organelles_on --outdir ./results
