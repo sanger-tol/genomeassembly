@@ -21,7 +21,7 @@ jobs:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'sanger-tol/genomeassembly') }}"
-    runs-on: self-hosted 
+    runs-on: ubuntu2204-8c 
     strategy:
       matrix:
         NXF_VER:
@@ -42,4 +42,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker -c conf/hifiasm_test.config --organelles_on --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,docker --outdir ./results
