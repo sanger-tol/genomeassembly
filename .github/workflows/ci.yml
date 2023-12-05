@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - large_runner
   pull_request:
   release:
     types: [published]
@@ -52,4 +51,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --organelles_on --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --outdir ./results
