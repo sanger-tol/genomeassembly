@@ -20,5 +20,4 @@ lint:
     - manifest.homePage
   multiqc_config:
     - report_comment
-  actions_ci:
-    - .github/workflows/ci.yml
+
