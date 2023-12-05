@@ -1,13 +1,12 @@
 #!/bin/bash
 
+#    Copyright (C) 2022-2023 Genome Research Ltd.
 #
 # Based on https://github.com/sanger-tol/treeval/blob/80554a803903183613d49690d5770eeadb3c42c9/bin/generate_cram_csv.sh
 # from Sanger TOL treeval pipeline
 #
 
-#cram_path=$1
 chunkn=0
-#for cram in ${cram_path}/*.cram; do
 for cram in "$@"; do
 
     rgline=$(samtools view -H $cram|grep "RG"|sed 's/\t/\\t/g'|sed "s/'//g")

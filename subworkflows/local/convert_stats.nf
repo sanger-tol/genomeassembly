@@ -19,37 +19,43 @@ workflow CONVERT_STATS {
     main:
     ch_versions = Channel.empty()
 
-    // Convert BAM to CRAM
+    // 
+    // MODULE: CONVERT BAM TO CRAM
+    //
     SAMTOOLS_VIEW ( bam, fasta, [] )
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW.out.versions.first())
 
-    // Index CRAM file
+    //
+    // MODULE: INDEX CRAM FILE
+    //
     SAMTOOLS_INDEX ( SAMTOOLS_VIEW.out.cram )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
     
-    // Combine CRAM and CRAI into one channel
+    //
+    // LOGIC: COMBINE CRAM AND CRAI INTP ONE CHANNEL
+    //
     SAMTOOLS_VIEW.out.cram
     .join(SAMTOOLS_INDEX.out.crai, by: [0], remainder: true)
     .set { ch_cram_crai }
 
-    // Calculate statistics
+    //
+    // MODULE: CALCULATE STATS
+    //
     SAMTOOLS_STATS ( ch_cram_crai, fasta )
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 
-    // Calculate statistics based on flag values
+    //
+    // MODULE: CALCULATE STATISTTICS BASED ON FLAG VALUES
+    //
     SAMTOOLS_FLAGSTAT ( ch_cram_crai )
     ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
 
-    // Calculate index statistics
+    //
+    // MODULE: CALCULATE INDEX STATISTICS
+    //
     SAMTOOLS_IDXSTATS ( ch_cram_crai )
     ch_versions = ch_versions.mix(SAMTOOLS_IDXSTATS.out.versions.first())
 
     emit:
-    cram = SAMTOOLS_VIEW.out.cram
-    crai = SAMTOOLS_INDEX.out.crai
-    stats = SAMTOOLS_STATS.out.stats
-    flagstat = SAMTOOLS_FLAGSTAT.out.flagstat
-    idxstats = SAMTOOLS_IDXSTATS.out.idxstats
-
     versions = ch_versions
 }

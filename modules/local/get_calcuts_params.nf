@@ -22,7 +22,7 @@ process GET_CALCUTS_PARAMS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        \$(python --version)
+        python: \$(python --version)
     END_VERSIONS
     """
 }

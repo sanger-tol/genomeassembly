@@ -1,0 +1,29 @@
+name: sanger-tol LSF tests
+
+on:
+  workflow_dispatch:
+jobs:
+  run-tower:
+    name: Run LSF tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Launch workflow via tower
+        uses: seqeralabs/action-tower-launch@v2
+        with:
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          revision: ${{ github.sha }}
+          workdir: ${{ secrets.TOWER_WORKDIR_PARENT }}/work/${{ github.repository }}/work-${{ github.sha }}
+          parameters: |
+            {
+              "outdir": "${{ secrets.TOWER_WORKDIR_PARENT }}/results/${{ github.repository }}/results-${{ github.sha }}",
+            }
+          profiles: test,sanger,singularity,cleanup
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: |
+            tower_action_*.log
+            tower_action_*.json

@@ -59,15 +59,18 @@
                 },
                 "timestamp": {
                     "type": "string",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Used for output naming, defined at runtime"
                 },
                 "hifiasm": {
                     "type": "string",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Used for hifiasm output naming, defined at runtime"
                 },
                 "hifiasmhic": {
                     "type": "string",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Used for hifiasm-hic output naming, defined at runtime"
                 }
             }
         },
