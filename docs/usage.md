@@ -1,7 +1,5 @@
 # sanger-tol/genomeassembly: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
 ## Workflow input
@@ -56,7 +54,7 @@ BUSCO lineage, mitochondrial code etc. For more information see [Input YAML defi
 <details markdown="1">
   <summary>Details</summary>
   
-Example is based on [test.yaml](test.yaml).
+Example is based on [test.yaml](../assets/test.yaml).
 ```yaml
 dataset:
   id: baUndUnlc1
