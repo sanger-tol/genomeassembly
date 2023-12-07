@@ -2,10 +2,10 @@ dataset:
   id: gfLaeSulp1
   pacbio:
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gfLaeSulp1/pacbio/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
+      - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
     HiC:
       reads:
-        - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gfLaeSulp1/hic-arima2/40063_3#5.cram
+        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineages_path: /lustre/scratch123/tol/resources/busco/v5/
