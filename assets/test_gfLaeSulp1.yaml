@@ -1,18 +1,16 @@
-samples:
-  - id: gfLaeSulp1
-    assembly:
-      primary: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/gfLaeSulp1.p_ctg.fa.gz
-      haplotigs: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/working/gfLaeSulp1.hifiasm.20210610/gfLaeSulp1.a_ctg.fa.gz
-    illumina_10X:
-      reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/10x/
-    pacbio:
-      reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
-      kmer_pref: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/kmer/k31/gfLaeSulp1.k31
+dataset:
+  id: gfLaeSulp1
+  pacbio:
+    reads:
+      - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
     HiC:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
-      arima_motif: GATC,GANTC,CTNAG,TTAA
-    busco:
-      lineages_path: /lustre/scratch123/tol/resources/busco/v5/
-      lineage: fungi_odb10
+hic_motif: GATC,GANTC,CTNAG,TTAA
+busco:
+  lineages_path: /lustre/scratch123/tol/resources/busco/v5/
+  lineage: fungi_odb10
+mito:
+  species: Laetiporus sulphureus
+  min_length: 15000
+  code: 4
