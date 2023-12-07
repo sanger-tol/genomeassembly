@@ -7,7 +7,7 @@ dataset:
       - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/pacbio/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
   HiC:
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/hic-arima/35528_4#7.cram
+      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/hic-arima2/35528_4#7.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineage_path: /lustre/scratch123/tol/resources/busco/v5/
