@@ -1,13 +1,13 @@
 dataset:
   id: iyVesGerm1
   illumina_10X:
-    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/10x 
+    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/10x
   pacbio:
     reads:
       - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/pacbio/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.filtered.fasta.gz
   HiC:
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/hic-arima2/34957_3#2.cram 
+      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/hic-arima2/34957_3#2.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
 busco:
   lineage_path: /lustre/scratch123/tol/resources/busco/v5/
