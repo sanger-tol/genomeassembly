@@ -30,10 +30,6 @@ jobs:
           - "22.10.1"
           - "latest-everything"
     steps:
-      - name: Set up nextflow secrets
-        run: |
-          nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
-
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
@@ -41,6 +37,10 @@ jobs:
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up nextflow secrets
+        run: |
+          nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
 
       - name: Download test data
         run: |
