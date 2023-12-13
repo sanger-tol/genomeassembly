@@ -1,4 +1,6 @@
 process MITOHIFI_FINDMITOREFERENCE {
+    secret 'NCBI_API_KEY'
+
     tag '$species'
     label 'process_low'
 

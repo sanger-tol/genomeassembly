@@ -19,6 +19,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  - name: Set up nextflow secrets
+    nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
+
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
