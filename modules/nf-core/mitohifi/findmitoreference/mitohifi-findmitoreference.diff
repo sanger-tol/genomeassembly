@@ -1,0 +1,12 @@
+Changes in module 'nf-core/mitohifi/findmitoreference'
+--- modules/nf-core/mitohifi/findmitoreference/main.nf
++++ modules/nf-core/mitohifi/findmitoreference/main.nf
+@@ -1,4 +1,6 @@
+ process MITOHIFI_FINDMITOREFERENCE {
++    secret 'NCBI_API_KEY'
++
+     tag '$species'
+     label 'process_low'
+ 
+
+************************************************************
