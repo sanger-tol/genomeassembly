@@ -20,8 +20,9 @@ concurrency:
 
 jobs:
   set_secrets:
+    name: Set up nextflow secrets
     steps:
-      - name: Set up nextflow secrets
+      - name: Set up NCBI API key
         run: |
           nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
   test:
