@@ -71,9 +71,9 @@ TreeVal team Damon-Lee Pointon (@DLBPointon), Yumi Sims (@yumisims) and William 
 
 @muffato for help with nf-core integration, dealing with infrastructure and troubleshooting, for the code reviews and valuable suggestions at the different stages of the pipeline development.
 
-@mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
+@gq1 for the code review, valuable suggestions to the code improvement and contributions to the full test setup.
 
-@gq1 for the code review and valuable suggestions.
+@mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
 
 ## Contributions and Support
 
