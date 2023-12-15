@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[1.0.0](https://github.com/sanger-tol/genomeassembly/releases/tag/1.0.0)] - Night Fury - [2023-12-15]
+## [[0.9.0](https://github.com/sanger-tol/genomeassembly/releases/tag/0.9.0)] - Night Fury - [2023-12-15]
 
 Initial release of sanger-tol/genomeassembly, created with the [nf-core](https://nf-co.re/) template.
 
