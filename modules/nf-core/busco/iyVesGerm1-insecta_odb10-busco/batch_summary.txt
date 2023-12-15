@@ -1,0 +1,2 @@
+Input_file	Dataset	Complete	Single	Duplicated	Fragmented	Missing	n_markers	Scaffold N50	Contigs N50	Percent gaps	Number of scaffolds
+iyVesGerm1_scaffolds_final.fa	Run failed; check logs													

@@ -1,64 +1,116 @@
 # sanger-tol/genomeassembly: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+## Workflow input
 
-## Samplesheet input
+### Parameters summary
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+<details markdown="1">
+  <summary>Details</summary>
+  
+Workflow accepts the following parameters:
+* <code>input</code> - (required) YAML file containing description of the dataset, incl. ToLID, paths to the raw data etc.
+* <code>bed_chunks_polishing</code> - a number of chunks to split contigs for polishing (default 100)
+* <code>cool_bin</code> - a bin size for cooler (default 1000)
+* <code>organelles_on</code> - set <code>True</code> for running organelles subworkflow
+* <code>polishing_on</code> - set <code>True</code> for polishing
+* <code>hifiasm_hic_on</code> - set <code>True</code> to run of hifiasm in HiC mode
+  <br>NB: hifiasm in the original mode is used as the main assembly even if the <code>hifiasm_hic_on</code> flag is set</br>
 
-```console
---input '[path to samplesheet file]'
-```
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
+</details>
 
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The input dataset is described in YAML format which states for "Yet Another Markdown Language". It is a human readable file which contains information
+about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs,
+BUSCO lineage, mitochondrial code etc. For more information see [Input YAML definition](#input_yaml_definition)
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+### <a name="input_yaml_definition"></a> Input YAML definition
 
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+- <code>dataset.id</code>
+  - is used as the sample id throughout the pipeline. ToLID should be used in ToL datasets.</p>
+- <code>dataset.illumina_10X.reads</code>
+  - is necessary in case polishing is applied, this field should point to the path of the folder containing 10X reads. Sample identifier in the Illumina reads should coincide with the top level ID. For the use of the Longranger software the reads should follow [the 10X FASTQ file naming convention](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/fastq-input).</p>
+- <code>dataset.pacbio.reads</code>
+  - contains the list (<code>-reads</code>) of the HiFi reads in FASTA (or gzipped FASTA) format in. The pipeline implementation is based on an assumption that reads have gone through adapter/barcode checks. </p>
+- <code>dataset.HiC.reads</code>
+  - contains the list (<code>-reads</code>) of the HiC reads in the indexed CRAM format.</p>
+- <code>dataset.hic_motif</code>
+  - is a comma-separated list of restriction sites. The pipeline was tested with the Arima dataset, but it's should be alright to use it with the other HiC libraries
+- <code>dataset.busco.lineage</code>
+  - specifies the name of the BUSCO dataset (i.e. bacteria_odb10). </p>
+- <code>dataset.busco.lineage_path</code>
+  - is an optional field containing the path to the folder with pre-downloaded BUSCO lineages. </p>
+- <code>dataset.mito.species</code>
+  - is the latin name of the species to look for the mitogenome reference in the organelles subworkflow. Normally this parameter will contain the latin name of the species whose genome is being assembled. </p>
+- <code>dataset.mito.min_length</code>
+  - sets the minimal length of the mito, can be 15Kb. </p>
+- <code>dataset.mito.code</code>
+  - is a mitochondrial code for the mitogenome annotation. See [here](https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi) for reference.
+
+### <a name="input_yaml_example"></a> An example of the input YAML
+
+<details markdown="1">
+  <summary>Details</summary>
+  
+Example is based on [test.yaml](../assets/test.yaml).
+```yaml
+dataset:
+  id: baUndUnlc1
+  illumina_10X:
+    reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
+  pacbio:
+    reads:
+      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  HiC:
+    reads:
+      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
+hic_motif: GATC,GANTC,CTNAG,TTAA
+busco:
+  lineage: bacteria_odb10
+mito:
+  species: Caradrina clavipalpis
+  min_length: 15000
+  code: 5
+```
+</details>
+
+## Usage
+
+### Local testing
+
+<details markdown="1">
+  <summary>Details</summary>
+
+The pipeline can be tested locally using a provided small test dataset:
+
+```
+cd ${GENOMEASSEMBLY_TEST_DATA}
+curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
+
+git clone git@github.com:sanger-tol/genomeassembly.git
+cd genomeassembly/
+sed -i "s|/home/runner/work/genomeassembly/genomeassembly|${GENOMEASSEMBLY_TEST_DATA}|" assets/test_github.yaml
+nextflow run main.nf -profile test_github,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+These command line steps will download and decompress the test data first, then download the pipeline and modify YAML so that it matches dataset location in your file system.
+The last command line runs the test.
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+You should now be able to run the pipeline as you see fit.
 
-## Running the pipeline
+</details>
+
+### Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```console
-nextflow run sanger-tol/genomeassembly --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker
+nextflow run sanger-tol/genomeassembly --input assets/dataset.yaml --outdir <OUTDIR> -profile docker,sanger
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline with the `docker` configuration profile, also using your institution profille if available (see [nf-core/configs](#nf-core_configs)). See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -134,100 +186,11 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](../conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
-For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
+To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
-```console
-[62/149eb0] NOTE: Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
-Error executing process > 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
-
-Caused by:
-    Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
-
-Command executed:
-    STAR \
-        --genomeDir star \
-        --readFilesIn WT_REP1_trimmed.fq.gz  \
-        --runThreadN 2 \
-        --outFileNamePrefix WT_REP1. \
-        <TRUNCATED>
-
-Command exit status:
-    137
-
-Command output:
-    (empty)
-
-Command error:
-    .command.sh: line 9:  30 Killed    STAR --genomeDir star --readFilesIn WT_REP1_trimmed.fq.gz --runThreadN 2 --outFileNamePrefix WT_REP1. <TRUNCATED>
-Work dir:
-    /home/pipelinetest/work/9d/172ca5881234073e8d76f2a19c88fb
-
-Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
-```
-
-To bypass this error you would need to find exactly which resources are set by the `STAR_ALIGN` process. The quickest way is to search for `process STAR_ALIGN` in the [nf-core/rnaseq Github repo](https://github.com/nf-core/rnaseq/search?q=process+STAR_ALIGN).
-We have standardised the structure of Nextflow DSL2 pipelines such that all module files will be present in the `modules/` directory and so, based on the search results, the file we want is `modules/nf-core/software/star/align/main.nf`.
-If you click on the link to that file you will notice that there is a `label` directive at the top of the module that is set to [`label process_high`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/modules/nf-core/software/star/align/main.nf#L9).
-The [Nextflow `label`](https://www.nextflow.io/docs/latest/process.html#label) directive allows us to organise workflow processes in separate groups which can be referenced in a configuration file to select and configure subset of processes having similar computing requirements.
-The default values for the `process_high` label are set in the pipeline's [`base.config`](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L33-L37) which in this case is defined as 72GB.
-Providing you haven't set any other standard nf-core parameters to **cap** the [maximum resources](https://nf-co.re/usage/configuration#max-resources) used by the pipeline then we can try and bypass the `STAR_ALIGN` process failure by creating a custom config file that sets at least 72GB of memory, in this case increased to 100GB.
-The custom config below can then be provided to the pipeline via the [`-c`](#-c) parameter as highlighted in previous sections.
-
-```nextflow
-process {
-    withName: 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN' {
-        memory = 100.GB
-    }
-}
-```
-
-> **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
->
-> If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
-
-### Updating containers
-
-The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration. For example, in the [nf-core/viralrecon](https://nf-co.re/viralrecon) pipeline a tool called [Pangolin](https://github.com/cov-lineages/pangolin) has been used during the COVID-19 pandemic to assign lineages to SARS-CoV-2 genome sequenced samples. Given that the lineage assignments change quite frequently it doesn't make sense to re-release the nf-core/viralrecon everytime a new version of Pangolin has been released. However, you can override the default container used by the pipeline by creating a custom config file and passing it as a command-line argument via `-c custom.config`.
-
-1. Check the default version used by the pipeline in the module file for [Pangolin](https://github.com/nf-core/viralrecon/blob/a85d5969f9025409e3618d6c280ef15ce417df65/modules/nf-core/software/pangolin/main.nf#L14-L19)
-2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
-3. Create the custom config accordingly:
-
-   - For Docker:
-
-     ```nextflow
-     process {
-         withName: PANGOLIN {
-             container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
-         }
-     }
-     ```
-
-   - For Singularity:
-
-     ```nextflow
-     process {
-         withName: PANGOLIN {
-             container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
-         }
-     }
-     ```
-
-   - For Conda:
-
-     ```nextflow
-     process {
-         withName: PANGOLIN {
-             conda = 'bioconda::pangolin=3.0.5'
-         }
-     }
-     ```
-
-> **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
-
-### nf-core/configs
+### <a name="nf-core_configs"></a> nf-core/configs
 
 In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
