@@ -37,8 +37,7 @@ if (params.organelles_on) { organelles_on = params.organelles_on } else { organe
 //
 include { PREPARE_INPUT                                    } from '../subworkflows/local/prepare_input'
 include { RAW_ASSEMBLY                                     } from '../subworkflows/local/raw_assembly' 
-include { ORGANELLES as ORGANELLES_READS                   } from '../subworkflows/local/organelles' 
-include { ORGANELLES as ORGANELLES_CONTIGS                 } from '../subworkflows/local/organelles' 
+include { ORGANELLES                                       } from '../subworkflows/local/organelles' 
 include { GENOMESCOPE_MODEL                                } from '../subworkflows/local/genomescope_model'
 include { PURGE_DUPS as PURGE_DUPS_PRI                     } from '../subworkflows/local/purge_dups'
 include { PURGE_DUPS as PURGE_DUPS_ALT                     } from '../subworkflows/local/purge_dups'
@@ -99,23 +98,6 @@ workflow GENOMEASSEMBLY {
     //
     GENOMESCOPE_MODEL( hifi_reads_ch )   
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
-
-    //
-    // LOGIC: ONLY LOOK FOR A MITO IF THE CORRESPONDING FLAG IS SET
-    //
-    if ( organelles_on ) {
-        //
-        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-        //
-        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
-        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-
-        //
-        // SUBWORKFLOW: IDENTIFY ORGANELLES ON THE RAW READS
-        //
-        ORGANELLES_READS(CAT_CAT_MITOHIFI_READS.out.file_out, PREPARE_INPUT.out.mito)
-        ch_versions = ch_versions.mix(ORGANELLES_READS.out.versions)
-    }
 
     //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
@@ -320,9 +302,15 @@ workflow GENOMEASSEMBLY {
     }
     if ( organelles_on ) {
         //
-        // SUBWORKFLOW: INDETIFY MITO IN THE ASSEMBLY CONTIGS
+        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
+        //
+        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
+        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
+
+        //
+        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
         // 
-        ORGANELLES_CONTIGS(merged_pri_alt, PREPARE_INPUT.out.mito)
+        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt, PREPARE_INPUT.out.mito)
     }
 
     //

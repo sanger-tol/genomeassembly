@@ -55,4 +55,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity -c conf/test_github_params.config --outdir ./results
