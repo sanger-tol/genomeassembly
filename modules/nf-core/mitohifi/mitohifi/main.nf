@@ -4,7 +4,8 @@ process MITOHIFI_MITOHIFI {
 
 
     // Docker image available at the project github repository
-    container 'ghcr.io/marcelauliano/mitohifi:master'
+//    container 'ghcr.io/marcelauliano/mitohifi:master'
+    container 'quay.io/sanger-tol/mitohifi:1.0.1'
 
     input:
     tuple val(meta), path(input)
