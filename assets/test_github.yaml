@@ -15,3 +15,4 @@ mito:
   species: Caradrina clavipalpis
   min_length: 15000
   code: 5
+  fam: /home/runner/work/genomeassembly/genomeassembly/Undibacterium_unclassified/hmm_db/insecta_mito.fam
