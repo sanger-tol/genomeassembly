@@ -22,7 +22,7 @@ jobs:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'sanger-tol/genomeassembly') }}"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu2204-8c
     strategy:
       matrix:
         NXF_VER:
