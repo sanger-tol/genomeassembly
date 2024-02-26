@@ -5,9 +5,10 @@ process MITOHIFI_FINDMITOREFERENCE {
     label 'process_low'
 
     // Docker image available at the biocontainers Dockerhub
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://biocontainers/mitohifi:3.0.0_cv1':
-        'docker.io/biocontainers/mitohifi:3.0.0_cv1' }"
+//    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+//        'docker://biocontainers/mitohifi:3.0.0_cv1':
+//        'docker.io/biocontainers/mitohifi:3.0.0_cv1' }"
+    container 'quay.io/sanger-tol/mitohifi:1.0.1'
 
     input:
     val species
@@ -28,7 +29,8 @@ process MITOHIFI_FINDMITOREFERENCE {
         --species $species \\
         --email $email \\
         --min_length $min_length \\
-        --outfolder .
+        --outfolder . \\
+        --ncbi-api-key \${NCBI_API_KEY}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
