@@ -39,8 +39,7 @@ include { PREPARE_INPUT                                    } from '../subworkflo
 include { RAW_ASSEMBLY                                     } from '../subworkflows/local/raw_assembly' 
 include { ORGANELLES                                       } from '../subworkflows/local/organelles' 
 include { GENOMESCOPE_MODEL                                } from '../subworkflows/local/genomescope_model'
-include { PURGE_DUPS as PURGE_DUPS_PRI                     } from '../subworkflows/local/purge_dups'
-include { PURGE_DUPS as PURGE_DUPS_ALT                     } from '../subworkflows/local/purge_dups'
+include { PURGE_DUPS                                       } from '../subworkflows/local/purge_dups'
 include { POLISHING                                        } from '../subworkflows/local/polishing'
 include { SCAFFOLDING                                      } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY           } from '../modules/local/keep_seqnames'
@@ -151,19 +150,19 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
     //
-    PURGE_DUPS_PRI( purge_dups_input, 'primary' )
-    ch_versions = ch_versions.mix(PURGE_DUPS_PRI.out.versions)
+    PURGE_DUPS( purge_dups_input )
+    ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
 
     //
     // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL
     //
-    PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+    PURGE_DUPS.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
                           .set{ primary_contigs_ch }
     
     //
     // LOGIC: SET APART THE HAPLOTIGS AFTER PURGING AND THE HIFIASM HAPLOTIGS
     //
-    haplotigs_ch.combine( PURGE_DUPS_PRI.out.alt )
+    haplotigs_ch.combine( PURGE_DUPS.out.alt )
                     .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
                     .set{ haplotigs_to_merge }
     
@@ -171,25 +170,9 @@ workflow GENOMEASSEMBLY {
     // MODULE: COMBINE PURGED SEQUENCES WITH THE ORIGINAL HAPLOTIGS
     //
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
+    haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
 
-    //
-    // LOGIC: CREATE AN INPUT DATA STRUCTURE FOR THE SECOND ROUND OF PURGING
-    // 
-    hifi_reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
-            .join(GENOMESCOPE_MODEL.out.model)
-            .set{ purge_dups_haplotigs_input }
-
-    //
-    // SUBWORKFLOW: PURGE HAPLOTIGS
-    //
-    PURGE_DUPS_ALT( purge_dups_haplotigs_input, 'haplotigs' )
-
-    //
-    // LOGIC: UPDATE THE HAPLOTIGS CHANNEL
-    //
-    PURGE_DUPS_ALT.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
-                        .set{ haplotigs_ch }
-
+    primary_contigs_ch.join(haplotigs_ch).view()
     //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
     //
@@ -198,11 +181,11 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
-    
+   
     //
     // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS 
     //
-    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
+    PURGE_DUPS.out.pri.combine(haplotigs_ch)
                         .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
 
@@ -249,7 +232,7 @@ workflow GENOMEASSEMBLY {
         //
         // MODULE: EXTRACT THE NAMES OF THE PRIMARY CONTIGS
         //
-        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS_PRI.out.pri)
+        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
 
         //
@@ -269,7 +252,7 @@ workflow GENOMEASSEMBLY {
         //
         // MODULE: EXTRACT THE NAMES OF THE HAPLOTIGS
         //
-        KEEP_SEQNAMES_HAPLOTIGS(PURGE_DUPS_ALT.out.pri)
+        KEEP_SEQNAMES_HAPLOTIGS(haplotigs_ch)
 
         //
         // MODULE: SEPARATE THE POLSIHED HAPLOTIGS
