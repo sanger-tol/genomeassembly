@@ -57,6 +57,7 @@ include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
+include { CAT_CAT as CAT_CAT_RAW                     } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_HAPLOTIGS               } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_PURGEDUPS               } from "../modules/nf-core/cat/cat/main"
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
@@ -125,6 +126,34 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
 
+    if ( organelles_on ) {
+        //
+        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
+        //
+        primary_contigs_ch.join(haplotigs_ch)
+                          .set{ raw_pri_alt_ch }
+        //
+        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
+        //
+        CAT_CAT_RAW( raw_pri_alt_ch )
+
+        //
+        // LOGIC: DEFINE MERGED ASSEMBLY
+        //
+        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
+
+        //
+        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
+        //
+        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
+        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
+
+        //
+        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
+        // 
+        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw, PREPARE_INPUT.out.mito)
+    }
+
     //
     // LOGIC: CHECK IF THE HIFIASM HIC MODE WAS SWITCHED ON
     //
@@ -172,7 +201,6 @@ workflow GENOMEASSEMBLY {
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
     haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
 
-    primary_contigs_ch.join(haplotigs_ch).view()
     //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
     //
@@ -185,9 +213,10 @@ workflow GENOMEASSEMBLY {
     //
     // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS 
     //
-    PURGE_DUPS.out.pri.combine(haplotigs_ch)
-                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
+    PURGE_DUPS.out.pri.join(haplotigs_ch)
+                        .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
+    purged_pri_alt_ch.view()
 
     //
     // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
@@ -282,18 +311,6 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
         )
-    }
-    if ( organelles_on ) {
-        //
-        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-        //
-        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
-        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-
-        //
-        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
-        // 
-        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt, PREPARE_INPUT.out.mito)
     }
 
     //
