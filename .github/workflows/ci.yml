@@ -18,6 +18,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  login:
+    runs-on: ubuntu2204-4c
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
