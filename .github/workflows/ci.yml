@@ -53,10 +53,6 @@ jobs:
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
-      - name: Fix Longranger repo
-        run: |
-          sed -i 's/container .*/container \"ghcr.io\/sanger-tol\/longranger:2.2.2-c4\"/' modules/local/longranger/mkref/main.nf 
-          sed -i 's/container .*/container \"ghcr.io\/sanger-tol\/longranger:2.2.2-c4\"/' modules/local/longranger/align/main.nf
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity -c conf/test_github_params.config --outdir ./results
