@@ -131,6 +131,7 @@ workflow GENOMEASSEMBLY {
         // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
         //
         primary_contigs_ch.join(haplotigs_ch)
+                          .map{ meta, pri, alt -> [meta, [pri, alt]]}
                           .set{ raw_pri_alt_ch }
         //
         // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
