@@ -5,9 +5,9 @@ process LONGRANGER_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    def version = '2.2.2-c1'
+    def version = '2.2.2-c2'
 
-    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c1"
+    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c2"
 
     input:
     tuple val(meta), path(reference)
