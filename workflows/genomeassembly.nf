@@ -217,8 +217,6 @@ workflow GENOMEASSEMBLY {
     PURGE_DUPS.out.pri.join(haplotigs_ch)
                         .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
-    purged_pri_alt_ch.view()
-
     //
     // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
     //
