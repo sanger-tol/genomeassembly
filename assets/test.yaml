@@ -4,7 +4,7 @@ dataset:
     reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
   pacbio:
     reads:
-      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+      - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/test/test/HiFi.reads.BIG.fasta
   HiC:
     reads:
       - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
@@ -15,3 +15,4 @@ mito:
   species: Caradrina clavipalpis
   min_length: 15000
   code: 5
+  fam: /lustre/scratch124/tol/projects/darwin/users/cz3/organelle_asm/hmm_db/insecta_mito.fam

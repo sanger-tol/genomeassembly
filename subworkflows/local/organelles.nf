@@ -1,10 +1,15 @@
-include { MITOHIFI_FINDMITOREFERENCE } from '../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI          } from '../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_FINDMITOREFERENCE    } from '../../modules/nf-core/mitohifi/findmitoreference/main'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS       } from '../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS     } from '../../modules/nf-core/mitohifi/mitohifi/main'
+
+include { OATK                          } from '../../modules/nf-core/oatk/main'
+
 
 workflow ORGANELLES {
     take:
-    input  // channel: [ val(meta), datafile  ]
-    mito_info   // channel: [ val(species), val(min_length), val(code), val(email) ]
+    reads_input  // channel: [ val(meta), datafile  ]
+    contigs_input  // channel: [ val(meta), datafile  ]
+    mito_info   // channel: [ val(species), val(min_length), val(code), val(email), val(fam) ]
 
     main:
     ch_versions = Channel.empty()
@@ -12,10 +17,10 @@ workflow ORGANELLES {
     //
     // LOGIC: SEPARATE INPUT INTO CHANNELS
     //
-    mito_info.map{ species, min_length, code, email -> species}.set{species}
-    mito_info.map{ species, min_length, code, email -> min_length}.set{min_length}
-    mito_info.map{ species, min_length, code, email -> code}.set{code}
-    mito_info.map{ species, min_length, code, email -> email}.set{email}
+    mito_info.map{ species, min_length, code, email, fam -> species}.set{species}
+    mito_info.map{ species, min_length, code, email, fam -> min_length}.set{min_length}
+    mito_info.map{ species, min_length, code, email, fam -> code}.set{code}
+    mito_info.map{ species, min_length, code, email, fam -> email}.set{email}
 
     //
     // MODULE: DOWNLOAD REFERENCE ORGANELLE ASSEMBLY
@@ -24,13 +29,37 @@ workflow ORGANELLES {
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
         
     //
-    // MODULE: IDENTIFY ORGANELLE IN THE DATASET
+    // MODULE: IDENTIFY ORGANELLE IN THE READS DATASET
     //
-    MITOHIFI_MITOHIFI( input, 
+    MITOHIFI_MITOHIFI_READS( reads_input, 
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+
+    //
+    // MODULE: IDENTIFY ORGANELLE IN THE ASSEMBLY DATASET
+    //
+    MITOHIFI_MITOHIFI_CONTIGS( contigs_input, 
+                   MITOHIFI_FINDMITOREFERENCE.out.fasta,
+                   MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   code)    
+    ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+
+    //
+    // LOGIC: PREPARE OATK INPUT
+    //
+    mito_info.map{ species, min_length, code, email, fam -> [ file(fam.toString(), checkIfExists: true), 
+                                                            file(fam.toString()+'.h3f', checkIfExists: true), 
+                                                            file(fam.toString()+'.h3i', checkIfExists: true), 
+                                                            file(fam.toString()+'.h3m', checkIfExists: true), 
+                                                            file(fam.toString()+'.h3p', checkIfExists: true) ]}
+                                                            .set { hmm_input }
+    //
+    // MODULE: RUN OATK TO IDENTIFY MITO
+    //
+    OATK(reads_input, hmm_input, [[],[],[],[],[]])
+    ch_versions = ch_versions.mix(OATK.out.versions.first())
 
     emit:
 

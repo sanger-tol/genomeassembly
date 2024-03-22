@@ -26,7 +26,7 @@ workflow PREPARE_INPUT {
     ymlfile.multiMap{ data -> 
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
-        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\""] : [])
+        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? data.mito.fam : "\"\"" ] : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
     }
     .set{ ch_yml_data }

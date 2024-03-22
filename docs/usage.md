@@ -112,6 +112,12 @@ nextflow run sanger-tol/genomeassembly --input assets/dataset.yaml --outdir <OUT
 
 This will launch the pipeline with the `docker` configuration profile, also using your institution profille if available (see [nf-core/configs](#nf-core_configs)). See below for more information about profiles.
 
+In case organelles subworkflow is switched on you will also need to set a nextflow secret to store the API key belonging to your user.
+
+```bash
+  nextflow secrets set TOL_API_KEY '[API key]'
+```
+
 Note that the pipeline will create the following files in your working directory:
 
 ```console

@@ -37,11 +37,9 @@ if (params.organelles_on) { organelles_on = params.organelles_on } else { organe
 //
 include { PREPARE_INPUT                                    } from '../subworkflows/local/prepare_input'
 include { RAW_ASSEMBLY                                     } from '../subworkflows/local/raw_assembly' 
-include { ORGANELLES as ORGANELLES_READS                   } from '../subworkflows/local/organelles' 
-include { ORGANELLES as ORGANELLES_CONTIGS                 } from '../subworkflows/local/organelles' 
+include { ORGANELLES                                       } from '../subworkflows/local/organelles' 
 include { GENOMESCOPE_MODEL                                } from '../subworkflows/local/genomescope_model'
-include { PURGE_DUPS as PURGE_DUPS_PRI                     } from '../subworkflows/local/purge_dups'
-include { PURGE_DUPS as PURGE_DUPS_ALT                     } from '../subworkflows/local/purge_dups'
+include { PURGE_DUPS                                       } from '../subworkflows/local/purge_dups'
 include { POLISHING                                        } from '../subworkflows/local/polishing'
 include { SCAFFOLDING                                      } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY           } from '../modules/local/keep_seqnames'
@@ -59,6 +57,7 @@ include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
+include { CAT_CAT as CAT_CAT_RAW                     } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_HAPLOTIGS               } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_PURGEDUPS               } from "../modules/nf-core/cat/cat/main"
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
@@ -101,23 +100,6 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
 
     //
-    // LOGIC: ONLY LOOK FOR A MITO IF THE CORRESPONDING FLAG IS SET
-    //
-    if ( organelles_on ) {
-        //
-        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-        //
-        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
-        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-
-        //
-        // SUBWORKFLOW: IDENTIFY ORGANELLES ON THE RAW READS
-        //
-        ORGANELLES_READS(CAT_CAT_MITOHIFI_READS.out.file_out, PREPARE_INPUT.out.mito)
-        ch_versions = ch_versions.mix(ORGANELLES_READS.out.versions)
-    }
-
-    //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
     //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
     //
@@ -144,6 +126,35 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
 
+    if ( organelles_on ) {
+        //
+        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
+        //
+        primary_contigs_ch.join(haplotigs_ch)
+                          .map{ meta, pri, alt -> [meta, [pri, alt]]}
+                          .set{ raw_pri_alt_ch }
+        //
+        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
+        //
+        CAT_CAT_RAW( raw_pri_alt_ch )
+
+        //
+        // LOGIC: DEFINE MERGED ASSEMBLY
+        //
+        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
+
+        //
+        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
+        //
+        CAT_CAT_MITOHIFI_READS(hifi_reads_ch)
+        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
+
+        //
+        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
+        // 
+        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw, PREPARE_INPUT.out.mito)
+    }
+
     //
     // LOGIC: CHECK IF THE HIFIASM HIC MODE WAS SWITCHED ON
     //
@@ -169,19 +180,19 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
     //
-    PURGE_DUPS_PRI( purge_dups_input, 'primary' )
-    ch_versions = ch_versions.mix(PURGE_DUPS_PRI.out.versions)
+    PURGE_DUPS( purge_dups_input )
+    ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
 
     //
     // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL
     //
-    PURGE_DUPS_PRI.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+    PURGE_DUPS.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
                           .set{ primary_contigs_ch }
     
     //
     // LOGIC: SET APART THE HAPLOTIGS AFTER PURGING AND THE HIFIASM HAPLOTIGS
     //
-    haplotigs_ch.combine( PURGE_DUPS_PRI.out.alt )
+    haplotigs_ch.combine( PURGE_DUPS.out.alt )
                     .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
                     .set{ haplotigs_to_merge }
     
@@ -189,24 +200,7 @@ workflow GENOMEASSEMBLY {
     // MODULE: COMBINE PURGED SEQUENCES WITH THE ORIGINAL HAPLOTIGS
     //
     CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
-
-    //
-    // LOGIC: CREATE AN INPUT DATA STRUCTURE FOR THE SECOND ROUND OF PURGING
-    // 
-    hifi_reads_ch.join(CAT_CAT_HAPLOTIGS.out.file_out)
-            .join(GENOMESCOPE_MODEL.out.model)
-            .set{ purge_dups_haplotigs_input }
-
-    //
-    // SUBWORKFLOW: PURGE HAPLOTIGS
-    //
-    PURGE_DUPS_ALT( purge_dups_haplotigs_input, 'haplotigs' )
-
-    //
-    // LOGIC: UPDATE THE HAPLOTIGS CHANNEL
-    //
-    PURGE_DUPS_ALT.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
-                        .set{ haplotigs_ch }
+    haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
 
     //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
@@ -216,14 +210,13 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
-    
+   
     //
     // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS 
     //
-    PURGE_DUPS_PRI.out.pri.combine(PURGE_DUPS_ALT.out.pri)
-                        .map{ meta_pri, purged_pri, meta_alt, purged_alt -> [[id: meta_pri.id], [purged_pri, purged_alt]]}
+    PURGE_DUPS.out.pri.join(haplotigs_ch)
+                        .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
                         .set{ purged_pri_alt_ch }
-
     //
     // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
     //
@@ -267,7 +260,7 @@ workflow GENOMEASSEMBLY {
         //
         // MODULE: EXTRACT THE NAMES OF THE PRIMARY CONTIGS
         //
-        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS_PRI.out.pri)
+        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS.out.pri)
         ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
 
         //
@@ -287,7 +280,7 @@ workflow GENOMEASSEMBLY {
         //
         // MODULE: EXTRACT THE NAMES OF THE HAPLOTIGS
         //
-        KEEP_SEQNAMES_HAPLOTIGS(PURGE_DUPS_ALT.out.pri)
+        KEEP_SEQNAMES_HAPLOTIGS(haplotigs_ch)
 
         //
         // MODULE: SEPARATE THE POLSIHED HAPLOTIGS
@@ -317,12 +310,6 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
         )
-    }
-    if ( organelles_on ) {
-        //
-        // SUBWORKFLOW: INDETIFY MITO IN THE ASSEMBLY CONTIGS
-        // 
-        ORGANELLES_CONTIGS(merged_pri_alt, PREPARE_INPUT.out.mito)
     }
 
     //
