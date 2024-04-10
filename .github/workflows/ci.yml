@@ -49,7 +49,7 @@ jobs:
 
       - name: Download test data
         run: |
-          curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
+          curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
 
       - name: Setup apptainer
         uses: eWaterCycle/setup-apptainer@main
