@@ -176,10 +176,15 @@ This subworkflow is used to evaluate the quality of sequences. It is performed a
 - <code>\*.hifiasm.\*/mito..\*/contigs_stats.tsv</code>
   - summary of mitochondrial findings
 - output also includes other output files produced by MitoHiFi
+- <code>\*.hifiasm.\*/oatk/.*mito.ctg.fasta</code>
+  - mitochondrion organelle assembly
+- <code>\*.hifiasm.\*/oatk/.*mito.gfa</code>
+  - assembly graph for the mitochondrion assembly
+- output also includes other output files produced by oatk
 
 </details>
 
-This subworkflow implements assembly of organelles. In the main pipeline it is called twice - for assembling mitochondrion from HiFi reads and as an alternative it runs identification of the mitochondrion for the genome assembly </p>
+This subworkflow implements assembly of organelles. First it identifies a reference mitochondrion assembly by quering NCBI then MitoHiFi is called on raw HIFI reads and separately on the assembled contigs using the queried reference. Separately OATK is called on the raw reads. </p>
 
 ![Organelles subworkflow](images/v1/organelles.png)
 
