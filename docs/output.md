@@ -176,9 +176,9 @@ This subworkflow is used to evaluate the quality of sequences. It is performed a
 - <code>\*.hifiasm.\*/mito..\*/contigs_stats.tsv</code>
   - summary of mitochondrial findings
 - output also includes other output files produced by MitoHiFi
-- <code>\*.hifiasm.\*/oatk/.*mito.ctg.fasta</code>
+- <code>\*.hifiasm.\*/oatk/.\*mito.ctg.fasta</code>
   - mitochondrion organelle assembly
-- <code>\*.hifiasm.\*/oatk/.*mito.gfa</code>
+- <code>\*.hifiasm.\*/oatk/.\*mito.gfa</code>
   - assembly graph for the mitochondrion assembly
 - output also includes other output files produced by oatk
 
