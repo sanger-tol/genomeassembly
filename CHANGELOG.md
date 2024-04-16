@@ -72,7 +72,7 @@ Note, since the pipeline is using Nextflow DSL2, each process will be run with i
 | fastk           |             | f18a4e6d2207539f7b84461daebc54530a9559b0 |
 | freebayes       |             | 1.3.6                                    |
 | gatk4           |             | 4.4.0.0                                  |
-| genescope       |             | 380815c420f50171f9234a0fd1ff426b39829b91 | 
+| genescope       |             | 380815c420f50171f9234a0fd1ff426b39829b91 |
 | gfastats        |             | 1.3.5                                    |
 | GNU Awk         |             | 5.1.0                                    |
 | hifiasm         |             | 0.19.3-r572                              |
