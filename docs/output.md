@@ -177,14 +177,18 @@ This subworkflow is used to evaluate the quality of sequences. It is performed a
   - summary of mitochondrial findings
 - output also includes other output files produced by MitoHiFi
 - <code>\*.hifiasm.\*/oatk/.\*mito.ctg.fasta</code>
-  - mitochondrion organelle assembly
+  - mitochondrion assembly
 - <code>\*.hifiasm.\*/oatk/.\*mito.gfa</code>
   - assembly graph for the mitochondrion assembly
+- <code>\*.hifiasm.\*/oatk/.\*pltd.ctg.fasta</code>
+  - plastid assembly
+- <code>\*.hifiasm.\*/oatk/.\*pltd.gfa</code>
+  - assembly graph for the plastid assembly
 - output also includes other output files produced by oatk
 
 </details>
 
-This subworkflow implements assembly of organelles. First it identifies a reference mitochondrion assembly by quering NCBI then MitoHiFi is called on raw HIFI reads and separately on the assembled contigs using the queried reference. Separately OATK is called on the raw reads. </p>
+This subworkflow implements assembly of organelles. First it identifies a reference mitochondrion assembly by quering NCBI then MitoHiFi is called on raw HIFI reads and separately on the assembled contigs using the queried reference. Separately OATK is called on the raw reads. For plants an optional path to plastid HMM can be provided in YAML then OATK will be tried for both types of organelles </p>
 
 ![Organelles subworkflow](images/v1/organelles.png)
 
