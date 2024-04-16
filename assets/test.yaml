@@ -16,3 +16,5 @@ mito:
   min_length: 15000
   code: 5
   fam: /lustre/scratch124/tol/projects/darwin/users/cz3/organelle_asm/hmm_db/insecta_mito.fam
+plastid:
+  fam: /lustre/scratch124/tol/projects/darwin/users/cz3/organelle_asm/hmm_db/acrogymnospermae_pltd.fam
