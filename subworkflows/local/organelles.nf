@@ -10,6 +10,7 @@ workflow ORGANELLES {
     reads_input  // channel: [ val(meta), datafile  ]
     contigs_input  // channel: [ val(meta), datafile  ]
     mito_info   // channel: [ val(species), val(min_length), val(code), val(email), val(fam) ]
+    plastid_info // channel: [ val(fam) ]
 
     main:
     ch_versions = Channel.empty()
@@ -54,11 +55,17 @@ workflow ORGANELLES {
                                                             file(fam.toString()+'.h3i', checkIfExists: true), 
                                                             file(fam.toString()+'.h3m', checkIfExists: true), 
                                                             file(fam.toString()+'.h3p', checkIfExists: true) ]}
-                                                            .set { hmm_input }
+                                                            .set { mito_hmm_input }
+    plastid_info.map{ fam -> fam ? [ file(fam.toString(), checkIfExists: true), 
+                               file(fam.toString()+'.h3f', checkIfExists: true), 
+                               file(fam.toString()+'.h3i', checkIfExists: true), 
+                               file(fam.toString()+'.h3m', checkIfExists: true), 
+                               file(fam.toString()+'.h3p', checkIfExists: true) ] : [[],[],[],[],[]]}
+                               .set { plastid_hmm_input }
     //
     // MODULE: RUN OATK TO IDENTIFY MITO
     //
-    OATK(reads_input, hmm_input, [[],[],[],[],[]])
+    OATK(reads_input, mito_hmm_input, plastid_hmm_input)
     ch_versions = ch_versions.mix(OATK.out.versions.first())
 
     emit:

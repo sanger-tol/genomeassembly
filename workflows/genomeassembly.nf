@@ -152,7 +152,8 @@ workflow GENOMEASSEMBLY {
         //
         // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
         // 
-        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw, PREPARE_INPUT.out.mito)
+        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
+                        PREPARE_INPUT.out.mito, PREPARE_INPUT.out.plastid)
         ch_versions = ch_versions.mix(ORGANELLES.out.versions)
     }
 
