@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.10.1dev - [date]
+
+### `Added`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## [[0.10.0](https://github.com/sanger-tol/genomeassembly/releases/tag/0.10.0)] - Hideous Zippleback - [2024-04-16]
 
 ### Enhancements & fixes
