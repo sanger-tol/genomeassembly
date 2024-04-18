@@ -22,13 +22,19 @@ jobs:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'sanger-tol/genomeassembly') }}"
-    runs-on: ubuntu2204-16c
+    runs-on: ubuntu2204-4c
     strategy:
       matrix:
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
     steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
@@ -37,9 +43,13 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      - name: Set up nextflow secrets
+        run: |
+          nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
+
       - name: Download test data
         run: |
-          curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
+          curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
 
       - name: Setup apptainer
         uses: eWaterCycle/setup-apptainer@main

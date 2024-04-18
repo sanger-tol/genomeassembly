@@ -2,9 +2,9 @@ process LONGRANGER_MKREF {
     tag "$meta.id"
     label 'process_medium'
 
-    def version = '2.2.2-c1'
+    def version = '2.2.2-c4'
 
-    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c1"
+    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c4"
 
     input:
     tuple val(meta), path(reference)

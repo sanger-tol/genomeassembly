@@ -3,6 +3,28 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[0.10.0](https://github.com/sanger-tol/genomeassembly/releases/tag/0.10.0)] - Hideous Zippleback - [2024-04-16]
+
+### Enhancements & fixes
+
+- OATK module is added into the ORGANELLES subworkflow
+- ORGANELLES subworkflow is now called once in the main workflow and runs MITOHIFI in read and assembly mode along with OATK
+- ORGANELLES module is now tested in github CI
+- NCBI API secret introduced to run MITOHIFI_FINDMITOREFERENCE module
+- hifiasm haplotigs are not purged anymore
+- Longranger container version is updated
+
+### Software dependencies
+
+Note, since the pipeline is using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| mitohifi   | 3.0.0       | 3.1.1       |
+| oatk       |             | 1.0         |
+
+**NB:** Dependency has been **added** if just the new version information is present.
+
 ## [[0.9.0](https://github.com/sanger-tol/genomeassembly/releases/tag/0.9.0)] - Night Fury - [2023-12-15]
 
 Initial release of sanger-tol/genomeassembly, created with the [nf-core](https://nf-co.re/) template.
@@ -50,6 +72,7 @@ Note, since the pipeline is using Nextflow DSL2, each process will be run with i
 | fastk           |             | f18a4e6d2207539f7b84461daebc54530a9559b0 |
 | freebayes       |             | 1.3.6                                    |
 | gatk4           |             | 4.4.0.0                                  |
+| genescope       |             | 380815c420f50171f9234a0fd1ff426b39829b91 |
 | gfastats        |             | 1.3.5                                    |
 | GNU Awk         |             | 5.1.0                                    |
 | hifiasm         |             | 0.19.3-r572                              |

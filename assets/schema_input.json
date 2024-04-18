@@ -44,6 +44,40 @@
                         "errorMessage": "busco lineage to run"
                     }
                 }
+            },
+            "mito": {
+                "type": "object",
+                "properties": {
+                    "species": {
+                        "type": "string",
+                        "errorMessage": "Latin name"
+                    },
+                    "min_length": {
+                        "type": "string",
+                        "errorMessage": "Minimal allowed length of the mito reference"
+                    },
+                    "email": {
+                        "type": "string",
+                        "errorMessage": "email to query NCBI"
+                    },
+                    "code": {
+                        "type": "string",
+                        "errorMessage": "Mitochondrial code"
+                    },
+                    "fam": {
+                        "type": "string",
+                        "errorMessage": "Path to mitochondrial HMM for OATK"
+                    }
+                }
+            },
+            "plastid": {
+                "type": "object",
+                "properties": {
+                    "fam": {
+                        "type": "string",
+                        "errorMessage": "Path to plastid HMM for OATK"
+                    }
+                }
             }
         },
         "required": ["dataset", "busco"]

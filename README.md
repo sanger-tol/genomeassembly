@@ -35,7 +35,8 @@ While the steps are described in a sequential order, many of them can be execute
    1. Illumina 10X reads to the joined primary and alt contigs.
    2. polish initial assembly based on the aligment produced in [9i]. Set polished primary contigs as the primary assembly and polished haplotigs as the haplotig assembly.
    3. produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [9ii].
-10. Run organelles subworkflow on the joined primary and haplotigs contigs.
+10. If <code>organelles_on</code>
+    1. Run organelles subworkflow on the raw HiFi read data and the joined primary and haplotigs contigs.
 11. Map HiC data onto primary contigs.
 12. Run scaffolding for primary contigs.
 13. Produce numerical stats, BUSCO score and QV, completeness metrics, and kmer spectra for [12].
