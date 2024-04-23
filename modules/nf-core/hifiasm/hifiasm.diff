@@ -47,5 +47,16 @@ Changes in module 'nf-core/hifiasm'
      if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
          error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
      } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {
+@@ -67,8 +73,8 @@
+             $args \\
+             -o ${prefix}.asm \\
+             -t $task.cpus \\
+-            --h1 $hic_read1 \\
+-            --h2 $hic_read2 \\
++            --h1 <($hic_read1) \\
++            --h2 <($hic_read2) \\
+             $reads \\
+             2> >( tee ${prefix}.stderr.log >&2 )
+ 
 
 ************************************************************
