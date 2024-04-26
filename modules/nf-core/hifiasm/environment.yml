@@ -1,0 +1,8 @@
+name: hifiasm
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::hifiasm=0.19.8
+  - biioconda::samtools=1.20
