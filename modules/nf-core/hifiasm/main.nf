@@ -6,7 +6,7 @@ process HIFIASM {
         exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    container "wave.seqera.io/wt/73ac3caec075/wave/build:hifiasm-0.19.8_samtools-1.20--1f6824530f0d0ad5"
+    container "quay.io/sanger-tol/hifiasm_samtools:0.01"
 
     input:
     tuple val(meta), path(reads)
