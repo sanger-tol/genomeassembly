@@ -91,13 +91,13 @@ workflow GENOMEASSEMBLY {
     //
     // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
     //    
-    PREPARE_INPUT.out.hic.map{ meta, reads, motif -> reads }.set{ hic_reads_ch }
+    PREPARE_INPUT.out.hic.map{ meta, reads, motif, hic_aligner -> reads }.set{ hic_reads_ch }
 
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    GENOMESCOPE_MODEL( hifi_reads_ch )   
-    ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
+    /*GENOMESCOPE_MODEL( hifi_reads_ch )   
+    ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)*/
 
     //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
@@ -114,7 +114,7 @@ workflow GENOMEASSEMBLY {
     //
     // LOGIC: DEFINE THE HAPLOTIGS CHANNELS
     //
-    RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
+    /*RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
 
     //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE RAW ASSEMBLY
@@ -310,24 +310,27 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
         )
-    }
+    }*/
 
     //
     // LOGIC: CREATE A CHANNEL FOR THE PATHS TO HIC DATA
     //
-    PREPARE_INPUT.out.hic.map{ meta, crams, motif -> [meta, crams] }
+    PREPARE_INPUT.out.hic.map{ meta, crams, motif, hic_aligner -> [meta, crams] }
                          .set{ crams_ch }
+    
+    PREPARE_INPUT.out.hic.map{ meta, crams, motif, hic_aligner -> [meta, hic_aligner] }
+                         .set{ hic_aligner_ch }
 
     //
     // SUBWORKFLOW: MAP HIC DATA TO THE PRIMARY ASSEMBLY
     //
-    HIC_MAPPING ( primary_contigs_ch,crams_ch )
+    HIC_MAPPING ( primary_contigs_ch,crams_ch,hic_aligner_ch )
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
     //
     // SUBWORKFLOW: SCAFFOLD THE PRIMARY ASSEMBLY
     //
-    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )
+    /*SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     //
@@ -345,7 +348,7 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
-    )
+    )*/
 
     //
     // MODULE: Collate versions.yml file
