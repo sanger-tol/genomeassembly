@@ -27,6 +27,7 @@ workflow PREPARE_INPUT {
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
         mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? data.mito.fam : "\"\"" ] : [])
+        plastid : ( data.plastid ? ( data.plastid.fam ? data.plastid.fam : "\"\"" ) : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
         hic_aligner : (data.hic_aligner ? data.hic_aligner :[])
     }
@@ -76,6 +77,7 @@ workflow PREPARE_INPUT {
     illumina_10X   = dataset_ch.illumina_10X_ch
     busco          = busco_ch
     mito           = ch_yml_data.mito 
+    plastid        = ch_yml_data.plastid
     versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }
 

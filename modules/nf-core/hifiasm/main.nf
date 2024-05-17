@@ -6,9 +6,7 @@ process HIFIASM {
         exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' :
-        'quay.io/biocontainers/mulled-v2-8019bff5bdc04e0e88980d5ba292ba022fec5dd9:56ed7e3ac0e84e7d947af98abfb86dda9e1dc9f8-0' }"
+    container "quay.io/sanger-tol/hifiasm_samtools:0.01"
 
     input:
     tuple val(meta), path(reads)
@@ -23,6 +21,7 @@ process HIFIASM {
     tuple val(meta), path("*.ec.bin")          , emit: corrected_reads
     tuple val(meta), path("*.ovlp.source.bin") , emit: source_overlaps
     tuple val(meta), path("*.ovlp.reverse.bin"), emit: reverse_overlaps
+    tuple val(meta), path("*.bp.p_ctg.gfa")    , emit: processed_contigs, optional: true
     tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
     tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
     tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
@@ -30,6 +29,7 @@ process HIFIASM {
     tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
     tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
+    tuple val(meta), path("*.log")             , emit: log
     path  "versions.yml"                       , emit: versions
 
     when:
@@ -54,7 +54,9 @@ process HIFIASM {
             -t $task.cpus \\
             -1 $paternal_kmer_dump \\
             -2 $maternal_kmer_dump \\
-            $reads
+            $reads \\
+            2> >( tee ${prefix}.stderr.log >&2 )
+
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -73,7 +75,9 @@ process HIFIASM {
             -t $task.cpus \\
             --h1 <($hic_read1) \\
             --h2 <($hic_read2) \\
-            $reads
+            $reads \\
+            2> >( tee ${prefix}.stderr.log >&2 )
+
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -86,7 +90,8 @@ process HIFIASM {
             $args \\
             -o ${prefix}.asm \\
             -t $task.cpus \\
-            $reads
+            $reads \\
+            2> >( tee ${prefix}.stderr.log >&2 )
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -94,4 +99,26 @@ process HIFIASM {
         END_VERSIONS
         """
     }
+        stub:
+        def args = task.ext.args ?: ''
+        def prefix = task.ext.prefix ?: "${meta.id}"
+        """
+        touch ${prefix}.asm.r_utg.gfa
+        touch ${prefix}.asm.ec.bin
+        touch ${prefix}.asm.ovlp.source.bin
+        touch ${prefix}.asm.ovlp.reverse.bin
+        touch ${prefix}.asm.bp.p_ctg.gfa
+        touch ${prefix}.asm.p_utg.gfa
+        touch ${prefix}.asm.p_ctg.gfa
+        touch ${prefix}.asm.a_ctg.gfa
+        touch ${prefix}.asm.hap1.p_ctg.gfa
+        touch ${prefix}.asm.hap2.p_ctg.gfa
+        touch ${prefix}.stderr.log
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            hifiasm: \$(hifiasm --version 2>&1)
+        END_VERSIONS
+        """
+
 }
