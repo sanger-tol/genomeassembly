@@ -63,13 +63,6 @@ jobs:
         run: |
           pip install nf-core
 
-      - name: NF-Core Download - download singularity containers
-        # Forcibly download repo on active branch and download SINGULARITY containers into the CACHE dir if not found
-        # Must occur after singularity install or will crash trying to dl containers
-        # Zip up this fresh download and run the checked out version
-        run: |
-          nf-core download sanger-tol/genomeassembly --revision ${{ steps.branch-names.outputs.current_branch }} --compress none -d --force --outdir sanger-genomeassembly --container-cache-utilisation amend --container-system singularity
-
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --outdir ./results
