@@ -58,7 +58,11 @@ jobs:
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
-    
+
+      - name: Install nf-core
+        run: |
+          pip install nf-core
+
       - name: NF-Core Download - download singularity containers
         # Forcibly download repo on active branch and download SINGULARITY containers into the CACHE dir if not found
         # Must occur after singularity install or will crash trying to dl containers
