@@ -38,6 +38,12 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      - name: Get branch names
+        # Pulls the names of current branches in repo
+        # steps.branch-names.outputs.current_branch is used later and returns the name of the branch the PR is made FROM not to
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
