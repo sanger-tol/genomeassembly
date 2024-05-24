@@ -84,4 +84,4 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --outdir ./results
+          nextflow run ./sanger-genomeassembly/${{ steps.branch-names.outputs.current_branch }}/main.nf -profile test_github,singularity --outdir ./Sing-Full
