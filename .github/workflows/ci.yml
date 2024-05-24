@@ -35,6 +35,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
@@ -80,9 +81,6 @@ jobs:
       - name: Download test data
         run: |
           curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
-
-      - name: Setup apptainer
-        uses: eWaterCycle/setup-apptainer@main
 
       - name: Run pipeline with test data
         run: |
