@@ -38,6 +38,9 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      - name: Setup apptainer
+        uses: eWaterCycle/setup-apptainer@main
+
       - name: Get branch names
         # Pulls the names of current branches in repo
         # steps.branch-names.outputs.current_branch is used later and returns the name of the branch the PR is made FROM not to
