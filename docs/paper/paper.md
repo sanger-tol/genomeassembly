@@ -41,25 +41,25 @@ It is highly portable and configurable to be run on various workload managing pl
 
 # Pipeline overview
 
-The pipeline takes as input raw HiFi and HiC sequencing data and a set of metadata (see \autoref{fig:diagram}).\
-The HiFi reads are assembled into the raw primary and haplotypic sequences which follows with an extra round of purging of the primary sequences from extra haplotype(s). 
-Depending on availability of Illumina 10X data it can then be optionally followed with polishing of primary and haplotypic sequences. 
-The sequences representing primary assembly then scaffolded up using HiC data.\
+The pipeline takes as input raw HiFi and HiC sequencing data and a set of metadata (\autoref{fig:diagram}).\
+The HiFi reads are assembled into the raw primary and haplotypic sequences with hifiasm. It follows with an extra round of purging with purge_dups where the hifiasm primary assembly is further purged from the remained haplotypic sequences.
+Depending on availability of Illumina 10X data it can then be optionally followed with polishing of primary and haplotypic sequences with Longranger. 
+The sequences representing primary assembly then scaffolded up using HiC data. HiC reads are mapped with bwa-mem2 which is further passed over into yahs for scaffolding.\
 A separate subworkflow covers organelles assembly.
-Another optional feature implements an alternative way of producing the raw assembly from the joint HiFi and HiC data.\
-At every intermediate stage quality characteristics of an assembly are produced. 
-These include quantitative metrics, kmer frequency plots and universal single-copy orthologs representation rate.\
+Another optional feature implements an alternative way of producing the raw assembly from the joint HiFi and HiC data in hifiasm HiC mode.\
+At every intermediate stage of the assembly its quality characteristics are produced. 
+These include quantitative metrics produced by GFAstats, kmer frequency plots produced by MerkqurFK and universal single-copy orthologs representation rate calculated by BUSCO.\
 Along with that the final assembly is also complemented with the HiC maps in various formats (.pretext, .hic, .cload) usable for viewing and following up the assembly with manual curation. </p>
 
 ![Genomeassembly workflow.\label{fig:diagram}](whole_diagram.drawio.png){ width=70% }
 
-# Future development
+# Future developemnt
 
-The following releases will implement:
-- another entry point for running HiC data mapping and scaffolding of the provided contigs
-- running only assembly of organelles
-- running hifiasm in trio mode
-- facilitating assembly of the haploid genomes
-- necessary modifications for processing large genomes (>3Gb)
+The implementation of the following releases will cover:
+* another entry point into the pipeline for running HiC data mapping and scaffolding of the provided contigs
+* running only assembly of organelles
+* running hifiasm in trio mode
+* facilitating assembly of the haploid genomes
+* necessary modifications for processing large genomes (>3Gb)
 
 
