@@ -41,7 +41,7 @@ It is highly portable and configurable to be run on various workload managing pl
 
 # Pipeline overview
 
-The pipeline takes as input raw HiFi and HiC sequencing data and a set of metadata \autoref{fig:diagram}.\
+The pipeline takes as input raw HiFi and HiC sequencing data and a set of metadata (see \autoref{fig:diagram}).\
 The HiFi reads are assembled into the raw primary and haplotypic sequences which follows with an extra round of purging of the primary sequences from extra haplotype(s). 
 Depending on availability of Illumina 10X data it can then be optionally followed with polishing of primary and haplotypic sequences. 
 The sequences representing primary assembly then scaffolded up using HiC data.\
@@ -51,7 +51,7 @@ At every intermediate stage quality characteristics of an assembly are produced.
 These include quantitative metrics, kmer frequency plots and universal single-copy orthologs representation rate.\
 Along with that the final assembly is also complemented with the HiC maps in various formats (.pretext, .hic, .cload) usable for viewing and following up the assembly with manual curation. </p>
 
-![Genomeassembly workflow.\label{fig:diagram}](whole_diagram.drawio.png){ width=50% }
+![Genomeassembly workflow.\label{fig:diagram}](whole_diagram.drawio.png){ width=70% }
 
 # Future development
 
