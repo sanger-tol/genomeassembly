@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - testing-sif
   pull_request:
   release:
     types: [published]
