@@ -9,6 +9,7 @@ dataset:
     reads:
       - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
+hic_aligner: minimap2
 busco:
   lineage: bacteria_odb10
 mito:

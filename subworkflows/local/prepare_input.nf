@@ -29,6 +29,7 @@ workflow PREPARE_INPUT {
         mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? data.mito.fam : "\"\"" ] : [])
         plastid : ( data.plastid ? ( data.plastid.fam ? data.plastid.fam : "\"\"" ) : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
+        hic_aligner : (data.hic_aligner ? data.hic_aligner :[])
     }
     .set{ ch_yml_data }
 
@@ -46,7 +47,7 @@ workflow PREPARE_INPUT {
                                           data.pacbio.reads.collect { file( it.reads, checkIfExists: true ) } ]
                         : [])
             hic_ch: ( data.HiC ? [ [id: data.id ],  
-                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true ) } ] 
+                                    data.HiC.reads.collect { file( it.reads, checkIfExists: true )}] 
                         : [])
         }
         .set{ dataset_ch }
@@ -55,6 +56,7 @@ workflow PREPARE_INPUT {
     // LOGIC: ADD HIC MOTIF TO DATASET HIC CHANNEL
     //
     dataset_ch.hic_ch.combine(ch_yml_data.hic_motif)
+                     .combine(ch_yml_data.hic_aligner)
                      .set{ hic_ch }
 
     //
