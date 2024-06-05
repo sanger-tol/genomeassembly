@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - dev
+    paths-ignore:
+      - 'docs/**'
   pull_request:
   release:
     types: [published]
