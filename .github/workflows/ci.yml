@@ -12,6 +12,7 @@ env:
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  SINGULARITY_DISABLE_CACHE: true
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -20,7 +21,7 @@ concurrency:
 jobs:
   test:
     name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs).
+    # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'sanger-tol/genomeassembly') }}"
     runs-on: ubuntu2204-4c
     strategy:
@@ -35,18 +36,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check out pipeline code
         uses: actions/checkout@v3
-
-      - name: Setup apptainer
-        uses: eWaterCycle/setup-apptainer@main
-
-      - name: Get branch names
-        # Pulls the names of current branches in repo
-        # steps.branch-names.outputs.current_branch is used later and returns the name of the branch the PR is made FROM not to
-        id: branch-names
-        uses: tj-actions/branch-names@v8
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -57,31 +48,18 @@ jobs:
         run: |
           nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
 
+      - name: Download test data
+        run: |
+          curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
+
+      - name: Setup apptainer
+        uses: eWaterCycle/setup-apptainer@main
+
       - name: Set up Singularity
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Install nf-core
-        run: |
-          pip install nf-core
-
-      - name: NF-Core Download - download singularity containers
-        # Forcibly download repo on active branch and download SINGULARITY containers into the CACHE dir if not found
-        # Must occur after singularity install or will crash trying to dl containers
-        # Zip up this fresh download and run the checked out version
-        run: |
-          nf-core download sanger-tol/genomeassembly --revision ${{ steps.branch-names.outputs.current_branch }} --compress none -d --force --outdir sanger-genomeassembly --container-cache-utilisation amend --container-system singularity
-
-      - name: Download test data
-        run: |
-          curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
-
       - name: Run pipeline with test data
         run: |
-          nextflow run ./sanger-genomeassembly/${{ steps.branch-names.outputs.current_branch }}/main.nf -profile test_github,singularity --outdir ./Sing-Full
+          nextflow run ${GITHUB_WORKSPACE} -profile test_github,singularity --outdir ./results
