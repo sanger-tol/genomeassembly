@@ -7,6 +7,7 @@ dataset:
       reads:
         - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
 hic_motif: GATC,GANTC,CTNAG,TTAA
+hic_aligner: minimap2
 busco:
   lineages_path: /lustre/scratch123/tol/resources/busco/v5/
   lineage: fungi_odb10

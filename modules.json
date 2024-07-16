@@ -125,6 +125,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/minimap2/align/minimap2-align.diff"
                     },
+                    "minimap2/index": {
+                        "branch": "master",
+                        "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
+                        "installed_by": ["modules"]
+                    },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
                         "git_sha": "f52220e84bfc16a8616a5bb3d6f5bc67d601bdce",
