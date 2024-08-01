@@ -25,6 +25,8 @@ process HIFIASM {
     tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
     tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
     tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
+    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")   , emit: hap1_contigs  , optional: true
+    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")   , emit: hap2_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.p_ctg.gfa")   , emit: hic_primary_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true

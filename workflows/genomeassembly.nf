@@ -35,21 +35,26 @@ if (params.organelles_on) { organelles_on = params.organelles_on } else { organe
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { PREPARE_INPUT                                    } from '../subworkflows/local/prepare_input'
-include { RAW_ASSEMBLY                                     } from '../subworkflows/local/raw_assembly' 
-include { ORGANELLES                                       } from '../subworkflows/local/organelles' 
-include { GENOMESCOPE_MODEL                                } from '../subworkflows/local/genomescope_model'
-include { PURGE_DUPS                                       } from '../subworkflows/local/purge_dups'
-include { POLISHING                                        } from '../subworkflows/local/polishing'
-include { SCAFFOLDING                                      } from '../subworkflows/local/scaffolding'
-include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY           } from '../modules/local/keep_seqnames'
-include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS         } from '../modules/local/keep_seqnames'
-include { HIC_MAPPING                                      } from '../subworkflows/local/hic_mapping'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW       } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC   } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED    } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED  } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS } from '../subworkflows/local/genome_statistics'
+include { PREPARE_INPUT                                         } from '../subworkflows/local/prepare_input'
+include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly' 
+include { ORGANELLES                                            } from '../subworkflows/local/organelles' 
+include { GENOMESCOPE_MODEL                                     } from '../subworkflows/local/genomescope_model'
+include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+include { POLISHING                                             } from '../subworkflows/local/polishing'
+include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
+include { SCAFFOLDING as SCAFFOLDING_HAP1                       } from '../subworkflows/local/scaffolding'
+include { SCAFFOLDING as SCAFFOLDING_HAP2                       } from '../subworkflows/local/scaffolding'
+include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
+include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS              } from '../modules/local/keep_seqnames'
+include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING as HIC_MAPPING_HAP1                       } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING as HIC_MAPPING_HAP2                       } from '../subworkflows/local/hic_mapping'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW            } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC        } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED         } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED       } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS      } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_HAPS } from '../subworkflows/local/genome_statistics'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -164,8 +169,8 @@ workflow GENOMEASSEMBLY {
         //
         // SUBWORKFLOW: CALCULATE RAW ASSEMBLY STATISTICS FOR THE HIFIASN IN HIC MODE
         //
-        GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.primary_hic_contigs
-                                    .join(RAW_ASSEMBLY.out.alternate_hic_contigs), 
+        GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.hap1_hic_contigs
+                                    .join(RAW_ASSEMBLY.out.hap2_hic_contigs), 
                            PREPARE_INPUT.out.busco,
                            GENOMESCOPE_MODEL.out.hist,
                            GENOMESCOPE_MODEL.out.ktab
@@ -351,6 +356,50 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab
     )
+
+
+    if ( hifiasm_hic_on ) {
+        //
+        // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
+        //
+        HIC_MAPPING_HAP1 ( RAW_ASSEMBLY.out.hap1_hic_contigs, crams_ch, hic_aligner_ch )
+        ch_versions = ch_versions.mix(HIC_MAPPING_HAP1.out.versions)
+
+        //
+        // SUBWORKFLOW: SCAFFOLD HAP1
+        //
+        SCAFFOLDING_HAP1( HIC_MAPPING_HAP1.out.bed, RAW_ASSEMBLY.out.hap1_hic_contigs, cool_bin )
+        ch_versions = ch_versions.mix(SCAFFOLDING_HAP1.out.versions)
+
+        //
+        // SUBWORKFLOW: MAP HIC DATA TO THE HAP2 CONTIGS
+        //
+        HIC_MAPPING_HAP2 ( RAW_ASSEMBLY.out.hap2_hic_contigs, crams_ch, hic_aligner_ch )
+        ch_versions = ch_versions.mix(HIC_MAPPING_HAP2.out.versions)
+        
+        //
+        // SUBWORKFLOW: SCAFFOLD HAP2
+        //
+        SCAFFOLDING_HAP2( HIC_MAPPING_HAP2.out.bed, RAW_ASSEMBLY.out.hap2_hic_contigs, cool_bin )
+        ch_versions = ch_versions.mix(SCAFFOLDING_HAP2.out.versions)
+        
+        //
+        // LOGIC: CREATE A CHANNEL FOR THE FULL HAP1/HAP2 ASSEMBLY
+        //
+        SCAFFOLDING_HAP1.out.fasta.combine(SCAFFOLDING_HAP2.out.fasta)
+                    .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
+                    .set{ stats_haps_input_ch }
+    
+        //
+        // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR HAP1/HAP2 ASSEMBLY
+        //
+        GENOME_STATISTICS_SCAFFOLDS_HAPS( stats_haps_input_ch, 
+                       PREPARE_INPUT.out.busco,
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab
+    )
+
+    }
 
     //
     // MODULE: Collate versions.yml file

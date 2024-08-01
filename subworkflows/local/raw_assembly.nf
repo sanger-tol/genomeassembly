@@ -3,8 +3,8 @@ include { HIFIASM as HIFIASM_HIC                } from '../../modules/nf-core/hi
 
 include { GFA_TO_FASTA as GFA_TO_FASTA_PRI      } from '../../modules/local/gfa_to_fasta'
 include { GFA_TO_FASTA as GFA_TO_FASTA_ALT      } from '../../modules/local/gfa_to_fasta'
-include { GFA_TO_FASTA as GFA_TO_FASTA_PRI_HIC  } from '../../modules/local/gfa_to_fasta'
-include { GFA_TO_FASTA as GFA_TO_FASTA_ALT_HIC  } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_HAP1_HIC  } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_HAP2_HIC  } from '../../modules/local/gfa_to_fasta'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -44,19 +44,19 @@ workflow RAW_ASSEMBLY {
         //
         // MODULE: CONVERT HIFIASM-HIC PRIMARY CONTIGS TO FASTA
         //
-        GFA_TO_FASTA_PRI_HIC( HIFIASM_HIC.out.hic_primary_contigs )
+        GFA_TO_FASTA_HAP1_HIC( HIFIASM_HIC.out.hap1_contigs )
         
         //
         // MODULE: CONVERT HIFIASM-HIC ALT CONTIGS TO FASTA
         //
-        GFA_TO_FASTA_ALT_HIC( HIFIASM_HIC.out.hic_alternate_contigs )
+        GFA_TO_FASTA_HAP2_HIC( HIFIASM_HIC.out.hap2_contigs )
     }
 
     emit:
     primary_contigs = GFA_TO_FASTA_PRI.out.fasta
     alternate_contigs = GFA_TO_FASTA_ALT.out.fasta
-    primary_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_PRI_HIC.out.fasta : null
-    alternate_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_ALT_HIC.out.fasta : null
+    hap1_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_HAP1_HIC.out.fasta : null
+    hap2_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_HAP2_HIC.out.fasta : null
 
     versions = ch_versions
 }

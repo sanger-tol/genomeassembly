@@ -13,7 +13,7 @@ Changes in module 'nf-core/hifiasm'
 +        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
 +    }
 +
-+    container "wave.seqera.io/wt/73ac3caec075/wave/build:hifiasm-0.19.8_samtools-1.20--1f6824530f0d0ad5"
++    container "quay.io/sanger-tol/hifiasm_samtools:0.01"
  
      input:
      tuple val(meta), path(reads)
@@ -25,12 +25,14 @@ Changes in module 'nf-core/hifiasm'
  
      output:
      tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
-@@ -23,8 +25,10 @@
+@@ -23,8 +25,12 @@
      tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
      tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
      tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
 -    tuple val(meta), path("*.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
 -    tuple val(meta), path("*.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
++    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")   , emit: hap1_contigs  , optional: true
++    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")   , emit: hap2_contigs  , optional: true
 +    tuple val(meta), path("*.asm.hic.p_ctg.gfa")   , emit: hic_primary_contigs  , optional: true
 +    tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
 +    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
@@ -38,7 +40,7 @@ Changes in module 'nf-core/hifiasm'
      tuple val(meta), path("*.log")             , emit: log
      path  "versions.yml"                       , emit: versions
  
-@@ -34,6 +38,8 @@
+@@ -34,6 +40,8 @@
      script:
      def args = task.ext.args ?: ''
      def prefix = task.ext.prefix ?: "${meta.id}"
@@ -47,7 +49,7 @@ Changes in module 'nf-core/hifiasm'
      if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
          error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
      } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {
-@@ -67,8 +73,8 @@
+@@ -67,8 +75,8 @@
              $args \\
              -o ${prefix}.asm \\
              -t $task.cpus \\
@@ -58,5 +60,16 @@ Changes in module 'nf-core/hifiasm'
              $reads \\
              2> >( tee ${prefix}.stderr.log >&2 )
  
+
+--- modules/nf-core/hifiasm/environment.yml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-name: hifiasm
+-channels:
+-  - conda-forge
+-  - bioconda
+-  - defaults
+-dependencies:
+-  - bioconda::hifiasm=0.19.8
 
 ************************************************************
