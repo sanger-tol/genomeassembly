@@ -77,7 +77,7 @@ workflow HIC_MINIMAP2 {
         .map { file ->
             tuple (
                 [
-                id: file[0].toString().split('/')[-1].split('_')[0] + '_' + file[0].toString().split('/')[-1].split('_')[1]
+                id: file[0].toString().split('/')[-1].split('_')[0]
                 ],
                 file
             )
