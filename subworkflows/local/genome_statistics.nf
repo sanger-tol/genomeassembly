@@ -9,7 +9,8 @@
 
 include { GFASTATS as GFASTATS_PRI  } from '../../modules/nf-core/gfastats/main'
 include { GFASTATS as GFASTATS_HAP  } from '../../modules/nf-core/gfastats/main'
-include { BUSCO                     } from '../../modules/nf-core/busco/main'
+include { BUSCO as BUSCO_PRI        } from '../../modules/nf-core/busco/main'
+include { BUSCO as BUSCO_HAP        } from '../../modules/nf-core/busco/main'
 include { MERQURYFK_MERQURYFK       } from '../../modules/nf-core/merquryfk/merquryfk/main'
 
 workflow GENOME_STATISTICS {
@@ -18,6 +19,7 @@ workflow GENOME_STATISTICS {
     lineage                // channel: [ meta, /path/to/buscoDB, lineage ] 
     hist                   // channel: [meta, fastk_hist files]
     ktab                   // channel: [meta, fastk_ktab files]
+    busco_alt              // channel: true/false
 
     main:
     ch_versions = Channel.empty()
@@ -48,14 +50,27 @@ workflow GENOME_STATISTICS {
     //
     // MODULE: RUN BUSCO ON PRIMARY ASSEMBLY
     //
-    BUSCO ( primary_ch.join(lineage)
+    BUSCO_PRI ( primary_ch.join(lineage)
                     .map{ meta, primary, lineage_db, lineage_name -> 
                             [[id:meta.id, lineage:lineage_name], primary]}, 
             lineage.map{ meta, lineage_db, lineage_name -> lineage_name } ,
             lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
             [] )
-    ch_versions = ch_versions.mix(BUSCO.out.versions.first())
+    ch_versions = ch_versions.mix(BUSCO_PRI.out.versions.first())
     
+    //
+    // MODULE: run BUSCO for haplotigs
+    // USED FOR HAP1/HAP2 ASSEMBLIES
+    //
+    if ( busco_alt ) {
+        BUSCO_HAP ( haplotigs_ch.join(lineage)
+                        .map{ meta, haps, lineage_db, lineage_name -> 
+                                [[id:meta.id, lineage:lineage_name], haps]}, 
+                lineage.map{ meta, lineage_db, lineage_name -> lineage_name } ,
+                lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
+                [] )
+    }
+
     //
     // LOGIC: JOIN ASSEMBLY AND KMER DATABASE INPUT
     //

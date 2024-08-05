@@ -122,12 +122,19 @@ workflow GENOMEASSEMBLY {
     RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
 
     //
+    // LOGIC: DECLARE CONSTANTS TO TOGGLE BUSCO FOR ALTS
+    //
+    set_busco_alts = true
+    unset_busco_alts = false
+    
+    //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE RAW ASSEMBLY
     //
     GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch), 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab
+                       GENOMESCOPE_MODEL.out.ktab,
+                       unset_busco_alts
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
 
@@ -173,7 +180,8 @@ workflow GENOMEASSEMBLY {
                                     .join(RAW_ASSEMBLY.out.hap2_hic_contigs), 
                            PREPARE_INPUT.out.busco,
                            GENOMESCOPE_MODEL.out.hist,
-                           GENOMESCOPE_MODEL.out.ktab
+                           GENOMESCOPE_MODEL.out.ktab,
+                           set_busco_alts
         )
     }
 
@@ -215,7 +223,8 @@ workflow GENOMEASSEMBLY {
     GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch), 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab
+                       GENOMESCOPE_MODEL.out.ktab,
+                       unset_busco_alts
     )
    
     //
@@ -315,7 +324,8 @@ workflow GENOMEASSEMBLY {
         GENOME_STATISTICS_POLISHED( polished_asm_stats_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab
+                       GENOMESCOPE_MODEL.out.ktab,
+                       unset_busco_alts
         )
     }
 
@@ -354,7 +364,8 @@ workflow GENOMEASSEMBLY {
     GENOME_STATISTICS_SCAFFOLDS( stats_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab
+                       GENOMESCOPE_MODEL.out.ktab,
+                       unset_busco_alts
     )
 
 
@@ -396,7 +407,8 @@ workflow GENOMEASSEMBLY {
         GENOME_STATISTICS_SCAFFOLDS_HAPS( stats_haps_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab
+                       GENOMESCOPE_MODEL.out.ktab,
+                       set_busco_alts
     )
 
     }
