@@ -20,6 +20,11 @@ if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
 if (params.organelles_on) { organelles_on = params.organelles_on } else { organelles_on = false; }
+
+// Declare constants to toggle BUSCO for alts
+set_busco_alts = true
+unset_busco_alts = false
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -121,12 +126,6 @@ workflow GENOMEASSEMBLY {
     //
     RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
 
-    //
-    // LOGIC: DECLARE CONSTANTS TO TOGGLE BUSCO FOR ALTS
-    //
-    set_busco_alts = true
-    unset_busco_alts = false
-    
     //
     // SUBWORKFLOW: CALCULATE STATISTICS FOR THE RAW ASSEMBLY
     //
