@@ -50,17 +50,9 @@ workflow ORGANELLES {
     //
     // LOGIC: PREPARE OATK INPUT
     //
-    mito_info.map{ species, min_length, code, email, fam -> [ file(fam.toString(), checkIfExists: true), 
-                                                            file(fam.toString()+'.h3f', checkIfExists: true), 
-                                                            file(fam.toString()+'.h3i', checkIfExists: true), 
-                                                            file(fam.toString()+'.h3m', checkIfExists: true), 
-                                                            file(fam.toString()+'.h3p', checkIfExists: true) ]}
+    mito_info.map{ species, min_length, code, email, fam -> [ fam ] + ['h3f', 'h3i', 'h3m', 'h3p'].collect {fam.resolveSibling(fam.name + '.' + it)} }
                                                             .set { mito_hmm_input }
-    plastid_info.map{ fam -> fam ? [ file(fam.toString(), checkIfExists: true), 
-                               file(fam.toString()+'.h3f', checkIfExists: true), 
-                               file(fam.toString()+'.h3i', checkIfExists: true), 
-                               file(fam.toString()+'.h3m', checkIfExists: true), 
-                               file(fam.toString()+'.h3p', checkIfExists: true) ] : [[],[],[],[],[]]}
+    plastid_info.map{ fam -> fam ? ([ fam ] + ['h3f', 'h3i', 'h3m', 'h3p'].collect {fam.resolveSibling(fam.name + '.' + it)} ) : [[],[],[],[],[]] }
                                .set { plastid_hmm_input }
     //
     // MODULE: RUN OATK TO IDENTIFY MITO
