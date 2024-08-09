@@ -87,7 +87,7 @@ The pipeline can be tested locally using a provided small test dataset:
 
 ```
 cd ${GENOMEASSEMBLY_TEST_DATA}
-curl https://darwin.cog.sanger.ac.uk/genomeassembly_test_data.tar.gz | tar xzf -
+curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
 
 git clone git@github.com:sanger-tol/genomeassembly.git
 cd genomeassembly/
