@@ -1,7 +1,7 @@
 dataset:
   id: baUndUnlc1
   illumina_10X:
-    reads: /home/runner/work/genomeassembly/genomeassembly/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
+    reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
   pacbio:
     reads:
       - reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta

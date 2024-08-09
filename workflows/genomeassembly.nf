@@ -245,7 +245,7 @@ workflow GENOMEASSEMBLY {
         //
         // LOGIC: REFACTOR ILLUMINA CHANNEL TO PASS IT INTO THE POLISHING SUBWORKFLOW
         //
-        PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> [reads] }
+        PREPARE_INPUT.out.illumina_10X.map{ meta, reads, kmers -> reads }
                         .set{ illumina_10X_ch }
         
         //
