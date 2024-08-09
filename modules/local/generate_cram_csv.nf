@@ -13,7 +13,7 @@ process GENERATE_CRAM_CSV {
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
-    tuple val(meta), path(crampaths, stageAs: "?/*")
+    tuple val(meta), path(crampaths, stageAs: "?/*"), path(craipaths, stageAs: "?/*")
 
 
     output:
