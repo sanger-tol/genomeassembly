@@ -23,7 +23,7 @@ process GENERATE_CRAM_CSV {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    generate_cram_csv.sh $crampaths >> ${prefix}_cram.csv
+    generate_cram_csv.sh $crampaths > ${prefix}_cram.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
