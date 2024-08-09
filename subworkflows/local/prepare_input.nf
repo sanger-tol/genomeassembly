@@ -40,7 +40,7 @@ workflow PREPARE_INPUT {
             .multiMap { data -> 
             id_ch : (data.id ? [id: data.id] : [])
             illumina_10X_ch : ( data.illumina_10X ? [ [id: data.id ], 
-                                                       files(data.illumina_10X.reads + "*", checkIfExists: true),
+                                                       data.illumina_10X.reads.collect { file(it, checkIfExists: true) },
                                                        data.illumina_10X.kmer_pref ? data.illumina_10X.kmer_pref : [] ] 
                                 : [] )
             pacbio_ch: ( data.pacbio ? [ [id: data.id ], 
