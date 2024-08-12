@@ -86,17 +86,12 @@ mito:
 The pipeline can be tested locally using a provided small test dataset:
 
 ```
-cd ${GENOMEASSEMBLY_TEST_DATA}
-curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
-
 git clone git@github.com:sanger-tol/genomeassembly.git
 cd genomeassembly/
-sed -i "s|/home/runner/work/genomeassembly/genomeassembly|${GENOMEASSEMBLY_TEST_DATA}|" assets/test_github.yaml
 nextflow run main.nf -profile test_github,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
 ```
 
-These command line steps will download and decompress the test data first, then download the pipeline and modify YAML so that it matches dataset location in your file system.
-The last command line runs the test.
+These command line steps will download the pipeline and run the test.
 
 You should now be able to run the pipeline as you see fit.
 

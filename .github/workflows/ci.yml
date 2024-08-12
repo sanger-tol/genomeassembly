@@ -48,10 +48,6 @@ jobs:
         run: |
           nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
 
-      - name: Download test data
-        run: |
-          curl https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/genomeassembly_test_data.tar.gz | tar xzf -
-
       - name: Setup apptainer
         uses: eWaterCycle/setup-apptainer@main
 
