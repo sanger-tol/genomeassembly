@@ -88,7 +88,7 @@ The pipeline can be tested locally using a provided small test dataset:
 ```
 git clone git@github.com:sanger-tol/genomeassembly.git
 cd genomeassembly/
-nextflow run main.nf -profile test_github,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
+nextflow run main.nf -profile test,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
 ```
 
 These command line steps will download the pipeline and run the test.
