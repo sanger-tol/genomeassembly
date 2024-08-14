@@ -26,8 +26,8 @@ workflow PREPARE_INPUT {
     ymlfile.multiMap{ data -> 
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
-        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? data.mito.fam : "\"\"" ] : [])
-        plastid : ( data.plastid ? ( data.plastid.fam ? data.plastid.fam : "\"\"" ) : [])
+        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? file(data.mito.fam, checkIfExists: true) : [] ] : [])
+        plastid : ( data.plastid ? ( data.plastid.fam ? file(data.plastid.fam, checkIfExists: true) : [] ) : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
         hic_aligner : (data.hic_aligner ? data.hic_aligner :[])
     }
@@ -40,7 +40,7 @@ workflow PREPARE_INPUT {
             .multiMap { data -> 
             id_ch : (data.id ? [id: data.id] : [])
             illumina_10X_ch : ( data.illumina_10X ? [ [id: data.id ], 
-                                                       file(data.illumina_10X.reads, checkIfExists: true),
+                                                       data.illumina_10X.reads.collect { file(it, checkIfExists: true) },
                                                        data.illumina_10X.kmer_pref ? data.illumina_10X.kmer_pref : [] ] 
                                 : [] )
             pacbio_ch: ( data.pacbio ? [ [id: data.id ], 

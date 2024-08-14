@@ -11,7 +11,7 @@ process LONGRANGER_ALIGN {
 
     input:
     tuple val(meta), path(reference)
-    path(fastqs)
+    path(fastqs, stageAs: "10X_inputs/*")
 
     output:
     tuple val(meta), path("${meta.id}/outs/possorted_bam.bam"), emit: bam
@@ -26,7 +26,7 @@ process LONGRANGER_ALIGN {
     def args = task.ext.args ?: ''
     def sample = "${meta.id}"
     """
-    longranger align --id=$sample --fastqs=$fastqs \
+    longranger align --id=$sample --fastqs=10X_inputs \
         --sample=$sample --reference=$reference \
         ${args}
 

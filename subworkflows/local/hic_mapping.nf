@@ -42,7 +42,7 @@ workflow HIC_MAPPING {
     reference_tuple
         .join( hic_reads_path )
         .map { meta, ref, hic_reads_path ->
-                tuple([ id: meta.id, single_end: true], hic_reads_path) }
+                tuple([ id: meta.id, single_end: true], hic_reads_path, hic_reads_path.collect { p -> p.resolveSibling(p.name + ".crai") } ) }
         .set { get_reads_input }
 
     //
