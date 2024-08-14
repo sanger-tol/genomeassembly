@@ -1,7 +1,10 @@
 dataset:
   id: gsMetZobe1
   illumina_10X:
-    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/10x/
+    reads: 
+      - /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/10x/gsMetZobe1_S6_L008_R1_001.fastq.gz
+      - /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/10x/gsMetZobe1_S6_L008_R2_001.fastq.gz
+      - /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/10x/gsMetZobe1_S6_L008_I1_001.fastq.gz
   pacbio:
     reads:
       - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/pacbio/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
