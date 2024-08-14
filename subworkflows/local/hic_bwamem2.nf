@@ -35,18 +35,17 @@ workflow HIC_BWAMEM2 {
                     id: cram_id.id
                     ],
                 file(cram_info[0]),
-                cram_info[1],
-                cram_info[2],
-                cram_info[3],
-                cram_info[4],
-                cram_info[5],
-                cram_info[6],
-                bwa_path.toString() + '/' + ref_dir.toString().split('/')[-1],
-                ref_dir
+                cram_info[1], // crai path
+                cram_info[2], // chunk starting position
+                cram_info[3], // chunk end position 
+                cram_info[4], // basename 
+                cram_info[5], // the number of chunk
+                cram_info[6], // rgline
+                bwa_path.toString() + '/' + ref_dir.toString().split('/')[-1]
             )
     }
     .set { ch_filtering_input }
-    ch_filtering_input.view()
+
     //
     // MODULE: map hic reads by 10,000 container per time using bwamem2
     //
