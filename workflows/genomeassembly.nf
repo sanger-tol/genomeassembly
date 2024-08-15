@@ -340,13 +340,13 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: MAP HIC DATA TO THE PRIMARY ASSEMBLY
     //
-    HIC_MAPPING ( primary_contigs_ch,crams_ch,hic_aligner_ch )
+    HIC_MAPPING ( primary_contigs_ch,crams_ch,hic_aligner_ch, "")
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
     //
     // SUBWORKFLOW: SCAFFOLD THE PRIMARY ASSEMBLY
     //
-    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin )
+    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, cool_bin, "")
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
     //
@@ -367,37 +367,36 @@ workflow GENOMEASSEMBLY {
                        unset_busco_alts
     )
 
-
     if ( hifiasm_hic_on ) {
         //
         // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
         //
-        HIC_MAPPING_HAP1 ( RAW_ASSEMBLY.out.hap1_hic_contigs, crams_ch, hic_aligner_ch )
+        HIC_MAPPING_HAP1 ( RAW_ASSEMBLY.out.hap1_hic_contigs, crams_ch, hic_aligner_ch, 'hap1' )
         ch_versions = ch_versions.mix(HIC_MAPPING_HAP1.out.versions)
 
         //
         // SUBWORKFLOW: SCAFFOLD HAP1
         //
-        SCAFFOLDING_HAP1( HIC_MAPPING_HAP1.out.bed, RAW_ASSEMBLY.out.hap1_hic_contigs, cool_bin )
+        SCAFFOLDING_HAP1( HIC_MAPPING_HAP1.out.bed, RAW_ASSEMBLY.out.hap1_hic_contigs, cool_bin, 'hap1' )
         ch_versions = ch_versions.mix(SCAFFOLDING_HAP1.out.versions)
 
         //
         // SUBWORKFLOW: MAP HIC DATA TO THE HAP2 CONTIGS
         //
-        HIC_MAPPING_HAP2 ( RAW_ASSEMBLY.out.hap2_hic_contigs, crams_ch, hic_aligner_ch )
+        HIC_MAPPING_HAP2 ( RAW_ASSEMBLY.out.hap2_hic_contigs, crams_ch, hic_aligner_ch, 'hap2' )
         ch_versions = ch_versions.mix(HIC_MAPPING_HAP2.out.versions)
         
         //
         // SUBWORKFLOW: SCAFFOLD HAP2
         //
-        SCAFFOLDING_HAP2( HIC_MAPPING_HAP2.out.bed, RAW_ASSEMBLY.out.hap2_hic_contigs, cool_bin )
+        SCAFFOLDING_HAP2( HIC_MAPPING_HAP2.out.bed, RAW_ASSEMBLY.out.hap2_hic_contigs, cool_bin, 'hap2' )
         ch_versions = ch_versions.mix(SCAFFOLDING_HAP2.out.versions)
         
         //
         // LOGIC: CREATE A CHANNEL FOR THE FULL HAP1/HAP2 ASSEMBLY
         //
         SCAFFOLDING_HAP1.out.fasta.combine(SCAFFOLDING_HAP2.out.fasta)
-                    .map{meta_s, fasta_s, meta_h, fasta_h -> [ meta_h, fasta_s, fasta_h ]}
+                    .map{meta_s, fasta_s, meta_h, fasta_h -> [ [id:meta_h.id], fasta_s, fasta_h ]}
                     .set{ stats_haps_input_ch }
     
         //

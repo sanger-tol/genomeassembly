@@ -16,6 +16,7 @@ workflow SCAFFOLDING {
     bed_in   // tuple(meta, bed)
     fasta_in // tuple(meta, fasta)
     cool_bin  // val: cooler cload parameter 
+    hap_id    // val: hap1/hap2/empty
     
     main:
     ch_versions = Channel.empty()
@@ -37,9 +38,14 @@ workflow SCAFFOLDING {
                     .set{ scaf_ref_fai }
 
     //
+    // LOGIC: MIX IN THE HAPLOTYPE ID TO CONTROL THE OUTPUT SUFFIX 
+    //
+    bed_in.map{ meta, bed -> [[id:meta.id, hap_id:hap_id],bed] }
+        .set{ bed_in_hap }
+    //
     // MODULE: PERFORM SCAAFFOLDING WITH YAHS
     //
-    YAHS( bed_in, scaf_ref, scaf_ref_fai )
+    YAHS( bed_in_hap , scaf_ref, scaf_ref_fai )
     ch_versions = ch_versions.mix(YAHS.out.versions)
 
     //
@@ -59,7 +65,7 @@ workflow SCAFFOLDING {
     YAHS.out.binary.join(YAHS.out.scaffolds_agp)
                     .combine(scaf_ref)
                     .combine(scaf_ref_fai)
-                    .map{meta, binary, agp, fa, fai -> [meta, binary, agp, fai]}
+                    .map{meta, binary, agp, fa, fai -> [[id:meta.id, hap_id:hap_id], binary, agp, fai]}
                     .set{ch_merge}
 
     //
@@ -71,7 +77,7 @@ workflow SCAFFOLDING {
     //
     // LOGIC: BIN CONTACT PAIRS
     //
-    JUICER_PRE.out.pairs.join(bed_in)
+    JUICER_PRE.out.pairs.join(bed_in_hap)
                         .combine(Channel.of(cool_bin))
                         .set{ch_juicer}
 
