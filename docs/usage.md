@@ -99,6 +99,22 @@ ADD ./longranger-2.2.2.tar.gz $DEST
 RUN ln -s $DEST/longranger-2.2.2/longranger /usr/local/bin/
 ```
 
+Then, to use the container in the pipeline, write the following to a `longranger.config` file
+
+```
+process {
+    withName: LONGRANGER_MKREF {
+        container = "/path/to/longranger_container"
+    }
+
+    withName: LONGRANGER_ALIGN {
+        container = "/path/to/longranger_container"
+    }
+}
+```
+
+And pass it to the pipeline with `-c longranger.config`.
+
 ## Usage
 
 ### Local testing
