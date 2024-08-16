@@ -76,6 +76,45 @@ mito:
 ```
 </details>
 
+## Extra installation procedures
+
+### Longranger
+
+Longranger is a proprietary software product from 10X Genomics.
+Its terms and conditions state that we _cannot_ redistribute the copy we have in the Tree of Life department.
+
+If you want to run the polising option, you have to install longranger yourself.
+Go to <https://support.10xgenomics.com/genome-exome/software/downloads/latest>,
+read their End User Software License Agreement,
+and you'll be able to download the software if you accept it.
+
+To make a Docker (or Singularity) container out of it,
+use the following Dockerfile.
+
+```Dockerfile
+FROM ubuntu:22.04
+LABEL org.opencontainers.image.licenses="10x Genomics End User Software License Agreement - https://support.10xgenomics.com/genome-exome/software/downloads/latest"
+ARG DEST=/opt
+ADD ./longranger-2.2.2.tar.gz $DEST
+RUN ln -s $DEST/longranger-2.2.2/longranger /usr/local/bin/
+```
+
+Then, to use the container in the pipeline, write the following to a `longranger.config` file
+
+```
+process {
+    withName: LONGRANGER_MKREF {
+        container = "/path/to/longranger_container"
+    }
+
+    withName: LONGRANGER_ALIGN {
+        container = "/path/to/longranger_container"
+    }
+}
+```
+
+And pass it to the pipeline with `-c longranger.config`.
+
 ## Usage
 
 ### Local testing

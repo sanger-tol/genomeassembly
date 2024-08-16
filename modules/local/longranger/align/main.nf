@@ -7,8 +7,6 @@ process LONGRANGER_ALIGN {
 
     def version = '2.2.2-c4'
 
-    container "gitlab-registry.internal.sanger.ac.uk/tol-it/software/docker-images/longranger:2.2.2-c4"
-
     input:
     tuple val(meta), path(reference)
     path(fastqs, stageAs: "10X_inputs/*")
