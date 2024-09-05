@@ -9,7 +9,7 @@ Optionally, if Illumina 10X data is provided, the purged contigs and haplotigs c
 
 In case of a diploid genome when HiFi and HiC data is coming from the same individual addtionally <code>hifiasm</code> can be run in HiC mode to produce a phased assembly. In that case the produced haplotypes are not purged but scaffolded up directly with <code>YaHS</code>.
 
-Optionally, the organelles assembly can be triggered. The mitochondrion and (if relevant) plastid sequences are produced using <code>MitoHiFi</code> and <code>OATK</code>. 
+Optionally, the organelles assembly can be triggered. The mitochondrion and (if relevant) plastid sequences are produced using <code>MitoHiFi</code> and <code>OATK</code>.
 
 The directories listed below will be created in the <code>--outdir</code> directory after the pipeline has finished. All paths are relative to the top-level <code>--outdir</code> directory.
 
