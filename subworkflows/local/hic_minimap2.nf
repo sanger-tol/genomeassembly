@@ -43,12 +43,12 @@ workflow HIC_MINIMAP2 {
                     id: cram_id.id
                     ],
                 file(cram_info[0]),
-                cram_info[1],
-                cram_info[2],
-                cram_info[3],
-                cram_info[4],
-                cram_info[5],
-                cram_info[6],
+                cram_info[1], // crai path
+                cram_info[2], // chunk starting position
+                cram_info[3], // chunk end position 
+                cram_info[4], // basename 
+                cram_info[5], // the number of chunk
+                cram_info[6], // rgline
                 mmi_path.toString(),
                 ref_dir
             )
@@ -77,7 +77,7 @@ workflow HIC_MINIMAP2 {
         .map { file ->
             tuple (
                 [
-                id: file[0].toString().split('/')[-1].split('_')[0] + '_' + file[0].toString().split('/')[-1].split('_')[1]
+                id: file[0].toString().split('/')[-1].split('_')[0]
                 ],
                 file
             )

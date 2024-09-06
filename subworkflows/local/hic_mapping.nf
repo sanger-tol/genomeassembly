@@ -26,6 +26,7 @@ workflow HIC_MAPPING {
     reference_tuple     // Channel [ val(meta), path(file) ]
     hic_reads_path      // Channel [ val(meta), path(directory) ]
     hic_aligner_ch      // Channel [ val(meta), val(hic_aligner)]
+    hap_id              // Value hap_id
 
     main:
     ch_versions = Channel.empty()
@@ -42,7 +43,7 @@ workflow HIC_MAPPING {
     reference_tuple
         .join( hic_reads_path )
         .map { meta, ref, hic_reads_path ->
-                tuple([ id: meta.id, single_end: true], hic_reads_path, hic_reads_path.collect { p -> p.resolveSibling(p.name + ".crai") } ) }
+                tuple([ id: meta.id, hap_id: hap_id, single_end: true], hic_reads_path, hic_reads_path.collect { p -> p.resolveSibling(p.name + ".crai") } ) }
         .set { get_reads_input }
 
     //
@@ -67,7 +68,8 @@ workflow HIC_MAPPING {
             bwamem2       : it[0].aligner == "bwamem2"
         }
         .set{ch_aligner}
-    
+
+      
     //
     // SUBWORKFLOW: mapping hic reads using minimap2
     //
@@ -78,7 +80,7 @@ workflow HIC_MAPPING {
     ch_versions         = ch_versions.mix( HIC_MINIMAP2.out.versions )
     mappedbams           = HIC_MINIMAP2.out.mappedbams
     
-        //
+    //
     // SUBWORKFLOW: mapping hic reads using bwamem2
     //
     HIC_BWAMEM2 (
@@ -87,6 +89,9 @@ workflow HIC_MAPPING {
     )
     ch_versions         = ch_versions.mix( HIC_BWAMEM2.out.versions )
     mappedbams           = mappedbams.mix(HIC_BWAMEM2.out.mappedbams)
+
+    mappedbams.map{meta, bams -> [[id: meta.id, hap_id:hap_id], bams]}
+              .set { mappedbams }
 
     //
     // LOGIC: GENERATE INDEX OF REFERENCE
