@@ -7,7 +7,7 @@ This document describes the output produced by the genomeassembly pipeline.
 The standard assembly pipeline contains running <code>hifiasm</code> on the HiFi reads, purging the primary contigs with <code>purge_dups</code>, and scaffolding them up with <code>YaHS</code>.
 Optionally, if Illumina 10X data is provided, the purged contigs and haplotigs can be polished.
 
-In case of a diploid genome when HiFi and HiC data is coming from the same individual addtionally <code>hifiasm</code> can be run in HiC mode to produce a phased assembly. In that case the produced haplotypes are not purged but scaffolded up directly with <code>YaHS</code>.
+In case of a diploid genome when HiFi and HiC data come from the same individual an additional hifiasm run in HiC mode produces two balanced fully phased haplotypes. The haplotypes are not purged but scaffolded up directly with <code>YaHS</code>.
 
 Optionally, the organelles assembly can be triggered. The mitochondrion and (if relevant) plastid sequences are produced using <code>MitoHiFi</code> and <code>OATK</code>.
 
