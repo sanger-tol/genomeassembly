@@ -49,6 +49,13 @@ workflow PREPARE_INPUT {
             hic_ch: ( data.HiC ? [ [id: data.id ],  
                                     data.HiC.reads.collect { file( it.reads, checkIfExists: true )}] 
                         : [])
+            matreads_ch: ( data.trio ? [ [id: data.id ], 
+                                          data.trio.matreads.collect { file( it, checkIfExists: true ) } ]
+                        : [])
+            patreads_ch: ( data.trio ? [ [id: data.id ], 
+                                          data.trio.patreads.collect { file( it, checkIfExists: true ) } ]
+                        : [])
+            
         }
         .set{ dataset_ch }
 
@@ -74,6 +81,8 @@ workflow PREPARE_INPUT {
 
     hic            = hic_ch
     hifi           = dataset_ch.pacbio_ch
+    matreads       = dataset_ch.matreads_ch
+    patreads       = dataset_ch.patreads_ch
     illumina_10X   = dataset_ch.illumina_10X_ch
     busco          = busco_ch
     mito           = ch_yml_data.mito 

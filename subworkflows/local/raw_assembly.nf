@@ -11,6 +11,8 @@ workflow RAW_ASSEMBLY {
     hifi_reads // channel: [ val(meta), [ datafile ] ]
     hic_reads // channel: [ datafile ] 
     hifiasm_hic_on // val: True/False
+    matdb
+    patdb
 
     main:
     ch_versions = Channel.empty()
@@ -18,7 +20,8 @@ workflow RAW_ASSEMBLY {
     // 
     // MODULE: RUN HIFIASM IN STANDARD WAY
     //
-    HIFIASM_PRI(hifi_reads, [], [], [], [], [])
+    patdb.view()
+    HIFIASM_PRI(hifi_reads, patdb, matdb, [], [], [])
     ch_versions = ch_versions.mix(HIFIASM_PRI.out.versions)
 
     //
@@ -39,7 +42,7 @@ workflow RAW_ASSEMBLY {
         //
         // MODULE: RUN HIFIASM IN HIC MODE
         //
-        HIFIASM_HIC(hifi_reads, [], [], [], [], hic_reads)
+        HIFIASM_HIC(hifi_reads, patdb, matdb, [], [], hic_reads)
         
         //
         // MODULE: CONVERT HIFIASM-HIC PRIMARY CONTIGS TO FASTA

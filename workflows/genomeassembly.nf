@@ -97,6 +97,8 @@ workflow GENOMEASSEMBLY {
     // LOGIC: CREATE A VARIABLE SERVING AS AN ALIAS FOR HIFI READS CHANNEL
     //
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
+    PREPARE_INPUT.out.matreads.set{ mat_reads_ch}
+    PREPARE_INPUT.out.patreads.set{ pat_reads_ch}
     
     //
     // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
@@ -106,14 +108,14 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    GENOMESCOPE_MODEL( hifi_reads_ch )   
+    GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch )   
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
 
     //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
     //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
     //
-    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on )
+    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, GENOMESCOPE_MODEL.out.patdb, GENOMESCOPE_MODEL.out.matdb )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
 
     //

@@ -2,11 +2,15 @@ include { CAT_CAT as CAT_CAT_READS   } from "../../modules/nf-core/cat/cat/main"
 include { FASTK_FASTK                } from "../../modules/nf-core/fastk/fastk/main"
 include { FASTK_HISTEX               } from '../../modules/nf-core/fastk/histex/main'
 include { GENESCOPEFK                } from "../../modules/nf-core/genescopefk/main"
+include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
+include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
 
 workflow GENOMESCOPE_MODEL {
 
     take:
     reads // [meta, [reads]] 
+    matreads // [meta, [matreads]] 
+    patreads // [meta, [patreads]]
 
     main: 
     ch_versions = Channel.empty()
@@ -43,6 +47,18 @@ workflow GENOMESCOPE_MODEL {
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
     //
+    // MODULE: YAK TO PRODUCE MAT DATABASE
+    //
+    YAK_COUNT_MAT( matreads )
+    ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
+
+    //
+    // MODULE: YAK TO PRODUCE PAT DATABASE
+    //
+    YAK_COUNT_PAT( patreads )
+    ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
+
+    //
     // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
     //
     GENESCOPEFK( FASTK_HISTEX.out.hist )
@@ -52,6 +68,8 @@ workflow GENOMESCOPE_MODEL {
     model = GENESCOPEFK.out.model
     hist = FASTK_FASTK.out.hist
     ktab = FASTK_FASTK.out.ktab
+    matdb = YAK_COUNT_MAT.out.yak.map{ meta, matyak -> matyak}
+    patdb = YAK_COUNT_PAT.out.yak.map{ meta, patyak -> patyak}
     
     versions = ch_versions
 }
