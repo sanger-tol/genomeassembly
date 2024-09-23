@@ -425,7 +425,7 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
                        [],
-                       []],
+                       [],
                        set_busco_alts
     )
 
