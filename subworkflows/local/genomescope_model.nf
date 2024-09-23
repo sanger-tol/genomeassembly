@@ -2,8 +2,7 @@ include { CAT_CAT as CAT_CAT_READS   } from "../../modules/nf-core/cat/cat/main"
 include { FASTK_FASTK                } from "../../modules/nf-core/fastk/fastk/main"
 include { FASTK_HISTEX               } from '../../modules/nf-core/fastk/histex/main'
 include { GENESCOPEFK                } from "../../modules/nf-core/genescopefk/main"
-include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
-include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
+include { TRIO_MODE as TRIO_PROCESS  } from '../../subworkflows/local/trio_mode'
 
 workflow GENOMESCOPE_MODEL {
 
@@ -11,10 +10,17 @@ workflow GENOMESCOPE_MODEL {
     reads // [meta, [reads]] 
     matreads // [meta, [matreads]] 
     patreads // [meta, [patreads]]
+    trio_flag
 
     main: 
     ch_versions = Channel.empty()
+    matdb_ch = Channel.empty()
+    matktab_ch = Channel.empty()
+    patdb_ch = Channel.empty()
+    patktab_ch = Channel.empty()
+    
 
+    trio_flag.view()
     //
     // MODULE: MERGE ALL READS IN ONE FILE
     //
@@ -46,18 +52,33 @@ workflow GENOMESCOPE_MODEL {
     FASTK_HISTEX( FASTK_FASTK.out.hist )
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
-    //
-    // MODULE: YAK TO PRODUCE MAT DATABASE
-    //
-    YAK_COUNT_MAT( matreads )
-    ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
 
     //
     // MODULE: YAK TO PRODUCE PAT DATABASE
     //
-    YAK_COUNT_PAT( patreads )
-    ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
 
+    trio_flag
+        .combine( patreads )
+        .combine( matreads )
+        .branch {
+            trio:     it[0] == "trio"
+            non_trio: it[0] == "nontrio"
+        }
+        .set{ trio_data }
+
+    trio_data
+            .trio
+            .multiMap { trio_mode, pat_meta, pat_data, mat_meta, mat_data ->
+                pat:    tuple( pat_meta, pat_data )
+                mat:    tuple( mat_meta, mat_data )
+            }
+            .set{ ch_trio_data }
+
+    TRIO_PROCESS (
+        ch_trio_data.pat,
+        ch_trio_data.mat
+    )    
+    
     //
     // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
     //
@@ -68,9 +89,10 @@ workflow GENOMESCOPE_MODEL {
     model = GENESCOPEFK.out.model
     hist = FASTK_FASTK.out.hist
     ktab = FASTK_FASTK.out.ktab
-    matdb = YAK_COUNT_MAT.out.yak.map{ meta, matyak -> matyak}
-    patdb = YAK_COUNT_PAT.out.yak.map{ meta, patyak -> patyak}
-    
+    pktab = TRIO_PROCESS.out.pktab
+    mktab = TRIO_PROCESS.out.mktab
+    matdb = TRIO_PROCESS.out.matdb
+    patdb = TRIO_PROCESS.out.patdb
     versions = ch_versions
 }
 

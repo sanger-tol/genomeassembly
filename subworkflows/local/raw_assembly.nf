@@ -20,7 +20,6 @@ workflow RAW_ASSEMBLY {
     // 
     // MODULE: RUN HIFIASM IN STANDARD WAY
     //
-    patdb.view()
     HIFIASM_PRI(hifi_reads, patdb, matdb, [], [], [])
     ch_versions = ch_versions.mix(HIFIASM_PRI.out.versions)
 

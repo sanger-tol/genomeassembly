@@ -19,6 +19,8 @@ workflow GENOME_STATISTICS {
     lineage                // channel: [ meta, /path/to/buscoDB, lineage ] 
     hist                   // channel: [meta, fastk_hist files]
     ktab                   // channel: [meta, fastk_ktab files]
+    pktab                  // channel: [meta, fastk_ktab files]
+    mktab                  // channel: [meta, fastk_ktab files]
     busco_alt              // channel: true/false
 
     main:
@@ -83,7 +85,7 @@ workflow GENOME_STATISTICS {
     //
     // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
     //
-    MERQURYFK_MERQURYFK ( ch_merq )
+    MERQURYFK_MERQURYFK ( ch_merq, mktab, pktab)
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:

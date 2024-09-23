@@ -116,7 +116,7 @@
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "95f7516731f960e86bff900b9f1d80a8904bffd8",
                         "installed_by": ["modules"]
                     },
                     "minimap2/align": {

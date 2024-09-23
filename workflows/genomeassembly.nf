@@ -99,6 +99,9 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.hifi.set{ hifi_reads_ch }
     PREPARE_INPUT.out.matreads.set{ mat_reads_ch}
     PREPARE_INPUT.out.patreads.set{ pat_reads_ch}
+    PREPARE_INPUT.out.trio_flag_ch.set{ trio_flag_ch}
+
+    
     
     //
     // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
@@ -108,7 +111,7 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch )   
+    GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch, trio_flag_ch)   
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
 
     //
@@ -135,6 +138,8 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
+                       GENOMESCOPE_MODEL.out.pktab,
+                       GENOMESCOPE_MODEL.out.mktab,
                        unset_busco_alts
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
@@ -182,6 +187,8 @@ workflow GENOMEASSEMBLY {
                            PREPARE_INPUT.out.busco,
                            GENOMESCOPE_MODEL.out.hist,
                            GENOMESCOPE_MODEL.out.ktab,
+                           GENOMESCOPE_MODEL.out.pktab,
+                           GENOMESCOPE_MODEL.out.mktab,
                            set_busco_alts
         )
     }
@@ -225,6 +232,8 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
+                       GENOMESCOPE_MODEL.out.pktab,
+                       GENOMESCOPE_MODEL.out.mktab,
                        unset_busco_alts
     )
    
@@ -366,6 +375,8 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
+                       GENOMESCOPE_MODEL.out.pktab,
+                       GENOMESCOPE_MODEL.out.mktab,
                        unset_busco_alts
     )
 
@@ -408,6 +419,8 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
+                       GENOMESCOPE_MODEL.out.pktab,
+                       GENOMESCOPE_MODEL.out.mktab,
                        set_busco_alts
     )
 
