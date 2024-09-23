@@ -101,8 +101,6 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUT.out.patreads.set{ pat_reads_ch}
     PREPARE_INPUT.out.trio_flag_ch.set{ trio_flag_ch}
 
-    
-    
     //
     // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
     //    
@@ -111,14 +109,17 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch, trio_flag_ch)   
+    GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch, trio_flag_ch)
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
+
+    GENOMESCOPE_MODEL.out.patdb.map{ meta, patdb -> patdb }.set{ patdb_ch }
+    GENOMESCOPE_MODEL.out.matdb.map{ meta, matdb -> matdb }.set{ matdb_ch }
 
     //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
     //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
     //
-    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, GENOMESCOPE_MODEL.out.patdb, GENOMESCOPE_MODEL.out.matdb )
+    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, patdb_ch, matdb_ch )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
 
     //

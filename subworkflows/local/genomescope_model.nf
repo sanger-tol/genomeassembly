@@ -19,8 +19,6 @@ workflow GENOMESCOPE_MODEL {
     patdb_ch = Channel.empty()
     patktab_ch = Channel.empty()
     
-
-    trio_flag.view()
     //
     // MODULE: MERGE ALL READS IN ONE FILE
     //
@@ -54,9 +52,8 @@ workflow GENOMESCOPE_MODEL {
 
 
     //
-    // MODULE: YAK TO PRODUCE PAT DATABASE
+    // LOGIC: RUN TRIO WHEN TRIO DATA IS AVAILABLE
     //
-
     trio_flag
         .combine( patreads )
         .combine( matreads )
@@ -73,7 +70,9 @@ workflow GENOMESCOPE_MODEL {
                 mat:    tuple( mat_meta, mat_data )
             }
             .set{ ch_trio_data }
-
+    //
+    // SUBWORKFLOW: RUN TRIO PROCESS WITH TRIO DATA
+    //
     TRIO_PROCESS (
         ch_trio_data.pat,
         ch_trio_data.mat
@@ -89,10 +88,10 @@ workflow GENOMESCOPE_MODEL {
     model = GENESCOPEFK.out.model
     hist = FASTK_FASTK.out.hist
     ktab = FASTK_FASTK.out.ktab
-    pktab = TRIO_PROCESS.out.pktab
-    mktab = TRIO_PROCESS.out.mktab
-    matdb = TRIO_PROCESS.out.matdb
-    patdb = TRIO_PROCESS.out.patdb
+    pktab = TRIO_PROCESS.out.pktab.ifEmpty( [] )
+    mktab = TRIO_PROCESS.out.mktab.ifEmpty( [] )
+    matdb = TRIO_PROCESS.out.matdb.ifEmpty( [] )
+    patdb = TRIO_PROCESS.out.patdb.ifEmpty( [] )
     versions = ch_versions
 }
 

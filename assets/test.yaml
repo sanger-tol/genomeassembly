@@ -8,17 +8,16 @@ dataset:
   pacbio:
     reads:
       - reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
-  #trio:
-    #matreads: 
-      #- https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz
-    #patreads: 
-      #- https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz
   HiC:
     reads:
       - reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram
+  trio:
+    matreads:
+      - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz
+    patreads:
+      - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz
 hic_motif: GATC,GANTC,CTNAG,TTAA
 hic_aligner: bwamem2
-trio_mode: non_trio
 busco:
   lineage: bacteria_odb10
 mito:

@@ -11,11 +11,6 @@ workflow TRIO_MODE {
 
     main: 
     ch_versions = Channel.empty()
-    matdb_ch = Channel.empty()
-    matktab_ch = Channel.empty()
-    patdb_ch = Channel.empty()
-    patktab_ch = Channel.empty()
-    
     
     YAK_COUNT_PAT(patreads)
     FASTK_PAT(patreads)
@@ -31,10 +26,10 @@ workflow TRIO_MODE {
     ch_versions = ch_versions.mix(FASTK_MAT.out.versions)
 
     emit:
-    pktab = patktab_ch.ifEmpty( [ [], [] ] )
-    mktab = matktab_ch.ifEmpty( [ [], [] ] )
-    matdb = matdb_ch.ifEmpty( [] )
-    patdb = patdb_ch.ifEmpty( [] )
+    pktab = patktab_ch
+    mktab = matktab_ch
+    matdb = matdb_ch
+    patdb = patdb_ch
     versions = ch_versions
 }
 
