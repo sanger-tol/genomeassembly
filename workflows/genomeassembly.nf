@@ -190,8 +190,8 @@ workflow GENOMEASSEMBLY {
                            PREPARE_INPUT.out.busco,
                            GENOMESCOPE_MODEL.out.hist,
                            GENOMESCOPE_MODEL.out.ktab,
-                           pktab_ch,
-                           mktab_ch,
+                           [],
+                           [],
                            set_busco_alts
         )
     }
