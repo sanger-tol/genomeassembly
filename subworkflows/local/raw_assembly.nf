@@ -41,7 +41,7 @@ workflow RAW_ASSEMBLY {
         //
         // MODULE: RUN HIFIASM IN HIC MODE
         //
-        HIFIASM_HIC(hifi_reads, patdb, matdb, [], [], hic_reads)
+        HIFIASM_HIC(hifi_reads, [], [], [], [], hic_reads)
         
         //
         // MODULE: CONVERT HIFIASM-HIC PRIMARY CONTIGS TO FASTA
