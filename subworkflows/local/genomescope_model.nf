@@ -77,7 +77,8 @@ workflow GENOMESCOPE_MODEL {
         ch_trio_data.pat,
         ch_trio_data.mat
     )    
-    
+    ch_versions = ch_versions.mix(TRIO_PROCESS.out.versions)
+
     //
     // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
     //

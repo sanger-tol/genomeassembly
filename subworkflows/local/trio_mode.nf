@@ -11,11 +11,14 @@ workflow TRIO_MODE {
 
     main: 
     ch_versions = Channel.empty()
-    
+
+    //
+    // MODULE: GENERATE TRIO DATABASES AND KTABS FOR BOTH PAT AND MAT
+    //
     YAK_COUNT_PAT(patreads)
     FASTK_PAT(patreads)
     patdb_ch = YAK_COUNT_PAT.out.yak
-    patktab_ch = FASTK_PAT.out.ktab           
+    patktab_ch = FASTK_PAT.out.ktab
     ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
     ch_versions = ch_versions.mix(FASTK_PAT.out.versions)
     YAK_COUNT_MAT(matreads)
