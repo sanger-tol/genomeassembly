@@ -19,6 +19,7 @@ if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
 
 if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
 if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
+if (params.hifiasm_trio_on) { hifiasm_trio_on = params.hifiasm_trio_on } else { hifiasm_trio_on = false; }
 if (params.organelles_on) { organelles_on = params.organelles_on } else { organelles_on = false; }
 
 // Declare constants to toggle BUSCO for alts
@@ -49,17 +50,22 @@ include { POLISHING                                             } from '../subwo
 include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
 include { SCAFFOLDING as SCAFFOLDING_HAP1                       } from '../subworkflows/local/scaffolding'
 include { SCAFFOLDING as SCAFFOLDING_HAP2                       } from '../subworkflows/local/scaffolding'
+include { SCAFFOLDING as SCAFFOLDING_PAT                        } from '../subworkflows/local/scaffolding'
+include { SCAFFOLDING as SCAFFOLDING_MAT                        } from '../subworkflows/local/scaffolding'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
 include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS              } from '../modules/local/keep_seqnames'
 include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
 include { HIC_MAPPING as HIC_MAPPING_HAP1                       } from '../subworkflows/local/hic_mapping'
 include { HIC_MAPPING as HIC_MAPPING_HAP2                       } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING as HIC_MAPPING_PAT                        } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING as HIC_MAPPING_MAT                        } from '../subworkflows/local/hic_mapping'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW            } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC        } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED         } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED       } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS      } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_HAPS } from '../subworkflows/local/genome_statistics'
+include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_TRIO } from '../subworkflows/local/genome_statistics'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -421,6 +427,51 @@ workflow GENOMEASSEMBLY {
         // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR HAP1/HAP2 ASSEMBLY
         //
         GENOME_STATISTICS_SCAFFOLDS_HAPS( stats_haps_input_ch, 
+                       PREPARE_INPUT.out.busco,
+                       GENOMESCOPE_MODEL.out.hist,
+                       GENOMESCOPE_MODEL.out.ktab,
+                       [],
+                       [],
+                       set_busco_alts
+    )
+    }
+
+    if ( hifiasm_trio_on ) {
+        //
+        // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
+        //
+        HIC_MAPPING_PAT ( RAW_ASSEMBLY.out.pat_hic_contigs, crams_ch, hic_aligner_ch, 'pat' )
+        ch_versions = ch_versions.mix(HIC_MAPPING_HAP1.out.versions)
+
+        //
+        // SUBWORKFLOW: SCAFFOLD PAT
+        //
+        SCAFFOLDING_PAT( HIC_MAPPING_PAT.out.bed, RAW_ASSEMBLY.out.pat_hic_contigs, cool_bin, 'pat' )
+        ch_versions = ch_versions.mix(SCAFFOLDING_PAT.out.versions)
+
+        //
+        // SUBWORKFLOW: MAP HIC DATA TO THE HAP2 CONTIGS
+        //
+        HIC_MAPPING_MAT ( RAW_ASSEMBLY.out.mat_hic_contigs, crams_ch, hic_aligner_ch, 'mat' )
+        ch_versions = ch_versions.mix(HIC_MAPPING_MAT.out.versions)
+        
+        //
+        // SUBWORKFLOW: SCAFFOLD MAT
+        //
+        SCAFFOLDING_MAT( HIC_MAPPING_MAT.out.bed, RAW_ASSEMBLY.out.mat_hic_contigs, cool_bin, 'mat' )
+        ch_versions = ch_versions.mix(SCAFFOLDING_MAT.out.versions)
+        
+        //
+        // LOGIC: CREATE A CHANNEL FOR THE FULL PAT/MAT ASSEMBLY
+        //
+        SCAFFOLDING_PAT.out.fasta.combine(SCAFFOLDING_PAT.out.fasta)
+                    .map{meta_s, fasta_s, meta_h, fasta_h -> [ [id:meta_h.id], fasta_s, fasta_h ]}
+                    .set{ stats_trio_input_ch }
+    
+        //
+        // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR PAT/MAT ASSEMBLY
+        //
+        GENOME_STATISTICS_SCAFFOLDS_TRIO( stats_trio_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
