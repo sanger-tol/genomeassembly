@@ -13,6 +13,7 @@ workflow RAW_ASSEMBLY {
     hifi_reads // channel: [ val(meta), [ datafile ] ]
     hic_reads // channel: [ datafile ] 
     hifiasm_hic_on // val: True/False
+    hifiasm_trio_on // val: True/False
     matdb
     patdb
 

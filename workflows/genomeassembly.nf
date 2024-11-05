@@ -127,7 +127,7 @@ workflow GENOMEASSEMBLY {
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
     //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
     //
-    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, patdb_ch, matdb_ch )
+    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, hifiasm_trio_on, patdb_ch, matdb_ch )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
 
     //
