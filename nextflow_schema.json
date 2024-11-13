@@ -39,6 +39,10 @@
                     "type": "boolean",
                     "description": "Switch on HiC mode for hifiasm assembly"
                 },
+                "hifiasm_trio_on": {
+                    "type": "boolean",
+                    "description": "Switch on TRIO mode for hifiasm assembly"
+                },
                 "polishing_on": {
                     "type": "boolean",
                     "description": "Switch on to do polish purged assembly before scaffolding"
