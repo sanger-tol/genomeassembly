@@ -441,7 +441,7 @@ workflow GENOMEASSEMBLY {
         // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
         //
         HIC_MAPPING_PAT ( RAW_ASSEMBLY.out.pat_hic_contigs, crams_ch, hic_aligner_ch, 'pat' )
-        ch_versions = ch_versions.mix(HIC_MAPPING_HAP1.out.versions)
+        ch_versions = ch_versions.mix(HIC_MAPPING_PAT.out.versions)
 
         //
         // SUBWORKFLOW: SCAFFOLD PAT
@@ -464,7 +464,7 @@ workflow GENOMEASSEMBLY {
         //
         // LOGIC: CREATE A CHANNEL FOR THE FULL PAT/MAT ASSEMBLY
         //
-        SCAFFOLDING_PAT.out.fasta.combine(SCAFFOLDING_PAT.out.fasta)
+        SCAFFOLDING_PAT.out.fasta.combine(SCAFFOLDING_MAT.out.fasta)
                     .map{meta_s, fasta_s, meta_h, fasta_h -> [ [id:meta_h.id], fasta_s, fasta_h ]}
                     .set{ stats_trio_input_ch }
     

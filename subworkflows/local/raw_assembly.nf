@@ -1,5 +1,6 @@
 include { HIFIASM as HIFIASM_PRI                } from '../../modules/nf-core/hifiasm/main'
 include { HIFIASM as HIFIASM_HIC                } from '../../modules/nf-core/hifiasm/main'
+include { HIFIASM as HIFIASM_HIC_TRIO           } from '../../modules/nf-core/hifiasm/main'
 
 include { GFA_TO_FASTA as GFA_TO_FASTA_PRI      } from '../../modules/local/gfa_to_fasta'
 include { GFA_TO_FASTA as GFA_TO_FASTA_ALT      } from '../../modules/local/gfa_to_fasta'
