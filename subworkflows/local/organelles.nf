@@ -35,6 +35,7 @@ workflow ORGANELLES {
     MITOHIFI_MITOHIFI_READS( reads_input, 
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   "r",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
 
@@ -44,6 +45,7 @@ workflow ORGANELLES {
     MITOHIFI_MITOHIFI_CONTIGS( contigs_input, 
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   "c",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
 
