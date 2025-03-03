@@ -75,6 +75,11 @@
                     "type": "string",
                     "hidden": true,
                     "description": "Used for hifiasm-hic output naming, defined at runtime"
+                },
+                "hifiasmtrio": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Used for hifiasm-trio output naming, defined at runtime"
                 }
             }
         },

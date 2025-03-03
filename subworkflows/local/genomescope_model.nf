@@ -14,8 +14,6 @@ workflow GENOMESCOPE_MODEL {
 
     main: 
     ch_versions = Channel.empty()
-    matdb_ch = Channel.empty()
-    matktab_ch = Channel.empty()
     patdb_ch = Channel.empty()
     patktab_ch = Channel.empty()
     
@@ -74,8 +72,9 @@ workflow GENOMESCOPE_MODEL {
     // SUBWORKFLOW: RUN TRIO PROCESS WITH TRIO DATA
     //
     TRIO_PROCESS (
-        ch_trio_data.pat,
-        ch_trio_data.mat
+        FASTK_FASTK.out.ktab,
+        ch_trio_data.mat,
+        ch_trio_data.pat    
     )    
     ch_versions = ch_versions.mix(TRIO_PROCESS.out.versions)
 
@@ -89,8 +88,8 @@ workflow GENOMESCOPE_MODEL {
     model = GENESCOPEFK.out.model
     hist = FASTK_FASTK.out.hist
     ktab = FASTK_FASTK.out.ktab
-    pktab = TRIO_PROCESS.out.pktab.ifEmpty( [] )
-    mktab = TRIO_PROCESS.out.mktab.ifEmpty( [] )
+    phapktab = TRIO_PROCESS.out.phapktab.ifEmpty( [] )
+    mhapktab = TRIO_PROCESS.out.mhapktab.ifEmpty( [] )
     matdb = TRIO_PROCESS.out.matdb.ifEmpty( [] )
     patdb = TRIO_PROCESS.out.patdb.ifEmpty( [] )
     versions = ch_versions

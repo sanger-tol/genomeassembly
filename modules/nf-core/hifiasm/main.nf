@@ -29,8 +29,8 @@ process HIFIASM {
     tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")   , emit: hap2_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.p_ctg.gfa")   , emit: hic_primary_contigs  , optional: true
     tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
-    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
-    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
+    tuple val(meta), path("*.asm.dip.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
+    tuple val(meta), path("*.asm.dip.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
     tuple val(meta), path("*.log")             , emit: log
     path  "versions.yml"                       , emit: versions
 

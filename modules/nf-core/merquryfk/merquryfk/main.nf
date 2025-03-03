@@ -7,8 +7,10 @@ process MERQURYFK_MERQURYFK {
 
     input:
     tuple val(meta), path(fastk_hist),path(fastk_ktab),path(assembly),path(haplotigs)
-    path matktab                                                                        //optional
-    path patktab                                                                        //optional
+    path matktab                                                                         //optional 
+    path mathaptab                                                                       //optional
+    path patktab                                                                         //optional
+    path pathaptab                                                                       //optional
 
     output:
     tuple val(meta), path("${prefix}.completeness.stats")         , emit: stats
@@ -39,17 +41,18 @@ process MERQURYFK_MERQURYFK {
     }
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def mat_ktab = matktab ? "${matktab.find{ it.toString().endsWith(".ktab") }}" : ''
-    def pat_ktab = patktab ? "${patktab.find{ it.toString().endsWith(".ktab") }}" : ''
+    def fk_ktab =  fastk_ktab ? "${fastk_ktab.find{ it.toString().endsWith(".ktab") }}" : ''
+    def mat_hapktab = mathaptab ? "${mathaptab.find{ it.toString().endsWith("hap.ktab") }}" : ''
+    def pat_hapktab = pathaptab ? "${pathaptab.find{ it.toString().endsWith("hap.ktab") }}" : ''
     def FASTK_VERSION = 'f18a4e6d2207539f7b84461daebc54530a9559b0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     def MERQURY_VERSION = '8ae344092df5dcaf83cfb7f90f662597a9b1fc61' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     MerquryFK \\
         $args \\
         -T$task.cpus \\
-        ${fastk_ktab.find{ it.toString().endsWith(".ktab") }} \\
-        ${mat_ktab} \\
-        ${pat_ktab} \\
+        ${fk_ktab} \\
+        ${mat_hapktab} \\
+        ${pat_hapktab} \\
         $assembly \\
         $haplotigs \\
         $prefix

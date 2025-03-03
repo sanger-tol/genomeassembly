@@ -112,22 +112,48 @@ workflow GENOMEASSEMBLY {
     //    
     PREPARE_INPUT.out.hic.map{ meta, reads, motif, hic_aligner -> reads }.set{ hic_reads_ch }
 
+    
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
     GENOMESCOPE_MODEL( hifi_reads_ch, mat_reads_ch, pat_reads_ch, trio_flag_ch)
     ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
 
-    GENOMESCOPE_MODEL.out.patdb.map{ meta, patdb -> patdb }.set{ patdb_ch }
-    GENOMESCOPE_MODEL.out.matdb.map{ meta, matdb -> matdb }.set{ matdb_ch }
-    GENOMESCOPE_MODEL.out.pktab.map{ meta, pktab -> pktab }.set{ pktab_ch }
-    GENOMESCOPE_MODEL.out.pktab.map{ meta, mktab -> mktab }.set{ mktab_ch }
+    if (params.hifiasm_trio_on) {
+
+        // LOGIC: PRODUCE YAK DATABASE FOR BOTH PAT AND MAT FOR HIFIASM
+        GENOMESCOPE_MODEL.out.patdb.map{ meta, patdb -> patdb }.set{ patdb_ch }
+        GENOMESCOPE_MODEL.out.matdb.map{ meta, matdb -> matdb }.set{ matdb_ch }
+
+        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
+        GENOMESCOPE_MODEL.out.phapktab
+        .map { it[1] }
+        .set { phapktab_ch }  
+    
+        GENOMESCOPE_MODEL.out.mhapktab
+        .map { it[1] }
+        .set { mhapktab_ch }
+
+        GENOMESCOPE_MODEL.out.phapktab
+        .map { it[2] }
+        .set { fastk_pktab}
+
+        GENOMESCOPE_MODEL.out.mhapktab
+        .map { it[2] }
+        .set { fastk_mktab}
+        
+        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
+        RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, hifiasm_trio_on, patdb_ch, matdb_ch )
+    }
+    else {
+        RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, hifiasm_trio_on, [], [] )
+    }
+
 
     //
     // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
     //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
     //
-    RAW_ASSEMBLY( hifi_reads_ch, hic_reads_ch, hifiasm_hic_on, hifiasm_trio_on, patdb_ch, matdb_ch )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
 
     //
@@ -147,8 +173,10 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
-                       pktab_ch,
-                       mktab_ch,
+                       [],
+                       [],
+                       [],
+                       [],
                        unset_busco_alts
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
@@ -192,16 +220,18 @@ workflow GENOMEASSEMBLY {
         // SUBWORKFLOW: CALCULATE RAW ASSEMBLY STATISTICS FOR THE HIFIASN IN HIC MODE
         //
         GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.hap1_hic_contigs
-                                    .join(RAW_ASSEMBLY.out.hap2_hic_contigs), 
+                            .join(RAW_ASSEMBLY.out.hap2_hic_contigs), 
                            PREPARE_INPUT.out.busco,
                            GENOMESCOPE_MODEL.out.hist,
                            GENOMESCOPE_MODEL.out.ktab,
                            [],
                            [],
+                           [],
+                           [],
                            set_busco_alts
         )
     }
-
+    
     //
     // LOGIC: CREATE AN INPUT DATA STRUCTURE FOR PURGING
     //
@@ -241,8 +271,10 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
-                       pktab_ch,
-                       mktab_ch,
+                       [],
+                       [],
+                       [],
+                       [],
                        unset_busco_alts
     )
    
@@ -344,8 +376,10 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
-                       pktab_ch,
-                       mktab_ch,
+                       [],
+                       [],  // Conditional pktab_ch
+                       [],
+                       [],
                        unset_busco_alts
         )
     }
@@ -358,7 +392,7 @@ workflow GENOMEASSEMBLY {
     
     PREPARE_INPUT.out.hic.map{ meta, crams, motif, hic_aligner -> [meta, hic_aligner] }
                          .set{ hic_aligner_ch }
-
+    
     //
     // SUBWORKFLOW: MAP HIC DATA TO THE PRIMARY ASSEMBLY
     //
@@ -386,11 +420,13 @@ workflow GENOMEASSEMBLY {
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
-                       pktab_ch,
-                       mktab_ch,
+                       [],
+                       [],
+                       [],
+                       [],
                        unset_busco_alts
-    )
-
+    ) 
+    
     if ( hifiasm_hic_on ) {
         //
         // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
@@ -432,33 +468,35 @@ workflow GENOMEASSEMBLY {
                        GENOMESCOPE_MODEL.out.ktab,
                        [],
                        [],
+                       [],
+                       [],
                        set_busco_alts
-    )
+        )
     }
 
     if ( hifiasm_trio_on ) {
         //
-        // SUBWORKFLOW: MAP HIC DATA TO THE HAP1 CONTIGS
+        // SUBWORKFLOW: MAP HIC DATA TO THE PATERNAL CONTIGS
         //
-        HIC_MAPPING_PAT ( RAW_ASSEMBLY.out.pat_hic_contigs, crams_ch, hic_aligner_ch, 'pat' )
+        HIC_MAPPING_PAT ( RAW_ASSEMBLY.out.pat_contigs, crams_ch, hic_aligner_ch, 'pat' )
         ch_versions = ch_versions.mix(HIC_MAPPING_PAT.out.versions)
 
         //
         // SUBWORKFLOW: SCAFFOLD PAT
         //
-        SCAFFOLDING_PAT( HIC_MAPPING_PAT.out.bed, RAW_ASSEMBLY.out.pat_hic_contigs, cool_bin, 'pat' )
+        SCAFFOLDING_PAT( HIC_MAPPING_PAT.out.bed, RAW_ASSEMBLY.out.pat_contigs, cool_bin, 'pat' )
         ch_versions = ch_versions.mix(SCAFFOLDING_PAT.out.versions)
 
         //
-        // SUBWORKFLOW: MAP HIC DATA TO THE HAP2 CONTIGS
+        // SUBWORKFLOW: MAP HIC DATA TO THE MATERNAL CONTIGS
         //
-        HIC_MAPPING_MAT ( RAW_ASSEMBLY.out.mat_hic_contigs, crams_ch, hic_aligner_ch, 'mat' )
+        HIC_MAPPING_MAT ( RAW_ASSEMBLY.out.mat_contigs, crams_ch, hic_aligner_ch, 'mat' )
         ch_versions = ch_versions.mix(HIC_MAPPING_MAT.out.versions)
         
         //
         // SUBWORKFLOW: SCAFFOLD MAT
         //
-        SCAFFOLDING_MAT( HIC_MAPPING_MAT.out.bed, RAW_ASSEMBLY.out.mat_hic_contigs, cool_bin, 'mat' )
+        SCAFFOLDING_MAT( HIC_MAPPING_MAT.out.bed, RAW_ASSEMBLY.out.mat_contigs, cool_bin, 'mat' )
         ch_versions = ch_versions.mix(SCAFFOLDING_MAT.out.versions)
         
         //
@@ -467,16 +505,18 @@ workflow GENOMEASSEMBLY {
         SCAFFOLDING_PAT.out.fasta.combine(SCAFFOLDING_MAT.out.fasta)
                     .map{meta_s, fasta_s, meta_h, fasta_h -> [ [id:meta_h.id], fasta_s, fasta_h ]}
                     .set{ stats_trio_input_ch }
-    
+        
         //
-        // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR PAT/MAT ASSEMBLY
+        // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR TRIO ASSEMBLY
         //
         GENOME_STATISTICS_SCAFFOLDS_TRIO( stats_trio_input_ch, 
                        PREPARE_INPUT.out.busco,
                        GENOMESCOPE_MODEL.out.hist,
                        GENOMESCOPE_MODEL.out.ktab,
-                       [],
-                       [],
+                       fastk_pktab,
+                       phapktab_ch,
+                       fastk_mktab,
+                       mhapktab_ch,
                        set_busco_alts
     )
 
