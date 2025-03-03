@@ -95,7 +95,7 @@ workflow GENOME_STATISTICS {
         //
         // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
         //
-        MERQURYFK_MERQURYFK ( ch_merq )
+        MERQURYFK_MERQURYFK ( ch_merq, [], [], [], [])
     }
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
