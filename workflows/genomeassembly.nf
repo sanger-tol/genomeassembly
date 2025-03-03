@@ -242,57 +242,59 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
     //
-    PURGE_DUPS( purge_dups_input )
-    ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
+    if ( !hifiasm_trio_on ) {
+        PURGE_DUPS( purge_dups_input )
+        ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
 
-    //
-    // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL
-    //
-    PURGE_DUPS.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
-                          .set{ primary_contigs_ch }
+        //
+        // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL
+        //
+        PURGE_DUPS.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
+                            .set{ primary_contigs_ch }
+        
+        //
+        // LOGIC: SET APART THE HAPLOTIGS AFTER PURGING AND THE HIFIASM HAPLOTIGS
+        //
+        haplotigs_ch.combine( PURGE_DUPS.out.alt )
+                        .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
+                        .set{ haplotigs_to_merge }
+        
+        //
+        // MODULE: COMBINE PURGED SEQUENCES WITH THE ORIGINAL HAPLOTIGS
+        //
+        CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
+        haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
+
+        //
+        // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
+        //
+        GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch), 
+                        PREPARE_INPUT.out.busco,
+                        GENOMESCOPE_MODEL.out.hist,
+                        GENOMESCOPE_MODEL.out.ktab,
+                        [],
+                        [],
+                        [],
+                        [],
+                        unset_busco_alts
+        )
     
-    //
-    // LOGIC: SET APART THE HAPLOTIGS AFTER PURGING AND THE HIFIASM HAPLOTIGS
-    //
-    haplotigs_ch.combine( PURGE_DUPS.out.alt )
-                    .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
-                    .set{ haplotigs_to_merge }
-    
-    //
-    // MODULE: COMBINE PURGED SEQUENCES WITH THE ORIGINAL HAPLOTIGS
-    //
-    CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
-    haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
+        //
+        // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS 
+        //
+        PURGE_DUPS.out.pri.join(haplotigs_ch)
+                            .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
+                            .set{ purged_pri_alt_ch }
+        //
+        // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
+        //
+        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
 
-    //
-    // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
-    //
-    GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch), 
-                       PREPARE_INPUT.out.busco,
-                       GENOMESCOPE_MODEL.out.hist,
-                       GENOMESCOPE_MODEL.out.ktab,
-                       [],
-                       [],
-                       [],
-                       [],
-                       unset_busco_alts
-    )
-   
-    //
-    // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS 
-    //
-    PURGE_DUPS.out.pri.join(haplotigs_ch)
-                        .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
-                        .set{ purged_pri_alt_ch }
-    //
-    // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
-    //
-    CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-
-    //
-    // LOGIC: DEFINE MERGED ASSEMBLY
-    //
-    merged_pri_alt = CAT_CAT_PURGEDUPS.out.file_out
+        //
+        // LOGIC: DEFINE MERGED ASSEMBLY
+        //
+        merged_pri_alt = CAT_CAT_PURGEDUPS.out.file_out
+    }
 
     if ( polishing_on ) {
         //
