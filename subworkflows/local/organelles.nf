@@ -19,6 +19,7 @@ workflow ORGANELLES {
     // LOGIC: SEPARATE INPUT INTO CHANNELS
     //
     mito_info.map{ species, min_length, code, email, fam -> [[min_length: min_length], species]}.set{species}
+    mito_info.map{ species, min_length, code, email, fam -> code}.set{code}
 
     //
     // MODULE: DOWNLOAD REFERENCE ORGANELLE ASSEMBLY
