@@ -133,13 +133,13 @@
                     },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
-                        "git_sha": "f52220e84bfc16a8616a5bb3d6f5bc67d601bdce",
+                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/mitohifi/findmitoreference/mitohifi-findmitoreference.diff"
                     },
                     "mitohifi/mitohifi": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
                         "installed_by": ["modules"]
                     },
                     "oatk": {
