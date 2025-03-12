@@ -26,7 +26,7 @@ workflow PREPARE_INPUT {
     ymlfile.multiMap{ data -> 
         dataset : (data.dataset ? data.dataset : []) 
         busco : (data.busco ? data.busco : [])
-        mito: ( data.mito ? ['\"'+data.mito.species+'\"', data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? file(data.mito.fam, checkIfExists: true) : [] ] : [])
+        mito: ( data.mito ? [data.mito.species, data.mito.min_length, data.mito.code, data.mito.email ? data.mito.email : "\"\"", data.mito.fam ? file(data.mito.fam, checkIfExists: true) : [] ] : [])
         plastid : ( data.plastid ? ( data.plastid.fam ? file(data.plastid.fam, checkIfExists: true) : [] ) : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
         hic_aligner : (data.hic_aligner ? data.hic_aligner :[])
