@@ -1,0 +1,18 @@
+Changes in component 'nf-core/minimap2/index'
+Changes in 'minimap2/index/environment.yml':
+--- modules/nf-core/minimap2/index/environment.yml
++++ modules/nf-core/minimap2/index/environment.yml
+@@ -2,6 +2,5 @@
+ channels:
+   - conda-forge
+   - bioconda
+-  - defaults
+ dependencies:
+   - bioconda::minimap2=2.28
+
+'modules/nf-core/minimap2/index/meta.yml' is unchanged
+'modules/nf-core/minimap2/index/main.nf' is unchanged
+'modules/nf-core/minimap2/index/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/minimap2/index/tests/tags.yml' is unchanged
+'modules/nf-core/minimap2/index/tests/main.nf.test' is unchanged
+************************************************************

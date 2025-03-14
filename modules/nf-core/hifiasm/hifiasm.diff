@@ -1,7 +1,21 @@
-Changes in module 'nf-core/hifiasm'
+Changes in component 'nf-core/hifiasm'
+Changes in 'hifiasm/environment.yml':
+--- modules/nf-core/hifiasm/environment.yml
++++ modules/nf-core/hifiasm/environment.yml
+@@ -2,6 +2,6 @@
+ channels:
+   - conda-forge
+   - bioconda
+-  - defaults
+ dependencies:
+   - bioconda::hifiasm=0.19.8
++  - bioconda::samtools=1.20
+
+'modules/nf-core/hifiasm/meta.yml' is unchanged
+Changes in 'hifiasm/main.nf':
 --- modules/nf-core/hifiasm/main.nf
 +++ modules/nf-core/hifiasm/main.nf
-@@ -2,10 +2,11 @@
+@@ -2,10 +2,7 @@
      tag "$meta.id"
      label 'process_high'
  
@@ -9,15 +23,11 @@ Changes in module 'nf-core/hifiasm'
 -    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
 -        'https://depot.galaxyproject.org/singularity/hifiasm:0.19.8--h43eeafb_0' :
 -        'biocontainers/hifiasm:0.19.8--h43eeafb_0' }"
-+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-+        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
-+    }
-+
 +    container "quay.io/sanger-tol/hifiasm_samtools:0.01"
  
      input:
      tuple val(meta), path(reads)
-@@ -13,6 +14,7 @@
+@@ -13,6 +10,7 @@
      path  maternal_kmer_dump
      path  hic_read1
      path  hic_read2
@@ -25,7 +35,7 @@ Changes in module 'nf-core/hifiasm'
  
      output:
      tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
-@@ -23,8 +25,12 @@
+@@ -23,8 +21,12 @@
      tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
      tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
      tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
@@ -40,8 +50,14 @@ Changes in module 'nf-core/hifiasm'
      tuple val(meta), path("*.log")             , emit: log
      path  "versions.yml"                       , emit: versions
  
-@@ -34,6 +40,8 @@
+@@ -32,8 +34,14 @@
+     task.ext.when == null || task.ext.when
+ 
      script:
++    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
++        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
++    }
++    
      def args = task.ext.args ?: ''
      def prefix = task.ext.prefix ?: "${meta.id}"
 +    def hic_read1 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done" : ""
@@ -60,16 +76,5 @@ Changes in module 'nf-core/hifiasm'
              $reads \\
              2> >( tee ${prefix}.stderr.log >&2 )
  
-
---- modules/nf-core/hifiasm/environment.yml
-+++ /dev/null
-@@ -1,7 +0,0 @@
--name: hifiasm
--channels:
--  - conda-forge
--  - bioconda
--  - defaults
--dependencies:
--  - bioconda::hifiasm=0.19.8
 
 ************************************************************

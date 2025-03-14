@@ -2,10 +2,6 @@ process HIFIASM {
     tag "$meta.id"
     label 'process_high'
 
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
-
     container "quay.io/sanger-tol/hifiasm_samtools:0.01"
 
     input:
@@ -38,6 +34,10 @@ process HIFIASM {
     task.ext.when == null || task.ext.when
 
     script:
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def hic_read1 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done" : ""

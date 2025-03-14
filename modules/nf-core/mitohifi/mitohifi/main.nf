@@ -4,12 +4,13 @@ process MITOHIFI_MITOHIFI {
 
 
     // Docker image available at the project github repository
-    container 'ghcr.io/marcelauliano/mitohifi:master'
+    container 'ghcr.io/marcelauliano/mitohifi:3.2.3'
 
     input:
     tuple val(meta), path(input)
     path ref_fa
     path ref_gb
+    val input_mode
     val mito_code
 
     output:
@@ -37,35 +38,38 @@ process MITOHIFI_MITOHIFI {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "MitoHiFi module does not support Conda. Please use Docker / Singularity instead."
+        error "MitoHiFi module does not support Conda. Please use Docker / Singularity instead."
     }
 
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
-    def script_input = args2.equals("-r") ? "-r ${input}" :
-                args2.equals("-c") ? "-c ${input}" :
-                exit("-r for reads or -c for contigs must be specified")
+    if (! ["c", "r"].contains(input_mode)) {
+        error "r for reads or c for contigs must be specified"
+    }
+    def VERSION = '3.2.3' // WARN: Incorrect version information is provided by tool on CLI. Please update this string when bumping container versions.
     """
-    mitohifi.py ${script_input} \\
+    mitohifi.py -${input_mode} ${input} \\
         -f ${ref_fa} \\
         -g ${ref_gb} \\
         -o ${mito_code} \\
         -t $task.cpus ${args}
+
+    ## old version command: \$(mitohifi.py -v | sed 's/.* //')
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//' )
+        mitohifi: ${VERSION}
     END_VERSIONS
     """
 
     stub:
+    def VERSION = '3.2.3' // WARN: Incorrect version information is provided by tool on CLI. Please update this string when bumping container versions.
     """
     touch final_mitogenome.fasta
-    touch final_mitogenome.fasta
+    touch final_mitogenome.gb
     touch contigs_stats.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        mitohifi: \$( mitohifi.py --version 2>&1 | head -n1 | sed 's/^.*MitoHiFi //; s/ .*\$//')
+        mitohifi: ${VERSION}
     END_VERSIONS
     """
 }

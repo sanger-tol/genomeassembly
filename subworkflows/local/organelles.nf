@@ -18,15 +18,13 @@ workflow ORGANELLES {
     //
     // LOGIC: SEPARATE INPUT INTO CHANNELS
     //
-    mito_info.map{ species, min_length, code, email, fam -> species}.set{species}
-    mito_info.map{ species, min_length, code, email, fam -> min_length}.set{min_length}
+    mito_info.map{ species, min_length, code, email, fam -> [[min_length: min_length], species]}.set{species}
     mito_info.map{ species, min_length, code, email, fam -> code}.set{code}
-    mito_info.map{ species, min_length, code, email, fam -> email}.set{email}
 
     //
     // MODULE: DOWNLOAD REFERENCE ORGANELLE ASSEMBLY
     //
-    MITOHIFI_FINDMITOREFERENCE(species, email, min_length)
+    MITOHIFI_FINDMITOREFERENCE(species)
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
         
     //
@@ -35,6 +33,7 @@ workflow ORGANELLES {
     MITOHIFI_MITOHIFI_READS( reads_input, 
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   "r",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
 
@@ -44,6 +43,7 @@ workflow ORGANELLES {
     MITOHIFI_MITOHIFI_CONTIGS( contigs_input, 
                    MITOHIFI_FINDMITOREFERENCE.out.fasta,
                    MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   "c",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
 

@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install editorconfig-checker
-        run: npm install -g editorconfig-checker
+        run: npm install -g editorconfig-checker@3.0.2
 
       - name: Run ECLint check
         run: editorconfig-checker -exclude README.md $(find .* -type f | grep -v '.git\|.py\|.md\|cff\|json\|yml\|yaml\|html\|css\|work\|.nextflow\|build\|nf_core.egg-info\|log.txt\|Makefile\|drawio')
@@ -99,7 +99,7 @@ jobs:
 
       - name: Upload linting log file artifact
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linting-logs
           path: |

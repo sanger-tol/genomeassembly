@@ -128,23 +128,23 @@
                     "minimap2/index": {
                         "branch": "master",
                         "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/minimap2/index/minimap2-index.diff"
                     },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
-                        "git_sha": "f52220e84bfc16a8616a5bb3d6f5bc67d601bdce",
+                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/mitohifi/findmitoreference/mitohifi-findmitoreference.diff"
                     },
                     "mitohifi/mitohifi": {
                         "branch": "master",
-                        "git_sha": "c607e74f7aa72eb7cb7cc0a1454f97d3907e8d84",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/mitohifi/mitohifi/mitohifi-mitohifi.diff"
+                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
+                        "installed_by": ["modules"]
                     },
                     "oatk": {
                         "branch": "master",
-                        "git_sha": "d6a146325058eb9a18da2e898a2376e1d1093052",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },
                     "pretextmap": {
