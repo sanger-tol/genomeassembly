@@ -11,11 +11,6 @@ dataset:
   HiC:
     reads:
       - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/hic-arima2/35528_4#7.cram
-  trio:
-    matreads:
-      - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz
-    patreads:
-      - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_2.fastq.gz
 hic_motif: GATC,GANTC,CTNAG,TTAA
 hic_aligner: minimap2
 busco:

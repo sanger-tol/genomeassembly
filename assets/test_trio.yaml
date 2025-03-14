@@ -15,10 +15,3 @@ hic_motif: GATC
 hic_aligner: bwamem2
 busco:
   lineage: actinopterygii_odb10
-mito:
-  species: Acipenser ruthenus
-  min_length: 15000
-  code: 5
-  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/actinopterygii_mito.fam
-plastid:
-  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam

@@ -1,5 +1,5 @@
 
-process HAPMAKER {
+process MERQURYFK_HAPMAKER {
     tag "$meta.id"
     label 'process_low'
 
@@ -26,7 +26,7 @@ process HAPMAKER {
     def child_ktab = childktab ? "${childktab.find{ it.toString().endsWith(".ktab") }}" : ''
     def HAPmaker_VERSION = '1.2'
     """
-    HAPmaker $args -T$task.cpus ${mat_ktab} ${pat_ktab} ${child_ktab} 2>hapmaker.log
+    HAPmaker $args -T$task.cpus ${mat_ktab} ${pat_ktab} ${child_ktab}
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         HAPmaker: $HAPmaker_VERSION

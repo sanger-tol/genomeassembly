@@ -2,7 +2,7 @@ include { FASTK_FASTK as FASTK_PAT   } from "../../modules/nf-core/fastk/fastk/m
 include { FASTK_FASTK as FASTK_MAT   } from "../../modules/nf-core/fastk/fastk/main"
 include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
 include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
-include { HAPMAKER         } from "../../modules/local/hapmaker"
+include { MERQURYFK_HAPMAKER         } from "../../modules/local/hapmaker"
 
 workflow TRIO_MODE {
 
@@ -31,14 +31,14 @@ workflow TRIO_MODE {
     ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
     ch_versions = ch_versions.mix(FASTK_MAT.out.versions)
 
-    HAPMAKER( matktab_ch, patktab_ch, childktab_ch ) 
+    MERQURYFK_HAPMAKER( matktab_ch, patktab_ch, childktab_ch ) 
 
-    HAPMAKER.out.pathap_ktab
+    MERQURYFK_HAPMAKER.out.pathap_ktab
     .combine( patktab_ch )
     .map{ hapmeta, pathapktabs, fastkmeta, patktabs -> [hapmeta, pathapktabs, patktabs] }
     .set{pathap_ch}
 
-    HAPMAKER.out.mathap_ktab
+    MERQURYFK_HAPMAKER.out.mathap_ktab
     .combine( matktab_ch )
     .map{ hapmeta, mathapktabs, fastkmeta, matktabs -> [hapmeta, mathapktabs, matktabs] }
     .set{mathap_ch}
