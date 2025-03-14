@@ -2,7 +2,7 @@ include { FASTK_FASTK as FASTK_PAT   } from "../../modules/nf-core/fastk/fastk/m
 include { FASTK_FASTK as FASTK_MAT   } from "../../modules/nf-core/fastk/fastk/main"
 include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
 include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
-include { MERQURYFK_HAPMAKER         } from "../../modules/local/hapmaker"
+include { MERQURYFK_HAPMAKER         } from "../../modules/local/merquryfk_hapmaker"
 
 workflow TRIO_MODE {
 
