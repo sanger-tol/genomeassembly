@@ -43,7 +43,6 @@ workflow RAW_ASSEMBLY {
     //
     if ( hifiasm_hic_on ) {
 
-        println "hic on"
         //
         // MODULE: RUN HIFIASM IN HIC MODE
         //
@@ -62,7 +61,6 @@ workflow RAW_ASSEMBLY {
 
     if ( hifiasm_trio_on ) {
 
-        println "trio on"
         //
         // MODULE: RUN HIFIASM IN HIC MODE
         //
