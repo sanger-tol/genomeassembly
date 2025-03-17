@@ -13,5 +13,10 @@ dataset:
       - /lustre/scratch123/tol/teams/tola/users/yy5/trio_data/fAciRut/fAciRut1_pat.fastq.gz
 hic_motif: GATC
 hic_aligner: bwamem2
+mito:
+  species: Caradrina clavipalpis
+  min_length: 15000
+  code: 5
+  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
 busco:
   lineage: actinopterygii_odb10
