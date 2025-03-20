@@ -15,11 +15,15 @@ include { MERQURYFK_MERQURYFK       } from '../../modules/nf-core/merquryfk/merq
 
 workflow GENOME_STATISTICS {
     take:
-    assembly               // channel: [ meta, primary, haplotigs ]
-    lineage                // channel: [ meta, /path/to/buscoDB, lineage ] 
-    hist                   // channel: [meta, fastk_hist files]
-    ktab                   // channel: [meta, fastk_ktab files]
-    busco_alt              // channel: true/false
+    assembly                  // channel: [ meta, primary, haplotigs ]
+    lineage                   // channel: [ meta, /path/to/buscoDB, lineage ] 
+    hist                      // channel: [meta, fastk_hist files]
+    ktab                      // channel: [fastk_ktab files]
+    fastk_pktab               // channel: [fk_pat_ktab files] it is one argument for merquryFK trio case
+    phapktab                  // channel: [hapmer files]
+    fastk_mktab               // channel: [fk_mat_ktab files] it is one argument for merquryFK trio case
+    mhapktab                  // channel: [hapmer files]
+    busco_alt                 // channel: true/false
 
     main:
     ch_versions = Channel.empty()
@@ -71,19 +75,28 @@ workflow GENOME_STATISTICS {
                 [] )
     }
 
-    //
-    // LOGIC: JOIN ASSEMBLY AND KMER DATABASE INPUT
-    //
-    hist.join(ktab).join(assembly)
-                    .map{ meta, hist, ktab, primary, hap -> 
-                            hap.size() ? [ meta, hist, ktab, primary, hap ] :
-                                [ meta, hist, ktab, primary, [] ] } 
-                    .set{ ch_merq }
-    
-    //
-    // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
-    //
-    MERQURYFK_MERQURYFK ( ch_merq )
+    if (params.hifiasm_trio_on) {
+
+        hist.join(ktab).join(assembly)
+                       .set{ ch_merq }
+        MERQURYFK_MERQURYFK ( ch_merq, fastk_pktab, phapktab, fastk_mktab, mhapktab )
+
+    }
+    else{
+        //
+        // LOGIC: JOIN ASSEMBLY AND KMER DATABASE INPUT
+        //
+        hist.join(ktab).join(assembly)
+                        .map{ meta, hist, ktab, primary, hap -> 
+                                hap.size() ? [ meta, hist, ktab, primary, hap ] :
+                                    [ meta, hist, ktab, primary, [] ] } 
+                        .set{ ch_merq }
+        
+        //
+        // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
+        //
+        MERQURYFK_MERQURYFK ( ch_merq, [], [], [], [])
+    }
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:

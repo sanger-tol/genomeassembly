@@ -1,8 +1,7 @@
-include { MITOHIFI_FINDMITOREFERENCE    } from '../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS       } from '../../modules/nf-core/mitohifi/mitohifi/main'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS     } from '../../modules/nf-core/mitohifi/mitohifi/main'
-
-include { OATK                          } from '../../modules/nf-core/oatk/main'
+include { MITOHIFI_FINDMITOREFERENCE                     } from '../../modules/nf-core/mitohifi/findmitoreference/main'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS   } from '../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS } from '../../modules/nf-core/mitohifi/mitohifi/main'
+include { OATK                                           } from '../../modules/nf-core/oatk/main'
 
 
 workflow ORGANELLES {
@@ -26,13 +25,19 @@ workflow ORGANELLES {
     //
     MITOHIFI_FINDMITOREFERENCE(species)
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
-        
+
+    ref_fasta = MITOHIFI_FINDMITOREFERENCE.out.fasta
+        | map { meta, fasta -> fasta }
+
+    ref_gb = MITOHIFI_FINDMITOREFERENCE.out.gb
+        | map { meta, gb -> gb }
+
     //
     // MODULE: IDENTIFY ORGANELLE IN THE READS DATASET
     //
     MITOHIFI_MITOHIFI_READS( reads_input, 
-                   MITOHIFI_FINDMITOREFERENCE.out.fasta,
-                   MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   ref_fasta,
+                   ref_gb,
                    "r",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
@@ -41,8 +46,8 @@ workflow ORGANELLES {
     // MODULE: IDENTIFY ORGANELLE IN THE ASSEMBLY DATASET
     //
     MITOHIFI_MITOHIFI_CONTIGS( contigs_input, 
-                   MITOHIFI_FINDMITOREFERENCE.out.fasta,
-                   MITOHIFI_FINDMITOREFERENCE.out.gb,
+                   ref_fasta,
+                   ref_gb,
                    "c",
                    code)    
     ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())

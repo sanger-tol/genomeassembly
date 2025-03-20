@@ -116,8 +116,9 @@
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
-                        "installed_by": ["modules"]
+                        "git_sha": "95f7516731f960e86bff900b9f1d80a8904bffd8",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/merquryfk/merquryfk/merquryfk-merquryfk.diff"
                     },
                     "minimap2/align": {
                         "branch": "master",
@@ -154,7 +155,7 @@
                     },
                     "pretextsnapshot": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/pretextsnapshot/pretextsnapshot.diff"
                     },
@@ -248,6 +249,11 @@
                     "yahs": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "installed_by": ["modules"]
+                    },
+                    "yak/count": {
+                        "branch": "master",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules"]
                     }
                 }

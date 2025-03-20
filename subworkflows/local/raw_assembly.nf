@@ -1,16 +1,22 @@
 include { HIFIASM as HIFIASM_PRI                } from '../../modules/nf-core/hifiasm/main'
 include { HIFIASM as HIFIASM_HIC                } from '../../modules/nf-core/hifiasm/main'
+include { HIFIASM as HIFIASM_TRIO               } from '../../modules/nf-core/hifiasm/main'
 
 include { GFA_TO_FASTA as GFA_TO_FASTA_PRI      } from '../../modules/local/gfa_to_fasta'
 include { GFA_TO_FASTA as GFA_TO_FASTA_ALT      } from '../../modules/local/gfa_to_fasta'
-include { GFA_TO_FASTA as GFA_TO_FASTA_HAP1_HIC  } from '../../modules/local/gfa_to_fasta'
-include { GFA_TO_FASTA as GFA_TO_FASTA_HAP2_HIC  } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_HAP1_HIC } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_HAP2_HIC } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_PAT  } from '../../modules/local/gfa_to_fasta'
+include { GFA_TO_FASTA as GFA_TO_FASTA_MAT  } from '../../modules/local/gfa_to_fasta'
 
 workflow RAW_ASSEMBLY {
     take:
     hifi_reads // channel: [ val(meta), [ datafile ] ]
     hic_reads // channel: [ datafile ] 
     hifiasm_hic_on // val: True/False
+    hifiasm_trio_on // val: True/False
+    matdb
+    patdb
 
     main:
     ch_versions = Channel.empty()
@@ -36,6 +42,7 @@ workflow RAW_ASSEMBLY {
     // LOGIC: IF FLAG SWITCHED ON RUN HIFIASM IN HIC MODE
     //
     if ( hifiasm_hic_on ) {
+
         //
         // MODULE: RUN HIFIASM IN HIC MODE
         //
@@ -52,11 +59,31 @@ workflow RAW_ASSEMBLY {
         GFA_TO_FASTA_HAP2_HIC( HIFIASM_HIC.out.hap2_contigs )
     }
 
+    if ( hifiasm_trio_on ) {
+
+        //
+        // MODULE: RUN HIFIASM IN HIC MODE
+        //
+        HIFIASM_TRIO(hifi_reads, patdb, matdb, [], [], [])
+        
+        //
+        // MODULE: CONVERT HIFIASM PATERNAL CONTIGS TO FASTA
+        //
+        GFA_TO_FASTA_PAT( HIFIASM_TRIO.out.paternal_contigs)
+        
+        //
+        // MODULE: CONVERT HIFIASM MATERNAL CONTIGS TO FASTA
+        //
+        GFA_TO_FASTA_MAT( HIFIASM_TRIO.out.maternal_contigs )
+    }
+
     emit:
     primary_contigs = GFA_TO_FASTA_PRI.out.fasta
     alternate_contigs = GFA_TO_FASTA_ALT.out.fasta
     hap1_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_HAP1_HIC.out.fasta : null
     hap2_hic_contigs = hifiasm_hic_on ? GFA_TO_FASTA_HAP2_HIC.out.fasta : null
+    pat_contigs = hifiasm_trio_on ? GFA_TO_FASTA_PAT.out.fasta : null
+    mat_contigs = hifiasm_trio_on ? GFA_TO_FASTA_MAT.out.fasta : null
 
     versions = ch_versions
 }

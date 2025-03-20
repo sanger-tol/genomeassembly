@@ -30,6 +30,7 @@ workflow PREPARE_INPUT {
         plastid : ( data.plastid ? ( data.plastid.fam ? file(data.plastid.fam, checkIfExists: true) : [] ) : [])
         hic_motif : (data.hic_motif ? data.hic_motif : [])
         hic_aligner : (data.hic_aligner ? data.hic_aligner :[])
+        trio : (data.trio ? data.trio:[])
     }
     .set{ ch_yml_data }
 
@@ -49,6 +50,13 @@ workflow PREPARE_INPUT {
             hic_ch: ( data.HiC ? [ [id: data.id ],  
                                     data.HiC.reads.collect { file( it.reads, checkIfExists: true )}] 
                         : [])
+            matreads_ch: (data.trio?.matreads ? [[id: data.id],
+                                    data.trio.matreads.collect { file(it, checkIfExists: true) }] 
+                        : [[id: data.id], []])
+            patreads_ch: (data.trio?.patreads ? [ [id: data.id],
+                                    data.trio.patreads.collect { file(it, checkIfExists: true) }] 
+                        : [[id: data.id], []])
+            trio_mode: ( data.trio ? "trio" : "non_trio" )
         }
         .set{ dataset_ch }
 
@@ -74,8 +82,11 @@ workflow PREPARE_INPUT {
 
     hic            = hic_ch
     hifi           = dataset_ch.pacbio_ch
+    matreads       = dataset_ch.matreads_ch
+    patreads       = dataset_ch.patreads_ch
     illumina_10X   = dataset_ch.illumina_10X_ch
     busco          = busco_ch
+    trio_flag_ch   = dataset_ch.trio_mode
     mito           = ch_yml_data.mito 
     plastid        = ch_yml_data.plastid
     versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
