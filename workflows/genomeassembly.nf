@@ -1,46 +1,9 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
-
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input YAML not specified!' }
-
-if (params.bed_chunks_polishing) { bed_chunks_polishing = params.bed_chunks_polishing } else { bed_chunks_polishing = 100; }
-
-if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
-
-if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
-if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
-if (params.hifiasm_trio_on) { hifiasm_trio_on = params.hifiasm_trio_on } else { hifiasm_trio_on = false; }
-if (params.organelles_on) { organelles_on = params.organelles_on } else { organelles_on = false; }
-
-// Declare constants to toggle BUSCO for alts
-set_busco_alts = true
-unset_busco_alts = false
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
 include { PREPARE_INPUT                                         } from '../subworkflows/local/prepare_input'
 include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly' 
 include { ORGANELLES                                            } from '../subworkflows/local/organelles' 
@@ -67,11 +30,6 @@ include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS      } from '../subwo
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_HAPS } from '../subworkflows/local/genome_statistics'
 include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_TRIO } from '../subworkflows/local/genome_statistics'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
 include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_RAW                     } from "../modules/nf-core/cat/cat/main"
 include { CAT_CAT as CAT_CAT_HAPLOTIGS               } from "../modules/nf-core/cat/cat/main"
@@ -79,7 +37,9 @@ include { CAT_CAT as CAT_CAT_PURGEDUPS               } from "../modules/nf-core/
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
 include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS     } from '../modules/nf-core/seqtk/subseq/main'
 include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY       } from '../modules/nf-core/seqtk/subseq/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS                } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,9 +47,25 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS                } from '../modules/nf-core/
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Info required for completion email and summary
-
 workflow GENOMEASSEMBLY {
+
+    take:
+    ch_input // channel: samplesheet read in from --input
+    main:
+
+    // Check mandatory parameters
+    if (params.bed_chunks_polishing) { bed_chunks_polishing = params.bed_chunks_polishing } else { bed_chunks_polishing = 100; }
+
+    if (params.cool_bin) { cool_bin = params.cool_bin } else { cool_bin = 1000; }
+
+    if (params.polishing_on) { polishing_on = params.polishing_on } else { polishing_on = false; }
+    if (params.hifiasm_hic_on) { hifiasm_hic_on = params.hifiasm_hic_on } else { hifiasm_hic_on = false; }
+    if (params.hifiasm_trio_on) { hifiasm_trio_on = params.hifiasm_trio_on } else { hifiasm_trio_on = false; }
+    if (params.organelles_on) { organelles_on = params.organelles_on } else { organelles_on = false; }
+
+    // Declare constants to toggle BUSCO for alts
+    set_busco_alts = true
+    unset_busco_alts = false
 
     ch_versions = Channel.empty()
 
@@ -524,28 +500,20 @@ workflow GENOMEASSEMBLY {
 
     }
 
+    // Collate and save software versions
     //
-    // MODULE: Collate versions.yml file
-    //
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
-}
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name:  'genomeassembly_software_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    COMPLETION EMAIL AND SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
 
-workflow.onComplete {
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, null)
-    }
-    NfcoreTemplate.summary(workflow, params, log)
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
+    emit:
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
 }
 
 /*
