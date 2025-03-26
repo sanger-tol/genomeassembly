@@ -10,7 +10,7 @@
 //
 include { CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT    } from '../../modules/local/cram_filter_minimap2_filter5end_fixmate_sort'
 include { SAMTOOLS_MERGE                                  } from '../../modules/nf-core/samtools/merge/main'
-include { MINIMAP2_INDEX                                   } from '../../modules/nf-core/minimap2/index/main'
+include { MINIMAP2_INDEX                                  } from '../../modules/nf-core/minimap2/index/main'
 
 
 workflow HIC_MINIMAP2 {
@@ -86,5 +86,5 @@ workflow HIC_MINIMAP2 {
 
     emit:
     mappedbams          = collected_files_for_merge
-    versions            = ch_versions.ifEmpty(null)
+    versions            = ch_versions
 }

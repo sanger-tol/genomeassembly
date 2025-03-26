@@ -137,5 +137,5 @@ workflow SCAFFOLDING {
     emit:
     fasta = YAHS.out.scaffolds_fasta
 
-    versions = ch_versions.ifEmpty(null)
+    versions = ch_versions
 }

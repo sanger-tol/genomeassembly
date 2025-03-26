@@ -76,5 +76,5 @@ workflow HIC_BWAMEM2 {
 
     emit:
     mappedbams           = collected_files_for_merge
-    versions            = ch_versions.ifEmpty(null)
+    versions            = ch_versions
 }

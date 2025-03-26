@@ -475,6 +475,7 @@ workflow GENOMEASSEMBLY {
 
     }
 
+    //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)

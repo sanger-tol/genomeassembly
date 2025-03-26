@@ -180,5 +180,5 @@ workflow POLISHING {
 
     emit:
     fasta = BCFTOOLS_CONSENSUS.out.fasta
-    versions = ch_versions.ifEmpty(null)
+    versions = ch_versions
 }

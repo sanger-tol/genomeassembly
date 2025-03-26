@@ -89,7 +89,7 @@ workflow PREPARE_INPUT {
     trio_flag_ch   = dataset_ch.trio_mode
     mito           = ch_yml_data.mito
     plastid        = ch_yml_data.plastid
-    versions       = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+    versions       = ch_versions // channel: [ versions.yml ]
 }
 
 
