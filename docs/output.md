@@ -25,16 +25,16 @@ Here the input YAML is being processed. This subworkflow generates the input cha
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>kmer/*ktab</code>
-    - kmer table file
-  - <code>kmer/*hist</code>
-    - kmer histogram file
-  - <code>kmer/*model.txt</code>
-    - genomescope model in text format
-  - <code>kmer/*[linear,log]_plot.png</code>
-    - genomescope kmer plots
-  
+
+- <code>kmer/\*ktab</code>
+  - kmer table file
+- <code>kmer/\*hist</code>
+  - kmer histogram file
+- <code>kmer/\*model.txt</code>
+  - genomescope model in text format
+- <code>kmer/\*[linear,log]\_plot.png</code>
+  - genomescope kmer plots
+
 </details>
 
 This subworkflow generates a KMER database and coverage model used in [PURGE_DUPS](#purge_dups) and [GENOME_STATISTICS](#genome_statistics) </p>
@@ -45,18 +45,18 @@ This subworkflow generates a KMER database and coverage model used in [PURGE_DUP
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>.\*hifiasm.\*/.*p_ctg.[g]fa</code>
-    - primary assembly in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html) 
-  - <code>.\*hifiasm.\*/.*a_ctg.[g]fa</code>
-    - haplotigs in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-  - <code>.\*hifiasm-hic.\*/.*hap1.p_ctg.[g]fa</code>
-    - fully phased hap1 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html) 
-  - <code>.\*hifiasm-hic.\*/.*hap2.p_ctg.[g]fa</code>
-    - fully phased hap2 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-  - <code>.\*hifiasm.\*/.*bin</code>
-    - internal binary hifiasm files; for more details refer [here](https://hifiasm.readthedocs.io/en/latest/faq.html#id12)
-  
+
+- <code>.\*hifiasm.\*/.\*p_ctg.[g]fa</code>
+  - primary assembly in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+- <code>.\*hifiasm.\*/.\*a_ctg.[g]fa</code>
+  - haplotigs in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+- <code>.\*hifiasm-hic.\*/.\*hap1.p_ctg.[g]fa</code>
+  - fully phased hap1 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+- <code>.\*hifiasm-hic.\*/.\*hap2.p_ctg.[g]fa</code>
+  - fully phased hap2 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+- <code>.\*hifiasm.\*/.\*bin</code>
+  - internal binary hifiasm files; for more details refer [here](https://hifiasm.readthedocs.io/en/latest/faq.html#id12)
+
 </details>
 
 This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the input HiFi reads then raw contigs are converted from GFA into FASTA format, this assembly is due to purging, polishing (optional) and scaffolding further down the pipeline.
@@ -67,13 +67,12 @@ This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the in
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>\*.hifiasm..\*/purged.fa</code>
-    - purged primary contigs
-  - <code>\*.hifiasm..\*/purged.htigs.fa</code>
-    - haplotigs after purging  
-  - other files from the purge_dups pipeline
-    - for details refer [here](https://github.com/dfguan/purge_dups)
+
+- <code>\*.hifiasm..\*/purged.fa</code>
+  - purged primary contigs
+- <code>\*.hifiasm..\*/purged.htigs.fa</code>
+  - haplotigs after purging
+- other files from the purge_dups pipeline - for details refer [here](https://github.com/dfguan/purge_dups)
 </details>
 
 Retained haplotype is identified in primary assembly. The alternate contigs are updated correspondingly.
@@ -88,15 +87,15 @@ The two haplotype assemblies produced by hifiasm in HiC mode are not purged.
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>\*.hifiasm..\*/polishing/.*consensus.fa</code>
-    - polished joined primary and haplotigs assembly
-  - <code>\*.hifiasm..\*/polishing/merged.vcf.gz</code>
-    - unfiltered variants
-  - <code>\*.hifiasm..\*/polishing/merged.vcf.gz.tbi</code>
-    - index file
-  - <code>\*.hifiasm..\*/polishing/refdata-*</code>
-    - Longranger assembly indices
+
+- <code>\*.hifiasm..\*/polishing/.\*consensus.fa</code>
+  - polished joined primary and haplotigs assembly
+- <code>\*.hifiasm..\*/polishing/merged.vcf.gz</code>
+  - unfiltered variants
+- <code>\*.hifiasm..\*/polishing/merged.vcf.gz.tbi</code>
+  - index file
+- <code>\*.hifiasm..\*/polishing/refdata-\*</code>
+  - Longranger assembly indices
 
 </details>
 
@@ -108,11 +107,10 @@ This subworkflow uses read mapping of the Illumina 10X short read data to fix sh
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.*_merged_sorted.bed</code>
-    - bed file obtained from merged mkdup bam
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.*mkdup.bam</code>
-    - final read mapping bam with mapped reads  
+
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*\_merged_sorted.bed</code>
+  - bed file obtained from merged mkdup bam
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*mkdup.bam</code> - final read mapping bam with mapped reads
 </details>
 
 This subworkflow implements alignment of the Illumina HiC short reads to the primary assembly. Uses [`CONVERT_STATS`](#convert_stats) as internal subworkflow to calculate read mapping stats.</p>
@@ -123,13 +121,12 @@ This subworkflow implements alignment of the Illumina HiC short reads to the pri
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.*.stats</code>
-    - output of samtools stats 
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.*.idxstats</code>
-    - output of samtools idxstats
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.*.flagstat</code>
-    - output of samtools flagstat  
+
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.stats</code>
+  - output of samtools stats
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.idxstats</code>
+  - output of samtools idxstats
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.flagstat</code> - output of samtools flagstat
 </details>
 
 This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](#hic_mapping) subworkflow.</p>
@@ -138,19 +135,19 @@ This subworkflow produces statistcs for a bam file containing read mapping. It i
 
 <details markdown="1">
   <summary>Output files</summary>
-  
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.fa</code>
-    - scaffolds in FASTA format
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.agp</code>
-    - coordinates of contigs relative to scaffolds
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/alignments_sorted.txt</code>
-    - Alignments for Juicer in text format
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/yahs_scaffolds.hic</code>
-    - Juicer HiC map
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/*cool</code>
-    - HiC map for cooler
-  - <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/*.FullMap.png</code>
-    - Pretext snapshot
+
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.fa</code>
+  - scaffolds in FASTA format
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.agp</code>
+  - coordinates of contigs relative to scaffolds
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/alignments_sorted.txt</code>
+  - Alignments for Juicer in text format
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/yahs_scaffolds.hic</code>
+  - Juicer HiC map
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/\*cool</code>
+  - HiC map for cooler
+- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/\*.FullMap.png</code>
+  - Pretext snapshot
 
 </details>
 The subworkflow performs scaffolding of the primary contigs using HiC mapping generated in [`HIC_MAPPING`](hic_mapping). It also performs some postprocessing steps such as generating cooler and pretext files</p>

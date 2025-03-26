@@ -19,7 +19,7 @@ workflow CONVERT_STATS {
     main:
     ch_versions = Channel.empty()
 
-    // 
+    //
     // MODULE: CONVERT BAM TO CRAM
     //
     SAMTOOLS_VIEW ( bam, fasta, [] )
@@ -30,7 +30,7 @@ workflow CONVERT_STATS {
     //
     SAMTOOLS_INDEX ( SAMTOOLS_VIEW.out.cram )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
-    
+
     //
     // LOGIC: COMBINE CRAM AND CRAI INTP ONE CHANNEL
     //

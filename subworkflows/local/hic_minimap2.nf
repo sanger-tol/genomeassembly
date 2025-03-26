@@ -18,14 +18,14 @@ workflow HIC_MINIMAP2 {
     take:
     reference_tuple     // Channel: tuple [ val(meta), path( file )      ]
     csv_ch
-    
+
     main:
     ch_versions         = Channel.empty()
     mappedbam_ch        = Channel.empty()
 
     //
-    // MODULE: generate minimap2 mmi file 
-    //       
+    // MODULE: generate minimap2 mmi file
+    //
     MINIMAP2_INDEX (
         reference_tuple
         )
@@ -33,7 +33,7 @@ workflow HIC_MINIMAP2 {
 
     //
     // LOGIC: generate input channel for mapping
-    // 
+    //
     csv_ch
         .splitCsv()
         .combine ( reference_tuple )
@@ -45,8 +45,8 @@ workflow HIC_MINIMAP2 {
                 file(cram_info[0]),
                 cram_info[1], // crai path
                 cram_info[2], // chunk starting position
-                cram_info[3], // chunk end position 
-                cram_info[4], // basename 
+                cram_info[3], // chunk end position
+                cram_info[4], // basename
                 cram_info[5], // the number of chunk
                 cram_info[6], // rgline
                 mmi_path.toString(),
@@ -57,7 +57,7 @@ workflow HIC_MINIMAP2 {
 
     //
     // MODULE: map hic reads by 10,000 container per time
-    // 
+    //
     CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT (
         ch_filtering_input
 

@@ -8,10 +8,10 @@ workflow TRIO_MODE {
 
     take:
     childktab_ch // [meta, [childreads]]
-    matreads  // [meta, [matreads]] 
+    matreads  // [meta, [matreads]]
     patreads  // [meta, [patreads]]
 
-    main: 
+    main:
     ch_versions = Channel.empty()
 
     //
@@ -23,15 +23,15 @@ workflow TRIO_MODE {
     FASTK_PAT.out.ktab.set{patktab_ch}
     ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
     ch_versions = ch_versions.mix(FASTK_PAT.out.versions)
-    
+
     YAK_COUNT_MAT(matreads)
-    matdb_ch = YAK_COUNT_MAT.out.yak 
+    matdb_ch = YAK_COUNT_MAT.out.yak
     FASTK_MAT(matreads)
     FASTK_MAT.out.ktab.set{matktab_ch}
     ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
     ch_versions = ch_versions.mix(FASTK_MAT.out.versions)
 
-    MERQURYFK_HAPMAKER( matktab_ch, patktab_ch, childktab_ch ) 
+    MERQURYFK_HAPMAKER( matktab_ch, patktab_ch, childktab_ch )
 
     MERQURYFK_HAPMAKER.out.pathap_ktab
     .combine( patktab_ch )
@@ -50,4 +50,3 @@ workflow TRIO_MODE {
     patdb = patdb_ch
     versions = ch_versions
 }
-

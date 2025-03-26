@@ -7,22 +7,22 @@ include { TRIO_MODE as TRIO_PROCESS  } from '../../subworkflows/local/trio_mode'
 workflow GENOMESCOPE_MODEL {
 
     take:
-    reads // [meta, [reads]] 
-    matreads // [meta, [matreads]] 
+    reads // [meta, [reads]]
+    matreads // [meta, [matreads]]
     patreads // [meta, [patreads]]
     trio_flag
 
-    main: 
+    main:
     ch_versions = Channel.empty()
     patdb_ch = Channel.empty()
     patktab_ch = Channel.empty()
-    
+
     //
     // MODULE: MERGE ALL READS IN ONE FILE
     //
     CAT_CAT_READS( reads )
     ch_versions = ch_versions.mix(CAT_CAT_READS.out.versions)
-    
+
     //
     // LOGIC: KEEP THE CORRECT EXTENSION
     //
@@ -74,8 +74,8 @@ workflow GENOMESCOPE_MODEL {
     TRIO_PROCESS (
         FASTK_FASTK.out.ktab,
         ch_trio_data.mat,
-        ch_trio_data.pat    
-    )    
+        ch_trio_data.pat
+    )
     ch_versions = ch_versions.mix(TRIO_PROCESS.out.versions)
 
     //
@@ -94,4 +94,3 @@ workflow GENOMESCOPE_MODEL {
     patdb = TRIO_PROCESS.out.patdb.ifEmpty( [] )
     versions = ch_versions
 }
-

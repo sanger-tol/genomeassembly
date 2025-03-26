@@ -12,7 +12,7 @@ include { GFA_TO_FASTA as GFA_TO_FASTA_MAT  } from '../../modules/local/gfa_to_f
 workflow RAW_ASSEMBLY {
     take:
     hifi_reads // channel: [ val(meta), [ datafile ] ]
-    hic_reads // channel: [ datafile ] 
+    hic_reads // channel: [ datafile ]
     hifiasm_hic_on // val: True/False
     hifiasm_trio_on // val: True/False
     matdb
@@ -21,7 +21,7 @@ workflow RAW_ASSEMBLY {
     main:
     ch_versions = Channel.empty()
 
-    // 
+    //
     // MODULE: RUN HIFIASM IN STANDARD WAY
     //
     HIFIASM_PRI(hifi_reads, [], [], [], [], [])
@@ -47,12 +47,12 @@ workflow RAW_ASSEMBLY {
         // MODULE: RUN HIFIASM IN HIC MODE
         //
         HIFIASM_HIC(hifi_reads, [], [], [], [], hic_reads)
-        
+
         //
         // MODULE: CONVERT HIFIASM-HIC PRIMARY CONTIGS TO FASTA
         //
         GFA_TO_FASTA_HAP1_HIC( HIFIASM_HIC.out.hap1_contigs )
-        
+
         //
         // MODULE: CONVERT HIFIASM-HIC ALT CONTIGS TO FASTA
         //
@@ -65,12 +65,12 @@ workflow RAW_ASSEMBLY {
         // MODULE: RUN HIFIASM IN HIC MODE
         //
         HIFIASM_TRIO(hifi_reads, patdb, matdb, [], [], [])
-        
+
         //
         // MODULE: CONVERT HIFIASM PATERNAL CONTIGS TO FASTA
         //
         GFA_TO_FASTA_PAT( HIFIASM_TRIO.out.paternal_contigs)
-        
+
         //
         // MODULE: CONVERT HIFIASM MATERNAL CONTIGS TO FASTA
         //

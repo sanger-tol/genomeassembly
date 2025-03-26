@@ -8,14 +8,15 @@
 
 <details markdown="1">
   <summary>Details</summary>
-  
+
 Workflow accepts the following parameters:
-* <code>input</code> - (required) YAML file containing description of the dataset, incl. ToLID, paths to the raw data etc.
-* <code>bed_chunks_polishing</code> - a number of chunks to split contigs for polishing (default 100)
-* <code>cool_bin</code> - a bin size for cooler (default 1000)
-* <code>organelles_on</code> - set <code>True</code> for running organelles subworkflow
-* <code>polishing_on</code> - set <code>True</code> for polishing
-* <code>hifiasm_hic_on</code> - set <code>True</code> to run of hifiasm in HiC mode
+
+- <code>input</code> - (required) YAML file containing description of the dataset, incl. ToLID, paths to the raw data etc.
+- <code>bed_chunks_polishing</code> - a number of chunks to split contigs for polishing (default 100)
+- <code>cool_bin</code> - a bin size for cooler (default 1000)
+- <code>organelles_on</code> - set <code>True</code> for running organelles subworkflow
+- <code>polishing_on</code> - set <code>True</code> for polishing
+- <code>hifiasm_hic_on</code> - set <code>True</code> to run of hifiasm in HiC mode
   <br>NB: hifiasm in the original mode is used as the main assembly even if the <code>hifiasm_hic_on</code> flag is set</br>
 
 </details>
@@ -53,8 +54,9 @@ BUSCO lineage, mitochondrial code etc. For more information see [Input YAML defi
 
 <details markdown="1">
   <summary>Details</summary>
-  
+
 Example is based on [test.yaml](../assets/test.yaml).
+
 ```yaml
 dataset:
   id: baUndUnlc1
@@ -81,6 +83,7 @@ mito:
 plastid:
   fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam
 ```
+
 </details>
 
 ## Extra installation procedures
