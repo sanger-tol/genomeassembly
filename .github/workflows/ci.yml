@@ -54,6 +54,10 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      - name: Set up nextflow secrets
+        run: |
+          nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
+
       - name: Set up Apptainer
         if: matrix.profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
