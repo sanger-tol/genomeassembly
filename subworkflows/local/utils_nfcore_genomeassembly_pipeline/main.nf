@@ -8,14 +8,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap        } from 'plugin/nf-schema'
+include { samplesheetToList       } from 'plugin/nf-schema'
+include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
+include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
+include { PREPARE_INPUT           } from '../prepare_input'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,32 +65,42 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // SUBWORKFLOW: READ IN YAML, VALIDATE AND PREPARE FOR FURTHER STEPS
     //
+    PREPARE_INPUT(input)
+    ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
 
-    Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+    //
+    // LOGIC: CREATE A VARIABLE SERVING AS AN ALIAS FOR HIFI READS CHANNEL
+    //
+    ch_hifi_reads = PREPARE_INPUT.out.hifi
+    ch_mat_reads  = PREPARE_INPUT.out.matreads
+    ch_pat_reads  = PREPARE_INPUT.out.patreads
+    ch_trio_flag  = PREPARE_INPUT.out.trio_flag_ch
+
+    //
+    // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
+    //
+    ch_hic          = PREPARE_INPUT.out.hic
+    ch_hic_reads    = PREPARE_INPUT.out.hic.map{ meta, reads, motif, hic_aligner -> reads }
+    ch_illumina_10x = PREPARE_INPUT.out.illumina_10X
+
+    ch_busco   = PREPARE_INPUT.out.busco
+    ch_mito    = PREPARE_INPUT.out.mito
+    ch_plastid = PREPARE_INPUT.out.plastid
 
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    hifi_reads   = ch_hifi_reads
+    hic          = ch_hic
+    hic_reads    = ch_hic_reads
+    mat_reads    = ch_mat_reads
+    pat_reads    = ch_pat_reads
+    illumina_10x = ch_illumina_10x
+    busco        = ch_busco
+    mito         = ch_mito
+    plastid      = ch_plastid
+    trio_flag    = ch_trio_flag
+    versions     = ch_versions
 }
 
 /*
@@ -219,4 +230,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-
