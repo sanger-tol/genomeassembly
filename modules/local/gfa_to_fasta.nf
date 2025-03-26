@@ -22,7 +22,7 @@ process GFA_TO_FASTA {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        GNU Awk: \$(echo \$(awk --version | head -n1 | cut -f3 -d' ' | sed 's/,//'))
+        gawk: \$(echo \$(awk --version | head -n1 | cut -f3 -d' ' | sed 's/,//'))
     END_VERSIONS
     """
 }

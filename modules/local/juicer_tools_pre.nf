@@ -30,7 +30,7 @@ process JUICER_TOOLS_PRE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        juicer tools: \$(java ${juicer_jvm_params} -jar ${projectDir}/bin/${juicer_tools_jar} -V | grep "Juicer Tools Version" | sed 's/Juicer Tools Version //')
+        juicer_tools: \$(java ${juicer_jvm_params} -jar ${projectDir}/bin/${juicer_tools_jar} -V | grep "Juicer Tools Version" | sed 's/Juicer Tools Version //')
     END_VERSIONS
     """
 }

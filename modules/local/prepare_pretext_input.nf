@@ -26,7 +26,7 @@ process PREPARE_PRETEXTMAP_INPUT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        GNU Awk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
+        gawk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
     END_VERSIONS
     """
 

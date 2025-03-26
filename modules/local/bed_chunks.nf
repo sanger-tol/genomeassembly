@@ -23,8 +23,8 @@ process BED_CHUNKS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        GNU Awk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
-        bed_chunks.sh: \$(bed_chunks.sh | tail -n 1 | cut -d' ' -f2)
+        gawk: \$(echo \$(awk --version 2>&1) | grep -i awk | sed 's/GNU Awk //; s/,.*//')
+        bed_chunks_sh: \$(bed_chunks.sh | tail -n 1 | cut -d' ' -f2)
     END_VERSIONS
     """
 }

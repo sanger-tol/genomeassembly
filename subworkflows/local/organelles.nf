@@ -42,7 +42,7 @@ workflow ORGANELLES {
         "r",
         code
     )
-    ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+    ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_READS.out.versions.first())
 
     //
     // MODULE: IDENTIFY ORGANELLE IN THE ASSEMBLY DATASET
@@ -54,7 +54,7 @@ workflow ORGANELLES {
         "c",
         code
     )
-    ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+    ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_CONTIGS.out.versions.first())
 
     //
     // LOGIC: PREPARE OATK INPUT

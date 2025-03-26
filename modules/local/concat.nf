@@ -22,7 +22,7 @@ process FASTA_CONCAT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        GNU coreutils: \$(cat --version | head -n 1 | awk '{print \$NF}')
+        gnutls: \$(cat --version | head -n 1 | awk '{print \$NF}')
     END_VERSIONS
     """
 }
