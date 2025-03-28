@@ -16,7 +16,7 @@ include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
-include { PREPARE_INPUT           } from '../prepare_input'
+include { READ_YAML               } from '../../../modules/local/read_yaml'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,37 +65,38 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // SUBWORKFLOW: READ IN YAML, VALIDATE AND PREPARE FOR FURTHER STEPS
+    // Module: Create channels from input file provided through params.input
     //
-    PREPARE_INPUT(input)
-    ch_versions = ch_versions.mix(PREPARE_INPUT.out.versions)
+    READ_YAML(input)
 
     //
-    // LOGIC: CREATE A VARIABLE SERVING AS AN ALIAS FOR HIFI READS CHANNEL
+    // LOGIC: Create channels for reads for raw assembly input
     //
-    ch_hifi_reads = PREPARE_INPUT.out.hifi
-    ch_mat_reads  = PREPARE_INPUT.out.matreads
-    ch_pat_reads  = PREPARE_INPUT.out.patreads
-    ch_trio_flag  = PREPARE_INPUT.out.trio_flag_ch
+    ch_hifi_reads = READ_YAML.out.pacbio_reads       | filter { !it[1].isEmpty() }
+    ch_ont_reads  = READ_YAML.out.ont_reads          | filter { !it[1].isEmpty() }
 
     //
-    // LOGIC: SEPARATE READS PATHS INTO A DIFFERENT CHANNEL
+    // LOGIC: Create channels for Illumina reads
     //
-    ch_hic          = PREPARE_INPUT.out.hic
-    ch_hic_reads    = PREPARE_INPUT.out.hic.map{ meta, reads, motif, hic_aligner -> reads }
-    ch_illumina_10x = PREPARE_INPUT.out.illumina_10X
+    ch_hic_reads  = READ_YAML.out.hic_reads          | filter { !it[1].isEmpty() }
+    ch_10x_reads  = READ_YAML.out.illumina_10x_reads | filter { !it[1].isEmpty() }
+    ch_mat_reads  = READ_YAML.out.maternal_reads     | filter { !it[1].isEmpty() }
+    ch_pat_reads  = READ_YAML.out.paternal_reads     | filter { !it[1].isEmpty() }
 
-    ch_busco   = PREPARE_INPUT.out.busco
-    ch_mito    = PREPARE_INPUT.out.mito
-    ch_plastid = PREPARE_INPUT.out.plastid
+    //
+    // LOGIC: Create channels for databases
+    //
+    ch_busco        = READ_YAML.out.busco_lineage
+    ch_oatk_mito    = READ_YAML.out.oatk_mito        | filter { !it.isEmpty() }
+    ch_oatk_plastid = READ_YAML.out.oatk_plastid     | filter { !it.isEmpty() }
 
     emit:
     hifi_reads   = ch_hifi_reads
-    hic          = ch_hic
+    ont_reads    = ch_ont_reads
     hic_reads    = ch_hic_reads
     mat_reads    = ch_mat_reads
     pat_reads    = ch_pat_reads
-    illumina_10x = ch_illumina_10x
+    illumina_10x = ch_10x_reads
     busco        = ch_busco
     mito         = ch_mito
     plastid      = ch_plastid

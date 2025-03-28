@@ -29,7 +29,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
     hifi_reads
-    hic
+    ont_reads
     hic_reads
     mat_reads
     pat_reads
@@ -37,7 +37,6 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     busco
     mito
     plastid
-    trio_flag
 
     main:
 
@@ -46,15 +45,14 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     //
     GENOMEASSEMBLY (
         hifi_reads,
-        hic,
+        ont_reads,
         hic_reads,
         mat_reads,
         pat_reads,
         illumina_10x,
         busco,
         mito,
-        plastid,
-        trio_flag
+        plastid
     )
 }
 /*
@@ -83,15 +81,14 @@ workflow {
     //
     SANGERTOL_GENOMEASSEMBLY (
         PIPELINE_INITIALISATION.out.hifi_reads,
-        PIPELINE_INITIALISATION.out.hic,
+        PIPELINE_INITIALISATION.out.ont_reads,
         PIPELINE_INITIALISATION.out.hic_reads,
         PIPELINE_INITIALISATION.out.mat_reads,
         PIPELINE_INITIALISATION.out.pat_reads,
         PIPELINE_INITIALISATION.out.illumina_10x,
         PIPELINE_INITIALISATION.out.busco,
         PIPELINE_INITIALISATION.out.mito,
-        PIPELINE_INITIALISATION.out.plastid,
-        PIPELINE_INITIALISATION.out.trio_flag,
+        PIPELINE_INITIALISATION.out.plastid
     )
     //
     // SUBWORKFLOW: Run completion tasks

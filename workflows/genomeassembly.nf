@@ -50,7 +50,7 @@ workflow GENOMEASSEMBLY {
 
     take:
     hifi_reads
-    hic
+    ont_reads
     hic_reads
     mat_reads
     pat_reads
@@ -58,7 +58,6 @@ workflow GENOMEASSEMBLY {
     busco
     mito
     plastid
-    trio_flag
 
     main:
 
