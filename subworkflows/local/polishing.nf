@@ -1,12 +1,12 @@
-include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/bcftools/view/main' 
-include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/bcftools/consensus/main' 
-include { BCFTOOLS_NORM                               } from '../../modules/nf-core/bcftools/norm/main' 
-include { BCFTOOLS_CONCAT                             } from '../../modules/nf-core/bcftools/concat/main' 
-include { BCFTOOLS_SORT                               } from '../../modules/nf-core/bcftools/sort/main'     
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/bcftools/index/main'     
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/bcftools/index/main'     
+include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/bcftools/view/main'
+include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/bcftools/consensus/main'
+include { BCFTOOLS_NORM                               } from '../../modules/nf-core/bcftools/norm/main'
+include { BCFTOOLS_CONCAT                             } from '../../modules/nf-core/bcftools/concat/main'
+include { BCFTOOLS_SORT                               } from '../../modules/nf-core/bcftools/sort/main'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/bcftools/index/main'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/bcftools/index/main'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-core/gatk4/mergevcfs/main'
-include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main' 
+include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main'
 
 include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
 include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
@@ -28,7 +28,7 @@ workflow POLISHING {
     fasta_in.map{ meta, fasta, fai -> [meta, fasta] }
             .set{ fasta_ch }
     //
-    // MODULE: GENERATE INDICES 
+    // MODULE: GENERATE INDICES
     //
     LONGRANGER_MKREF(fasta_ch)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
@@ -44,10 +44,10 @@ workflow POLISHING {
     //
     // Split genome into chunks
     fasta_in.map{ meta, fasta, fai -> [meta, fai] }
-           .set{chunks_ch}
+        .set{chunks_ch}
 
     //
-    // MODULE: SPLIT ASSEMBLY INTO CHUNKS 
+    // MODULE: SPLIT ASSEMBLY INTO CHUNKS
     //
     BED_CHUNKS (chunks_ch, bed_chunks_polishing)
     ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
@@ -62,12 +62,12 @@ workflow POLISHING {
     //
     LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
                             .set{ bam_ch }
-    
+
     //
     // LOGIC: CREATE DATA STRUCTURE FOR SCATTERING
     //
     intervals_freebayes = bam_ch.combine(intervals_structured)
-     .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
+        .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
 
     //
     // LOGIC: SEPARATE ASSEMBLY AND ITS INDEX INTO CHANNELS
@@ -100,9 +100,9 @@ workflow POLISHING {
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_FB.out.versions)
 
     //
-    // LOGIC: REFACTOR AND COMBINE VCF CHANNELS FOR FURTHER PROCESSING 
+    // LOGIC: REFACTOR AND COMBINE VCF CHANNELS FOR FURTHER PROCESSING
     //
-    FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]} 
+    FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
             .join(BCFTOOLS_INDEX_FB.out.tbi.map {meta, tbi -> [meta.id.toString(), tbi]})
             .map{ id, vcf, tbi -> [[ id: id.toString()+'_view'], vcf, tbi ]}
             .set{ input_view }
@@ -123,7 +123,7 @@ workflow POLISHING {
     //
     BCFTOOLS_SORT(input_sort)
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
-    
+
     //
     // LOGIC: SEPARATE META INTO CHANNEL
     //
@@ -145,7 +145,7 @@ workflow POLISHING {
         .combine(fasta_in)
         .map{ id_norm, vcf, tbi, meta, fasta, fai -> [meta, vcf, tbi] }
         .set{ input_norm }
-    
+
     //
     // LOGIC: CREATE CHANNEL FROM REFERENCE FILE AND META
     //
@@ -180,5 +180,5 @@ workflow POLISHING {
 
     emit:
     fasta = BCFTOOLS_CONSENSUS.out.fasta
-    versions = ch_versions.ifEmpty(null)
+    versions = ch_versions
 }

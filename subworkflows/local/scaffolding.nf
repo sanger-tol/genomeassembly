@@ -1,5 +1,5 @@
-include { COOLER_CLOAD                        } from '../../modules/nf-core/cooler/cload/main.nf' 
-include { COOLER_ZOOMIFY                      } from '../../modules/nf-core/cooler/zoomify/main.nf' 
+include { COOLER_CLOAD                        } from '../../modules/nf-core/cooler/cload/main.nf'
+include { COOLER_ZOOMIFY                      } from '../../modules/nf-core/cooler/zoomify/main.nf'
 include { SAMTOOLS_FAIDX  as CONTIGS_FAIDX    } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX  as SCAFFOLDS_FAIDX  } from '../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS                                } from '../../modules/nf-core/yahs/main'
@@ -12,12 +12,12 @@ include { PREPARE_PRETEXTMAP_INPUT            } from '../../modules/local/prepar
 include { CHROM_SIZES                         } from '../../modules/local/chrom_sizes.nf'
 
 workflow SCAFFOLDING {
-    take:  
+    take:
     bed_in   // tuple(meta, bed)
     fasta_in // tuple(meta, fasta)
-    cool_bin  // val: cooler cload parameter 
+    cool_bin  // val: cooler cload parameter
     hap_id    // val: hap1/hap2/empty
-    
+
     main:
     ch_versions = Channel.empty()
 
@@ -38,7 +38,7 @@ workflow SCAFFOLDING {
                     .set{ scaf_ref_fai }
 
     //
-    // LOGIC: MIX IN THE HAPLOTYPE ID TO CONTROL THE OUTPUT SUFFIX 
+    // LOGIC: MIX IN THE HAPLOTYPE ID TO CONTROL THE OUTPUT SUFFIX
     //
     bed_in.map{ meta, bed -> [[id:meta.id, hap_id:hap_id],bed] }
         .set{ bed_in_hap }
@@ -73,7 +73,7 @@ workflow SCAFFOLDING {
     //
     JUICER_PRE(ch_merge)
     ch_versions = ch_versions.mix(JUICER_PRE.out.versions)
-    
+
     //
     // LOGIC: BIN CONTACT PAIRS
     //
@@ -92,12 +92,12 @@ workflow SCAFFOLDING {
     //
     COOLER_CLOAD(ch_juicer, CHROM_SIZES.out.chrom_sizes)
     ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
-    
+
     //
     // LOGIC: REFACTOR CHANNEL FOR ZOOMIFY
     //
     COOLER_CLOAD.out.cool.map{ meta, cools, cool_bin-> [meta, cools]}
-                         .set{ch_cool}
+        .set{ch_cool}
 
     //
     //  MODULE: ZOOM COOL TO MCOOL
@@ -137,5 +137,5 @@ workflow SCAFFOLDING {
     emit:
     fasta = YAHS.out.scaffolds_fasta
 
-    versions = ch_versions.ifEmpty(null)
+    versions = ch_versions
 }

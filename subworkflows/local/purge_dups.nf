@@ -31,10 +31,10 @@ workflow PURGE_DUPS {
     //
     reads_plus_assembly_ch
         .flatMap { meta, reads, assembly, model -> reads instanceof List ? reads.collect{ [ meta, reads, assembly, model ] } : [ [ meta, reads, assembly, model ] ] }
-        .multiMap { meta, reads, assembly, model -> 
+        .multiMap { meta, reads, assembly, model ->
             reads_ch: [ meta, reads ]
             assembly_ch: assembly
-            model_ch: [ meta, model ] 
+            model_ch: [ meta, model ]
         }
         .set { input }
 
@@ -52,13 +52,13 @@ workflow PURGE_DUPS {
     ch_versions = ch_versions.mix(MINIMAP2_ALIGN_READS.out.versions)
 
     //
-    // MODULE: CREATE READ DEPTH HISTOGRAM 
+    // MODULE: CREATE READ DEPTH HISTOGRAM
     //
     PURGEDUPS_PBCSTAT( MINIMAP2_ALIGN_READS.out.paf.groupTuple() )
     ch_versions = ch_versions.mix(PURGEDUPS_PBCSTAT.out.versions)
-    
+
     //
-    // MODULE: PARSE KMER COVERAGE  
+    // MODULE: PARSE KMER COVERAGE
     //
     GET_CALCUTS_PARAMS( input.model_ch )
     ch_versions = ch_versions.mix(GET_CALCUTS_PARAMS.out.versions)
@@ -99,7 +99,7 @@ workflow PURGE_DUPS {
         idx_num
     )
     ch_versions = ch_versions.mix(MINIMAP2_ALIGN_ASSEMBLY.out.versions)
-    
+
     //
     // MODULE: PURGE HAPLOTIGS
     //
@@ -108,14 +108,14 @@ workflow PURGE_DUPS {
             .join( PURGEDUPS_CALCUTS.out.cutoff )
             .map { meta, cov, cutoff -> [ meta.findAll { !(it.key in [ 'single_end' ]) }, cov, cutoff ] }
             .join( MINIMAP2_ALIGN_ASSEMBLY.out.paf )
-    ) 
+    )
     ch_versions = ch_versions.mix(PURGEDUPS_PURGEDUPS.out.versions)
 
     //
-    // LOGIC: PREPARE INPUT FOR GETSEQS 
+    // LOGIC: PREPARE INPUT FOR GETSEQS
     //
     minimal_assembly_ch.join( PURGEDUPS_PURGEDUPS.out.bed )
-                       .set { ch_getseqs_input }
+        .set { ch_getseqs_input }
 
     //
     // MODULE: GENERATE PRIMARY AND ALT CONTIGS

@@ -37,8 +37,8 @@ workflow HIC_BWAMEM2 {
                 file(cram_info[0]),
                 cram_info[1], // crai path
                 cram_info[2], // chunk starting position
-                cram_info[3], // chunk end position 
-                cram_info[4], // basename 
+                cram_info[3], // chunk end position
+                cram_info[4], // basename
                 cram_info[5], // the number of chunk
                 cram_info[6], // rgline
                 bwa_path.toString() + '/' + ref_dir.toString().split('/')[-1]
@@ -67,7 +67,7 @@ workflow HIC_BWAMEM2 {
         .map { file ->
             tuple (
                 [
-                id: file[0].toString().split('/')[-1].split('_')[0] 
+                id: file[0].toString().split('/')[-1].split('_')[0]
                 ],
                 file
             )
@@ -76,5 +76,5 @@ workflow HIC_BWAMEM2 {
 
     emit:
     mappedbams           = collected_files_for_merge
-    versions            = ch_versions.ifEmpty(null)
+    versions            = ch_versions
 }

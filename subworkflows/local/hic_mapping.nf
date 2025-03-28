@@ -36,7 +36,7 @@ workflow HIC_MAPPING {
     //
     BWAMEM2_INDEX (reference_tuple)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-    
+
     //
     // LOGIC: JOIN HIC READS AND REFERENCE INTO A NEW CHANNEL
     //
@@ -47,7 +47,7 @@ workflow HIC_MAPPING {
         .set { get_reads_input }
 
     //
-    // MODULE: GENERATE A CSV LISTING CRAM CHUNKS 
+    // MODULE: GENERATE A CSV LISTING CRAM CHUNKS
     //
     GENERATE_CRAM_CSV ( get_reads_input )
     ch_versions = ch_versions.mix(GENERATE_CRAM_CSV.out.versions)
@@ -55,13 +55,14 @@ workflow HIC_MAPPING {
     hic_reads_path
         .combine(reference_tuple)
         .combine(hic_aligner_ch)
-        .map{ meta, hic_read_path, ref_meta, ref, aligner_meta, hic_aligner ->
-             tuple(
-                [   id : ref_meta,
+        .map { meta, hic_read_path, ref_meta, ref, aligner_meta, hic_aligner ->
+            tuple(
+                [
+                    id : ref_meta,
                     aligner : hic_aligner
                 ],
                 ref
-             )
+            )
             }
         .branch{
             minimap2      : it[0].aligner == "minimap2"
@@ -69,7 +70,7 @@ workflow HIC_MAPPING {
         }
         .set{ch_aligner}
 
-      
+
     //
     // SUBWORKFLOW: mapping hic reads using minimap2
     //
@@ -79,7 +80,7 @@ workflow HIC_MAPPING {
     )
     ch_versions         = ch_versions.mix( HIC_MINIMAP2.out.versions )
     mappedbams           = HIC_MINIMAP2.out.mappedbams
-    
+
     //
     // SUBWORKFLOW: mapping hic reads using bwamem2
     //
@@ -91,7 +92,7 @@ workflow HIC_MAPPING {
     mappedbams           = mappedbams.mix(HIC_BWAMEM2.out.mappedbams)
 
     mappedbams.map{meta, bams -> [[id: meta.id, hap_id:hap_id], bams]}
-              .set { mappedbams }
+        .set { mappedbams }
 
     //
     // LOGIC: GENERATE INDEX OF REFERENCE
@@ -111,7 +112,7 @@ workflow HIC_MAPPING {
         .set { ref_files }
 
     //
-    // MODULE: MERGE POSITION SORTED BAM FILES 
+    // MODULE: MERGE POSITION SORTED BAM FILES
     //
     SAMTOOLS_MERGE_HIC_MAPPING ( mappedbams, ref_files.reference_meta, ref_files.ref_idx )
     ch_versions = ch_versions.mix ( SAMTOOLS_MERGE_HIC_MAPPING.out.versions.first() )
@@ -134,7 +135,7 @@ workflow HIC_MAPPING {
     SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam
                 .map { meta, bam -> [ meta, bam, [] ] }
                 .set { ch_stat }
-    
+
     //
     // SUBWORKFLOW: PRODUCE READ MAPPING STATS
     //

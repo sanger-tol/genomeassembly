@@ -1,10 +1,14 @@
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.10391851-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.10391851)
+# sanger-tol/genomeassembly
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
+[![GitHub Actions CI Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/ci.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.10391851-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.10391851)
+[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
+
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/sanger-tol/genomeassembly)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/sanger-tol/genomeassembly)
 
 ## Introduction
 
@@ -43,24 +47,26 @@ While the steps are described in a sequential order, many of them can be execute
 
 ## Usage
 
-> **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 Currently, it is advised to run the pipeline with docker or singularity as some modules do not have a conda env associated with them.
 
-To run the pipeline use a command-line:
+Now, you can run the pipeline using:
 
 ```bash
-nextflow run sanger-tol/genomeassembly -profile singularity,YOURPROFILE --outdir <OUTDIR>
+nextflow run sanger-tol/genomeassembly \
+   -profile <docker/singularity/.../institute> \
+   --input input.yaml \
+   --outdir <OUTDIR>
 ```
 
-For more details on how to run the pipeline and interprete the results see [usage](usage.md) and [output](output.md) sections of the documentation.
+> [!WARNING]
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 ## Credits
 
-sanger-tol/genomeassembly was originally written by @ksenia-krasheninnikova.
+sanger-tol/genomeassembly was originally written by Ksenia Krashennikova.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
@@ -86,7 +92,7 @@ If you use sanger-tol/genomeassembly for your analysis, please cite it using the
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
-This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
+This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
 >

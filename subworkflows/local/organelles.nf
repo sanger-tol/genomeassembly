@@ -35,30 +35,34 @@ workflow ORGANELLES {
     //
     // MODULE: IDENTIFY ORGANELLE IN THE READS DATASET
     //
-    MITOHIFI_MITOHIFI_READS( reads_input, 
-                   ref_fasta,
-                   ref_gb,
-                   "r",
-                   code)    
-    ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+    MITOHIFI_MITOHIFI_READS(
+        reads_input,
+        ref_fasta,
+        ref_gb,
+        "r",
+        code
+    )
+    ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_READS.out.versions.first())
 
     //
     // MODULE: IDENTIFY ORGANELLE IN THE ASSEMBLY DATASET
     //
-    MITOHIFI_MITOHIFI_CONTIGS( contigs_input, 
-                   ref_fasta,
-                   ref_gb,
-                   "c",
-                   code)    
-    ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions.first())
+    MITOHIFI_MITOHIFI_CONTIGS(
+        contigs_input,
+        ref_fasta,
+        ref_gb,
+        "c",
+        code
+    )
+    ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_CONTIGS.out.versions.first())
 
     //
     // LOGIC: PREPARE OATK INPUT
     //
     mito_info.map{ species, min_length, code, email, fam -> [ fam ] + ['h3f', 'h3i', 'h3m', 'h3p'].collect {fam.resolveSibling(fam.name + '.' + it)} }
-                                                            .set { mito_hmm_input }
+        .set { mito_hmm_input }
     plastid_info.map{ fam -> fam ? ([ fam ] + ['h3f', 'h3i', 'h3m', 'h3p'].collect {fam.resolveSibling(fam.name + '.' + it)} ) : [[],[],[],[],[]] }
-                               .set { plastid_hmm_input }
+        .set { plastid_hmm_input }
     //
     // MODULE: RUN OATK TO IDENTIFY MITO
     //

@@ -16,7 +16,7 @@ include { MERQURYFK_MERQURYFK       } from '../../modules/nf-core/merquryfk/merq
 workflow GENOME_STATISTICS {
     take:
     assembly                  // channel: [ meta, primary, haplotigs ]
-    lineage                   // channel: [ meta, /path/to/buscoDB, lineage ] 
+    lineage                   // channel: [ meta, /path/to/buscoDB, lineage ]
     hist                      // channel: [meta, fastk_hist files]
     ktab                      // channel: [fastk_ktab files]
     fastk_pktab               // channel: [fk_pat_ktab files] it is one argument for merquryFK trio case
@@ -39,7 +39,7 @@ workflow GENOME_STATISTICS {
     //
     GFASTATS_PRI( primary_ch, 'fasta', [], [], [], [], [], [] )
     ch_versions = ch_versions.mix(GFASTATS_PRI.out.versions.first())
-    
+
     //
     // LOGIC: SEPARATE HAP INTO A CHANNEL
     //
@@ -55,21 +55,21 @@ workflow GENOME_STATISTICS {
     // MODULE: RUN BUSCO ON PRIMARY ASSEMBLY
     //
     BUSCO_PRI ( primary_ch.join(lineage)
-                    .map{ meta, primary, lineage_db, lineage_name -> 
-                            [[id:meta.id, lineage:lineage_name], primary]}, 
+                    .map{ meta, primary, lineage_db, lineage_name ->
+                            [[id:meta.id, lineage:lineage_name], primary]},
             lineage.map{ meta, lineage_db, lineage_name -> lineage_name } ,
             lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
             [] )
     ch_versions = ch_versions.mix(BUSCO_PRI.out.versions.first())
-    
+
     //
     // MODULE: run BUSCO for haplotigs
     // USED FOR HAP1/HAP2 ASSEMBLIES
     //
     if ( busco_alt ) {
         BUSCO_HAP ( haplotigs_ch.join(lineage)
-                        .map{ meta, haps, lineage_db, lineage_name -> 
-                                [[id:meta.id, lineage:lineage_name], haps]}, 
+                        .map{ meta, haps, lineage_db, lineage_name ->
+                                [[id:meta.id, lineage:lineage_name], haps]},
                 lineage.map{ meta, lineage_db, lineage_name -> lineage_name } ,
                 lineage.map{ meta, lineage_db, ch_lineage -> lineage_db },
                 [] )
@@ -78,7 +78,7 @@ workflow GENOME_STATISTICS {
     if (params.hifiasm_trio_on) {
 
         hist.join(ktab).join(assembly)
-                       .set{ ch_merq }
+            .set{ ch_merq }
         MERQURYFK_MERQURYFK ( ch_merq, fastk_pktab, phapktab, fastk_mktab, mhapktab )
 
     }
@@ -87,11 +87,11 @@ workflow GENOME_STATISTICS {
         // LOGIC: JOIN ASSEMBLY AND KMER DATABASE INPUT
         //
         hist.join(ktab).join(assembly)
-                        .map{ meta, hist, ktab, primary, hap -> 
+                        .map{ meta, hist, ktab, primary, hap ->
                                 hap.size() ? [ meta, hist, ktab, primary, hap ] :
-                                    [ meta, hist, ktab, primary, [] ] } 
+                                    [ meta, hist, ktab, primary, [] ] }
                         .set{ ch_merq }
-        
+
         //
         // MODULE: RUN KMER ANALYSIS WITH MERQURYFK
         //
@@ -100,7 +100,7 @@ workflow GENOME_STATISTICS {
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions.first())
 
     emit:
-    versions                  = ch_versions   
+    versions                  = ch_versions
 }
 
 
