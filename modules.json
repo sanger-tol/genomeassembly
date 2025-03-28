@@ -71,6 +71,11 @@
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
                         "installed_by": ["modules"]
                     },
+                    "fastk/histex": {
+                        "branch": "master",
+                        "git_sha": "26ae0455fc69b3fbf542ec506c71bce44ddddc4e",
+                        "installed_by": ["modules"]
+                    },
                     "freebayes": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
