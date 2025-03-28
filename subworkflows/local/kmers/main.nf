@@ -1,10 +1,15 @@
 include { FASTK_FASTK                } from "../../modules/nf-core/fastk/fastk/main"
 include { FASTK_HISTEX               } from '../../modules/nf-core/fastk/histex/main'
 include { GENESCOPEFK                } from "../../modules/nf-core/genescopefk/main"
+include { FASTK_FASTK as FASTK_PAT   } from "../../modules/nf-core/fastk/fastk/main"
+include { FASTK_FASTK as FASTK_MAT   } from "../../modules/nf-core/fastk/fastk/main"
+include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
+include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
+include { MERQURYFK_HAPMAKER         } from "../../modules/local/merquryfk_hapmaker"
 
 workflow KMERS {
     take:
-    reads          // [meta, [reads]]
+    reads          // [meta, [reads]   ]
     maternal_reads // [meta, [matreads]]
     paternal_reads // [meta, [patreads]]
 
@@ -14,7 +19,7 @@ workflow KMERS {
     //
     // MODULE: GENERATE KMER DATABASE
     //
-    FASTK_FASTK( reads_merged_ch )
+    FASTK_FASTK(reads)
     ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
     //
@@ -23,41 +28,40 @@ workflow KMERS {
     FASTK_HISTEX( FASTK_FASTK.out.hist )
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
-
-    //
-    // LOGIC: RUN TRIO WHEN TRIO DATA IS AVAILABLE
-    //
-    trio_flag
-        .combine( patreads )
-        .combine( matreads )
-        .branch {
-            trio:     it[0] == "trio"
-            non_trio: it[0] == "nontrio"
-        }
-        .set{ trio_data }
-
-    trio_data
-            .trio
-            .multiMap { trio_mode, pat_meta, pat_data, mat_meta, mat_data ->
-                pat:    tuple( pat_meta, pat_data )
-                mat:    tuple( mat_meta, mat_data )
-            }
-            .set{ ch_trio_data }
-    //
-    // SUBWORKFLOW: RUN TRIO PROCESS WITH TRIO DATA
-    //
-    TRIO_PROCESS (
-        FASTK_FASTK.out.ktab,
-        ch_trio_data.mat,
-        ch_trio_data.pat
-    )
-    ch_versions = ch_versions.mix(TRIO_PROCESS.out.versions)
-
     //
     // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
     //
     GENESCOPEFK( FASTK_HISTEX.out.hist )
     ch_versions = ch_versions.mix(GENESCOPEFK.out.versions)
+
+    //
+    // MODULE: GENERATE TRIO DATABASES AND KTABS FOR BOTH PAT AND MAT
+    //
+    YAK_COUNT_PAT(patreads)
+    patdb_ch = YAK_COUNT_PAT.out.yak
+    FASTK_PAT(patreads)
+    FASTK_PAT.out.ktab.set{patktab_ch}
+    ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
+    ch_versions = ch_versions.mix(FASTK_PAT.out.versions)
+
+    YAK_COUNT_MAT(matreads)
+    matdb_ch = YAK_COUNT_MAT.out.yak
+    FASTK_MAT(matreads)
+    FASTK_MAT.out.ktab.set{matktab_ch}
+    ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
+    ch_versions = ch_versions.mix(FASTK_MAT.out.versions)
+
+    MERQURYFK_HAPMAKER( matktab_ch, patktab_ch, childktab_ch )
+
+    MERQURYFK_HAPMAKER.out.pathap_ktab
+    .combine( patktab_ch )
+    .map{ hapmeta, pathapktabs, fastkmeta, patktabs -> [hapmeta, pathapktabs, patktabs] }
+    .set{pathap_ch}
+
+    MERQURYFK_HAPMAKER.out.mathap_ktab
+    .combine( matktab_ch )
+    .map{ hapmeta, mathapktabs, fastkmeta, matktabs -> [hapmeta, mathapktabs, matktabs] }
+    .set{mathap_ch}
 
     emit:
     model = GENESCOPEFK.out.model

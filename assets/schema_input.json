@@ -44,6 +44,24 @@
                                 "exists": true
                             },
                             "uniqueItems": true
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory_path": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the PacBio reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                }
+                            },
+                            "dependentRequired": {
+                                "directory_path": ["basename"]
+                            }
                         }
                     },
                     "required": ["reads"]
@@ -61,6 +79,24 @@
                                 "exists": true
                             },
                             "uniqueItems": true
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory_path": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the ONT reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                }
+                            },
+                            "dependentRequired": {
+                                "directory_path": ["basename"]
+                            }
                         }
                     },
                     "required": ["reads"]
