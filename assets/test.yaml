@@ -3,12 +3,13 @@ metadata:
   species: "Caradrina clavipalpis"
   mitochondrial_code: 5
 sequencing_data:
-  pacbio:
+  long_reads:
+    platform: "pacbio"
     reads:
       - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
   hic:
     reads:
-      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram\
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram
     hic_motif:
       - GATC
       - GANTC
