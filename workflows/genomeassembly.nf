@@ -4,38 +4,20 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly'
-include { ORGANELLES                                            } from '../subworkflows/local/organelles'
-include { GENOMESCOPE_MODEL                                     } from '../subworkflows/local/genomescope_model'
-include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
-include { POLISHING                                             } from '../subworkflows/local/polishing'
-include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
-include { SCAFFOLDING as SCAFFOLDING_HAP1                       } from '../subworkflows/local/scaffolding'
-include { SCAFFOLDING as SCAFFOLDING_HAP2                       } from '../subworkflows/local/scaffolding'
-include { SCAFFOLDING as SCAFFOLDING_PAT                        } from '../subworkflows/local/scaffolding'
-include { SCAFFOLDING as SCAFFOLDING_MAT                        } from '../subworkflows/local/scaffolding'
-include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
-include { KEEP_SEQNAMES as KEEP_SEQNAMES_HAPLOTIGS              } from '../modules/local/keep_seqnames'
-include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
-include { HIC_MAPPING as HIC_MAPPING_HAP1                       } from '../subworkflows/local/hic_mapping'
-include { HIC_MAPPING as HIC_MAPPING_HAP2                       } from '../subworkflows/local/hic_mapping'
-include { HIC_MAPPING as HIC_MAPPING_PAT                        } from '../subworkflows/local/hic_mapping'
-include { HIC_MAPPING as HIC_MAPPING_MAT                        } from '../subworkflows/local/hic_mapping'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW            } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_RAW_HIC        } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_PURGED         } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_POLISHED       } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS      } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_HAPS } from '../subworkflows/local/genome_statistics'
-include { GENOME_STATISTICS as GENOME_STATISTICS_SCAFFOLDS_TRIO } from '../subworkflows/local/genome_statistics'
+//include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly'
+//include { ORGANELLES                                            } from '../subworkflows/local/organelles'
+include { KMERS                                     } from '../subworkflows/local/kmers'
+//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+//include { POLISHING                                             } from '../subworkflows/local/polishing'
+//include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
+//include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
+//include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
+//include { GENOME_STATISTICS as GENOME_STATISTICS            } from '../subworkflows/local/genome_statistics'
 
-include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
-include { CAT_CAT as CAT_CAT_RAW                     } from "../modules/nf-core/cat/cat/main"
-include { CAT_CAT as CAT_CAT_HAPLOTIGS               } from "../modules/nf-core/cat/cat/main"
-include { CAT_CAT as CAT_CAT_PURGEDUPS               } from "../modules/nf-core/cat/cat/main"
-include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
-include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS     } from '../modules/nf-core/seqtk/subseq/main'
-include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY       } from '../modules/nf-core/seqtk/subseq/main'
+//include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
+//include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
+//include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS     } from '../modules/nf-core/seqtk/subseq/main'
+//include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_PRIMARY       } from '../modules/nf-core/seqtk/subseq/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
@@ -66,8 +48,8 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    GENOMESCOPE_MODEL( hifi_reads, mat_reads, pat_reads, trio_flag)
-    ch_versions = ch_versions.mix(GENOMESCOPE_MODEL.out.versions)
+    KMERS( hifi_reads, mat_reads, pat_reads)
+    ch_versions = ch_versions.mix(KMERS.out.versions)
 
 //    if (params.hifiasm_trio_on) {
 //

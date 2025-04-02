@@ -31,9 +31,14 @@
             "type": "object",
             "errorMessage": "The sequencing_data section must contain either a 'pacbio' or 'ont' section.",
             "properties": {
-                "pacbio": {
+                "long_reads": {
                     "type": "object",
                     "properties": {
+                        "platform": {
+                            "type": "string",
+                            "description": "Platform used to sequence long reads ('pacbio' or 'ont')",
+                            "enum": ["pacbio", "ont"]
+                        },
                         "reads": {
                             "type": "array",
                             "description": "List of FASTA files containing PacBio HiFi reads. Must be gzipped.",
@@ -48,7 +53,7 @@
                         "fastk": {
                             "type": "object",
                             "properties": {
-                                "directory_path": {
+                                "directory": {
                                     "type": "string",
                                     "description": "(optional) A directory containing a FastK database (hist + table) of the PacBio reads.",
                                     "format": "directory-path",
@@ -59,47 +64,10 @@
                                     "description": "Basename of the FastK database in the directory."
                                 }
                             },
-                            "dependentRequired": {
-                                "directory_path": ["basename"]
-                            }
+                            "required": ["directory", "basename"]
                         }
                     },
-                    "required": ["reads"]
-                },
-                "ont": {
-                    "type": "object",
-                    "properties": {
-                        "reads": {
-                            "type": "array",
-                            "description": "List of FASTA files containing ONT reads. Must be gzipped.",
-                            "items": {
-                                "type": "string",
-                                "format": "file-path",
-                                "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                                "exists": true
-                            },
-                            "uniqueItems": true
-                        },
-                        "fastk": {
-                            "type": "object",
-                            "properties": {
-                                "directory_path": {
-                                    "type": "string",
-                                    "description": "(optional) A directory containing a FastK database (hist + table) of the ONT reads.",
-                                    "format": "directory-path",
-                                    "exists": "true"
-                                },
-                                "basename": {
-                                    "type": "string",
-                                    "description": "Basename of the FastK database in the directory."
-                                }
-                            },
-                            "dependentRequired": {
-                                "directory_path": ["basename"]
-                            }
-                        }
-                    },
-                    "required": ["reads"]
+                    "required": ["reads", "platform"]
                 },
                 "hic": {
                     "type": "object",
@@ -121,6 +89,22 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the Hi-C reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                }
+                            },
+                            "required": ["directory", "basename"]
                         }
                     },
                     "required": ["reads"],
@@ -128,58 +112,105 @@
                         "reads": ["hic_motif"]
                     }
                 },
-                "illumina": {
+                "illumina_10x": {
                     "type": "object",
                     "properties": {
-                        "illumina_10x": {
-                            "type": "object",
-                            "properties": {
-                                "reads": {
-                                    "type": "array",
-                                    "description": "List of fastq files containing Illumina 10X reads for polishing. Must be gzipped.",
-                                    "items": {
-                                        "type": "string",
-                                        "format": "file-path",
-                                        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                                        "exists": true
-                                    },
-                                    "uniqueItems": true
-                                }
+                        "reads": {
+                            "type": "array",
+                            "description": "List of fastq files containing Illumina 10X reads for polishing. Must be gzipped.",
+                            "items": {
+                                "type": "string",
+                                "format": "file-path",
+                                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                "exists": true
                             },
-                            "required": ["reads"]
+                            "uniqueItems": true
                         },
-                        "trio": {
+                        "fastk": {
                             "type": "object",
                             "properties": {
-                                "reads_maternal": {
-                                    "type": "array",
-                                    "description": "List of fastq files containing Illumina 10X reads for polishing. Must be gzipped.",
-                                    "items": {
-                                        "type": "string",
-                                        "format": "file-path",
-                                        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                                        "exists": true
-                                    },
-                                    "uniqueItems": true
+                                "directory": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the Illumina 10X reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
                                 },
-                                "reads_paternal": {
-                                    "type": "array",
-                                    "description": "List of fastq files containing Illumina 10X reads for polishing. Must be gzipped.",
-                                    "items": {
-                                        "type": "string",
-                                        "format": "file-path",
-                                        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                                        "exists": true
-                                    },
-                                    "uniqueItems": true
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
                                 }
                             },
-                            "required": ["reads_maternal", "reads_paternal"]
+                            "required": ["directory", "basename"]
                         }
-                    }
+                    },
+                    "required": ["reads"]
+                },
+                "trio": {
+                    "type": "object",
+                    "properties": {
+                        "maternal": {
+                            "reads": {
+                                "type": "array",
+                                "description": "List of fastq files containing maternal reads for trio binning. Must be gzipped.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                    "exists": true
+                                },
+                                "uniqueItems": true
+                            },
+                            "fastk": {
+                                "type": "object",
+                                "properties": {
+                                    "directory": {
+                                        "type": "string",
+                                        "description": "(optional) A directory containing a FastK database (hist + table) of the maternal reads.",
+                                        "format": "directory-path",
+                                        "exists": "true"
+                                    },
+                                    "basename": {
+                                        "type": "string",
+                                        "description": "Basename of the FastK database in the directory."
+                                    }
+                                },
+                                "required": ["directory", "basename"]
+                            }
+                        },
+                        "paternal": {
+                            "reads": {
+                                "type": "array",
+                                "description": "List of fastq files containing paternal reads for trio binning. Must be gzipped.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                    "exists": true
+                                },
+                                "uniqueItems": true
+                            },
+                            "fastk": {
+                                "type": "object",
+                                "properties": {
+                                    "directory": {
+                                        "type": "string",
+                                        "description": "(optional) A directory containing a FastK database (hist + table) of the paternal reads.",
+                                        "format": "directory-path",
+                                        "exists": "true"
+                                    },
+                                    "basename": {
+                                        "type": "string",
+                                        "description": "Basename of the FastK database in the directory."
+                                    }
+                                },
+                                "required": ["directory", "basename"]
+                            }
+                        }
+                    },
+                    "required": ["reads_maternal", "reads_paternal"]
                 }
             },
-            "anyOf": [{ "required": ["pacbio"] }, { "required": ["ont"] }]
+            "required": ["long_reads"]
         },
         "databases": {
             "type": "object",

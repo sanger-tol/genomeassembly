@@ -1,75 +1,99 @@
-include { FASTK_FASTK                } from "../../modules/nf-core/fastk/fastk/main"
-include { FASTK_HISTEX               } from '../../modules/nf-core/fastk/histex/main'
-include { GENESCOPEFK                } from "../../modules/nf-core/genescopefk/main"
-include { FASTK_FASTK as FASTK_PAT   } from "../../modules/nf-core/fastk/fastk/main"
-include { FASTK_FASTK as FASTK_MAT   } from "../../modules/nf-core/fastk/fastk/main"
-include { YAK_COUNT as YAK_COUNT_MAT } from "../../modules/nf-core/yak/count/main"
-include { YAK_COUNT as YAK_COUNT_PAT } from "../../modules/nf-core/yak/count/main"
-include { MERQURYFK_HAPMAKER         } from "../../modules/local/merquryfk_hapmaker"
+include { FASTK_FASTK        } from "../../../modules/nf-core/fastk/fastk/main"
+include { FASTK_HISTEX       } from '../../../modules/nf-core/fastk/histex/main'
+include { GENOMESCOPE2       } from "../../../modules/nf-core/genomescope2/main"
+include { YAK_COUNT          } from "../../../modules/nf-core/yak/count/main"
+include { MERQURYFK_HAPMAKER } from "../../../modules/nf-core/merquryfk/hapmaker"
 
 workflow KMERS {
     take:
-    reads          // [meta, [reads]   ]
-    maternal_reads // [meta, [matreads]]
-    paternal_reads // [meta, [patreads]]
+    long_reads     // [meta, [reads], fk_hist, [fk_ktab]]
+    maternal_reads // [meta, [reads], fk_hist, [fk_ktab]]
+    paternal_reads // [meta, [reads], fk_hist, [fk_ktab]]
 
     main:
     ch_versions = Channel.empty()
 
     //
-    // MODULE: GENERATE KMER DATABASE
+    // Module: Generate FastK databases for all read sets without one
     //
-    FASTK_FASTK(reads)
+    ch_fastk_status = long_reads.mix(maternal_reads, paternal_reads)
+        | branch { meta, reads, hist, ktab ->
+            has_fastk: !hist.isEmpty()
+            no_fastk: true
+        }
+
+    ch_fastk_status.no_fastk
+        | map { meta, reads, _hist, _ktab -> [meta, reads] }
+        | FASTK_FASTK
     ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
+    ch_fastk = FASTK_FASTK.out.hist
+        | combine(FASTK_FASTK.out.ktab, by: 0)
+        | mix(ch_fastk_status.has_fastk)
+
     //
-    // MODULE: KEEP THE KMERS HISTOGRAM
+    // Module: FastK histogram to ASCII for Genomescope
     //
-    FASTK_HISTEX( FASTK_FASTK.out.hist )
+    ch_fastk
+        | filter { it[0].reads == "long" }
+        | map { meta, hist, _ktab -> [meta, hist] }
+        | FASTK_HISTEX
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
     //
-    // MODULE: GENERATE GENOMESCOPE KMER COVERAGE MODEL
+    // Module: Estimate nuclear coverage with Genomescope
     //
-    GENESCOPEFK( FASTK_HISTEX.out.hist )
+    GENOMESCOPE2(FASTK_HISTEX.out.hist)
     ch_versions = ch_versions.mix(GENESCOPEFK.out.versions)
 
+    ch_coverage = GENESCOPEFK.out.model
+        | map { meta, model ->
+            def kcov_line = model.readLines().find { it =~ "kmercov" }
+            def kcov = kcov_line ? kcov_line.tokenize(/\s+/).getAt(1).toFloat() : -1
+            return [meta, kcov]
+        }
+
     //
-    // MODULE: GENERATE TRIO DATABASES AND KTABS FOR BOTH PAT AND MAT
+    // Module: Generate trio databases for maternal and paternal read sets
+    //         for trio assembly with hifiasm
     //
-    YAK_COUNT_PAT(patreads)
-    patdb_ch = YAK_COUNT_PAT.out.yak
-    FASTK_PAT(patreads)
-    FASTK_PAT.out.ktab.set{patktab_ch}
-    ch_versions = ch_versions.mix(YAK_COUNT_PAT.out.versions)
-    ch_versions = ch_versions.mix(FASTK_PAT.out.versions)
+    reads
+        | filter { it[0].reads in ["pat", "mat"] }
+        | map { meta, reads, _hist, _ktab -> [meta, reads] }
+        | YAK_COUNT
+    ch_versions = ch_versions.mix(YAK_COUNT.out.versions)
 
-    YAK_COUNT_MAT(matreads)
-    matdb_ch = YAK_COUNT_MAT.out.yak
-    FASTK_MAT(matreads)
-    FASTK_MAT.out.ktab.set{matktab_ch}
-    ch_versions = ch_versions.mix(YAK_COUNT_MAT.out.versions)
-    ch_versions = ch_versions.mix(FASTK_MAT.out.versions)
+    ch_trio_yak_dbs = YAK_COUNT.out.yak
+        | map { meta, yak ->
+            def meta_new = meta - meta.subMap("trio")
+            [meta_new, yak]
+        }
+        | collect()
+        | map { meta, yaks ->
+            def pat = yaks.find { it.name =~ "pat" }
+            def mat = yaks.find { it.name =~ "mat" }
+            [meta, pat, mat]
+        }
 
-    MERQURYFK_HAPMAKER( matktab_ch, patktab_ch, childktab_ch )
+    //
+    // Module: Generate trio fastk databases for maternal and paternal read sets
+    //         for QC with Merquryfk
+    //
 
-    MERQURYFK_HAPMAKER.out.pathap_ktab
-    .combine( patktab_ch )
-    .map{ hapmeta, pathapktabs, fastkmeta, patktabs -> [hapmeta, pathapktabs, patktabs] }
-    .set{pathap_ch}
+    ch_mat_fk   = ch_fastk | filter { it[0].reads == "mat"  }
+    ch_pat_fk   = ch_fastk | filter { it[0].reads == "pat"  }
+    ch_child_fk = ch_fastk | filter { it[0].reads == "long" }
 
-    MERQURYFK_HAPMAKER.out.mathap_ktab
-    .combine( matktab_ch )
-    .map{ hapmeta, mathapktabs, fastkmeta, matktabs -> [hapmeta, mathapktabs, matktabs] }
-    .set{mathap_ch}
+    MERQURYFK_HAPMAKER(ch_mat_fk, ch_pat_fk, ch_child_fk)
+    ch_versions = ch_versions.mix(MERQURYFK_HAPMAKER.out.versions)
+
+    ch_trio_hap_dbs = MERQURYFK_HAPMAKER.out.pat_hap_ktab
+        | combine(MERQURYFK_HAPMAKER.out.mat_hap_ktab, by: 0)
 
     emit:
-    model = GENESCOPEFK.out.model
-    hist = FASTK_FASTK.out.hist
-    ktab = FASTK_FASTK.out.ktab
-    phapktab = TRIO_PROCESS.out.phapktab.ifEmpty( [] )
-    mhapktab = TRIO_PROCESS.out.mhapktab.ifEmpty( [] )
-    matdb = TRIO_PROCESS.out.matdb.ifEmpty( [] )
-    patdb = TRIO_PROCESS.out.patdb.ifEmpty( [] )
-    versions = ch_versions
+    coverage   = ch_coverage
+    fastk      = ch_fastk.filter { it[0].reads == "long" }
+    trio_yakdb = ch_trio_yak_dbs
+    trio_hapdb = ch_trio_hap_dbs
+    versions   = ch_versions
 }

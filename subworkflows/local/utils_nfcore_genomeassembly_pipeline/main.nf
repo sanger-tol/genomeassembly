@@ -71,36 +71,30 @@ workflow PIPELINE_INITIALISATION {
 
     //
     // LOGIC: Create channels for reads for raw assembly input
+    //        [meta, reads, fk_hist, fk_ktab]
     //
-    ch_hifi_reads = READ_YAML.out.pacbio_reads       | filter { !it[1].isEmpty() }
-    ch_ont_reads  = READ_YAML.out.ont_reads          | filter { !it[1].isEmpty() }
-
-    //
-    // LOGIC: Create channels for Illumina reads
-    //
-    ch_hic_reads  = READ_YAML.out.hic_reads          | filter { !it[1].isEmpty() }
-    ch_10x_reads  = READ_YAML.out.illumina_10x_reads | filter { !it[1].isEmpty() }
-    ch_mat_reads  = READ_YAML.out.maternal_reads     | filter { !it[1].isEmpty() }
-    ch_pat_reads  = READ_YAML.out.paternal_reads     | filter { !it[1].isEmpty() }
+    ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() }
+    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() }
+    ch_10x_reads  = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() }
+    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() }
+    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() }
 
     //
     // LOGIC: Create channels for databases
     //
     ch_busco        = READ_YAML.out.busco_lineage
-    ch_oatk_mito    = READ_YAML.out.oatk_mito        | filter { !it.isEmpty() }
-    ch_oatk_plastid = READ_YAML.out.oatk_plastid     | filter { !it.isEmpty() }
+    ch_oatk_mito    = READ_YAML.out.oatk_mito     | filter { !it.isEmpty() }
+    ch_oatk_plastid = READ_YAML.out.oatk_plastid  | filter { !it.isEmpty() }
 
     emit:
-    hifi_reads   = ch_hifi_reads
-    ont_reads    = ch_ont_reads
+    long_reads   = ch_long_reads
     hic_reads    = ch_hic_reads
+    illumina_10x = ch_iå10x_reads
     mat_reads    = ch_mat_reads
     pat_reads    = ch_pat_reads
-    illumina_10x = ch_10x_reads
     busco        = ch_busco
-    mito         = ch_mito
-    plastid      = ch_plastid
-    trio_flag    = ch_trio_flag
+    oatk_mito    = ch_oatk_mito
+    oatk_plastid = ch_oatk_plastid
     versions     = ch_versions
 }
 

@@ -87,9 +87,9 @@
                         "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
                         "installed_by": ["modules"]
                     },
-                    "genescopefk": {
+                    "genomescope2": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "gfastats": {
@@ -108,6 +108,11 @@
                         "git_sha": "aecb06fcdb995ff3e3df7c7a1fd119367d6d1996",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/hifiasm/hifiasm.diff"
+                    },
+                    "merquryfk/hapmaker": {
+                        "branch": "master",
+                        "git_sha": "26ae0455fc69b3fbf542ec506c71bce44ddddc4e",
+                        "installed_by": ["modules"]
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
@@ -248,7 +253,7 @@
                     },
                     "yak/count": {
                         "branch": "master",
-                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     }
                 }
