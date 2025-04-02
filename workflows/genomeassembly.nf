@@ -48,7 +48,7 @@ workflow GENOMEASSEMBLY {
     //
     // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
     //
-    KMERS( hifi_reads, mat_reads, pat_reads)
+    KMERS(hifi_reads, mat_reads, pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
 
 //    if (params.hifiasm_trio_on) {
