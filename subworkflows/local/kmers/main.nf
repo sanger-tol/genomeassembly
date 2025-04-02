@@ -39,7 +39,8 @@ workflow KMERS {
         | mix(ch_fastk_skip)
 
     //
-    // Module: FastK histogram to ASCII for Genomescope
+    // Module: FastK histogram to ASCII for Genomescope.
+    //         Currently runs only for long reads
     //
     ch_fastk_histex_input = ch_fastk
         | filter { it[0].read_type == "long", coverage == -1 }
@@ -66,7 +67,7 @@ workflow KMERS {
         | map { lr_meta, reads, cov_meta, cov ->
             def outcov = lr_meta.coverage != -1 ? lr_meta.coverage : cov
             if(outcov == -1) {
-                log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope failed!")
+                log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope2 failed!")
             }
             def meta_new = meta + [coverage: outcov]
             [meta_new, reads]

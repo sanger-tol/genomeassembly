@@ -34,21 +34,9 @@
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
                 },
-                "hifiasm_hic_on": {
-                    "type": "boolean",
-                    "description": "Switch on HiC mode for hifiasm assembly"
-                },
-                "hifiasm_trio_on": {
-                    "type": "boolean",
-                    "description": "Switch on TRIO mode for hifiasm assembly"
-                },
                 "polishing_on": {
                     "type": "boolean",
                     "description": "Switch on to do polish purged assembly before scaffolding"
-                },
-                "organelles_on": {
-                    "type": "boolean",
-                    "description": "Switch off to skip organelles subworkflow"
                 },
                 "bed_chunks_polishing": {
                     "type": "integer",
@@ -63,24 +51,64 @@
                 "timestamp": {
                     "type": "string",
                     "hidden": true,
-                    "description": "Used for output naming, defined at runtime"
+                    "description": "Used for output naming, defined at runtime",
+                    "default": 20250402
                 },
                 "hifiasm": {
                     "type": "string",
                     "hidden": true,
-                    "description": "Used for hifiasm output naming, defined at runtime"
+                    "description": "Used for hifiasm output naming, defined at runtime",
+                    "default": "hifiasm.20250402"
                 },
                 "hifiasmhic": {
                     "type": "string",
                     "hidden": true,
-                    "description": "Used for hifiasm-hic output naming, defined at runtime"
+                    "description": "Used for hifiasm-hic output naming, defined at runtime",
+                    "default": "hifiasm-hic.20250402"
                 },
                 "hifiasmtrio": {
                     "type": "string",
                     "hidden": true,
-                    "description": "Used for hifiasm-trio output naming, defined at runtime"
+                    "description": "Used for hifiasm-trio output naming, defined at runtime",
+                    "default": "hifiasm-trio.20250402"
                 }
             }
+        },
+        "raw_assembly_options": {
+            "title": "Raw assembly options",
+            "type": "object",
+            "description": "Options for tuning the outputs of raw assembies.",
+            "default": "",
+            "properties": {
+                "enable_hic_phasing": {
+                    "type": "boolean",
+                    "description": "If Hi-C data is provided, enabling this will produce a Hi-C phased assembly with hifiasm."
+                },
+                "enable_trio_binning": {
+                    "type": "boolean",
+                    "description": "If parental read data is provided, enabling this will produce a trio binned assembly with hifiasm."
+                },
+                "enable_organelles": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable organellar assembly subroutines."
+                }
+            },
+            "fa_icon": "fas fa-cubes"
+        },
+        "kmer_profiling_options": {
+            "title": "Kmer profiling options",
+            "type": "object",
+            "description": "Options for the kmer profiling subworkflow.",
+            "default": "",
+            "properties": {
+                "kmer_size": {
+                    "type": "integer",
+                    "default": 31,
+                    "description": "Kmer size to use for all kmer-based subroutines in the Kmer profiling subworkflow. This parameter is overridden by the provided kmer size for a given input read set if a FastK database is provided."
+                }
+            },
+            "fa_icon": "fas fa-signal"
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -205,6 +233,12 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/raw_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/kmer_profiling_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
