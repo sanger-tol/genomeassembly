@@ -28,7 +28,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_geno
 workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
-    hifi_reads
+    long_reads
     hic_reads
     illumina_10x
     mat_reads
@@ -43,7 +43,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     // WORKFLOW: Run pipeline
     //
     GENOMEASSEMBLY (
-        hifi_reads,
+        long_reads,
         hic_reads,
         illumina_10x,
         mat_reads,
@@ -78,7 +78,7 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     SANGERTOL_GENOMEASSEMBLY (
-        PIPELINE_INITIALISATION.out.hifi_reads,
+        PIPELINE_INITIALISATION.out.long_reads,
         PIPELINE_INITIALISATION.out.hic_reads,
         PIPELINE_INITIALISATION.out.illumina_10x,
         PIPELINE_INITIALISATION.out.mat_reads,

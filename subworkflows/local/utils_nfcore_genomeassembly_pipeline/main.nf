@@ -67,7 +67,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Module: Create channels from input file provided through params.input
     //
-    READ_YAML(input)
+    READ_YAML(file(input))
 
     //
     // LOGIC: Create channels for reads for raw assembly input
@@ -75,7 +75,7 @@ workflow PIPELINE_INITIALISATION {
     //
     ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() }
     ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() }
-    ch_10x_reads  = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() }
+    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() }
     ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() }
     ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() }
 
@@ -83,13 +83,13 @@ workflow PIPELINE_INITIALISATION {
     // LOGIC: Create channels for databases
     //
     ch_busco        = READ_YAML.out.busco_lineage
-    ch_oatk_mito    = READ_YAML.out.oatk_mito     | filter { !it.isEmpty() }
-    ch_oatk_plastid = READ_YAML.out.oatk_plastid  | filter { !it.isEmpty() }
+    ch_oatk_mito    = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() }
+    ch_oatk_plastid = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() }
 
     emit:
     long_reads   = ch_long_reads
     hic_reads    = ch_hic_reads
-    illumina_10x = ch_iå10x_reads
+    illumina_10x = ch_i10x_reads
     mat_reads    = ch_mat_reads
     pat_reads    = ch_pat_reads
     busco        = ch_busco

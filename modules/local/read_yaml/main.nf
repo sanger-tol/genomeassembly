@@ -64,11 +64,11 @@ process READ_YAML {
     def db    = input.databases
 
     // Process input files
-    def lr   = get_seq_data(sd.long_reads)
-    def hic  = sd.hic           ? get_seq_data(sd.hic)           : [reads: [], hist: [], ktab: [], kmer_size: null]
-    def i10x = sd.illumina_10x  ? get_seq_data(sd.illumina_10x)  : [reads: [], hist: [], ktab: [], kmer_size: null]
-    def mat  = sd.trio.maternal ? get_seq_data(sd.trio.maternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
-    def pat  = sd.trio.paternal ? get_seq_data(sd.trio.paternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
+    lr   = get_seq_data(sd.long_reads)
+    hic  = sd?.hic            ? get_seq_data(sd.hic)           : [reads: [], hist: [], ktab: [], kmer_size: null]
+    i10x = sd?.illumina_10x   ? get_seq_data(sd.illumina_10x)  : [reads: [], hist: [], ktab: [], kmer_size: null]
+    mat  = sd?.trio?.maternal ? get_seq_data(sd.trio.maternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
+    pat  = sd?.trio?.paternal ? get_seq_data(sd.trio.paternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
 
     // Generate meta maps
     meta      = input.metadata

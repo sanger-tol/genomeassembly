@@ -34,7 +34,8 @@ workflow KMERS {
     ch_fastk = FASTK_FASTK.out.hist
         | combine(FASTK_FASTK.out.ktab, by: 0)
         | map { meta, hist, ktab ->
-            def meta_new = meta + [kmer_size: ${params.kmer_size}]
+            def meta_new = meta + [kmer_size: params.kmer_size]
+            [meta_new, hist, ktab]
         }
         | mix(ch_fastk_skip)
 
@@ -43,7 +44,7 @@ workflow KMERS {
     //         Currently runs only for long reads
     //
     ch_fastk_histex_input = ch_fastk
-        | filter { it[0].read_type == "long", coverage == -1 }
+        | filter { it[0].read_type == "long" && it[0].coverage == -1 }
         | map { meta, hist, _ktab -> [meta, hist] }
 
     FASTK_HISTEX(ch_fastk_histex_input)
@@ -53,23 +54,23 @@ workflow KMERS {
     // Module: Estimate nuclear coverage with Genomescope
     //
     GENOMESCOPE2(FASTK_HISTEX.out.hist)
-    ch_versions = ch_versions.mix(GENESCOPEFK.out.versions)
+    ch_versions = ch_versions.mix(GENOMESCOPE2.out.versions)
 
     ch_coverage = GENOMESCOPE2.out.model
         | map { meta, model ->
-            def kcov_line = model.readLines().find { it =~ "kmercov" }
-            def kcov = kcov_line ? kcov_line.tokenize(/\s+/).getAt(1).toFloat() : -1
+            def kcov_line = model.readLines().find { it =~ /^kmercov/ }
+            def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : -1
             return [meta, kcov]
         }
 
     ch_long_reads_out = long_reads
-        | combine(ch_coverage.ifEmpty([:], -1)
-        | map { lr_meta, reads, cov_meta, cov ->
+        | combine(ch_coverage.ifEmpty([[:], -1]))
+        | map { lr_meta, reads, hist, ktab, cov_meta, cov ->
             def outcov = lr_meta.coverage != -1 ? lr_meta.coverage : cov
             if(outcov == -1) {
                 log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope2 failed!")
             }
-            def meta_new = meta + [coverage: outcov]
+            def meta_new = lr_meta + [coverage: outcov]
             [meta_new, reads]
         }
 
@@ -77,10 +78,10 @@ workflow KMERS {
     // Module: Generate trio databases for maternal and paternal read sets
     //         for trio assembly with hifiasm
     //
-    reads
-        | filter { it[0].read_type in ["pat", "mat"] }
+    ch_yak_input = paternal_reads.mix(maternal_reads)
         | map { meta, reads, _hist, _ktab -> [meta, reads] }
-        | YAK_COUNT
+
+    YAK_COUNT(ch_yak_input)
     ch_versions = ch_versions.mix(YAK_COUNT.out.versions)
 
     ch_trio_yak_dbs = YAK_COUNT.out.yak
@@ -88,10 +89,10 @@ workflow KMERS {
             def meta_new = meta - meta.subMap("read_type")
             [meta_new, yak]
         }
-        | collect()
+        | collect
         | map { meta, yaks ->
-            def pat = yaks.find { it.name =~ "pat" }
-            def mat = yaks.find { it.name =~ "mat" }
+            def pat = yaks.find { it.name =~ /pat.yak$/ }
+            def mat = yaks.find { it.name =~ /mat.yak$/ }
             [meta, pat, mat]
         }
 
