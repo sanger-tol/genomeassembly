@@ -50,6 +50,11 @@
                             },
                             "uniqueItems": true
                         },
+                        "coverage": {
+                            "type": "number",
+                            "description": "Haploid coverage of target genome in the sample.",
+                            "default": -1
+                        },
                         "fastk": {
                             "type": "object",
                             "properties": {
@@ -62,9 +67,14 @@
                                 "basename": {
                                     "type": "string",
                                     "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
                                 }
                             },
-                            "required": ["directory", "basename"]
+                            "required": ["directory", "basename", "kmer_size"]
                         }
                     },
                     "required": ["reads", "platform"]
@@ -102,9 +112,14 @@
                                 "basename": {
                                     "type": "string",
                                     "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
                                 }
                             },
-                            "required": ["directory", "basename"]
+                            "required": ["directory", "basename", "kmer_size"]
                         }
                     },
                     "required": ["reads"],
@@ -138,9 +153,14 @@
                                 "basename": {
                                     "type": "string",
                                     "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
                                 }
                             },
-                            "required": ["directory", "basename"]
+                            "required": ["directory", "basename", "kmer_size"]
                         }
                     },
                     "required": ["reads"]
@@ -172,9 +192,14 @@
                                     "basename": {
                                         "type": "string",
                                         "description": "Basename of the FastK database in the directory."
+                                    },
+                                    "kmer_size": {
+                                        "type": "integer",
+                                        "description": "Length of kmer used to generate the FastK database.",
+                                        "default": -1
                                     }
                                 },
-                                "required": ["directory", "basename"]
+                                "required": ["directory", "basename", "kmer_size"]
                             }
                         },
                         "paternal": {
@@ -201,9 +226,14 @@
                                     "basename": {
                                         "type": "string",
                                         "description": "Basename of the FastK database in the directory."
+                                    },
+                                    "kmer_size": {
+                                        "type": "integer",
+                                        "description": "Length of kmer used to generate the FastK database.",
+                                        "default": -1
                                     }
                                 },
-                                "required": ["directory", "basename"]
+                                "required": ["directory", "basename", "kmer_size"]
                             }
                         }
                     },

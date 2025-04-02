@@ -9,10 +9,19 @@ def get_all_hmm(hmmfile) {
 }
 
 def get_seq_data(map) {
-    def reads = map.reads.flatten()
+    def reads    = map.reads.flatten()
+    def coverage = map?.coverage ? map.coverage : -1
 
-    def has_fastk = map?.fastk
-    if(has_fastk) {
+    def output = [
+        reads: reads,
+        coverage: coverage,
+        hist: [],
+        ktab: [],
+        kmer_size: -1
+    ]
+
+    def fastk = map?.fastk
+    if(fastk) {
         def fastk_files = new File(fastk.directory)
             .listFiles()
             .findAll {
@@ -23,11 +32,11 @@ def get_seq_data(map) {
         def fk_ktab = fastk_files.findAll { it =~ /\.ktab(\.\d+)?$/ }
 
         if([fk_hist, fk_ktab].every { !it.isEmpty() } ){
-            return [reads: reads, hist: fk_hist, ktab: fk_ktab]
+            output = output + [hist: fk_hist, ktab: fk_ktab, kmer_size: fastk.kmer_size]
         }
     }
 
-    return [reads: reads, hist: [], ktab: []]
+    return output
 }
 
 process READ_YAML {
@@ -54,20 +63,25 @@ process READ_YAML {
     def sd    = input.sequencing_data
     def db    = input.databases
 
-    // Generate meta map
-    meta      = input.metadata
-    lr_meta   = meta + [reads: "long", platform: sd.long_reads.platform]
-    hic_meta  = meta + [reads: "hic"]
-    i10x_meta = meta + [reads: "i10x"]
-    mat_meta  = meta + [reads: "mat"]
-    pat_meta  = meta + [reads: "pat"]
-
     // Process input files
     def lr   = get_seq_data(sd.long_reads)
-    def hic  = sd.hic           ? get_seq_data(sd.hic)           : [reads: [], hist: [], ktab: []]
-    def i10x = sd.illumina_10x  ? get_seq_data(sd.illumina_10x)  : [reads: [], hist: [], ktab: []]
-    def mat  = sd.trio.maternal ? get_seq_data(sd.trio.maternal) : [reads: [], hist: [], ktab: []]
-    def pat  = sd.trio.paternal ? get_seq_data(sd.trio.paternal) : [reads: [], hist: [], ktab: []]
+    def hic  = sd.hic           ? get_seq_data(sd.hic)           : [reads: [], hist: [], ktab: [], kmer_size: null]
+    def i10x = sd.illumina_10x  ? get_seq_data(sd.illumina_10x)  : [reads: [], hist: [], ktab: [], kmer_size: null]
+    def mat  = sd.trio.maternal ? get_seq_data(sd.trio.maternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
+    def pat  = sd.trio.paternal ? get_seq_data(sd.trio.paternal) : [reads: [], hist: [], ktab: [], kmer_size: null]
+
+    // Generate meta maps
+    meta      = input.metadata
+    lr_meta   = meta + [
+        read_type: "long",
+        kmer_size: lr.kmer_size,
+        coverage : lr.coverage,
+        platform : sd.long_reads.platform
+    ]
+    hic_meta  = meta + [read_type: "hic" , kmer_size: hic.kmer_size ]
+    i10x_meta = meta + [read_type: "i10x", kmer_size: i10x.kmer_size]
+    mat_meta  = meta + [read_type: "mat" , kmer_size: mat.kmer_size ]
+    pat_meta  = meta + [read_type: "pat" , kmer_size: pat.kmer_size ]
 
     // Databases
     busco_lineage = db?.busco_lineage     ? db.busco_lineage : "auto_euk"
