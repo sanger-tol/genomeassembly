@@ -1,80 +1,137 @@
 Changes in component 'nf-core/hifiasm'
-Changes in 'hifiasm/environment.yml':
---- modules/nf-core/hifiasm/environment.yml
-+++ modules/nf-core/hifiasm/environment.yml
-@@ -2,6 +2,6 @@
- channels:
-   - conda-forge
-   - bioconda
--  - defaults
- dependencies:
-   - bioconda::hifiasm=0.19.8
-+  - bioconda::samtools=1.20
-
+'modules/nf-core/hifiasm/environment.yml' is unchanged
 'modules/nf-core/hifiasm/meta.yml' is unchanged
 Changes in 'hifiasm/main.nf':
 --- modules/nf-core/hifiasm/main.nf
 +++ modules/nf-core/hifiasm/main.nf
-@@ -2,10 +2,7 @@
-     tag "$meta.id"
-     label 'process_high'
+@@ -4,27 +4,27 @@
  
--    conda "${moduleDir}/environment.yml"
--    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
--        'https://depot.galaxyproject.org/singularity/hifiasm:0.19.8--h43eeafb_0' :
--        'biocontainers/hifiasm:0.19.8--h43eeafb_0' }"
-+    container "quay.io/sanger-tol/hifiasm_samtools:0.01"
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/hifiasm:0.24.0--h5ca1c30_0' :
+-        'biocontainers/hifiasm:0.24.0--h5ca1c30_0' }"
++        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/70/709c9b732af5bc95b8f02346f374b8d9ef815087e30a969410d5e385625bf7a9/data' :
++        'community.wave.seqera.io/library/hifiasm_samtools:7f8aef13225935f4' }"
  
      input:
-     tuple val(meta), path(reads)
-@@ -13,6 +10,7 @@
-     path  maternal_kmer_dump
-     path  hic_read1
-     path  hic_read2
-+    path  hic_reads_cram
+     tuple val(meta) , path(long_reads)        , path(ul_reads)
+     tuple val(meta1), path(paternal_kmer_dump), path(maternal_kmer_dump)
+-    tuple val(meta2), path(hic_read1)         , path(hic_read2)
++    tuple val(meta2), path(hic_reads)
+     tuple val(meta3), path(bin_files)
  
      output:
-     tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
-@@ -23,8 +21,12 @@
-     tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
-     tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
-     tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
--    tuple val(meta), path("*.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
--    tuple val(meta), path("*.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
-+    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")   , emit: hap1_contigs  , optional: true
-+    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")   , emit: hap2_contigs  , optional: true
-+    tuple val(meta), path("*.asm.hic.p_ctg.gfa")   , emit: hic_primary_contigs  , optional: true
-+    tuple val(meta), path("*.asm.hic.a_ctg.gfa")   , emit: hic_alternate_contigs  , optional: true
-+    tuple val(meta), path("*.asm.hic.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: true
-+    tuple val(meta), path("*.asm.hic.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: true
-     tuple val(meta), path("*.log")             , emit: log
-     path  "versions.yml"                       , emit: versions
+-    tuple val(meta), path("*.r_utg.gfa")                             , emit: raw_unitigs
+-    tuple val(meta), path("*.bin")                                   , emit: bin_files        , optional: true
+-    tuple val(meta), path("*.p_utg.gfa")                             , emit: processed_unitigs, optional: true
+-    tuple val(meta), path("${prefix}.{p_ctg,bp.p_ctg,hic.p_ctg}.gfa"), emit: primary_contigs  , optional: true
+-    tuple val(meta), path("${prefix}.{a_ctg,hic.a_ctg}.gfa")         , emit: alternate_contigs, optional: true
+-    tuple val(meta), path("${prefix}.*.hap1.p_ctg.gfa")              , emit: hap1_contigs     , optional: true
+-    tuple val(meta), path("${prefix}.*.hap2.p_ctg.gfa")              , emit: hap2_contigs     , optional: true
+-    tuple val(meta), path("*.ec.fa.gz")                              , emit: corrected_reads  , optional: true
+-    tuple val(meta), path("*.ovlp.paf.gz")                           , emit: read_overlaps    , optional: true
+-    tuple val(meta), path("${prefix}.stderr.log")                    , emit: log
+-    path  "versions.yml"                                             , emit: versions
++    tuple val(meta), path("*.r_utg.gfa.gz")                             , emit: raw_unitigs      , optional: true
++    tuple val(meta), path("*.bin")                                      , emit: bin_files        , optional: true
++    tuple val(meta), path("*.p_utg.gfa.gz")                             , emit: processed_unitigs, optional: true
++    tuple val(meta), path("${prefix}.{p_ctg,bp.p_ctg,hic.p_ctg}.gfa.gz"), emit: primary_contigs  , optional: true
++    tuple val(meta), path("${prefix}.{a_ctg,hic.a_ctg}.gfa.gz")         , emit: alternate_contigs, optional: true
++    tuple val(meta), path("${prefix}.*.hap1.p_ctg.gfa.gz")              , emit: hap1_contigs     , optional: true
++    tuple val(meta), path("${prefix}.*.hap2.p_ctg.gfa.gz")              , emit: hap2_contigs     , optional: true
++    tuple val(meta), path("*.ec.fa.gz")                                 , emit: corrected_reads  , optional: true
++    tuple val(meta), path("*.ovlp.paf.gz")                              , emit: read_overlaps    , optional: true
++    tuple val(meta), path("${prefix}.stderr.log")                       , emit: log
++    path  "versions.yml"                                                , emit: versions
  
-@@ -32,8 +34,14 @@
+     when:
      task.ext.when == null || task.ext.when
+@@ -37,7 +37,7 @@
+     def ul_reads_sorted = ul_reads instanceof List ? ul_reads.sort{ it.name } : ul_reads
+     def ultralong = ul_reads ? "--ul ${ul_reads_sorted}" : ""
  
-     script:
-+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-+        exit 1, "This version of HIFIASM module does not support Conda. Please use Docker / Singularity / Podman instead."
-+    }
-+    
-     def args = task.ext.args ?: ''
-     def prefix = task.ext.prefix ?: "${meta.id}"
-+    def hic_read1 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done" : ""
-+    def hic_read2 = hic_reads_cram ? "for f in $hic_reads_cram; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done" : ""
-     if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
-         error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
-     } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {
-@@ -67,8 +75,8 @@
-             $args \\
-             -o ${prefix}.asm \\
-             -t $task.cpus \\
--            --h1 $hic_read1 \\
--            --h2 $hic_read2 \\
-+            --h1 <($hic_read1) \\
-+            --h2 <($hic_read2) \\
-             $reads \\
-             2> >( tee ${prefix}.stderr.log >&2 )
+-    if([paternal_kmer_dump, maternal_kmer_dump].any() && [hic_read1, hic_read2].any()) {
++    if([paternal_kmer_dump, maternal_kmer_dump].any() && hic_reads) {
+         log.error("ERROR: hifiasm trio binning mode and Hi-C phasing can not be used at the same time.")
+     }
  
+@@ -50,20 +50,19 @@
+         }
+     }
+ 
+-    def input_hic = ""
+-    if([hic_read1, hic_read2].any()) {
+-        if(![hic_read1, hic_read2].every()) {
+-            log.error("ERROR: Either the forward or reverse Hi-C reads are missing!")
+-        } else {
+-            input_hic = "--h1 ${hic_read1} --h2 ${hic_read2}"
+-        }
++    def input_hic1 = ""
++    def input_hic2 = ""
++    if(hic_reads) {
++        input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
++        input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
+     }
+     """
+     hifiasm \\
+         $args \\
+         -t ${task.cpus} \\
+         ${input_trio} \\
+-        ${input_hic} \\
++        ${input_hic1} \\
++        ${input_hic2} \\
+         ${ultralong} \\
+         -o ${prefix} \\
+         ${long_reads_sorted} \\
+@@ -77,27 +76,31 @@
+         gzip ${prefix}.ovlp.paf
+     fi
+ 
++    ## gzip all GFA output files
++    find . -name "*.gfa" -exec gzip {} \\;
++
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+         hifiasm: \$(hifiasm --version 2>&1)
++        samtools: \$(samtools --version |& sed '1!d ; s/samtools //')
+     END_VERSIONS
+     """
+ 
+     stub:
+     prefix = task.ext.prefix ?: "${meta.id}"
+     """
+-    touch ${prefix}.r_utg.gfa
+     touch ${prefix}.ec.bin
+     touch ${prefix}.ovlp.source.bin
+     touch ${prefix}.ovlp.reverse.bin
+     touch ${prefix}.hic.tlb.bin
+     touch ${prefix}.hic.lk.bin
+-    touch ${prefix}.bp.p_ctg.gfa
+-    touch ${prefix}.p_utg.gfa
+-    touch ${prefix}.p_ctg.gfa
+-    touch ${prefix}.a_ctg.gfa
+-    touch ${prefix}.hap1.p_ctg.gfa
+-    touch ${prefix}.hap2.p_ctg.gfa
++    echo "" | gzip ${prefix}.r_utg.gfa.gz
++    echo "" | gzip ${prefix}.bp.p_ctg.gfa.gz
++    echo "" | gzip ${prefix}.p_utg.gfa.gz
++    echo "" | gzip ${prefix}.p_ctg.gfa.gz
++    echo "" | gzip ${prefix}.a_ctg.gfa.gz
++    echo "" | gzip ${prefix}.hap1.p_ctg.gfa.gz
++    echo "" | gzip ${prefix}.hap2.p_ctg.gfa.gz
+     echo "" | gzip > ${prefix}.ec.fa.gz
+     echo "" | gzip > ${prefix}.ovlp.paf.gz
+     touch ${prefix}.stderr.log
+@@ -105,6 +108,7 @@
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+         hifiasm: \$(hifiasm --version 2>&1)
++        samtools: \$(samtools --version |& sed '1!d ; s/samtools //')
+     END_VERSIONS
+     """
+ }
 
+'modules/nf-core/hifiasm/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/hifiasm/tests/nextflow.config' is unchanged
+'modules/nf-core/hifiasm/tests/main.nf.test' is unchanged
 ************************************************************

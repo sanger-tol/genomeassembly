@@ -4,15 +4,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly'
-//include { ORGANELLES                                            } from '../subworkflows/local/organelles'
 include { KMERS                                     } from '../subworkflows/local/kmers'
-//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+//include { ORGANELLES                              } from '../subworkflows/local/organelles'
 //include { POLISHING                                             } from '../subworkflows/local/polishing'
+//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+include { RAW_ASSEMBLY } from '../subworkflows/local/raw_assembly'
 //include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
 //include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
 //include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
-//include { GENOME_STATISTICS as GENOME_STATISTICS            } from '../subworkflows/local/genome_statistics'
+//include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 
 //include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 //include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
@@ -50,130 +50,26 @@ workflow GENOMEASSEMBLY {
     KMERS(long_reads, mat_reads, pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
 
+    // FastK databases
+    ch_fastk = KMERS.out.fastk
+
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
     ch_long_reads = KMERS.out.long_reads
 
-//    if (params.hifiasm_trio_on) {
-//
-//        // LOGIC: PRODUCE YAK DATABASE FOR BOTH PAT AND MAT FOR HIFIASM
-//        GENOMESCOPE_MODEL.out.patdb.map{ meta, patdb -> patdb }.set{ patdb_ch }
-//        GENOMESCOPE_MODEL.out.matdb.map{ meta, matdb -> matdb }.set{ matdb_ch }
-//
-//        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
-//        GENOMESCOPE_MODEL.out.phapktab
-//        .map { it[1] }
-//        .set { phapktab_ch }
-//
-//        GENOMESCOPE_MODEL.out.mhapktab
-//        .map { it[1] }
-//        .set { mhapktab_ch }
-//
-//        GENOMESCOPE_MODEL.out.phapktab
-//        .map { it[2] }
-//        .set { fastk_pktab}
-//
-//        GENOMESCOPE_MODEL.out.mhapktab
-//        .map { it[2] }
-//        .set { fastk_mktab}
-//
-//        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
-//        RAW_ASSEMBLY( hifi_reads, hic_reads, params.hifiasm_hic_on, params.hifiasm_trio_on, patdb_ch, matdb_ch )
-//    }
-//    else {
-//        RAW_ASSEMBLY( hifi_reads, hic_reads, params.hifiasm_hic_on, params.hifiasm_trio_on, [], [] )
-//    }
-//
-//
-//    //
-//    // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
-//    //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
-//    //
-//    ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
-//
-//    //
-//    // LOGIC: DEFINE THE PRIMARY CONTIGS CHANNEL
-//    //
-//    RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
-//
-//    //
-//    // LOGIC: DEFINE THE HAPLOTIGS CHANNELS
-//    //
-//    RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
-//
-//    //
-//    // SUBWORKFLOW: CALCULATE STATISTICS FOR THE RAW ASSEMBLY
-//    //
-//    GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch),
-//        busco,
-//        GENOMESCOPE_MODEL.out.hist,
-//        GENOMESCOPE_MODEL.out.ktab,
-//        [],
-//        [],
-//        [],
-//        [],
-//        false
-//    )
-//    ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
-//
-//    if ( params.organelles_on ) {
-//        //
-//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
-//        //
-//        primary_contigs_ch.join(haplotigs_ch)
-//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
-//            .set{ raw_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_RAW( raw_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
-//
-//        //
-//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-//        //
-//        CAT_CAT_MITOHIFI_READS(hifi_reads)
-//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-//
-//        //
-//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
-//        //
-//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
-//            mito, plastid)
-//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
-//    }
-//
-//    //
-//    // LOGIC: CHECK IF THE HIFIASM HIC MODE WAS SWITCHED ON
-//    //
-//    if ( params.hifiasm_hic_on ) {
-//        //
-//        // SUBWORKFLOW: CALCULATE RAW ASSEMBLY STATISTICS FOR THE HIFIASN IN HIC MODE
-//        //
-//        GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.hap1_hic_contigs
-//            .join(RAW_ASSEMBLY.out.hap2_hic_contigs),
-//            busco,
-//            GENOMESCOPE_MODEL.out.hist,
-//            GENOMESCOPE_MODEL.out.ktab,
-//            [],
-//            [],
-//            [],
-//            [],
-//            true
-//        )
-//    }
-//
-//    //
-//    // LOGIC: CREATE AN INPUT DATA STRUCTURE FOR PURGING
-//    //
-//    hifi_reads.join(primary_contigs_ch)
-//        .join(GENOMESCOPE_MODEL.out.model)
-//        .set{ purge_dups_input }
-//
+    // Drop FastK databases for all downstream uses of Hi-C
+    // CRAM files
+    ch_hic_reads  = hic_reads
+        | map { meta, cram, hist, ktab -> [meta, cram] }
+    ch_trio_yak_dbs   = KMERS.out.trio_yakdb
+
+    RAW_ASSEMBLY(
+        ch_long_reads,
+        ch_hic_reads,
+        ch_trio_yak_dbs
+    )
+    ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
+
 //    //
 //    // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
 //    //
@@ -458,6 +354,40 @@ workflow GENOMEASSEMBLY {
 //        )
 //
 //    }
+
+
+//
+//    if ( params.organelles_on ) {
+//        //
+//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
+//        //
+//        primary_contigs_ch.join(haplotigs_ch)
+//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
+//            .set{ raw_pri_alt_ch }
+//        //
+//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
+//        //
+//        CAT_CAT_RAW( raw_pri_alt_ch )
+//
+//        //
+//        // LOGIC: DEFINE MERGED ASSEMBLY
+//        //
+//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
+//
+//        //
+//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
+//        //
+//        CAT_CAT_MITOHIFI_READS(hifi_reads)
+//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
+//
+//        //
+//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
+//        //
+//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
+//            mito, plastid)
+//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
+//    }
+//
 
     //
     // Collate and save software versions
