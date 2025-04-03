@@ -51,19 +51,20 @@ process HIFIASM {
     }
 
     if(hic_reads) {
-        input_hic = """
-        --h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done) \\
-        --h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done) \\
+        def input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
+        def input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
         """
     } else {
-        def input_hic = ""
+        def input_hic1 = ""
+        def input_hic2 = ""
     }
     """
     hifiasm \\
         $args \\
         -t ${task.cpus} \\
         ${input_trio} \\
-        ${input_hic} \\
+        ${input_hic1} \\
+        ${input_hic2} \\
         ${ultralong} \\
         -o ${prefix} \\
         ${long_reads_sorted} \\
