@@ -1,85 +1,274 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/sanger-tol/genomeassembly/master/assets/schema_input.json",
-    "title": "sanger-tol/genomeassembly pipeline - params.input schema",
+    "title": "Test schema for samplesheets",
     "description": "Schema for the file provided with params.input",
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "dataset": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "errorMessage": "Sample name (ToLID) must be provided and cannot contain spaces"
-                    },
-                    "illumina_10X": {
-                        "type": "string",
-                        "errorMessage": "Path to folder containing 10X fastq reads and indices"
-                    },
-                    "pacbio": {
-                        "type": "array",
-                        "errorMessage": "Paths to HiFi reads in fasta format"
-                    },
-                    "HiC": {
-                        "type": "array",
-                        "errorMessage": "Path to HiC reads in cram format"
-                    }
+    "type": "object",
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "A short string identifying the sample to be assembled."
+                },
+                "species": {
+                    "type": "string",
+                    "description": "The binomial name of the species."
+                },
+                "taxid": {
+                    "type": "integer",
+                    "description": "NCBI numeric taxonomic identifier for the species (https://www.ncbi.nlm.nih.gov/books/NBK53758/)"
+                },
+                "mitochondrial_code": {
+                    "type": "integer",
+                    "description": "The genetic code used by the mitochondrion for the species (https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)."
                 }
             },
-            "arima_motif": {
-                "type": "string",
-                "errorMessage": "Comma-separated list of restriction enzymes"
-            },
-            "busco": {
-                "type": "object",
-                "properties": {
-                    "lineage_path": {
-                        "type": "string",
-                        "errorMessage": "Path to directory containing lineages folder"
+            "required": ["id"]
+        },
+        "sequencing_data": {
+            "type": "object",
+            "errorMessage": "The sequencing_data section must contain either a 'pacbio' or 'ont' section.",
+            "properties": {
+                "long_reads": {
+                    "type": "object",
+                    "properties": {
+                        "platform": {
+                            "type": "string",
+                            "description": "Platform used to sequence long reads ('pacbio' or 'ont')",
+                            "enum": ["pacbio", "ont"]
+                        },
+                        "reads": {
+                            "type": "array",
+                            "description": "List of FASTA files containing PacBio HiFi reads. Must be gzipped.",
+                            "items": {
+                                "type": "string",
+                                "format": "file-path",
+                                "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                                "exists": true
+                            },
+                            "uniqueItems": true
+                        },
+                        "coverage": {
+                            "type": "number",
+                            "description": "Haploid coverage of target genome in the sample.",
+                            "default": -1
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the PacBio reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
+                                }
+                            },
+                            "required": ["directory", "basename", "kmer_size"]
+                        }
                     },
-                    "lineage": {
-                        "type": "string",
-                        "errorMessage": "busco lineage to run"
+                    "required": ["reads", "platform"]
+                },
+                "hic": {
+                    "type": "object",
+                    "properties": {
+                        "reads": {
+                            "type": "array",
+                            "description": "List of CRAM files containing Hi-C Illumina reads.",
+                            "items": {
+                                "type": "string",
+                                "format": "file-path",
+                                "pattern": ".*\\.cram$",
+                                "exists": true
+                            },
+                            "uniqueItems": true
+                        },
+                        "hic_motif": {
+                            "type": "array",
+                            "description": "List of restriction enzymes used during Hi-C library preparation.",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the Hi-C reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
+                                }
+                            },
+                            "required": ["directory", "basename", "kmer_size"]
+                        }
+                    },
+                    "required": ["reads"],
+                    "dependentRequired": {
+                        "reads": ["hic_motif"]
                     }
+                },
+                "illumina_10x": {
+                    "type": "object",
+                    "properties": {
+                        "reads": {
+                            "type": "array",
+                            "description": "List of fastq files containing Illumina 10X reads for polishing. Must be gzipped.",
+                            "items": {
+                                "type": "string",
+                                "format": "file-path",
+                                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                "exists": true
+                            },
+                            "uniqueItems": true
+                        },
+                        "fastk": {
+                            "type": "object",
+                            "properties": {
+                                "directory": {
+                                    "type": "string",
+                                    "description": "(optional) A directory containing a FastK database (hist + table) of the Illumina 10X reads.",
+                                    "format": "directory-path",
+                                    "exists": "true"
+                                },
+                                "basename": {
+                                    "type": "string",
+                                    "description": "Basename of the FastK database in the directory."
+                                },
+                                "kmer_size": {
+                                    "type": "integer",
+                                    "description": "Length of kmer used to generate the FastK database.",
+                                    "default": -1
+                                }
+                            },
+                            "required": ["directory", "basename", "kmer_size"]
+                        }
+                    },
+                    "required": ["reads"]
+                },
+                "trio": {
+                    "type": "object",
+                    "properties": {
+                        "maternal": {
+                            "reads": {
+                                "type": "array",
+                                "description": "List of fastq files containing maternal reads for trio binning. Must be gzipped.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                    "exists": true
+                                },
+                                "uniqueItems": true
+                            },
+                            "fastk": {
+                                "type": "object",
+                                "properties": {
+                                    "directory": {
+                                        "type": "string",
+                                        "description": "(optional) A directory containing a FastK database (hist + table) of the maternal reads.",
+                                        "format": "directory-path",
+                                        "exists": "true"
+                                    },
+                                    "basename": {
+                                        "type": "string",
+                                        "description": "Basename of the FastK database in the directory."
+                                    },
+                                    "kmer_size": {
+                                        "type": "integer",
+                                        "description": "Length of kmer used to generate the FastK database.",
+                                        "default": -1
+                                    }
+                                },
+                                "required": ["directory", "basename", "kmer_size"]
+                            }
+                        },
+                        "paternal": {
+                            "reads": {
+                                "type": "array",
+                                "description": "List of fastq files containing paternal reads for trio binning. Must be gzipped.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                                    "exists": true
+                                },
+                                "uniqueItems": true
+                            },
+                            "fastk": {
+                                "type": "object",
+                                "properties": {
+                                    "directory": {
+                                        "type": "string",
+                                        "description": "(optional) A directory containing a FastK database (hist + table) of the paternal reads.",
+                                        "format": "directory-path",
+                                        "exists": "true"
+                                    },
+                                    "basename": {
+                                        "type": "string",
+                                        "description": "Basename of the FastK database in the directory."
+                                    },
+                                    "kmer_size": {
+                                        "type": "integer",
+                                        "description": "Length of kmer used to generate the FastK database.",
+                                        "default": -1
+                                    }
+                                },
+                                "required": ["directory", "basename", "kmer_size"]
+                            }
+                        }
+                    },
+                    "required": ["reads_maternal", "reads_paternal"]
                 }
             },
-            "mito": {
-                "type": "object",
-                "properties": {
-                    "species": {
-                        "type": "string",
-                        "errorMessage": "Latin name"
-                    },
-                    "min_length": {
-                        "type": "string",
-                        "errorMessage": "Minimal allowed length of the mito reference"
-                    },
-                    "email": {
-                        "type": "string",
-                        "errorMessage": "email to query NCBI"
-                    },
-                    "code": {
-                        "type": "string",
-                        "errorMessage": "Mitochondrial code"
-                    },
-                    "fam": {
-                        "type": "string",
-                        "errorMessage": "Path to mitochondrial HMM for OATK"
-                    }
-                }
-            },
-            "plastid": {
-                "type": "object",
-                "properties": {
-                    "fam": {
-                        "type": "string",
-                        "errorMessage": "Path to plastid HMM for OATK"
+            "required": ["long_reads"]
+        },
+        "databases": {
+            "type": "object",
+            "properties": {
+                "busco_lineage": {
+                    "type": "string",
+                    "description": "BUSCO lineage to use.",
+                    "default": "auto_euk"
+                },
+                "oatk": {
+                    "type": "object",
+                    "properties": {
+                        "mito_hmm": {
+                            "type": "string",
+                            "format": "file-path",
+                            "description": "Path to base oatk mitochondrial HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files.",
+                            "exists": true
+                        },
+                        "plastid_hmm": {
+                            "type": "string",
+                            "format": "file-path",
+                            "description": "Path to base oatk plastid HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files.",
+                            "exists": true
+                        }
                     }
                 }
             }
-        },
-        "required": ["dataset", "busco"]
-    }
+        }
+    },
+    "required": ["metadata", "sequencing_data"]
 }

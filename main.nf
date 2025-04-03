@@ -28,16 +28,14 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_geno
 workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
-    hifi_reads
-    hic
+    long_reads
     hic_reads
+    illumina_10x
     mat_reads
     pat_reads
-    illumina_10x
     busco
-    mito
-    plastid
-    trio_flag
+    oatk_mito
+    oatk_plastid
 
     main:
 
@@ -45,16 +43,14 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     // WORKFLOW: Run pipeline
     //
     GENOMEASSEMBLY (
-        hifi_reads,
-        hic,
+        long_reads,
         hic_reads,
+        illumina_10x,
         mat_reads,
         pat_reads,
-        illumina_10x,
         busco,
-        mito,
-        plastid,
-        trio_flag
+        oatk_mito,
+        oatk_plastid
     )
 }
 /*
@@ -82,16 +78,14 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     SANGERTOL_GENOMEASSEMBLY (
-        PIPELINE_INITIALISATION.out.hifi_reads,
-        PIPELINE_INITIALISATION.out.hic,
+        PIPELINE_INITIALISATION.out.long_reads,
         PIPELINE_INITIALISATION.out.hic_reads,
+        PIPELINE_INITIALISATION.out.illumina_10x,
         PIPELINE_INITIALISATION.out.mat_reads,
         PIPELINE_INITIALISATION.out.pat_reads,
-        PIPELINE_INITIALISATION.out.illumina_10x,
         PIPELINE_INITIALISATION.out.busco,
-        PIPELINE_INITIALISATION.out.mito,
-        PIPELINE_INITIALISATION.out.plastid,
-        PIPELINE_INITIALISATION.out.trio_flag,
+        PIPELINE_INITIALISATION.out.oatk_mito,
+        PIPELINE_INITIALISATION.out.oatk_plastid
     )
     //
     // SUBWORKFLOW: Run completion tasks
