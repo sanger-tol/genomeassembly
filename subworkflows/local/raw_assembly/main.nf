@@ -35,6 +35,7 @@ workflow RAW_ASSEMBLY {
     //
 
     ch_hic_in = hic_reads
+        | map { meta, cram, hist, ktab -> [meta, cram] }
         | mix(Channel.of([[:], []]))
 
     ch_trio_in = trio_dbs
@@ -69,7 +70,7 @@ workflow RAW_ASSEMBLY {
             if(!hic.isEmpty()) {
                 assembly_type = "hic_phased"
             }
-            else if(!(mat.isEmpty() || pat.isEmpty()) {
+            else if(!(mat.isEmpty() || pat.isEmpty())) {
                 assembly_type = "trio_binned"
             }
             else {
