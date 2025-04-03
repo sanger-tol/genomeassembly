@@ -102,12 +102,12 @@ workflow RAW_ASSEMBLY {
         | groupTuple(by: 0, size: 4, remainder: true)
         | map { meta, asms ->
             if(asms.size() == 1) { return null }
-            def pri = /hap1.p_ctg.gfa$/
-            def alt = /hap2.p_ctg.gfa$/
+            def pri = /hap1.p_ctg.gfa.gz$/
+            def alt = /hap2.p_ctg.gfa.gz$/
             if(meta.assembly_type == "primary") {
-                if(asms.filter { it.name =~ "hap" }.size() == 0) {
-                    pri = /^[^.]+\.p_ctg\.gfa$/
-                    alt = /a_ctg.gfa$/
+                if(asms.findAll { it.name =~ /hap/ }.size() == 0) {
+                    pri = /^[^.]+\.p_ctg\.gfa.gz$/
+                    alt = /a_ctg.gfa.gz$/
                 }
             }
 
