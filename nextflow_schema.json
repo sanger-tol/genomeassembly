@@ -64,9 +64,15 @@
                     "type": "boolean",
                     "description": "If parental read data is provided, enabling this will produce a trio binned assembly with hifiasm."
                 },
-                "hifiasm_options": {
+                "hifiasm_error_correction_options": {
                     "type": "string",
-                    "description": "Extra command-line options for hifiasm."
+                    "description": "Options controlling Hifiasm error correction.",
+                    "help_text": "See the \"Error correction options\" section of https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options."
+                },
+                "hifiasm_assembly_options": {
+                    "type": "string",
+                    "help_text": "See https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options.",
+                    "description": "Options controlling Hifiasm assembly output, including those affecting assemblty, purging, phasing and trio binning."
                 }
             },
             "fa_icon": "fas fa-cubes"
