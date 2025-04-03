@@ -85,8 +85,8 @@ workflow RAW_ASSEMBLY {
 
     HIFIASM(
         ch_hifiasm_input.long_reads,
-        ch_hifiasm_input.hic,
         ch_hifiasm_input.trio,
+        ch_hifiasm_input.hic,
         ch_hifiasm_input.bin
     )
     ch_versions = ch_versions.mix(HIFIASM.out.versions)
