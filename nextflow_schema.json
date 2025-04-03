@@ -33,46 +33,22 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "polishing_on": {
-                    "type": "boolean",
-                    "description": "Switch on to do polish purged assembly before scaffolding"
-                },
-                "bed_chunks_polishing": {
-                    "type": "integer",
-                    "default": 100,
-                    "description": "Number of chunks to split fasta for polishing"
-                },
-                "cool_bin": {
-                    "type": "integer",
-                    "default": 1000,
-                    "description": "Number of bins for cooler cload"
-                },
-                "timestamp": {
-                    "type": "string",
-                    "hidden": true,
-                    "description": "Used for output naming, defined at runtime",
-                    "default": 20250402
-                },
-                "hifiasm": {
-                    "type": "string",
-                    "hidden": true,
-                    "description": "Used for hifiasm output naming, defined at runtime",
-                    "default": "hifiasm.20250402"
-                },
-                "hifiasmhic": {
-                    "type": "string",
-                    "hidden": true,
-                    "description": "Used for hifiasm-hic output naming, defined at runtime",
-                    "default": "hifiasm-hic.20250402"
-                },
-                "hifiasmtrio": {
-                    "type": "string",
-                    "hidden": true,
-                    "description": "Used for hifiasm-trio output naming, defined at runtime",
-                    "default": "hifiasm-trio.20250402"
                 }
             }
+        },
+        "kmer_profiling_options": {
+            "title": "Kmer profiling options",
+            "type": "object",
+            "description": "Options for the kmer profiling subworkflow.",
+            "default": "",
+            "properties": {
+                "kmer_size": {
+                    "type": "integer",
+                    "default": 31,
+                    "description": "Kmer size to use for all kmer-based subroutines in the Kmer profiling subworkflow. This parameter is overridden by the provided kmer size for a given input read set if a FastK database is provided."
+                }
+            },
+            "fa_icon": "fas fa-signal"
         },
         "raw_assembly_options": {
             "title": "Raw assembly options",
@@ -96,19 +72,35 @@
             },
             "fa_icon": "fas fa-cubes"
         },
-        "kmer_profiling_options": {
-            "title": "Kmer profiling options",
+        "polishing_options": {
+            "title": "Polishing options",
             "type": "object",
-            "description": "Options for the kmer profiling subworkflow.",
+            "description": "Options for polishing genomes with 10X Illumina reads.",
             "default": "",
             "properties": {
-                "kmer_size": {
+                "enable_polishing": {
+                    "type": "boolean",
+                    "description": "Switch on to do polish purged assembly before scaffolding"
+                },
+                "bed_chunks_polishing": {
                     "type": "integer",
-                    "default": 31,
-                    "description": "Kmer size to use for all kmer-based subroutines in the Kmer profiling subworkflow. This parameter is overridden by the provided kmer size for a given input read set if a FastK database is provided."
+                    "default": 100,
+                    "description": "Number of chunks to split assembly into for polishing."
                 }
-            },
-            "fa_icon": "fas fa-signal"
+            }
+        },
+        "scaffolding_options": {
+            "title": "Scaffolding options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "cool_bin": {
+                    "type": "integer",
+                    "default": 1000,
+                    "description": "Number of bins for cooler cload"
+                }
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -235,10 +227,16 @@
             "$ref": "#/$defs/input_output_options"
         },
         {
+            "$ref": "#/$defs/kmer_profiling_options"
+        },
+        {
             "$ref": "#/$defs/raw_assembly_options"
         },
         {
-            "$ref": "#/$defs/kmer_profiling_options"
+            "$ref": "#/$defs/polishing_options"
+        },
+        {
+            "$ref": "#/$defs/scaffolding_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
