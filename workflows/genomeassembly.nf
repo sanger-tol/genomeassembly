@@ -50,6 +50,10 @@ workflow GENOMEASSEMBLY {
     KMERS(long_reads, mat_reads, pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
 
+    // Get the long reads out with additional metadata from
+    // the kmer-based analyses
+    ch_long_reads = KMERS.out.long_reads
+
 //    if (params.hifiasm_trio_on) {
 //
 //        // LOGIC: PRODUCE YAK DATABASE FOR BOTH PAT AND MAT FOR HIFIASM
