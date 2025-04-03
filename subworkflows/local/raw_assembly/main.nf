@@ -65,7 +65,6 @@ workflow RAW_ASSEMBLY {
         }
         | multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             // Add assembly type into the long read meta object
-            def assembly_type = "primary"
             if(!hic.isEmpty()) {
                 assembly_type = "hic_phased"
             }
@@ -73,7 +72,7 @@ workflow RAW_ASSEMBLY {
                 assembly_type = "trio_binned"
             }
             else {
-                assembly_type = "unknown"
+                assembly_type = "primary"
             }
             def lr_meta_new = lr_meta + [assembly_type: assembly_type]
 
