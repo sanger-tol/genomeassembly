@@ -50,14 +50,22 @@ workflow GENOMEASSEMBLY {
     KMERS(long_reads, mat_reads, pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
 
+    // FastK databases
+    ch_fastk = KMERS.out.fastk
+
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
     ch_long_reads = KMERS.out.long_reads
+
+    // Drop FastK databases for all downstream uses of Hi-C
+    // CRAM files
+    ch_hic_reads  = hic_reads
+        | map { meta, cram, hist, ktab -> [meta, cram] }
     ch_trio_yak_dbs   = KMERS.out.trio_yakdb
 
     RAW_ASSEMBLY(
         ch_long_reads,
-        hic_reads,
+        ch_hic_reads,
         ch_trio_yak_dbs
     )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)

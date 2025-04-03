@@ -35,7 +35,6 @@ workflow RAW_ASSEMBLY {
     //
 
     ch_hic_in = hic_reads
-        | map { meta, cram, hist, ktab -> [meta, cram] }
         | mix(Channel.of([[:], []]))
 
     ch_trio_in = trio_dbs
