@@ -76,8 +76,8 @@ process HIFIASM {
         gzip ${prefix}.ovlp.paf
     fi
 
-    // gzip all GFA output files
-    find . -name "*.gfa" -exec gzip {} \;
+    ## gzip all GFA output files
+    find . -name "*.gfa" -exec gzip {} \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

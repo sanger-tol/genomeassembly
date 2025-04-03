@@ -50,10 +50,18 @@ workflow RAW_ASSEMBLY {
         | combine(HIFIASM_BIN.out.bin_files)
         | filter { lr_meta, lr, hic_meta, hic, trio_meta, pat, mat, bin_meta, bin ->
             // Filter disallowed assemblies
-            if(!hic.isEmpty()       && !(mat.isEmpty() && pat.isEmpty())) { return false }
-            else if(!hic.isEmpty()  && !params.enable_hic_phasing)        { return false }
-            else if(!trio.isEmpty() && !params.enable_trio_binning)       { return false }
-            else                                                          { return true  }
+            if(!hic.isEmpty() && !(mat.isEmpty() || pat.isEmpty())) {
+                return false
+            }
+            else if(!hic.isEmpty() && !params.enable_hic_phasing) {
+                return false
+            }
+            else if(!(mat.isEmpty() || pat.isEmpty())) && !params.enable_trio_binning) {
+                return false
+            }
+            else {
+                return true
+            }
         }
         | multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             // Add assembly type into the long read meta object

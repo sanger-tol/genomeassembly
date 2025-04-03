@@ -60,65 +60,8 @@ workflow GENOMEASSEMBLY {
         hic_reads,
         ch_trio_yak_dbs
     )
-//
-//    if ( params.organelles_on ) {
-//        //
-//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
-//        //
-//        primary_contigs_ch.join(haplotigs_ch)
-//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
-//            .set{ raw_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_RAW( raw_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
-//
-//        //
-//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-//        //
-//        CAT_CAT_MITOHIFI_READS(hifi_reads)
-//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-//
-//        //
-//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
-//        //
-//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
-//            mito, plastid)
-//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
-//    }
-//
-//    //
-//    // LOGIC: CHECK IF THE HIFIASM HIC MODE WAS SWITCHED ON
-//    //
-//    if ( params.hifiasm_hic_on ) {
-//        //
-//        // SUBWORKFLOW: CALCULATE RAW ASSEMBLY STATISTICS FOR THE HIFIASN IN HIC MODE
-//        //
-//        GENOME_STATISTICS_RAW_HIC( RAW_ASSEMBLY.out.hap1_hic_contigs
-//            .join(RAW_ASSEMBLY.out.hap2_hic_contigs),
-//            busco,
-//            GENOMESCOPE_MODEL.out.hist,
-//            GENOMESCOPE_MODEL.out.ktab,
-//            [],
-//            [],
-//            [],
-//            [],
-//            true
-//        )
-//    }
-//
-//    //
-//    // LOGIC: CREATE AN INPUT DATA STRUCTURE FOR PURGING
-//    //
-//    hifi_reads.join(primary_contigs_ch)
-//        .join(GENOMESCOPE_MODEL.out.model)
-//        .set{ purge_dups_input }
-//
+    ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
+
 //    //
 //    // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
 //    //
@@ -403,6 +346,40 @@ workflow GENOMEASSEMBLY {
 //        )
 //
 //    }
+
+
+//
+//    if ( params.organelles_on ) {
+//        //
+//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
+//        //
+//        primary_contigs_ch.join(haplotigs_ch)
+//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
+//            .set{ raw_pri_alt_ch }
+//        //
+//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
+//        //
+//        CAT_CAT_RAW( raw_pri_alt_ch )
+//
+//        //
+//        // LOGIC: DEFINE MERGED ASSEMBLY
+//        //
+//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
+//
+//        //
+//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
+//        //
+//        CAT_CAT_MITOHIFI_READS(hifi_reads)
+//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
+//
+//        //
+//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
+//        //
+//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
+//            mito, plastid)
+//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
+//    }
+//
 
     //
     // Collate and save software versions
