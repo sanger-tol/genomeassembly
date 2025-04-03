@@ -1,6 +1,6 @@
 include { GFA_TO_FASTA           } from '../../../modules/local/gfa_to_fasta/main'
+include { HIFIASM                } from '../../../modules/nf-core/hifiasm/main'
 include { HIFIASM as HIFIASM_BIN } from '../../../modules/nf-core/hifiasm/main'
-include { HIFIASM as HIFIASM_HIC } from '../../../modules/nf-core/hifiasm/main'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -55,7 +55,7 @@ workflow RAW_ASSEMBLY {
             else if(!trio.isEmpty() && !params.enable_trio_binning)       { return false }
             else                                                          { return true  }
         }
-        | multimap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
+        | multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             // Add assembly type into the long read meta object
             def assembly_type = "primary"
             if(!hic.isEmpty())       { assembly_type = "hic_phased"  }
