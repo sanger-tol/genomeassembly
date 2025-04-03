@@ -55,7 +55,7 @@ Changes in 'hifiasm/main.nf':
          log.error("ERROR: hifiasm trio binning mode and Hi-C phasing can not be used at the same time.")
      }
  
-@@ -50,20 +50,21 @@
+@@ -50,20 +50,19 @@
          }
      }
  
@@ -66,13 +66,11 @@ Changes in 'hifiasm/main.nf':
 -        } else {
 -            input_hic = "--h1 ${hic_read1} --h2 ${hic_read2}"
 -        }
++    def input_hic1 = ""
++    def input_hic2 = ""
 +    if(hic_reads) {
-+        def input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
-+        def input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
-+        """
-+    } else {
-+        def input_hic1 = ""
-+        def input_hic2 = ""
++        input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
++        input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
      }
      """
      hifiasm \\
@@ -85,7 +83,7 @@ Changes in 'hifiasm/main.nf':
          ${ultralong} \\
          -o ${prefix} \\
          ${long_reads_sorted} \\
-@@ -77,27 +78,31 @@
+@@ -77,27 +76,31 @@
          gzip ${prefix}.ovlp.paf
      fi
  
@@ -124,7 +122,7 @@ Changes in 'hifiasm/main.nf':
      echo "" | gzip > ${prefix}.ec.fa.gz
      echo "" | gzip > ${prefix}.ovlp.paf.gz
      touch ${prefix}.stderr.log
-@@ -105,6 +110,7 @@
+@@ -105,6 +108,7 @@
      cat <<-END_VERSIONS > versions.yml
      "${task.process}":
          hifiasm: \$(hifiasm --version 2>&1)
