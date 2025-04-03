@@ -64,10 +64,9 @@
                     "type": "boolean",
                     "description": "If parental read data is provided, enabling this will produce a trio binned assembly with hifiasm."
                 },
-                "enable_organelles": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable organellar assembly subroutines."
+                "hifiasm_options": {
+                    "type": "string",
+                    "description": "Extra command-line options for hifiasm."
                 }
             },
             "fa_icon": "fas fa-cubes"
@@ -99,6 +98,19 @@
                     "type": "integer",
                     "default": 1000,
                     "description": "Number of bins for cooler cload"
+                }
+            }
+        },
+        "organelle_assembly": {
+            "title": "Organelle assembly",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "enable_organelles": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable organellar assembly subroutines."
                 }
             }
         },
@@ -237,6 +249,9 @@
         },
         {
             "$ref": "#/$defs/scaffolding_options"
+        },
+        {
+            "$ref": "#/$defs/organelle_assembly"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

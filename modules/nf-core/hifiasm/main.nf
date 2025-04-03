@@ -50,12 +50,11 @@ process HIFIASM {
         }
     }
 
+    def input_hic1 = ""
+    def input_hic2 = ""
     if(hic_reads) {
-        def input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
-        def input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
-    } else {
-        def input_hic1 = ""
-        def input_hic2 = ""
+        input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
+        input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
     }
     """
     hifiasm \\
