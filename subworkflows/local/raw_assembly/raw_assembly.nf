@@ -11,15 +11,13 @@ include { GFA_TO_FASTA as GFA_TO_FASTA_MAT  } from '../../modules/local/gfa_to_f
 
 workflow RAW_ASSEMBLY {
     take:
-    hifi_reads // channel: [ val(meta), [ datafile ] ]
-    hic_reads // channel: [ datafile ]
-    hifiasm_hic_on // val: True/False
-    hifiasm_trio_on // val: True/False
-    matdb
-    patdb
+    long_reads // channel: [ meta, [reads] ]
+    hic_reads  // channel: [ meta, [reads] ]
+    trio_dbs   // channel: [ meta, pat_yak, mat_yak ]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions   = Channel.empty()
+    ch_assemblies = Channel.empty()
 
     //
     // MODULE: RUN HIFIASM IN STANDARD WAY

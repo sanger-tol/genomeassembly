@@ -4,15 +4,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//include { RAW_ASSEMBLY                                          } from '../subworkflows/local/raw_assembly'
-//include { ORGANELLES                                            } from '../subworkflows/local/organelles'
 include { KMERS                                     } from '../subworkflows/local/kmers'
-//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+//include { ORGANELLES                              } from '../subworkflows/local/organelles'
 //include { POLISHING                                             } from '../subworkflows/local/polishing'
+//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+include { RAW_ASSEMBLY } from '../subworkflows/local/raw_assembly'
 //include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
 //include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
 //include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
-//include { GENOME_STATISTICS as GENOME_STATISTICS            } from '../subworkflows/local/genome_statistics'
+//include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 
 //include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 //include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
