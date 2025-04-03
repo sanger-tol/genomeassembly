@@ -14,7 +14,7 @@ workflow RAW_ASSEMBLY {
 
     // Hifiasm input channel expects [meta, reads, ul_reads]
     ch_long_reads_input = long_reads
-        | map { meta, reads -> [meta, reads, []]
+        | map { meta, reads -> [meta, reads, []] }
 
     //
     // Module: Run Hifiasm but only generate the .bin files
@@ -50,10 +50,10 @@ workflow RAW_ASSEMBLY {
         | combine(HIFIASM_BIN.out.bin_files)
         | filter { lr_meta, lr, hic_meta, hic, trio_meta, pat, mat, bin_meta, bin ->
             // Filter disallowed assemblies
-            if(!hic.isEmpty()       && !trio.isEmpty()              { return false }
-            else if(!hic.isEmpty()  && !params.enable_hic_phasing)  { return false }
-            else if(!trio.isEmpty() && !params.enable_trio_binning) { return false }
-            else                                                    { return true  }
+            if(!hic.isEmpty()       && !(mat.isEmpty() && pat.isEmpty()) { return false }
+            else if(!hic.isEmpty()  && !params.enable_hic_phasing)       { return false }
+            else if(!trio.isEmpty() && !params.enable_trio_binning)      { return false }
+            else                                                         { return true  }
         }
         | multimap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             // Add assembly type into the long read meta object
@@ -88,7 +88,7 @@ workflow RAW_ASSEMBLY {
         | mix(HIFIASM.out.hap2_contigs)
         | groupTuple(by: 0, size: 4, remainder: true)
         | map { meta, asms ->
-            if(asms.size() == 1) { return }
+            if(asms.size() == 1) { return null }
             def pri = /hap1.p_ctg.gfa$/
             def alt = /hap2.p_ctg.gfa$/
             if(meta.assembly_type == "primary") {
@@ -100,6 +100,7 @@ workflow RAW_ASSEMBLY {
 
             return [meta, [asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]]
         }
+        | filter { it != null }
         | transpose
         | map { meta, asm ->
             if(asm.name =~ /hap1.p_ctg.gfa$/ || asm.name =~ /^[^.]+\.p_ctg\.gfa$/) {
