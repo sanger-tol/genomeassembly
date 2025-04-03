@@ -37,7 +37,7 @@ process HIFIASM {
     def ul_reads_sorted = ul_reads instanceof List ? ul_reads.sort{ it.name } : ul_reads
     def ultralong = ul_reads ? "--ul ${ul_reads_sorted}" : ""
 
-    if([paternal_kmer_dump, maternal_kmer_dump].any() && [hic_read1, hic_read2].any()) {
+    if([paternal_kmer_dump, maternal_kmer_dump].any() && hic_reads) {
         log.error("ERROR: hifiasm trio binning mode and Hi-C phasing can not be used at the same time.")
     }
 
@@ -50,16 +50,13 @@ process HIFIASM {
         }
     }
 
-    def input_hic = ""
-    if([hic_read1, hic_read2].any()) {
-        if(![hic_read1, hic_read2].every()) {
-            log.error("ERROR: Either the forward or reverse Hi-C reads are missing!")
-        } else {
-            input_hic = """
-            --h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done) \\
-            --h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done) \\
-            """
-        }
+    if(hic_reads) {
+        input_hic = """
+        --h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done) \\
+        --h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done) \\
+        """
+    } else {
+        def input_hic = ""
     }
     """
     hifiasm \\
