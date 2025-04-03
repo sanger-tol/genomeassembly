@@ -53,68 +53,13 @@ workflow GENOMEASSEMBLY {
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
     ch_long_reads = KMERS.out.long_reads
+    ch_trio_yak_dbs   = KMERS.out.trio_yakdb
 
-//    if (params.hifiasm_trio_on) {
-//
-//        // LOGIC: PRODUCE YAK DATABASE FOR BOTH PAT AND MAT FOR HIFIASM
-//        GENOMESCOPE_MODEL.out.patdb.map{ meta, patdb -> patdb }.set{ patdb_ch }
-//        GENOMESCOPE_MODEL.out.matdb.map{ meta, matdb -> matdb }.set{ matdb_ch }
-//
-//        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
-//        GENOMESCOPE_MODEL.out.phapktab
-//        .map { it[1] }
-//        .set { phapktab_ch }
-//
-//        GENOMESCOPE_MODEL.out.mhapktab
-//        .map { it[1] }
-//        .set { mhapktab_ch }
-//
-//        GENOMESCOPE_MODEL.out.phapktab
-//        .map { it[2] }
-//        .set { fastk_pktab}
-//
-//        GENOMESCOPE_MODEL.out.mhapktab
-//        .map { it[2] }
-//        .set { fastk_mktab}
-//
-//        // LOGIC: PREPARE INPUT CHANNELS FOR GENOME_STATISTICS_SCAFFOLDS_TRIO
-//        RAW_ASSEMBLY( hifi_reads, hic_reads, params.hifiasm_hic_on, params.hifiasm_trio_on, patdb_ch, matdb_ch )
-//    }
-//    else {
-//        RAW_ASSEMBLY( hifi_reads, hic_reads, params.hifiasm_hic_on, params.hifiasm_trio_on, [], [] )
-//    }
-//
-//
-//    //
-//    // SUBWORKFLOW: RUN A HIFIASM ASSEMBLY ON THE HIFI READS; ALSO CREATE
-//    //              A HIFIASM RUN IN HIC MODE IF THE FLAG IS SWITCHED ON
-//    //
-//    ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
-//
-//    //
-//    // LOGIC: DEFINE THE PRIMARY CONTIGS CHANNEL
-//    //
-//    RAW_ASSEMBLY.out.primary_contigs.set{ primary_contigs_ch }
-//
-//    //
-//    // LOGIC: DEFINE THE HAPLOTIGS CHANNELS
-//    //
-//    RAW_ASSEMBLY.out.alternate_contigs.set{ haplotigs_ch }
-//
-//    //
-//    // SUBWORKFLOW: CALCULATE STATISTICS FOR THE RAW ASSEMBLY
-//    //
-//    GENOME_STATISTICS_RAW( primary_contigs_ch.join(haplotigs_ch),
-//        busco,
-//        GENOMESCOPE_MODEL.out.hist,
-//        GENOMESCOPE_MODEL.out.ktab,
-//        [],
-//        [],
-//        [],
-//        [],
-//        false
-//    )
-//    ch_versions = ch_versions.mix(GENOME_STATISTICS_RAW.out.versions)
+    RAW_ASSEMBLY(
+        ch_long_reads,
+        hic_reads,
+        ch_trio_yak_dbs
+    )
 //
 //    if ( params.organelles_on ) {
 //        //
