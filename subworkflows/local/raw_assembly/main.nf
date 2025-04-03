@@ -56,7 +56,7 @@ workflow RAW_ASSEMBLY {
             else if(!hic.isEmpty() && !params.enable_hic_phasing) {
                 return false
             }
-            else if(!(mat.isEmpty() || pat.isEmpty())) && !params.enable_trio_binning) {
+            else if(!(mat.isEmpty() || pat.isEmpty()) && !params.enable_trio_binning) {
                 return false
             }
             else {
@@ -66,9 +66,15 @@ workflow RAW_ASSEMBLY {
         | multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             // Add assembly type into the long read meta object
             def assembly_type = "primary"
-            if(!hic.isEmpty())       { assembly_type = "hic_phased"  }
-            else if(!trio.isEmpty()) { assembly_type = "trio_binned" }
-            else                     { assembly_type = "unknown"     }
+            if(!hic.isEmpty()) {
+                assembly_type = "hic_phased"
+            }
+            else if(!(mat.isEmpty() || pat.isEmpty()) {
+                assembly_type = "trio_binned"
+            }
+            else {
+                assembly_type = "unknown"
+            }
             def lr_meta_new = lr_meta + [assembly_type: assembly_type]
 
             long_reads: [lr_meta_new, lr, []]
