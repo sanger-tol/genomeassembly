@@ -4,10 +4,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { KMERS        } from '../subworkflows/local/kmers'
-include { POLISHING    } from '../subworkflows/local/polishing'
-include { PURGING      } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY } from '../subworkflows/local/raw_assembly'
+include { KMERS         } from '../subworkflows/local/kmers'
+include { POLISHING_10X } from '../subworkflows/local/polishing_10X'
+include { PURGING       } from '../subworkflows/local/purging'
+include { RAW_ASSEMBLY  } from '../subworkflows/local/raw_assembly'
 
 //include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
 //include { ORGANELLES                              } from '../subworkflows/local/organelles'
@@ -96,38 +96,9 @@ workflow GENOMEASSEMBLY {
     ch_assemblies = ch_assemblies
         | mix(PURGING.out.assemblies)
 
-//        //
-//        // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
-//        //
-//        GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch),
-//            busco,
-//            GENOMESCOPE_MODEL.out.hist,
-//            GENOMESCOPE_MODEL.out.ktab,
-//            [],
-//            [],
-//            [],
-//            [],
-//            false
-//        )
-//
-//        //
-//        // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS
-//        //
-//        PURGE_DUPS.out.pri.join(haplotigs_ch)
-//            .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
-//            .set{ purged_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt = CAT_CAT_PURGEDUPS.out.file_out
-//    }
-//
-//    if ( params.polishing_on ) {
+    if (params.enable_polishing && params.longranger_container_path) {
+
+    }
 //        //
 //        // MODULE: INDEX FASTA FOR THE MERGED PRIMARY CONTIGS AND HAPLOTIGS
 //        //

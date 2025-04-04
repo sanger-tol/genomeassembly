@@ -1,35 +1,53 @@
-include { BCFTOOLS_VIEW                               } from '../../modules/nf-core/bcftools/view/main'
-include { BCFTOOLS_CONSENSUS                          } from '../../modules/nf-core/bcftools/consensus/main'
-include { BCFTOOLS_NORM                               } from '../../modules/nf-core/bcftools/norm/main'
-include { BCFTOOLS_CONCAT                             } from '../../modules/nf-core/bcftools/concat/main'
-include { BCFTOOLS_SORT                               } from '../../modules/nf-core/bcftools/sort/main'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../modules/nf-core/bcftools/index/main'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../modules/nf-core/bcftools/index/main'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../modules/nf-core/gatk4/mergevcfs/main'
-include { FREEBAYES                                   } from '../../modules/nf-core/freebayes/main'
+include { BCFTOOLS_VIEW                               } from '../../../modules/nf-core/bcftools/view'
+include { BCFTOOLS_CONSENSUS                          } from '../../../modules/nf-core/bcftools/consensus'
+include { BCFTOOLS_NORM                               } from '../../../modules/nf-core/bcftools/norm'
+include { BCFTOOLS_CONCAT                             } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_SORT                               } from '../../../modules/nf-core/bcftools/sort'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../../modules/nf-core/bcftools/index'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../../modules/nf-core/bcftools/index'
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { FREEBAYES                                   } from '../../../modules/nf-core/freebayes/main'
+include { BED_CHUNKS                                  } from '../../../modules/local/bed_chunks'
+include { LONGRANGER_COVERAGE                         } from '../../../modules/local/longranger_coverage'
+include { LONGRANGER_MKREF                            } from '../../../modules/local/longranger/mkref'
+include { LONGRANGER_ALIGN                            } from '../../../modules/local/longranger/align'
 
-include { BED_CHUNKS                                  } from '../../modules/local/bed_chunks'
-include { LONGRANGER_COVERAGE                         } from '../../modules/local/longranger_coverage'
-include { LONGRANGER_MKREF                            } from '../../modules/local/longranger/mkref/main'
-include { LONGRANGER_ALIGN                            } from '../../modules/local/longranger/align/main'
+include { CAT_CAT as CONCATENATE_ASSEMBLIES           } from '../../../modules/nf-core/cat/cat'
+include { SAMTOOLS_FAIDX                              } from '../../../modules/nf-core/samtools/faidx'
 
-workflow POLISHING {
+workflow POLISHING_10X {
     take:
-    fasta_in  //tuple meta, fasta, fai
-    reads_10X // file
-    bed_chunks_polishing    //val
+    assemblies           // [meta, fasta]
+    reads_10X            // [meta, reads]
+    bed_chunks_polishing // integer
 
     main:
     ch_versions = Channel.empty()
 
     //
-    // LOGIC: SEPARATE ASSEMBLY FILE INTO CHANNEL
+    // Module: concatenate hap1 and hap2 assemblies together
     //
-    fasta_in.map{ meta, fasta, fai -> [meta, fasta] }
-            .set{ fasta_ch }
+    ch_assemblies_to_concatenate = assemblies
+        | map { meta, asm ->
+            def meta_new = meta - meta.subMap('haplotype')
+            [meta_new, asm]
+        }
+        | groupTuple(by: 0, size: 2)
+
+    CONCATENATE_ASSEMBLIES(ch_assemblies_to_concatenate)
+    ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
+
+    //
+    // Module: Index merged assemblies
+    //
+    ch_merged_assemblies_to_index = CONCATENATE_ASSEMBLIES.out.file_out
+    SAMTOOLS_FAIDX(ch_merged_assemblies_to_index)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+
     //
     // MODULE: GENERATE INDICES
     //
+    ch_assemblies_with_index = SAMTOOLS_FAIDX.out.
     LONGRANGER_MKREF(fasta_ch)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
