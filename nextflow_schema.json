@@ -91,6 +91,10 @@
                 "purging_purge_middle": {
                     "type": "boolean",
                     "description": "During haplotype purging, look in the middle of contigs for potential haplotigs. This removes the \"-e\" option from the purgedups/getseqs command."
+                },
+                "purging_cutoffs": {
+                    "type": "string",
+                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\"."
                 }
             }
         },
