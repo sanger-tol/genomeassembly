@@ -94,7 +94,8 @@
                 },
                 "purging_cutoffs": {
                     "type": "string",
-                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\"."
+                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
+                    "pattern": "\\d+,\\d+,\\d+"
                 }
             }
         },
