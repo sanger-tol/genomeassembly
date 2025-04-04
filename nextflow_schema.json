@@ -77,6 +77,19 @@
             },
             "fa_icon": "fas fa-cubes"
         },
+        "purging_options": {
+            "title": "Purging options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "purging_assemblytypes": {
+                    "type": "string",
+                    "default": "primary",
+                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                }
+            }
+        },
         "polishing_options": {
             "title": "Polishing options",
             "type": "object",
@@ -249,6 +262,9 @@
         },
         {
             "$ref": "#/$defs/raw_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/purging_options"
         },
         {
             "$ref": "#/$defs/polishing_options"
