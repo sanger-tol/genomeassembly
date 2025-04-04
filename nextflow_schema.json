@@ -87,6 +87,10 @@
                     "type": "string",
                     "default": "primary",
                     "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                },
+                "purging_purge_middle": {
+                    "type": "boolean",
+                    "description": "During haplotype purging, look in the middle of contigs for potential haplotigs. This removes the \"-e\" option from the purgedups/getseqs command."
                 }
             }
         },
