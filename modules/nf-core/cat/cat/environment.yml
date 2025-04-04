@@ -4,5 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::samtools=1.21
-  - conda-forge::gawk=5.3.0
+  - conda-forge::pigz=2.3.4

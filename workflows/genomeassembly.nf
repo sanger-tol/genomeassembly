@@ -4,16 +4,16 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { KMERS                                     } from '../subworkflows/local/kmers'
-//include { ORGANELLES                              } from '../subworkflows/local/organelles'
-//include { POLISHING                                             } from '../subworkflows/local/polishing'
-//include { PURGE_DUPS                                            } from '../subworkflows/local/purge_dups'
+include { KMERS        } from '../subworkflows/local/kmers'
+include { POLISHING    } from '../subworkflows/local/polishing'
+include { PURGING      } from '../subworkflows/local/purging'
 include { RAW_ASSEMBLY } from '../subworkflows/local/raw_assembly'
-//include { SCAFFOLDING                                           } from '../subworkflows/local/scaffolding'
-//include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY                } from '../modules/local/keep_seqnames'
-//include { HIC_MAPPING                                           } from '../subworkflows/local/hic_mapping'
-//include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 
+//include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
+//include { ORGANELLES                              } from '../subworkflows/local/organelles'
+//include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY  } from '../modules/local/keep_seqnames'
+//include { HIC_MAPPING                             } from '../subworkflows/local/hic_mapping'
+//include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 //include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 //include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
 //include { SEQTK_SUBSEQ as SEQTK_SUBSEQ_HAPLOTIGS     } from '../modules/nf-core/seqtk/subseq/main'
@@ -45,7 +45,8 @@ workflow GENOMEASSEMBLY {
     ch_versions = Channel.empty()
 
     //
-    // SUBWORKFLOW: GENERATE KMER DATABASE AND PROFILE MODEL
+    // Subworkflow: generate Kmer databases and estimate
+    //     coverage if not provided
     //
     KMERS(long_reads, mat_reads, pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
@@ -56,46 +57,42 @@ workflow GENOMEASSEMBLY {
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
     ch_long_reads = KMERS.out.long_reads
+        | collect
 
     // Drop FastK databases for all downstream uses of Hi-C
     // CRAM files
     ch_hic_reads  = hic_reads
         | map { meta, cram, hist, ktab -> [meta, cram] }
+        | collect
     ch_trio_yak_dbs   = KMERS.out.trio_yakdb
 
+    //
+    // Subworkflow: raw assembly of long reads using hifiasm
+    //
     RAW_ASSEMBLY(
         ch_long_reads,
         ch_hic_reads,
         ch_trio_yak_dbs
     )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
+    ch_assemblies = RAW_ASSEMBLY.out.assembly_fasta
 
-//    //
-//    // SUBWORKFLOW: RUN PURGE DUPS ON THE PRIMARY CONTIGS
-//    //
-//    if ( !params.hifiasm_trio_on ) {
-//        PURGE_DUPS( purge_dups_input )
-//        ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
-//
-//        //
-//        // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL
-//        //
-//        PURGE_DUPS.out.pri.map{ meta, fasta -> [[id:meta.id], fasta] }
-//            .set{ primary_contigs_ch }
-//
-//        //
-//        // LOGIC: SET APART THE HAPLOTIGS AFTER PURGING AND THE HIFIASM HAPLOTIGS
-//        //
-//        haplotigs_ch.combine( PURGE_DUPS.out.alt )
-//            .map{ meta_h, h, meta_h_purged, h_purged -> [meta_h, [h, h_purged]]}
-//            .set{ haplotigs_to_merge }
-//
-//        //
-//        // MODULE: COMBINE PURGED SEQUENCES WITH THE ORIGINAL HAPLOTIGS
-//        //
-//        CAT_CAT_HAPLOTIGS{ haplotigs_to_merge }
-//        haplotigs_ch = CAT_CAT_HAPLOTIGS.out.file_out
-//
+    //
+    // Subworkflow: Purge dups on specified assemblies
+    //
+    ch_assemblies_purge_status = ch_assemblies
+        | branch { meta, assembly ->
+            def purge_types = params.purging_assemblytypes.tokenize(",")
+            purge: meta.assembly in purge_types
+            no_purge: true
+        }
+
+    PURGING(ch_assemblies_purge_status.purge)
+    ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
+
+    ch_assemblies = ch_assemblies
+        | mix(PURGING.out.assemblies)
+
 //        //
 //        // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
 //        //

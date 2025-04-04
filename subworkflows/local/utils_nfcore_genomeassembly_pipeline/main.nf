@@ -86,6 +86,19 @@ workflow PIPELINE_INITIALISATION {
     ch_oatk_mito    = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() }
     ch_oatk_plastid = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() }
 
+    //
+    // Logic: Check that purging parameter string only contains valid options
+    //
+    Channel.of(params.purging_assemblytypes)
+        | map { types ->
+            def input       = types.tokenize(",")
+            def valid_types = ["primary", "hic_phased", "trio_binned"]
+            def check       = input.collect { it in valid_types }
+            if(!check.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check].join(", ")}")
+            }
+        }
+
     emit:
     long_reads   = ch_long_reads
     hic_reads    = ch_hic_reads
