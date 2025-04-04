@@ -83,12 +83,15 @@ workflow GENOMEASSEMBLY {
     ch_assemblies_purge_status = ch_assemblies
         | branch { meta, assembly ->
             def purge_types = params.purging_assemblytypes.tokenize(",")
-            purge: meta.assembly in purge_types
+            purge: meta.assembly_type in purge_types
             no_purge: true
         }
 
-    PURGING(ch_assemblies_purge_status.purge)
-    ch_versions = ch_versions.mix(PURGE_DUPS.out.versions)
+    PURGING(
+        ch_assemblies_purge_status.purge,
+        ch_long_reads
+    )
+    ch_versions = ch_versions.mix(PURGING.out.versions)
 
     ch_assemblies = ch_assemblies
         | mix(PURGING.out.assemblies)

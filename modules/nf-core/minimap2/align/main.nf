@@ -15,12 +15,13 @@ process MINIMAP2_ALIGN {
     val bam_index_extension
     val cigar_paf_format
     val cigar_bam
+    val output_meta
 
     output:
-    tuple val(meta), path("*.paf")                       , optional: true, emit: paf
-    tuple val(meta), path("*.bam")                       , optional: true, emit: bam
-    tuple val(meta), path("*.bam.${bam_index_extension}"), optional: true, emit: index
-    path "versions.yml"                                  , emit: versions
+    tuple val(meta_out), path("*.paf")                       , optional: true, emit: paf
+    tuple val(meta_out), path("*.bam")                       , optional: true, emit: bam
+    tuple val(meta_out), path("*.bam.${bam_index_extension}"), optional: true, emit: index
+    path "versions.yml"                                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -39,7 +40,12 @@ process MINIMAP2_ALIGN {
     def samtools_reset_fastq = bam_input ? "samtools reset --threads ${task.cpus-1} $args3 $reads | samtools fastq --threads ${task.cpus-1} $args4 |" : ''
     def query = bam_input ? "-" : reads
     def target = reference ?: (bam_input ? error("BAM input requires reference") : reads)
-
+    if (!(output_meta in ['reads', 'reference', 'combine'])){
+        log.error("Error: Invalid value for output_meta")
+    }
+    if(output_meta == 'reads')     { meta_out = meta         }
+    if(output_meta == 'reference') { meta_out = meta2        }
+    if(output_meta == 'combine'  ) { meta_out = meta + meta2 }
     """
     $samtools_reset_fastq \\
     minimap2 \\

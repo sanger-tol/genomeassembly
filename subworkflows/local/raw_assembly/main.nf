@@ -1,6 +1,6 @@
-include { GAWK as GFA_TO_FASTA   } from '../../../modules/nf-core/gawk/main'
-include { HIFIASM                } from '../../../modules/nf-core/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN } from '../../../modules/nf-core/hifiasm/main'
+include { GAWK as GAWK_GFA_TO_FASTA } from '../../../modules/nf-core/gawk/main'
+include { HIFIASM                   } from '../../../modules/nf-core/hifiasm/main'
+include { HIFIASM as HIFIASM_BIN    } from '../../../modules/nf-core/hifiasm/main'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -106,7 +106,7 @@ workflow RAW_ASSEMBLY {
         | filter { it != null }
         | transpose
         | map { meta, asm ->
-            if(asm.name =~ /hap1.p_ctg.gfa$/ || asm.name =~ /^[^.]+\.p_ctg\.gfa$/) {
+            if(asm.name =~ /hap1.p_ctg.gfa.gz$/ || asm.name =~ /^[^.]+\.p_ctg\.gfa.gz$/) {
                 haplotype = "hap1"
             } else {
                 haplotype = "hap2"
@@ -125,7 +125,7 @@ workflow RAW_ASSEMBLY {
     )
     ch_versions = ch_versions.mix(GAWK_GFA_TO_FASTA.out.versions)
     ch_assemblies = ch_assemblies
-        | mix(GFA_TO_FASTA.out.fasta)
+        | mix(GAWK_GFA_TO_FASTA.out.output)
 
     emit:
     assembly_gfa   = ch_assembly_gfa
