@@ -77,6 +77,28 @@
             },
             "fa_icon": "fas fa-cubes"
         },
+        "purging_options": {
+            "title": "Purging options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "purging_assemblytypes": {
+                    "type": "string",
+                    "default": "primary",
+                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                },
+                "purging_purge_middle": {
+                    "type": "boolean",
+                    "description": "During haplotype purging, look in the middle of contigs for potential haplotigs. This removes the \"-e\" option from the purgedups/getseqs command."
+                },
+                "purging_cutoffs": {
+                    "type": "string",
+                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
+                    "pattern": "\\d+,\\d+,\\d+"
+                }
+            }
+        },
         "polishing_options": {
             "title": "Polishing options",
             "type": "object",
@@ -249,6 +271,9 @@
         },
         {
             "$ref": "#/$defs/raw_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/purging_options"
         },
         {
             "$ref": "#/$defs/polishing_options"
