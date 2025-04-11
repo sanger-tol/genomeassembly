@@ -89,9 +89,9 @@ workflow RAW_ASSEMBLY {
         | mix(HIFIASM.out.hap1_contigs)
         | mix(HIFIASM.out.hap2_contigs)
         | map { meta, asm ->
-            if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
+            if(asm.name =~ /hap1.p_ctg.gfa.gz$/ || asm.name =~ /^[^.]+\.p_ctg\.gfa.gz$/) {
                 haplotype = "hap1"
-            } else if(asm.name =~ /hap2.p_ctg.fa$/ || asm.name =~ /^[^.]+\.a_ctg\.fa$/) {
+            } else if(asm.name =~ /hap2.p_ctg.gfa.gz$/ || asm.name =~ /^[^.]+\.a_ctg\.gfa.gz$/) {
                 haplotype = "hap2"
             } else {
                 haplotype = null
