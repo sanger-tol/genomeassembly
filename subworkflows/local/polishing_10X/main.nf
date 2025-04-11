@@ -209,8 +209,8 @@ workflow POLISHING_10X {
         ch_assemblies_to_separate,
         []
     )
-    ch_versions         = ch_versions.mix(SEQKIT_GREP.out.versions)
-    ch_assemblies_split = SEQKIT_GREP.out.filter
+    ch_versions         = ch_versions.mix(SEQKIT_GREP_SPLIT_HAPS.out.versions)
+    ch_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
         | map { meta, fasta ->
             [meta + [assembly_stage: "polished"], fasta]
         }
