@@ -82,7 +82,7 @@ workflow POLISHING_10X {
     //
     // Module: split assembly into chunks
     //
-    GAWK_BED_CHUNKS(SAMTOOLS_FAIDX.out.fai)
+    GAWK_BED_CHUNKS(SAMTOOLS_FAIDX.out.fai, [], true)
     ch_versions = ch_versions.mix(GAWK_BED_CHUNKS.out.versions)
 
     //
