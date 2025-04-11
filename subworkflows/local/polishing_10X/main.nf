@@ -162,8 +162,8 @@ workflow POLISHING_10X {
     // Module: Left-align and normalize indels
     //
     ch_bcftools_norm_input = ch_assemblies_with_index
-        | combine(MERGE_FREEBAYES.out.vcf, by: 0)
-        | combine(MERGE_FREEBAYES.out.tbi, by: 0)
+        | combine(GATK4_MERGE_FREEBAYES.out.vcf, by: 0)
+        | combine(GATK4_MERGE_FREEBAYES.out.tbi, by: 0)
         | multiMap{ meta, fasta, fai, vcf, tbi ->
             vcf  : [meta, vcf  ]
             fasta: [meta, fasta]
