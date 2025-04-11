@@ -73,11 +73,11 @@ workflow PIPELINE_INITIALISATION {
     // LOGIC: Create channels for reads for raw assembly input
     //        [meta, reads, fk_hist, fk_ktab]
     //
-    ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() }
-    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() }
-    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() }
-    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() }
-    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() }
+    ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() } | collect
+    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() } | collect
+    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() } | collect
+    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() } | collect
+    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() } | collect
 
     //
     // LOGIC: Create channels for databases

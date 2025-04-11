@@ -64,6 +64,11 @@ workflow GENOMEASSEMBLY {
     ch_hic_reads  = hic_reads
         | map { meta, cram, hist, ktab -> [meta, cram] }
         | collect
+
+    ch_i10x_reads = illumina_10x
+        | map { meta, reads, hist, ktab -> [meta, reads] }
+        | collect
+
     ch_trio_yak_dbs   = KMERS.out.trio_yakdb
 
     //
@@ -96,9 +101,22 @@ workflow GENOMEASSEMBLY {
     ch_assemblies = ch_assemblies
         | mix(PURGING.out.assemblies)
 
-    if (params.enable_polishing && params.longranger_container_path) {
+    ch_assemblies_to_polish = ch_assemblies
+        | branch { meta, assembly ->
+            def polish_types = params.polishing_assemblytypes.tokenize(",")
+            polish: (params.enable_polishing && meta.assembly_type in polish_types)
+            no_polish: true
+        }
 
-    }
+    POLISHING_10X(
+        ch_assemblies_to_polish.polish,
+        ch_i10x_reads
+    )
+    ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
+
+    ch_assemblies = ch_assemblies
+        | mix(POLISHING_10X.out.assemblies)
+
 //        //
 //        // MODULE: INDEX FASTA FOR THE MERGED PRIMARY CONTIGS AND HAPLOTIGS
 //        //

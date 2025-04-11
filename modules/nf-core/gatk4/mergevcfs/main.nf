@@ -1,11 +1,11 @@
 process GATK4_MERGEVCFS {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
-    conda "bioconda::gatk4=4.4.0.0"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data':
+        'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd' }"
 
     input:
     tuple val(meta), path(vcf)
@@ -32,7 +32,8 @@ process GATK4_MERGEVCFS {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}M" MergeVcfs \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        MergeVcfs \\
         $input_list \\
         --OUTPUT ${prefix}.vcf.gz \\
         $reference_command \\

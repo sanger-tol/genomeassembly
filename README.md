@@ -10,6 +10,10 @@
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/sanger-tol/genomeassembly)
 
+> [!WARNING]
+> We are currently undertaking a large-scale restructuring of the development branch and this branch is not currently in a usable state. If you would like to run the pipeline, please run using the latest official release, or try using the [last working commit in this branch](https://github.com/sanger-tol/genomeassembly/tree/a6f7cb65d2f9083315851bbbc13fad70473ed945).
+
+
 ## Introduction
 
 **sanger-tol/genomeassembly** is a bioinformatics pipeline for a genome assembly for HiFi, Illumina 10x (optional), and HiC data. It performs the following steps: raw assembly, purging from haplotigs, optional polishing, and scaffolding.

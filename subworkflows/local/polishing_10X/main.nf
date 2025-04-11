@@ -1,25 +1,23 @@
-include { BCFTOOLS_VIEW                               } from '../../../modules/nf-core/bcftools/view'
-include { BCFTOOLS_CONSENSUS                          } from '../../../modules/nf-core/bcftools/consensus'
-include { BCFTOOLS_NORM                               } from '../../../modules/nf-core/bcftools/norm'
-include { BCFTOOLS_CONCAT                             } from '../../../modules/nf-core/bcftools/concat'
-include { BCFTOOLS_SORT                               } from '../../../modules/nf-core/bcftools/sort'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB         } from '../../../modules/nf-core/bcftools/index'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM       } from '../../../modules/nf-core/bcftools/index'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES          } from '../../../modules/nf-core/gatk4/mergevcfs'
-include { FREEBAYES                                   } from '../../../modules/nf-core/freebayes/main'
-include { BED_CHUNKS                                  } from '../../../modules/local/bed_chunks'
-include { LONGRANGER_COVERAGE                         } from '../../../modules/local/longranger_coverage'
-include { LONGRANGER_MKREF                            } from '../../../modules/local/longranger/mkref'
-include { LONGRANGER_ALIGN                            } from '../../../modules/local/longranger/align'
-
-include { CAT_CAT as CONCATENATE_ASSEMBLIES           } from '../../../modules/nf-core/cat/cat'
-include { SAMTOOLS_FAIDX                              } from '../../../modules/nf-core/samtools/faidx'
+include { BCFTOOLS_VIEW                            } from '../../../modules/nf-core/bcftools/view'
+include { BCFTOOLS_CONSENSUS                       } from '../../../modules/nf-core/bcftools/consensus'
+include { BCFTOOLS_NORM                            } from '../../../modules/nf-core/bcftools/norm'
+include { BCFTOOLS_CONCAT                          } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_SORT                            } from '../../../modules/nf-core/bcftools/sort'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB      } from '../../../modules/nf-core/bcftools/index'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM    } from '../../../modules/nf-core/bcftools/index'
+include { CAT_CAT as CONCATENATE_ASSEMBLIES        } from '../../../modules/nf-core/cat/cat'
+include { GATK4_MERGEVCFS as GATK4_MERGE_FREEBAYES } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { GAWK as GAWK_BED_CHUNKS                  } from '../../../modules/nf-core/gawk'
+include { FREEBAYES                                } from '../../../modules/nf-core/freebayes/main'
+include { LONGRANGER_MKREF                         } from '../../../modules/local/longranger/mkref'
+include { LONGRANGER_ALIGN                         } from '../../../modules/local/longranger/align'
+include { SAMTOOLS_FAIDX                           } from '../../../modules/nf-core/samtools/faidx'
+include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS    } from '../../../modules/nf-core/seqkit/grep/main'
 
 workflow POLISHING_10X {
     take:
-    assemblies           // [meta, fasta]
-    reads_10X            // [meta, reads]
-    bed_chunks_polishing // integer
+    assemblies             // [meta, fasta]
+    illumina_10x_reads     // [meta, reads]
 
     main:
     ch_versions = Channel.empty()
@@ -41,162 +39,180 @@ workflow POLISHING_10X {
     // Module: Index merged assemblies
     //
     ch_merged_assemblies_to_index = CONCATENATE_ASSEMBLIES.out.file_out
-    SAMTOOLS_FAIDX(ch_merged_assemblies_to_index)
+
+    SAMTOOLS_FAIDX(
+        ch_merged_assemblies_to_index,
+        [[:], []],
+        false)
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
+    ch_assemblies_with_index = SAMTOOLS_FAIDX.out.fa
+        | join(SAMTOOLS_FAIDX.out.fai)
+
     //
-    // MODULE: GENERATE INDICES
+    // Module: Generate references
     //
-    ch_assemblies_with_index = SAMTOOLS_FAIDX.out.
-    LONGRANGER_MKREF(fasta_ch)
+    LONGRANGER_MKREF(CONCATENATE_ASSEMBLIES.out.file_out)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
     //
-    // MODULE: MAP 10X READS TO THE REFERENCE
+    // Module: map 10x reads to the merged assemblies
     //
-    LONGRANGER_ALIGN( LONGRANGER_MKREF.out.folder, reads_10X )
+    LONGRANGER_ALIGN(
+        LONGRANGER_MKREF.out.folder,
+        illumina_10x_reads
+    )
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
     //
-    // LOGIC: SEPARATE INDEX FILE INTO CHANNEL
+    // Logic: Join read mapping BAM with its index
     //
-    // Split genome into chunks
-    fasta_in.map{ meta, fasta, fai -> [meta, fai] }
-        .set{chunks_ch}
+    ch_aligned_bam = LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
 
     //
-    // MODULE: SPLIT ASSEMBLY INTO CHUNKS
+    // Logic: Extract coverage information from Longranger summary and
+    //        join to assembly
     //
-    BED_CHUNKS (chunks_ch, bed_chunks_polishing)
-    ch_versions = ch_versions.mix(BED_CHUNKS.out.versions)
+    ch_longranger_coverage = LONGRANGER_ALIGN.out.csv
+        | map { meta, summary ->
+            rows = summary.splitCsv(header: true, sep: ",")
+            [meta, summary.mean_depth.toInteger()]
+        }
 
     //
-    // LOGIC: TRANSFORM CHUNKS CHANNEL INTO LIST OF INTERVALS
+    // Module: split assembly into chunks
     //
-    intervals_structured = BED_CHUNKS.out.coords.toList().transpose()
+    GAWK_BED_CHUNKS(SAMTOOLS_FAIDX.out.fai)
+    ch_versions = ch_versions.mix(GAWK_BED_CHUNKS.out.versions)
 
     //
-    // LOGIC: JOIN READ MAPPING BAM WITH ITS INDEX
+    // Logic: Generate inputs for freebayes
     //
-    LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
-                            .set{ bam_ch }
+    ch_freebayes_input = ch_assemblies_with_index
+        | combine(LONGRANGER_ALIGN.out.bam  , by: 0)
+        | combine(LONGRANGER_ALIGN.out.bai  , by: 0)
+        | combine(GAWK_BED_CHUNKS.out.coords, by: 0)
+        | combine(ch_longranger_coverage, by: 0)
+        | transpose(by: 5) // one entry per bed file
+        | multiMap { meta, fasta, fai, bam, bai, bed, cov ->
+            def chunk    = bed.name =~ /\.(\d+)\.bed$/
+            def meta_new = meta + [longranger_cov: cov, chunk_id: chunk[0][1]]
+            bam        : [meta_new, bam, bai, [], [], bed]
+            fasta      : [meta_new, fasta                ]
+            fai        : [meta_new, fai                  ]
+            samples    : [meta_new, []                   ]
+            populations: [meta_new, []                   ]
+            cnv        : [meta_new, []                   ]
+        }
 
     //
-    // LOGIC: CREATE DATA STRUCTURE FOR SCATTERING
+    // Module: Scatter Freebayes over the chunks
     //
-    intervals_freebayes = bam_ch.combine(intervals_structured)
-        .map{ meta, bam, bai, bed -> [ [id: bed.getSimpleName()], bam, bai, [], [], bed] }
-
-    //
-    // LOGIC: SEPARATE ASSEMBLY AND ITS INDEX INTO CHANNELS
-    //
-    fasta = fasta_in.collect{it[1]}
-    fai = fasta_in.collect{it[2]}
-
-    //
-    // LOGIC: EXTRACT ALIGNMENT SUMMARY FROM LONGRANGER RESULTS
-    //
-    LONGRANGER_ALIGN.out.csv.collect{it[1]}
-                            .set{summary}
-
-    //
-    // MODULE: EXTRACT COVERAGE INFORMATION
-    //
-    LONGRANGER_COVERAGE(summary)
-    ch_versions = ch_versions.mix(LONGRANGER_COVERAGE.out.versions)
-
-    //
-    // MODULE: SCATTER FREEBAYES OVER THE CHUNKS
-    //
-    FREEBAYES(intervals_freebayes, fasta, fai, [], [], [], LONGRANGER_COVERAGE.out.cov)
+    FREEBAYES(
+        ch_freebayes_input.bam,
+        ch_freebayes_input.fasta,
+        ch_freebayes_input.fai,
+        ch_freebayes_input.samples,
+        ch_freebayes_input.populations,
+        ch_freebayes_input.cnv
+    )
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
 
     //
-    // MODULE: INDEX FREEBAYES OUTPUT
+    // Module: Index Freebayes output
     //
     BCFTOOLS_INDEX_FB(FREEBAYES.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_FB.out.versions)
 
     //
-    // LOGIC: REFACTOR AND COMBINE VCF CHANNELS FOR FURTHER PROCESSING
+    // Logic: Refactor and combine VCF channels for further processing
     //
-    FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
-            .join(BCFTOOLS_INDEX_FB.out.tbi.map {meta, tbi -> [meta.id.toString(), tbi]})
-            .map{ id, vcf, tbi -> [[ id: id.toString()+'_view'], vcf, tbi ]}
-            .set{ input_view }
+    ch_bcftools_view_input = FREEBAYES.out.vcf
+        | combine(BCFTOOLS_INDEX_FB.out.tbi)
 
     //
     // MODULE: FILTER FREEBAYES RESULTS
     //
-    BCFTOOLS_VIEW(input_view, [], [], [])
+    BCFTOOLS_VIEW(ch_bcftools_view_input, [], [], [])
     ch_versions = ch_versions.mix(BCFTOOLS_VIEW.out.versions)
 
     //
-    // LOGIC: REFACTOR CHANNEL TO AVOID NAME COLLISION
+    // Module: Sort filtered VCFs
     //
-    input_sort = BCFTOOLS_VIEW.out.vcf.map{ meta, vcf -> [ [id: meta.id.toString()+'_sorted'], vcf ]}
-
-    //
-    // MODULE: SORT FILTERED VCF
-    //
-    BCFTOOLS_SORT(input_sort)
+    BCFTOOLS_SORT(BCFTOOLS_VIEW.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
 
     //
-    // LOGIC: SEPARATE META INTO CHANNEL
+    // Module: Merge Freebayes results on chunks
     //
-    meta_ch = fasta_in.collect{it[0]}
+    ch_merge_freebayes_input = BCFTOOLS_SORT.out.vcf
+        | map { meta, vcf ->
+            meta_new = meta - meta.subMap(["longranger_cov", "chunk_id"])
+            [meta_new, vcf]
+        }
+        | groupTuple(by: 0)
 
-    //
-    // MODULE: MERGE FREEBAYES RESULTS ON CHUNKS
-    //
-    MERGE_FREEBAYES(BCFTOOLS_SORT.out.vcf.combine(fasta_in)
-                        .map{ meta, vcf, meta_fin, fa, fai -> [[id: meta_fin.id], vcf]}.groupTuple(),
-                    [ [id:'merged'], [] ] )
+    GATK4_MERGE_FREEBAYES(
+        ch_merge_freebayes_input,
+        [[:], []]
+    )
     ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
 
     //
-    // LOGIC: REFACTOR AND COMBINE CHANNELS FOR FURTHER PROCESSING
+    // Module: Left-align and normalize indels
     //
-    MERGE_FREEBAYES.out.vcf.map{ meta, vcf -> [meta.id.toString(), vcf]}
-        .join(MERGE_FREEBAYES.out.tbi.map{ meta, tbi -> [meta.id.toString(), tbi]})
-        .combine(fasta_in)
-        .map{ id_norm, vcf, tbi, meta, fasta, fai -> [meta, vcf, tbi] }
-        .set{ input_norm }
+    ch_bcftools_norm_input = ch_assemblies_with_index |
+        | combine(MERGE_FREEBAYES.out.vcf, by: 0)
+        | combine(MERGE_FREEBAYES.out.tbi, by: 0)
+        | multiMap{ meta, fasta, fai, vcf, tbi ->
+            vcf  : [meta, vcf  ]
+            fasta: [meta, fasta]
+        }
 
-    //
-    // LOGIC: CREATE CHANNEL FROM REFERENCE FILE AND META
-    //
-    fasta_in.map{ meta, fasta, fai -> [meta, fasta] }
-            .set{ fasta_meta_ch }
-
-    //
-    // MODULE: LEFT-ALIGN AND NORMALIZE INDELS
-    //
-    BCFTOOLS_NORM(input_norm, fasta_meta_ch)
+    BCFTOOLS_NORM(
+        ch_bcftools_norm_input.vcf,
+        ch_bcftools_norm_input.fasta
+    )
     ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
 
     //
-    // MODULE: INDEX NORMALIZED VARIANTS
+    // Module: Index normalised variants
     //
     BCFTOOLS_INDEX_NORM(BCFTOOLS_NORM.out.vcf)
     ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
 
     //
-    // LOGIC: JOIN VCF CHANNEL WITH ITS INDEX AND FASTA REFERENCE CHANNELS
+    // Module: Generate consensus FASTA file
     //
-    BCFTOOLS_NORM.out.vcf
-        .join(BCFTOOLS_INDEX_NORM.out.tbi, by: [0], remainder: true)
-        .join(fasta_ch, by: [0], remainder: true)
-        .set{ ch_merge }
+    ch_bcftools_consensus_input = ch_assemblies_with_index
+        | combine(BCFTOOLS_NORM.out.vcf      , by: 0)
+        | combine(BCFTOOLS_INDEX_NORM.out.tbi, by: 0)
+        | map { meta, fasta, fai, vcf, tbi ->
+            [meta, vcf, tbi, fasta, []]
+        }
 
-    //
-    // MODULE: GENERATE CONSENSUS FASTA FILE
-    //
-    BCFTOOLS_CONSENSUS(ch_merge)
+    BCFTOOLS_CONSENSUS(ch_bcftools_consensus_input)
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
+    //
+    // Module: Separate back out primary/alt/hap1/hap2 contigs
+    //
+    ch_haps = Channel.of(["hap1", "hap2"])
+    ch_assemblies_to_separate = BCFTOOLS_CONSENSUS.out.fasta
+        | combine(ch_split_regex)
+        | transpose(by: 2)
+        | map { meta, asm, hap ->
+            [meta + [haplotype: hap], asm]
+        }
+
+    SEQKIT_GREP_SPLIT_HAPS(
+        ch_assemblies_to_separate,
+        []
+    )
+    ch_versions         = ch_versions.mix(SEQKIT_GREP.out.versions)
+    ch_assemblies_split = SEQKIT_GREP.out.filter
+
     emit:
-    fasta = BCFTOOLS_CONSENSUS.out.fasta
-    versions = ch_versions
+    assemblies = ch_assemblies_split
+    versions   = ch_versions
 }

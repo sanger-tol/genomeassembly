@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+Overhaul pipeline input YAML structure (by @prototaxites):
+- Validate the input YAML file with nf-schema
+- Re-structure the input YAML a bit to be clearer
+    - Move all species-level metadata to a "metadata" subsection
+    - Move all input sequence data to a "sequencing_data" subsection
+      - Each sequence data readset has an optional FastK input section (directory, basename, kmer size)
+      - The long reads have an optional "coverage" input allowing pre-specification of the 1n coverage
+    - Move the database stuff (busco + oatk) to a "databases" subsection
+
+Overhaul kmer subworkfow (by @prototaxites):
+  - Pass any read set (currently long reads, maternal + paternal reads) without a pre-supplied FastK db through FastK
+  - For long reads, estimate coverage with Genomescope2 only if coverage is not supplied
+  - For maternal and paternal reads, build Yak DBs and make the hapmer dbs using merquryfk/hapmaker
+
+Overhaul raw assembly subworkflow (by @prototaxites):
+  - Hifiasm is first run in --bin-only mode to generate .bin files of error corrected reads
+  - These .bin files are then used to populate all assemblies
+  - Add a --hifiasm_options parameter to tune hifiasm command line arguments
+  - Pipeline then uses channel logic to decide
+    - run base assembly (always) - if the assembly is run without --primary, then hap1/hap2 are selected - otherwise pri/alt are used
+    - if hic_phasing is enabled AND hic data is available - run hic_phased assembly
+    - if trio_binning is enabled AND trio data is available - run trio_binned assembly
+  - Replace GFA_TO_FASTA with GAWK
+
+Overhaul purging subworkflow (by @prototaxites):
+  - Rename PURGE_DUPS to PURGING
+  - Add parameter purging_assemblytypes which takes a comma-separated list of types of assembly ("primary", "hic_phased", "trio_binned") to define which assembly types to purge. (default "primary")
+  - Add parameter purging_purge_middle which if set removes the -e arg from the purgedups/getseqs command, allowing purging in the middle of contigs
+  - Add parameter purging_cutoffs which if set overrides the automatic setting of the purge_dups calcuts cutoff parameters. Must be a comma-separated string with three entries - e.g. "5,20,100".
+  - Remove GET_CALCUTS_PARAMS and calculate these args directly from the coverage meta value
+  - Move the re-concatentation of purged haplotigs and the alternate assembly inside the PURGING subworkflow
+
+Overhaul polishing subworkflow (by @prototaxites):
+- Subworkflow can take multiple assemblies for polishing
+- Tidy up code to use modern Nextflow practices; avoid name collisions using meta objects for prefix setting
+- Replace BED_CHUNKS module with GAWK
+- Remove LONGRANGER_COVERAGE and just pull this value out the summary file with some Groovy
+- Move the hap1/hap2 splitting inside the subworkflow and accomplish this with Seqkit grep + known regular expressions
+- Update all nf-core modules used by the subworkflow
+
 ### `Fixed`
 
 ### `Dependencies`

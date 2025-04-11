@@ -9,7 +9,7 @@ process LONGRANGER_ALIGN {
 
     input:
     tuple val(meta), path(reference)
-    path(fastqs, stageAs: "10X_inputs/*")
+    tuple val(meta), path(fastqs, stageAs: "10X_inputs/*")
 
     output:
     tuple val(meta), path("${meta.id}/outs/possorted_bam.bam"), emit: bam
