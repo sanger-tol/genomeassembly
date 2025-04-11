@@ -12,10 +12,10 @@ process LONGRANGER_ALIGN {
     tuple val(meta2), path(fastqs, stageAs: "10X_inputs/*")
 
     output:
-    tuple val(meta2)    , path("${meta.id}/outs/possorted_bam.bam")    , emit: bam
-    tuple val(meta2)    , path("${meta.id}/outs/possorted_bam.bam.bai"), emit: bai
-    tuple val(meta2)    , path("${meta.id}/outs/summary.csv")          , emit: csv
-    path "versions.yml" , emit: versions
+    tuple val(meta)    , path("${meta.id}/outs/possorted_bam.bam")    , emit: bam
+    tuple val(meta)    , path("${meta.id}/outs/possorted_bam.bam.bai"), emit: bai
+    tuple val(meta)    , path("${meta.id}/outs/summary.csv")          , emit: csv
+    path("versions.yml")                                              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

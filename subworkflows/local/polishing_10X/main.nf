@@ -71,7 +71,7 @@ workflow POLISHING_10X {
     ch_longranger_coverage = LONGRANGER_ALIGN.out.csv
         | map { meta, summary ->
             rows = summary.splitCsv(header: true, sep: ",")
-            [meta, rows[0].mean_depth.toFloat()]
+            [meta, rows[0].mean_depth.toFloat().round().toInteger()]
         }
 
     //
