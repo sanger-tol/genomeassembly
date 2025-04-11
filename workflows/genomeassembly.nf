@@ -101,10 +101,21 @@ workflow GENOMEASSEMBLY {
     ch_assemblies = ch_assemblies
         | mix(PURGING.out.assemblies)
 
+    //
+    // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
+    //        only purged assemblies are polished.
+    //
     ch_assemblies_to_polish = ch_assemblies
         | branch { meta, assembly ->
-            def polish_types = params.polishing_assemblytypes.tokenize(",")
-            polish: (params.enable_polishing && meta.assembly_type in polish_types && params.polishing_longranger_container_path)
+            def purging_types   = params.purging_assemblytypes.tokenize(",")
+            // If we have purged this type of assembly, remove raw stages
+            def purging_filter  = (meta.assembly_type in purging_types) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
+            def polish_types    = params.polishing_assemblytypes.tokenize(",")
+            // Only purge assembly types requested
+            def polish_filter   = (meta.assembly_type in polish_types)
+            def purging_enabled = params.enable_polishing && params.polishing_longranger_container_path
+
+            polish: (purging_enabled && polish_filter && purging_filter)
             no_polish: true
         }
 
