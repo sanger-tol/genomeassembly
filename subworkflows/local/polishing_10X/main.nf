@@ -211,6 +211,9 @@ workflow POLISHING_10X {
     )
     ch_versions         = ch_versions.mix(SEQKIT_GREP.out.versions)
     ch_assemblies_split = SEQKIT_GREP.out.filter
+        | map { meta, fasta ->
+            [meta + [assembly_stage: "polished"], fasta]
+        }
 
     emit:
     assemblies = ch_assemblies_split
