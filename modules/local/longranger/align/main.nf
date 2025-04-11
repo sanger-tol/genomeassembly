@@ -8,14 +8,14 @@ process LONGRANGER_ALIGN {
     def version = '2.2.2-c4'
 
     input:
-    tuple val(meta), path(reference)
-    tuple val(meta), path(fastqs, stageAs: "10X_inputs/*")
+    tuple val(meta) , path(reference)
+    tuple val(meta2), path(fastqs, stageAs: "10X_inputs/*")
 
     output:
-    tuple val(meta), path("${meta.id}/outs/possorted_bam.bam"), emit: bam
-    tuple val(meta), path("${meta.id}/outs/possorted_bam.bam.bai"), emit: bai
-    tuple val(meta), path("${meta.id}/outs/summary.csv"), emit: csv
-    path "versions.yml"           , emit: versions
+    tuple val(meta2)    , path("${meta.id}/outs/possorted_bam.bam")    , emit: bam
+    tuple val(meta2)    , path("${meta.id}/outs/possorted_bam.bam.bai"), emit: bai
+    tuple val(meta2)    , path("${meta.id}/outs/summary.csv")          , emit: csv
+    path "versions.yml" , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

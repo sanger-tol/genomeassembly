@@ -46,7 +46,7 @@ workflow POLISHING_10X {
         false)
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    ch_assemblies_with_index = SAMTOOLS_FAIDX.out.fa
+    ch_assemblies_with_index = ch_merged_assemblies_to_index
         | join(SAMTOOLS_FAIDX.out.fai)
 
     //
@@ -63,11 +63,6 @@ workflow POLISHING_10X {
         illumina_10x_reads
     )
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
-
-    //
-    // Logic: Join read mapping BAM with its index
-    //
-    ch_aligned_bam = LONGRANGER_ALIGN.out.bam.join(LONGRANGER_ALIGN.out.bai)
 
     //
     // Logic: Extract coverage information from Longranger summary and
@@ -96,7 +91,7 @@ workflow POLISHING_10X {
         | combine(LONGRANGER_ALIGN.out.bam  , by: 0)
         | combine(LONGRANGER_ALIGN.out.bai  , by: 0)
         | combine(GAWK_BED_CHUNKS.out.output, by: 0)
-        | combine(ch_longranger_coverage, by: 0)
+        | combine(ch_longranger_coverage    , by: 0)
         | transpose(by: 5) // one entry per bed file
         | multiMap { meta, fasta, fai, bam, bai, bed, cov ->
             def chunk    = bed.name =~ /\.(\d+)\.bed$/
