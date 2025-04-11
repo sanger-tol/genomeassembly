@@ -109,7 +109,16 @@
                     "type": "boolean",
                     "description": "Switch on to do polish purged assembly before scaffolding"
                 },
-                "bed_chunks_polishing": {
+                "polishing_assemblytypes": {
+                    "type": "string",
+                    "default": "primary",
+                    "description": "A comma-separated list defining which types of assemblies to polish. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                },
+                "polishing_longranger_container_path": {
+                    "type": "string",
+                    "description": "Path to a container with longranger to use for the longranger processes. Required for polishing to run."
+                },
+                "polishing_n_chunks_bed": {
                     "type": "integer",
                     "default": 100,
                     "description": "Number of chunks to split assembly into for polishing."

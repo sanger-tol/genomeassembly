@@ -104,7 +104,7 @@ workflow GENOMEASSEMBLY {
     ch_assemblies_to_polish = ch_assemblies
         | branch { meta, assembly ->
             def polish_types = params.polishing_assemblytypes.tokenize(",")
-            polish: (params.enable_polishing && meta.assembly_type in polish_types)
+            polish: (params.enable_polishing && meta.assembly_type in polish_types && params.polishing_longranger_container_path)
             no_polish: true
         }
 
