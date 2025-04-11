@@ -91,7 +91,7 @@ workflow POLISHING_10X {
     ch_freebayes_input = ch_assemblies_with_index
         | combine(LONGRANGER_ALIGN.out.bam  , by: 0)
         | combine(LONGRANGER_ALIGN.out.bai  , by: 0)
-        | combine(GAWK_BED_CHUNKS.out.coords, by: 0)
+        | combine(GAWK_BED_CHUNKS.out.output, by: 0)
         | combine(ch_longranger_coverage, by: 0)
         | transpose(by: 5) // one entry per bed file
         | multiMap { meta, fasta, fai, bam, bai, bed, cov ->
