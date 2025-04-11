@@ -13,8 +13,8 @@ process SEQKIT_GREP {
     path pattern
 
     output:
-    tuple val(meta), path("*.{fa,fq}.gz")  , emit: filter
-    path "versions.yml"                    , emit: versions
+    tuple val(meta), path("*.{fa,fq}*")  , emit: filter
+    path "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,6 +22,7 @@ process SEQKIT_GREP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def gzip = sequence.getExtension() == "gz" ? ".gz" : ""
     // fasta or fastq. Exact pattern match .fasta or .fa suffix with optional .gz (gzip) suffix
     def suffix = task.ext.suffix ?: "${sequence}" ==~ /(.*f[astn]*a(.gz)?$)/ ? "fa" : "fq"
     def pattern_file = pattern ? "-f ${pattern}" : ""
@@ -33,7 +34,7 @@ process SEQKIT_GREP {
         --threads $task.cpus \\
         ${pattern_file} \\
         ${sequence} \\
-        -o ${prefix}.${suffix}.gz \\
+        -o ${prefix}.${suffix}${gzip} \\
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
