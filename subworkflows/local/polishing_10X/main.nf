@@ -127,7 +127,7 @@ workflow POLISHING_10X {
     // Logic: Refactor and combine VCF channels for further processing
     //
     ch_bcftools_view_input = FREEBAYES.out.vcf
-        | combine(BCFTOOLS_INDEX_FB.out.tbi)
+        | combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
 
     //
     // MODULE: FILTER FREEBAYES RESULTS
@@ -164,8 +164,8 @@ workflow POLISHING_10X {
         | combine(GATK4_MERGE_FREEBAYES.out.vcf, by: 0)
         | combine(GATK4_MERGE_FREEBAYES.out.tbi, by: 0)
         | multiMap{ meta, fasta, fai, vcf, tbi ->
-            vcf  : [meta, vcf  ]
-            fasta: [meta, fasta]
+            vcf  : [meta, vcf, tbi]
+            fasta: [meta, fasta   ]
         }
 
     BCFTOOLS_NORM(
@@ -196,10 +196,9 @@ workflow POLISHING_10X {
     //
     // Module: Separate back out primary/alt/hap1/hap2 contigs
     //
-    ch_haps = Channel.of(["hap1", "hap2"])
+    ch_haps = Channel.of("hap1", "hap2")
     ch_assemblies_to_separate = BCFTOOLS_CONSENSUS.out.fasta
         | combine(ch_haps)
-        | transpose(by: 2)
         | map { meta, asm, hap ->
             [meta + [haplotype: hap], asm]
         }
