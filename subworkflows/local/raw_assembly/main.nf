@@ -88,17 +88,6 @@ workflow RAW_ASSEMBLY {
         | mix(HIFIASM.out.alternate_contigs)
         | mix(HIFIASM.out.hap1_contigs)
         | mix(HIFIASM.out.hap2_contigs)
-        | map { meta, asm ->
-            if(asm.name =~ /hap1.p_ctg.gfa.gz$/ || asm.name =~ /^[^.]+\.p_ctg\.gfa.gz$/) {
-                haplotype = "hap1"
-            } else if(asm.name =~ /hap2.p_ctg.gfa.gz$/ || asm.name =~ /^[^.]+\.a_ctg\.gfa.gz$/) {
-                haplotype = "hap2"
-            } else {
-                haplotype = null
-            }
-            def meta_new = meta + [haplotype: haplotype]
-            [meta_new, asm]
-        }
 
     //
     // Module: Convert GFA to FASTA and compres with bgzip
@@ -130,6 +119,15 @@ workflow RAW_ASSEMBLY {
         }
         | filter { it != null }
         | transpose
+        | map { meta, asm ->
+            if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
+                haplotype = "hap1"
+            } else {
+                haplotype = "hap2"
+            }
+            def meta_new = meta + [haplotype: haplotype]
+            [meta_new, asm]
+        }
 
     emit:
     assembly_gfa   = ch_assembly_gfa
