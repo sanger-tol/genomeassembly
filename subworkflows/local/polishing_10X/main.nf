@@ -199,7 +199,7 @@ workflow POLISHING_10X {
     //
     ch_haps = Channel.of(["hap1", "hap2"])
     ch_assemblies_to_separate = BCFTOOLS_CONSENSUS.out.fasta
-        | combine(ch_split_regex)
+        | combine(ch_haps)
         | transpose(by: 2)
         | map { meta, asm, hap ->
             [meta + [haplotype: hap], asm]
