@@ -88,6 +88,32 @@ workflow RAW_ASSEMBLY {
         | mix(HIFIASM.out.alternate_contigs)
         | mix(HIFIASM.out.hap1_contigs)
         | mix(HIFIASM.out.hap2_contigs)
+        | map { meta, asm ->
+            if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
+                haplotype = "hap1"
+            } else if(asm.name =~ /hap2.p_ctg.fa$/ || asm.name =~ /^[^.]+\.a_ctg\.fa$/) {
+                haplotype = "hap2"
+            } else {
+                haplotype = null
+            }
+            def meta_new = meta + [haplotype: haplotype]
+            [meta_new, asm]
+        }
+
+    //
+    // Module: Convert GFA to FASTA and compres with bgzip
+    //
+    GAWK_GFA_TO_FASTA(
+        ch_assembly_gfa,
+        file("${projectDir}/bin/gfa_to_fasta.awk"),
+        false
+    )
+    ch_versions = ch_versions.mix(GAWK_GFA_TO_FASTA.out.versions)
+
+    //
+    // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
+    //
+    ch_assemblies = GAWK_GFA_TO_FASTA.out.output
         | groupTuple(by: 0, size: 4, remainder: true)
         | map { meta, asms ->
             if(asms.size() == 1) { return null }
@@ -104,26 +130,6 @@ workflow RAW_ASSEMBLY {
         }
         | filter { it != null }
         | transpose
-        | map { meta, asm ->
-            if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
-                haplotype = "hap1"
-            } else {
-                haplotype = "hap2"
-            }
-            def meta_new = meta + [haplotype: haplotype]
-            [meta_new, asm]
-        }
-
-    //
-    // Module: Convert GFA to FASTA and compres with bgzip
-    //
-    GAWK_GFA_TO_FASTA(
-        ch_assembly_gfa,
-        file("${projectDir}/bin/gfa_to_fasta.awk"),
-        false
-    )
-    ch_versions = ch_versions.mix(GAWK_GFA_TO_FASTA.out.versions)
-    ch_assemblies = GAWK_GFA_TO_FASTA.out.output
 
     emit:
     assembly_gfa   = ch_assembly_gfa
