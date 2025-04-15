@@ -151,7 +151,7 @@ workflow HIC_MAPPING {
     //
     // Module: Merge position-sorted bam files
     //
-    SAMTOOLS_MERGE_HIC_MAPPING
+    SAMTOOLS_MERGE_HIC_MAPPING(
         ch_samtools_merge_input.bam,
         ch_samtools_merge_input.fasta,
         ch_samtools_merge_input.fai
