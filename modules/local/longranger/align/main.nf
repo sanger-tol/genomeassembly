@@ -5,8 +5,6 @@ process LONGRANGER_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    def version = '2.2.2-c4'
-
     input:
     tuple val(meta) , path(reference)
     tuple val(meta2), path(fastqs, stageAs: "10X_inputs/*")
@@ -21,16 +19,30 @@ process LONGRANGER_ALIGN {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def sample = "${meta.id}"
+    def local_setup = !(task.ext.args =~ /--jobmode=lsf|--jobmode=sge/) ? : "--localcores=${task.cpus}"
+    def args        = task.ext.args   ?: ""
+    def prefix      = task.ext.prefix ?: "${meta.id}"
     """
-    longranger align --id=$sample --fastqs=10X_inputs \
-        --sample=$sample --reference=$reference \
+    longranger align \\
+        --id=${prefix} \\
+        --fastqs=10X_inputs \\
+        --sample=${prefix} \\
+        --reference=${reference} \\
+        ${local_setup} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         longranger: \$(longranger align --version | grep longranger | sed 's/.*(//' | sed 's/).*//')
     END_VERSIONS
+    """
+
+    stub:
+    def prefix      = reference - ~/\.fa/
+    """
+    mkdir -p refdata-${prefix}/outs
+    touch refdata-${prefix}/outs/possorted_bam.bam
+    touch refdata-${prefix}/outs/possorted_bam.bam.bai
+    touch refdata-${prefix}/outs/summary.csv
     """
 }
