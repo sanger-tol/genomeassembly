@@ -4,6 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { HIC_MAPPING   } from '../subworkflows/local/hic_mapping'
 include { KMERS         } from '../subworkflows/local/kmers'
 include { POLISHING_10X } from '../subworkflows/local/polishing_10X'
 include { PURGING       } from '../subworkflows/local/purging'
@@ -12,7 +13,6 @@ include { RAW_ASSEMBLY  } from '../subworkflows/local/raw_assembly'
 //include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
 //include { ORGANELLES                              } from '../subworkflows/local/organelles'
 //include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY  } from '../modules/local/keep_seqnames'
-//include { HIC_MAPPING                             } from '../subworkflows/local/hic_mapping'
 //include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 //include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 //include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'

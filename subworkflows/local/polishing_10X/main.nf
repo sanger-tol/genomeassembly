@@ -1,18 +1,18 @@
-include { BCFTOOLS_VIEW                            } from '../../../modules/nf-core/bcftools/view'
-include { BCFTOOLS_CONSENSUS                       } from '../../../modules/nf-core/bcftools/consensus'
-include { BCFTOOLS_NORM                            } from '../../../modules/nf-core/bcftools/norm'
-include { BCFTOOLS_CONCAT                          } from '../../../modules/nf-core/bcftools/concat'
-include { BCFTOOLS_SORT                            } from '../../../modules/nf-core/bcftools/sort'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB      } from '../../../modules/nf-core/bcftools/index'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM    } from '../../../modules/nf-core/bcftools/index'
-include { CAT_CAT as CONCATENATE_ASSEMBLIES        } from '../../../modules/nf-core/cat/cat'
-include { GATK4_MERGEVCFS as GATK4_MERGE_FREEBAYES } from '../../../modules/nf-core/gatk4/mergevcfs'
-include { GAWK as GAWK_BED_CHUNKS                  } from '../../../modules/nf-core/gawk'
-include { FREEBAYES                                } from '../../../modules/nf-core/freebayes/main'
-include { LONGRANGER_MKREF                         } from '../../../modules/local/longranger/mkref'
-include { LONGRANGER_ALIGN                         } from '../../../modules/local/longranger/align'
-include { SAMTOOLS_FAIDX                           } from '../../../modules/nf-core/samtools/faidx'
-include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS    } from '../../../modules/nf-core/seqkit/grep/main'
+include { BCFTOOLS_VIEW                              } from '../../../modules/nf-core/bcftools/view'
+include { BCFTOOLS_CONSENSUS                         } from '../../../modules/nf-core/bcftools/consensus'
+include { BCFTOOLS_NORM                              } from '../../../modules/nf-core/bcftools/norm'
+include { BCFTOOLS_CONCAT                            } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_SORT                              } from '../../../modules/nf-core/bcftools/sort'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB        } from '../../../modules/nf-core/bcftools/index'
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM      } from '../../../modules/nf-core/bcftools/index'
+include { CAT_CAT as CONCATENATE_ASSEMBLIES          } from '../../../modules/nf-core/cat/cat'
+include { GATK4_MERGEVCFS as GATK4_MERGE_FREEBAYES   } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { GAWK as GAWK_BED_CHUNKS                    } from '../../../modules/nf-core/gawk'
+include { FREEBAYES                                  } from '../../../modules/nf-core/freebayes/main'
+include { LONGRANGER_MKREF                           } from '../../../modules/local/longranger/mkref'
+include { LONGRANGER_ALIGN                           } from '../../../modules/local/longranger/align'
+include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_POLISHING } from '../../../modules/nf-core/samtools/faidx'
+include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS      } from '../../../modules/nf-core/seqkit/grep/main'
 
 workflow POLISHING_10X {
     take:
@@ -40,14 +40,14 @@ workflow POLISHING_10X {
     //
     ch_merged_assemblies_to_index = CONCATENATE_ASSEMBLIES.out.file_out
 
-    SAMTOOLS_FAIDX(
+    SAMTOOLS_FAIDX_POLISHING(
         ch_merged_assemblies_to_index,
         [[:], []],
         false)
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_POLISHING.out.versions)
 
     ch_assemblies_with_index = ch_merged_assemblies_to_index
-        | join(SAMTOOLS_FAIDX.out.fai)
+        | join(SAMTOOLS_FAIDX_POLISHING.out.fai)
 
     //
     // Module: Generate references
