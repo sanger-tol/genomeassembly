@@ -10,7 +10,7 @@
 
 include { BAMTOBED_SORT                                    } from '../../../modules/local/bamtobed_sort'
 include { BWAMEM2_INDEX                                    } from '../../../modules/nf-core/bwamem2/index/main'
-include { CONVERT_STATS                                    } from '../../../subworkflows/local/convert_stats'
+include { HIC_MAPPING_STATS                                } from '../../../subworkflows/local/hic_mapping_stats'
 include { CRAM_CHUNKS                                      } from '../../../modules/local/cramalign/chunks'
 include { CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT           } from '../../../modules/local/cramalign/cram_filter_align_bwamem2_fixmate_sort'
 include { CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT     } from '../../../modules/local/cramalign/cram_filter_minimap2_filter5end_fixmate_sort'
@@ -181,18 +181,15 @@ workflow HIC_MAPPING {
     ch_versions = ch_versions.mix(BAMTOBED_SORT.out.versions)
 
     //
-    // LOGIC: GENERATE INPUT FOR STATS SUBWORKFLOW
+    // Subworkflow: Calculate stats for Hi-C mapping
     //
-    SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam
-                .map { meta, bam -> [ meta, bam, [] ] }
-                .set { ch_stat }
-
-    //
-    // SUBWORKFLOW: PRODUCE READ MAPPING STATS
-    //
-    CONVERT_STATS ( ch_stat, ref_files.reference )
-    ch_versions  = ch_versions.mix( CONVERT_STATS.out.versions )
+    HIC_MAPPING_STATS(
+        SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam,
+        assemblies
+    )
+    ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
     emit:
-
+    bam = SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam
+    bed = BAMTOBED_SORT.out.bed
 }
