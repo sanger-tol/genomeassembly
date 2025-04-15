@@ -19,7 +19,7 @@ process LONGRANGER_ALIGN {
     task.ext.when == null || task.ext.when
 
     script:
-    def local_setup = !(task.ext.args =~ /--jobmode=lsf|--jobmode=sge/) ? : "--localcores=${task.cpus}"
+    def local_setup = !(task.ext.args =~ /--jobmode=lsf|--jobmode=sge/) ? "--localcores=${task.cpus}" : ""
     def args        = task.ext.args   ?: ""
     def prefix      = task.ext.prefix ?: "${meta.id}"
     """
