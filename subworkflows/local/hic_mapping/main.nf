@@ -7,7 +7,6 @@
 // Align short read (HiC and Illumina) data against the genome
 //
 
-
 include { BAMTOBED_SORT                                    } from '../../../modules/local/bamtobed_sort'
 include { BWAMEM2_INDEX                                    } from '../../../modules/nf-core/bwamem2/index/main'
 include { HIC_MAPPING_STATS                                } from '../../../subworkflows/local/hic_mapping_stats'
@@ -25,7 +24,7 @@ workflow HIC_MAPPING {
     take:
     assemblies   // Channel [meta, assembly]
     hic_cram     // Channel [meta, crams]
-    aligner,
+    aligner
     hic_mapping_cram_chunk_size
 
     main:

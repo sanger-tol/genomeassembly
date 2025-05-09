@@ -125,6 +125,30 @@
                 }
             }
         },
+        "hi_c_mapping_options": {
+            "title": "Hi-C mapping options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "hic_aligner": {
+                    "type": "string",
+                    "default": "bwamem2",
+                    "enum": ["bwamem2", "minimap2"],
+                    "description": "Which aligner to use to align Hi-C reads to the reference"
+                },
+                "hic_mapping_cram_chunk_size": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Number of CRAM slices to include per CRAM file per mapping chunk. Lower values mean more Hi-C mapping jobs are spawned, but each should have a lower run time."
+                },
+                "hic_mapping_minq": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Minimum MapQ score for a Hi-C read to be retained for scaffolding."
+                }
+            }
+        },
         "scaffolding_options": {
             "title": "Scaffolding options",
             "type": "object",
@@ -286,6 +310,9 @@
         },
         {
             "$ref": "#/$defs/polishing_options"
+        },
+        {
+            "$ref": "#/$defs/hi_c_mapping_options"
         },
         {
             "$ref": "#/$defs/scaffolding_options"
