@@ -12,7 +12,7 @@ include { BWAMEM2_INDEX                                    } from '../../../modu
 include { HIC_MAPPING_STATS                                } from '../../../subworkflows/local/hic_mapping_stats'
 include { CRAM_CHUNKS                                      } from '../../../modules/local/cramalign/chunks'
 include { CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT           } from '../../../modules/local/cramalign/cram_filter_align_bwamem2_fixmate_sort'
-include { CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT     } from '../../../modules/local/cramalign/cram_filter_minimap2_filter5end_fixmate_sort'
+include { CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT     } from '../../../modules/local/cramalign/cram_filter_align_minimap2_filter5end_fixmate_sort'
 include { MINIMAP2_INDEX                                   } from '../../../modules/nf-core/minimap2/index/main'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_HIC_MAPPING     } from '../../../modules/nf-core/samtools/faidx/main'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_HIC_CRAM        } from '../../../modules/nf-core/samtools/index/main'
