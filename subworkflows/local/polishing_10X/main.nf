@@ -78,7 +78,7 @@ workflow POLISHING_10X {
     // Module: split assembly into chunks
     //
     GAWK_BED_CHUNKS(
-        SAMTOOLS_FAIDX.out.fai,
+        SAMTOOLS_FAIDX_POLISHING.out.fai,
         file("${projectDir}/bin/bed_chunks.awk"),
         true
     )
