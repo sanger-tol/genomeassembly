@@ -3,7 +3,7 @@
 // from Sanger readmapping pipeline by @priyanka-surana
 //
 
-INCLUDE { SAMTOOLS_INDEX    } from '../../../modules/nf-core/samtools/index'
+include { SAMTOOLS_INDEX    } from '../../../modules/nf-core/samtools/index'
 include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat'
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats'
