@@ -4,10 +4,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { KMERS        } from '../subworkflows/local/kmers'
-include { POLISHING    } from '../subworkflows/local/polishing'
-include { PURGING      } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY } from '../subworkflows/local/raw_assembly'
+include { KMERS         } from '../subworkflows/local/kmers'
+include { POLISHING_10X } from '../subworkflows/local/polishing_10X'
+include { PURGING       } from '../subworkflows/local/purging'
+include { RAW_ASSEMBLY  } from '../subworkflows/local/raw_assembly'
 
 //include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
 //include { ORGANELLES                              } from '../subworkflows/local/organelles'
@@ -64,6 +64,11 @@ workflow GENOMEASSEMBLY {
     ch_hic_reads  = hic_reads
         | map { meta, cram, hist, ktab -> [meta, cram] }
         | collect
+
+    ch_i10x_reads = illumina_10x
+        | map { meta, reads, hist, ktab -> [meta, reads] }
+        | collect
+
     ch_trio_yak_dbs   = KMERS.out.trio_yakdb
 
     //
@@ -96,127 +101,33 @@ workflow GENOMEASSEMBLY {
     ch_assemblies = ch_assemblies
         | mix(PURGING.out.assemblies)
 
-//        //
-//        // SUBWORKFLOW: CALCULATE STATISTICS FOR THE PURGED ASSEMBLY
-//        //
-//        GENOME_STATISTICS_PURGED( primary_contigs_ch.join(haplotigs_ch),
-//            busco,
-//            GENOMESCOPE_MODEL.out.hist,
-//            GENOMESCOPE_MODEL.out.ktab,
-//            [],
-//            [],
-//            [],
-//            [],
-//            false
-//        )
-//
-//        //
-//        // LOGIC: CREATE A CHANNEL FOR THE PURGED CONTIGS AMD HAPLOTIGS
-//        //
-//        PURGE_DUPS.out.pri.join(haplotigs_ch)
-//            .map{ meta, purged_pri, purged_alt -> [meta, [purged_pri, purged_alt]]}
-//            .set{ purged_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PURGED CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_PURGEDUPS( purged_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt = CAT_CAT_PURGEDUPS.out.file_out
-//    }
-//
-//    if ( params.polishing_on ) {
-//        //
-//        // MODULE: INDEX FASTA FOR THE MERGED PRIMARY CONTIGS AND HAPLOTIGS
-//        //
-//        SAMTOOLS_FAIDX_PURGEDUPS( CAT_CAT_PURGEDUPS.out.file_out, [[],[]] )
-//        ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_PURGEDUPS.out.versions)
-//
-//        //
-//        // LOGIC: CREATE AN ASSEMBLY CHANNEL FOR POLISHING
-//        //
-//        CAT_CAT_PURGEDUPS.out.file_out.join( SAMTOOLS_FAIDX_PURGEDUPS.out.fai )
-//            .set{ reference_ch }
-//
-//        //
-//        // LOGIC: REFACTOR ILLUMINA CHANNEL TO PASS IT INTO THE POLISHING SUBWORKFLOW
-//        //
-//        illumina_10x.map{ meta, reads, kmers -> reads }
-//            .set{ illumina_10X_ch }
-//
-//        //
-//        // SUBWORKFLOW: POLISH THE PRIMARY AND ALT
-//        //
-//        POLISHING(reference_ch, illumina_10X_ch, params.bed_chunks_polishing)
-//        ch_versions = ch_versions.mix(POLISHING.out.versions)
-//
-//        //
-//        // LOGIC: UPDATE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt = POLISHING.out.fasta
-//
-//        //
-//        // MODULE: EXTRACT THE NAMES OF THE PRIMARY CONTIGS
-//        //
-//        KEEP_SEQNAMES_PRIMARY(PURGE_DUPS.out.pri)
-//        ch_versions = ch_versions.mix(KEEP_SEQNAMES_PRIMARY.out.versions)
-//
-//        //
-//        // MODULE: SEPARATE POLISHED PRIMARY CONTIGS
-//        //
-//        SEQTK_SUBSEQ_PRIMARY(POLISHING.out.fasta, KEEP_SEQNAMES_PRIMARY.out.seqlist)
-//        ch_versions = ch_versions.mix(SEQTK_SUBSEQ_PRIMARY.out.versions)
-//
-//        //
-//        // LOGIC: UPDATE THE PRIMARY CONTIGS CHANNEL WITH THE POLISHED
-//        //        PRIMARY CONTIGS
-//        //
-//        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
-//            .combine(SEQTK_SUBSEQ_PRIMARY.out.sequences)
-//            .set{ primary_contigs_ch }
-//
-//        //
-//        // MODULE: EXTRACT THE NAMES OF THE HAPLOTIGS
-//        //
-//        KEEP_SEQNAMES_HAPLOTIGS(haplotigs_ch)
-//
-//        //
-//        // MODULE: SEPARATE THE POLSIHED HAPLOTIGS
-//        //
-//        SEQTK_SUBSEQ_HAPLOTIGS(POLISHING.out.fasta, KEEP_SEQNAMES_HAPLOTIGS.out.seqlist)
-//
-//        //
-//        // LOGIC: UPDATE THE HAPLOTIGS CHANNEL WITH THE POLISHED HAPLOTIGS
-//        //
-//        POLISHING.out.fasta.map{ meta, f -> [id: meta.id] }
-//            .combine(SEQTK_SUBSEQ_HAPLOTIGS.out.sequences)
-//            .set{ haplotigs_contigs_ch }
-//
-//        //
-//        // LOGIC: COMBINE PRI AND ALT POLISHED CONTIGS INTO A CHANNEL
-//        //
-//        primary_contigs_ch.join(haplotigs_contigs_ch)
-//            .map{ meta, pri, alt -> [[id:meta.id], pri, alt]}
-//            .set{ polished_asm_stats_input_ch }
-//
-//        //
-//        // SUBWORKFLOW: CALCULATE ASSEMBLY STATISTICS FOR THE POLISHED
-//        //              ASSEMBLY
-//        //
-//        GENOME_STATISTICS_POLISHED( polished_asm_stats_input_ch,
-//            busco,
-//            GENOMESCOPE_MODEL.out.hist,
-//            GENOMESCOPE_MODEL.out.ktab,
-//            [],
-//            [],  // Conditional pktab_ch
-//            [],
-//            [],
-//            false
-//        )
-//    }
-//
+    //
+    // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
+    //        only purged assemblies are polished.
+    //
+    ch_assemblies_to_polish = ch_assemblies
+        | branch { meta, assembly ->
+            def purging_types   = params.purging_assemblytypes.tokenize(",")
+            // If we have purged this type of assembly, remove raw stages
+            def purging_filter  = (meta.assembly_type in purging_types) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
+            def polish_types    = params.polishing_assemblytypes.tokenize(",")
+            // Only purge assembly types requested
+            def polish_filter   = (meta.assembly_type in polish_types)
+            def purging_enabled = params.enable_polishing && params.polishing_longranger_container_path
+
+            polish: (purging_enabled && polish_filter && purging_filter)
+            no_polish: true
+        }
+
+    POLISHING_10X(
+        ch_assemblies_to_polish.polish,
+        ch_i10x_reads
+    )
+    ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
+
+    ch_assemblies = ch_assemblies
+        | mix(POLISHING_10X.out.assemblies)
+
 //    //
 //    // LOGIC: CREATE A CHANNEL FOR THE PATHS TO HIC DATA
 //    //

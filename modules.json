@@ -7,32 +7,32 @@
                 "nf-core": {
                     "bcftools/concat": {
                         "branch": "master",
-                        "git_sha": "582ff1755bdd205c65e2ba4c31e0a008dae299ec",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/consensus": {
                         "branch": "master",
-                        "git_sha": "fa12afdf5874c1d11e4a20efe81c97935e8eea24",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/index": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/norm": {
                         "branch": "master",
-                        "git_sha": "0435e4eebc94e53721c194b2d5d06f455a79e407",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "4a21e4cca35e72ec059abd67f790e0b192ce5d81",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/view": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
                     "bedtools/bamtobed": {
@@ -78,13 +78,12 @@
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/freebayes/freebayes.diff"
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "gawk": {
@@ -197,7 +196,7 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "samtools/fixmate": {
@@ -244,6 +243,12 @@
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
                         "installed_by": ["modules"]
+                    },
+                    "seqkit/grep": {
+                        "branch": "master",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/seqkit/grep/seqkit-grep.diff"
                     },
                     "seqtk/subseq": {
                         "branch": "master",

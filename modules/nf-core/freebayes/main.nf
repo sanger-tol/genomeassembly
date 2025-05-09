@@ -2,19 +2,18 @@ process FREEBAYES {
     tag "$meta.id"
     label 'process_single'
 
-    conda "bioconda::freebayes=1.3.6"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/freebayes:1.3.6--hbfe0e7f_2' :
-        'quay.io/biocontainers/freebayes:1.3.6--hbfe0e7f_2' }"
+        'biocontainers/freebayes:1.3.6--hbfe0e7f_2' }"
 
     input:
     tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)
-    path fasta
-    path fasta_fai
-    path samples
-    path populations
-    path cnv
-    val  cov
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fasta_fai)
+    tuple val(meta4), path(samples)
+    tuple val(meta5), path(populations)
+    tuple val(meta6), path(cnv)
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -31,7 +30,6 @@ process FREEBAYES {
     def samples_file     = samples        ? "--samples ${samples}"         : ""
     def populations_file = populations    ? "--populations ${populations}" : ""
     def cnv_file         = cnv            ? "--cnv-map ${cnv}"             : ""
-    def cov              = cov            ? "--skip-coverage ${cov}"       : ""
 
     """
     freebayes \\
@@ -40,7 +38,6 @@ process FREEBAYES {
         $samples_file \\
         $populations_file \\
         $cnv_file \\
-        $cov \\
         $args \\
         $input > ${prefix}.vcf
 
