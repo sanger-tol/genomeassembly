@@ -138,7 +138,7 @@ workflow GENOMEASSEMBLY {
         }
 
     POLISHING_10X(
-        ch_assemblies_to_polish.polish,
+        ch_assemblies_to_polish,
         ch_i10x_reads
     )
     ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
