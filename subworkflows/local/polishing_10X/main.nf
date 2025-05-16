@@ -70,7 +70,7 @@ workflow POLISHING_10X {
     //
     ch_longranger_coverage = LONGRANGER_ALIGN.out.csv
         | map { meta, summary ->
-            rows = summary.splitCsv(header: true, sep: ",")
+            def rows = summary.splitCsv(header: true, sep: ",")
             [meta, rows[0].mean_depth.toFloat().round().toInteger()]
         }
 
@@ -146,7 +146,7 @@ workflow POLISHING_10X {
     //
     ch_merge_freebayes_input = BCFTOOLS_SORT.out.vcf
         | map { meta, vcf ->
-            meta_new = meta - meta.subMap(["longranger_cov", "chunk_id"])
+            def meta_new = meta - meta.subMap(["longranger_cov", "chunk_id"])
             [meta_new, vcf]
         }
         | groupTuple(by: 0)
@@ -163,7 +163,7 @@ workflow POLISHING_10X {
     ch_bcftools_norm_input = ch_assemblies_with_index
         | combine(GATK4_MERGE_FREEBAYES.out.vcf, by: 0)
         | combine(GATK4_MERGE_FREEBAYES.out.tbi, by: 0)
-        | multiMap{ meta, fasta, fai, vcf, tbi ->
+        | multiMap{ meta, fasta, _fai, vcf, tbi ->
             vcf  : [meta, vcf, tbi]
             fasta: [meta, fasta   ]
         }
@@ -186,7 +186,7 @@ workflow POLISHING_10X {
     ch_bcftools_consensus_input = ch_assemblies_with_index
         | combine(BCFTOOLS_NORM.out.vcf      , by: 0)
         | combine(BCFTOOLS_INDEX_NORM.out.tbi, by: 0)
-        | map { meta, fasta, fai, vcf, tbi ->
+        | map { meta, fasta, _fai, vcf, tbi ->
             [meta, vcf, tbi, fasta, []]
         }
 
@@ -209,9 +209,6 @@ workflow POLISHING_10X {
     )
     ch_versions         = ch_versions.mix(SEQKIT_GREP_SPLIT_HAPS.out.versions)
     ch_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
-        | map { meta, fasta ->
-            [meta + [assembly_stage: "polished"], fasta]
-        }
 
     emit:
     assemblies = ch_assemblies_split

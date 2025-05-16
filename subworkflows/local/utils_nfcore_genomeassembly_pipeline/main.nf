@@ -65,6 +65,23 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
+    // Logic: Check that purging and polishing parameter strings only contains valid options
+    //
+    Channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
+        | map { purging, polishing ->
+            def valid_types     = ["primary", "hic_phased", "trio_binned"]
+            def check_purging   = purging.tokenize(",").collect   { it in valid_types }
+            def check_polishing = polishing.tokenize(",").collect { it in valid_types }
+
+            if(!check_purging.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_purging].join(", ")}")
+            }
+            if(!check_polishing.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_polishing].join(", ")}")
+            }
+        }
+
+    //
     // Module: Create channels from input file provided through params.input
     //
     READ_YAML(file(input))
@@ -85,19 +102,6 @@ workflow PIPELINE_INITIALISATION {
     ch_busco        = READ_YAML.out.busco_lineage
     ch_oatk_mito    = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() }
     ch_oatk_plastid = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() }
-
-    //
-    // Logic: Check that purging parameter string only contains valid options
-    //
-    Channel.of(params.purging_assemblytypes)
-        | map { types ->
-            def input       = types.tokenize(",")
-            def valid_types = ["primary", "hic_phased", "trio_binned"]
-            def check       = input.collect { it in valid_types }
-            if(!check.every()) {
-                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check].join(", ")}")
-            }
-        }
 
     emit:
     long_reads   = ch_long_reads

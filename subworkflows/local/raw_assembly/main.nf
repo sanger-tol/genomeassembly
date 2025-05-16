@@ -47,7 +47,7 @@ workflow RAW_ASSEMBLY {
         | combine(ch_hic_in)
         | combine(ch_trio_in)
         | combine(HIFIASM_BIN.out.bin_files)
-        | filter { lr_meta, lr, hic_meta, hic, trio_meta, pat, mat, bin_meta, bin ->
+        | filter { _lr_meta, _lr, _hic_meta, hic, _trio_meta, pat, mat, _bin_meta, _bin ->
             def is_trio = !(mat.isEmpty() || pat.isEmpty())
             def is_hic  = !hic.isEmpty()
             // Filter disallowed assemblies
@@ -60,9 +60,9 @@ workflow RAW_ASSEMBLY {
             def is_trio = !(mat.isEmpty() || pat.isEmpty())
             def is_hic  = !hic.isEmpty()
             // Add assembly type into the long read meta object
+            def assembly_type = "primary"
             if(is_hic)       { assembly_type = "hic_phased"  }
             else if(is_trio) { assembly_type = "trio_binned" }
-            else             { assembly_type = "primary"     }
 
             def lr_meta_new = lr_meta + [assembly_type: assembly_type, assembly_stage: "raw"]
             long_reads: [lr_meta_new, lr, []]
@@ -120,6 +120,7 @@ workflow RAW_ASSEMBLY {
         | filter { it != null }
         | transpose
         | map { meta, asm ->
+            def haplotype = ""
             if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
                 haplotype = "hap1"
             } else {

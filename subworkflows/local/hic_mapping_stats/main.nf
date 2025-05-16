@@ -3,15 +3,15 @@
 // from Sanger readmapping pipeline by @priyanka-surana
 //
 
-include { SAMTOOLS_INDEX    } from '../../../modules/nf-core/samtools/index'
+include { SAMTOOLS_INDEX_HIC_MAP } from '../../../modules/nf-core/samtools/index'
 include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat'
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats'
 
 workflow HIC_MAPPING_STATS {
     take:
-    bam    // [meta, bam]
-    fasta  // [meta, fasta]
+    bam         // [meta, bam]
+    assemblies  // [meta, fasta]
 
     main:
     ch_versions = Channel.empty()
@@ -27,8 +27,8 @@ workflow HIC_MAPPING_STATS {
 
     ch_stats_input = ch_bam_bai
         | combine(assemblies, by: 0)
-        | multiMap { meta, bam, assembly ->
-            bam:      [meta, bam]
+        | multiMap { meta, in_bam, assembly ->
+            bam:      [meta, in_bam]
             assembly: [meta, assembly]
         }
 

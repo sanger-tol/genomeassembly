@@ -9,7 +9,6 @@
 
 include { BAMTOBED_SORT                                    } from '../../../modules/local/bamtobed_sort'
 include { BWAMEM2_INDEX                                    } from '../../../modules/nf-core/bwamem2/index/main'
-include { HIC_MAPPING_STATS                                } from '../../../subworkflows/local/hic_mapping_stats'
 include { CRAM_CHUNKS                                      } from '../../../modules/local/cramalign/chunks'
 include { CRAM_FILTER_ALIGN_BWAMEM2_FIXMATE_SORT           } from '../../../modules/local/cramalign/cram_filter_align_bwamem2_fixmate_sort'
 include { CRAM_FILTER_MINIMAP2_FILTER5END_FIXMATE_SORT     } from '../../../modules/local/cramalign/cram_filter_align_minimap2_filter5end_fixmate_sort'
@@ -67,7 +66,7 @@ workflow HIC_MAPPING {
     // Logic: Count the total number of cram chunks for downstream grouping
     //
     ch_n_cram_chunks = CRAM_CHUNKS.out.cram_slices
-        | map { meta, cram, crai, chunkn, slices -> chunkn }
+        | map { _meta, _cram, _crai, chunkn, _slices -> chunkn }
         | collect
         | map { chunkns -> chunkns.size() }
 
@@ -143,7 +142,7 @@ workflow HIC_MAPPING {
         | combine(SAMTOOLS_FAIDX_HIC_MAPPING.out.fai, by: 0)
         | multiMap { meta, bams, assembly, fai ->
             bam:   [meta, bams]
-            fasta: [meta, fasta]
+            fasta: [meta, assembly]
             fai:   [meta, fai]
         }
 
@@ -179,16 +178,8 @@ workflow HIC_MAPPING {
     BAMTOBED_SORT(SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam)
     ch_versions = ch_versions.mix(BAMTOBED_SORT.out.versions)
 
-    //
-    // Subworkflow: Calculate stats for Hi-C mapping
-    //
-    HIC_MAPPING_STATS(
-        SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam,
-        assemblies
-    )
-    ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
-
     emit:
-    bam = SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam
-    bed = BAMTOBED_SORT.out.bed
+    bam      = SAMTOOLS_MARKDUP_HIC_MAPPING.out.bam
+    bed      = BAMTOBED_SORT.out.sorted_bed
+    versions = ch_versions
 }

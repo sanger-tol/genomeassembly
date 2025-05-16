@@ -12,10 +12,11 @@ process CRAM_CHUNKS {
     def n_slices = file(crai).countLines(decompress: true) - 1
     def size     = cram_bin_size
     def n_bins   = n_slices.intdiv(size)
-    def slices   = (0..n_bins).collect { chunk ->
-        def lower = chunk == 0 ? 0 : (chunk * size) + 1
-        def upper = chunk == n_bins ? n_slices : (chunk + 1) * size
+    def chunkn = (0..n_bins)
+    def slices   = chunkn.collect { chunk ->
+        def lower = chunk * size
+        def upper = [lower + size - 1, n_slices - 1].min()
+
         return [ lower, upper ]
     }
-    def chunkn = (0..n_bins)
 }
