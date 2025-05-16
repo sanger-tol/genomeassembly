@@ -91,7 +91,7 @@ workflow GENOMEASSEMBLY {
             def polish_types = params.polishing_assemblytypes.tokenize(",")
 
             def purge        = meta.assembly_type in purge_types
-            def polish       = meta.assembly_type in polish_types
+            def polish       = (meta.assembly_type in polish_types && params.enable_polishing && params.polishing_longranger_container_path)
             def meta_new     = meta + [purge: purge, polish: polish]
 
             [meta_new, assembly]
