@@ -20,10 +20,10 @@ workflow HIC_MAPPING_STATS {
     // Module: index bam
     //
     SAMTOOLS_INDEX_HIC_MAP(bam)
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_HIC_MAP.out.versions)
 
     ch_bam_bai = bam
-        | combine(SAMTOOLS_INDEX.out.bai, by: 0)
+        | combine(SAMTOOLS_INDEX_HIC_MAP.out.bai, by: 0)
 
     ch_stats_input = ch_bam_bai
         | combine(assemblies, by: 0)
