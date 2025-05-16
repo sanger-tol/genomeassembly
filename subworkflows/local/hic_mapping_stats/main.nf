@@ -27,9 +27,9 @@ workflow HIC_MAPPING_STATS {
 
     ch_stats_input = ch_bam_bai
         | combine(assemblies, by: 0)
-        | multiMap { meta, in_bam, assembly ->
-            bam:      [meta, in_bam]
-            assembly: [meta, assembly]
+        | multiMap { meta, in_bam, bai, assembly ->
+            bam:      [meta, in_bam, bai]
+            assembly: assembly
         }
 
     //
