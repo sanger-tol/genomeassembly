@@ -35,7 +35,7 @@ workflow HIC_MAPPING_STATS {
     //
     // Module: calculate stats
     //
-    SAMTOOLS_STATS(ch_stats_input.bam, ch_stats_input.bam.assembly)
+    SAMTOOLS_STATS(ch_stats_input.bam, ch_stats_input.assembly)
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
     //
