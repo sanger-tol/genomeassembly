@@ -1,0 +1,27 @@
+Changes in component 'nf-core/mitohifi/findmitoreference'
+'modules/nf-core/mitohifi/findmitoreference/meta.yml' is unchanged
+Changes in 'mitohifi/findmitoreference/main.nf':
+--- modules/nf-core/mitohifi/findmitoreference/main.nf
++++ modules/nf-core/mitohifi/findmitoreference/main.nf
+@@ -1,6 +1,7 @@
+ process MITOHIFI_FINDMITOREFERENCE {
+     tag "$species"
+     label 'process_single'
++    secret 'NCBI_API_KEY'
+ 
+     // Docker image available at the project github repository
+     container 'ghcr.io/marcelauliano/mitohifi:3.2.3'
+@@ -23,7 +24,8 @@
+     findMitoReference.py \\
+         --species "$species" \\
+         --outfolder . \\
+-        $args
++        $args \\
++        --ncbi-api-key \${NCBI_API_KEY}
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+
+'modules/nf-core/mitohifi/findmitoreference/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/mitohifi/findmitoreference/tests/main.nf.test' is unchanged
+************************************************************

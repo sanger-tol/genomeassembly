@@ -15,13 +15,11 @@
                 "input": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
-                    "schema": "assets/schema_input.json",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "mimetype": "text/yaml",
+                    "pattern": "^\\S+\\.yaml$",
+                    "description": "Path to YAML file containing information about the dataset",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv"
+                    "fa_icon": "fas fa-file-yaml"
                 },
                 "outdir": {
                     "type": "string",
@@ -35,6 +33,121 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "kmer_profiling_options": {
+            "title": "Kmer profiling options",
+            "type": "object",
+            "description": "Options for the kmer profiling subworkflow.",
+            "default": "",
+            "properties": {
+                "kmer_size": {
+                    "type": "integer",
+                    "default": 31,
+                    "description": "Kmer size to use for all kmer-based subroutines in the Kmer profiling subworkflow. This parameter is overridden by the provided kmer size for a given input read set if a FastK database is provided."
+                }
+            },
+            "fa_icon": "fas fa-signal"
+        },
+        "raw_assembly_options": {
+            "title": "Raw assembly options",
+            "type": "object",
+            "description": "Options for tuning the outputs of raw assembies.",
+            "default": "",
+            "properties": {
+                "enable_hic_phasing": {
+                    "type": "boolean",
+                    "description": "If Hi-C data is provided, enabling this will produce a Hi-C phased assembly with hifiasm."
+                },
+                "enable_trio_binning": {
+                    "type": "boolean",
+                    "description": "If parental read data is provided, enabling this will produce a trio binned assembly with hifiasm."
+                },
+                "hifiasm_error_correction_options": {
+                    "type": "string",
+                    "description": "Options controlling Hifiasm error correction.",
+                    "help_text": "See the \"Error correction options\" section of https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options."
+                },
+                "hifiasm_assembly_options": {
+                    "type": "string",
+                    "help_text": "See https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options.",
+                    "description": "Options controlling Hifiasm assembly output, including those affecting assemblty, purging, phasing and trio binning."
+                }
+            },
+            "fa_icon": "fas fa-cubes"
+        },
+        "purging_options": {
+            "title": "Purging options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "purging_assemblytypes": {
+                    "type": "string",
+                    "default": "primary",
+                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                },
+                "purging_purge_middle": {
+                    "type": "boolean",
+                    "description": "During haplotype purging, look in the middle of contigs for potential haplotigs. This removes the \"-e\" option from the purgedups/getseqs command."
+                },
+                "purging_cutoffs": {
+                    "type": "string",
+                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
+                    "pattern": "\\d+,\\d+,\\d+"
+                }
+            }
+        },
+        "polishing_options": {
+            "title": "Polishing options",
+            "type": "object",
+            "description": "Options for polishing genomes with 10X Illumina reads.",
+            "default": "",
+            "properties": {
+                "enable_polishing": {
+                    "type": "boolean",
+                    "description": "Switch on to do polish purged assembly before scaffolding"
+                },
+                "polishing_assemblytypes": {
+                    "type": "string",
+                    "default": "primary",
+                    "description": "A comma-separated list defining which types of assemblies to polish. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                },
+                "polishing_longranger_container_path": {
+                    "type": "string",
+                    "description": "Path to a container with longranger to use for the longranger processes. Required for polishing to run."
+                },
+                "polishing_n_chunks_bed": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Number of chunks to split assembly into for polishing."
+                }
+            }
+        },
+        "scaffolding_options": {
+            "title": "Scaffolding options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "cool_bin": {
+                    "type": "integer",
+                    "default": 1000,
+                    "description": "Number of bins for cooler cload"
+                }
+            }
+        },
+        "organelle_assembly": {
+            "title": "Organelle assembly",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "enable_organelles": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable organellar assembly subroutines."
                 }
             }
         },
@@ -161,6 +274,24 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/kmer_profiling_options"
+        },
+        {
+            "$ref": "#/$defs/raw_assembly_options"
+        },
+        {
+            "$ref": "#/$defs/purging_options"
+        },
+        {
+            "$ref": "#/$defs/polishing_options"
+        },
+        {
+            "$ref": "#/$defs/scaffolding_options"
+        },
+        {
+            "$ref": "#/$defs/organelle_assembly"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

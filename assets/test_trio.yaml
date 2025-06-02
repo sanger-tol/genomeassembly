@@ -1,0 +1,22 @@
+dataset:
+  id: fAciRut3
+  pacbio:
+    reads:
+      - reads: /lustre/scratch123/tol/tolqc/data/vgp/fish/Acipenser_ruthenus/genomic_data/fAciRut3/pacbio/fasta/m64016_200219_033135.ccs.filtered.fasta.gz
+  HiC:
+    reads:
+      - reads: /lustre/scratch123/tol/tolqc/data/vgp/fish/Acipenser_ruthenus/genomic_data/fAciRut3/hic-dovetail/28791_7#1.cram
+  trio:
+    matreads:
+      - /lustre/scratch123/tol/teams/tola/users/yy5/trio_data/fAciRut/fAciRut2_mat.fastq.gz
+    patreads:
+      - /lustre/scratch123/tol/teams/tola/users/yy5/trio_data/fAciRut/fAciRut1_pat.fastq.gz
+hic_motif: GATC
+hic_aligner: bwamem2
+mito:
+  species: Caradrina clavipalpis
+  min_length: 15000
+  code: 5
+  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
+busco:
+  lineage: actinopterygii_odb10

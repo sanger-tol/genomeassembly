@@ -11,3 +11,4 @@ repos:
     hooks:
       - id: editorconfig-checker
         alias: ec
+        exclude: .*\.drawio

@@ -16,7 +16,7 @@
                         "type": "TextBlock",
                         "size": "Large",
                         "weight": "Bolder",
-                        "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
+                        "color": "<% if ( success ) { %>Good<% } else { %>Attention<%} %>",
                         "text": "sanger-tol/genomeassembly v${version} - ${runName}",
                         "wrap": true
                     },

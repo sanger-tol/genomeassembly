@@ -8,14 +8,14 @@ jobs:
     # Only run if comment is on a PR with the main repo, and if it contains the magic keywords
     if: >
       contains(github.event.comment.html_url, '/pull/') &&
-      contains(github.event.comment.body, '@nf-core-bot fix linting') &&
+      contains(github.event.comment.body, '@sanger-tolsoft fix linting') &&
       github.repository == 'sanger-tol/genomeassembly'
     runs-on: ubuntu-latest
     steps:
       # Use the @nf-core-bot token to check out so we can push later
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
-          token: ${{ secrets.nf_core_bot_auth_token }}
+          token: ${{ secrets.sangertolsoft_access_token }}
 
       # indication that the linting is being fixed
       - name: React on comment
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout Pull Request
         run: gh pr checkout ${{ github.event.issue.number }}
         env:
-          GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
+          GITHUB_TOKEN: ${{ secrets.sangertolsoft_access_token }}
 
       # Install and run pre-commit
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
@@ -56,8 +56,8 @@ jobs:
         id: commit-and-push
         if: steps.pre-commit.outcome == 'failure'
         run: |
-          git config user.email "core@nf-co.re"
-          git config user.name "nf-core-bot"
+          git config user.email "105875386+sanger-tolsoft@users.noreply.github.com"
+          git config user.name "sanger-tolsoft"
           git config push.default upstream
           git add .
           git status

@@ -1,0 +1,43 @@
+name: sanger-tol LSF full size tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+jobs:
+  run-tower:
+    name: Run LSF full size tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sets env vars for push
+        run: |
+          echo "REVISION=${{ github.sha }}" >> $GITHUB_ENV
+        if: github.event_name == 'push'
+
+      - name: Sets env vars for workflow_dispatch
+        run: |
+          echo "REVISION=${{ github.sha }}" >> $GITHUB_ENV
+        if: github.event_name == 'workflow_dispatch'
+
+      - name: Launch workflow via tower
+        uses: seqeralabs/action-tower-launch@v2
+        with:
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          revision: ${{ env.REVISION }}
+          workdir: ${{ secrets.TOWER_WORKDIR_PARENT }}/work/${{ github.repository }}/work-${{ env.REVISION }}
+          parameters: |
+            {
+              "outdir": "${{ secrets.TOWER_WORKDIR_PARENT }}/results/${{ github.repository }}/results-${{ env.REVISION }}",
+            }
+          profiles: test_full,sanger,singularity,cleanup
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: |
+            tower_action_*.log
+            tower_action_*.json

@@ -13,7 +13,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GENOMEASSEMBLY  } from './workflows/genomeassembly'
+include { GENOMEASSEMBLY          } from './workflows/genomeassembly'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 /*
@@ -28,7 +28,14 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_geno
 workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    long_reads
+    hic_reads
+    illumina_10x
+    mat_reads
+    pat_reads
+    busco
+    oatk_mito
+    oatk_plastid
 
     main:
 
@@ -36,7 +43,14 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     // WORKFLOW: Run pipeline
     //
     GENOMEASSEMBLY (
-        samplesheet
+        long_reads,
+        hic_reads,
+        illumina_10x,
+        mat_reads,
+        pat_reads,
+        busco,
+        oatk_mito,
+        oatk_plastid
     )
 }
 /*
@@ -64,7 +78,14 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     SANGERTOL_GENOMEASSEMBLY (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.long_reads,
+        PIPELINE_INITIALISATION.out.hic_reads,
+        PIPELINE_INITIALISATION.out.illumina_10x,
+        PIPELINE_INITIALISATION.out.mat_reads,
+        PIPELINE_INITIALISATION.out.pat_reads,
+        PIPELINE_INITIALISATION.out.busco,
+        PIPELINE_INITIALISATION.out.oatk_mito,
+        PIPELINE_INITIALISATION.out.oatk_plastid
     )
     //
     // SUBWORKFLOW: Run completion tasks

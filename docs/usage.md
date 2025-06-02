@@ -1,68 +1,170 @@
 # sanger-tol/genomeassembly: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+## Workflow input
 
-## Samplesheet input
+### Parameters summary
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+<details markdown="1">
+  <summary>Details</summary>
 
-```bash
---input '[path to samplesheet file]'
-```
+Workflow accepts the following parameters:
 
-### Multiple runs of the same sample
+- <code>input</code> - (required) YAML file containing description of the dataset, incl. ToLID, paths to the raw data etc.
+- <code>bed_chunks_polishing</code> - a number of chunks to split contigs for polishing (default 100)
+- <code>cool_bin</code> - a bin size for cooler (default 1000)
+- <code>organelles_on</code> - set <code>True</code> for running organelles subworkflow
+- <code>polishing_on</code> - set <code>True</code> for polishing
+- <code>hifiasm_hic_on</code> - set <code>True</code> to run of hifiasm in HiC mode
+  <br>NB: hifiasm in the original mode is used as the main assembly even if the <code>hifiasm_hic_on</code> flag is set</br>
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
+</details>
 
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The input dataset is described in YAML format which states for "Yet Another Markdown Language". It is a human readable file which contains information
+about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs,
+BUSCO lineage, mitochondrial code etc. For more information see [Input YAML definition](#input_yaml_definition)
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+### <a name="input_yaml_definition"></a> Input YAML definition
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+- <code>dataset.id</code>
+  - is used as the sample id throughout the pipeline. ToLID should be used in ToL datasets.</p>
+- <code>dataset.illumina_10X.reads</code>
+  - is necessary in case polishing is applied, this field should point to the path of the folder containing 10X reads. Sample identifier in the Illumina reads should coincide with the top level ID. For the use of the Longranger software the reads should follow [the 10X FASTQ file naming convention](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/fastq-input).</p>
+- <code>dataset.pacbio.reads</code>
+  - contains the list (<code>-reads</code>) of the HiFi reads in FASTA (or gzipped FASTA) format in. The pipeline implementation is based on an assumption that reads have gone through adapter/barcode checks. </p>
+- <code>dataset.HiC.reads</code>
+  - contains the list (<code>-reads</code>) of the HiC reads in the indexed CRAM format.</p>
+- <code>dataset.hic_motif</code>
+  - is a comma-separated list of restriction sites. The pipeline was tested with the Arima dataset, but it's should be alright to use it with the other HiC libraries
+- <code>dataset.busco.lineage</code>
+  - specifies the name of the BUSCO dataset (i.e. bacteria_odb10). </p>
+- <code>dataset.busco.lineage_path</code>
+  - is an optional field containing the path to the folder with pre-downloaded BUSCO lineages. </p>
+- <code>dataset.mito.species</code>
+  - is the latin name of the species to look for the mitogenome reference in the organelles subworkflow. Normally this parameter will contain the latin name of the species whose genome is being assembled. </p>
+- <code>dataset.mito.min_length</code>
+  - sets the minimal length of the mito, can be 15Kb. </p>
+- <code>dataset.mito.code</code>
+  - is a mitochondrial code for the mitogenome annotation. See [here](https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi) for reference.
+
+### <a name="input_yaml_example"></a> An example of the input YAML
+
+<details markdown="1">
+  <summary>Details</summary>
+
+Example is based on [test.yaml](../assets/test.yaml).
+
+```yaml
+dataset:
+  id: baUndUnlc1
+  illumina_10X:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz
+  pacbio:
+    reads:
+      - reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  HiC:
+    reads:
+      - reads: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram
+hic_motif: GATC,GANTC,CTNAG,TTAA
+hic_aligner: bwamem2
+busco:
+  lineage: bacteria_odb10
+mito:
+  species: Caradrina clavipalpis
+  min_length: 15000
+  code: 5
+  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
+plastid:
+  fam: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+</details>
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+## Extra installation procedures
 
-## Running the pipeline
+### Longranger
+
+Longranger is a proprietary software product from 10X Genomics.
+Its terms and conditions state that we _cannot_ redistribute the copy we have in the Tree of Life department.
+
+If you want to run the polising option, you have to install longranger yourself.
+Go to <https://support.10xgenomics.com/genome-exome/software/downloads/latest>,
+read their End User Software License Agreement,
+and you'll be able to download the software if you accept it.
+
+To make a Docker (or Singularity) container out of it,
+use the following Dockerfile.
+
+```Dockerfile
+FROM ubuntu:22.04
+LABEL org.opencontainers.image.licenses="10x Genomics End User Software License Agreement - https://support.10xgenomics.com/genome-exome/software/downloads/latest"
+ARG DEST=/opt
+ADD ./longranger-2.2.2.tar.gz $DEST
+RUN ln -s $DEST/longranger-2.2.2/longranger /usr/local/bin/
+```
+
+Then, to use the container in the pipeline, write the following to a `longranger.config` file
+
+```
+process {
+    withName: LONGRANGER_MKREF {
+        container = "/path/to/longranger_container"
+    }
+
+    withName: LONGRANGER_ALIGN {
+        container = "/path/to/longranger_container"
+    }
+}
+```
+
+And pass it to the pipeline with `-c longranger.config`.
+
+## Usage
+
+### Local testing
+
+<details markdown="1">
+  <summary>Details</summary>
+
+The pipeline can be tested locally using a provided small test dataset:
+
+```
+git clone git@github.com:sanger-tol/genomeassembly.git
+cd genomeassembly/
+nextflow run main.nf -profile test,singularity --outdir ${OUTDIR} {OTHER ARGUMENTS}
+```
+
+These command line steps will download the pipeline and run the test.
+
+You should now be able to run the pipeline as you see fit.
+
+</details>
+
+### Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
-```bash
-nextflow run sanger-tol/genomeassembly --input ./samplesheet.csv --outdir ./results  -profile docker
+```console
+nextflow run sanger-tol/genomeassembly --input assets/dataset.yaml --outdir <OUTDIR> -profile docker
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline with the `docker` configuration profile, also using your institution profille if available (see [nf-core/configs](#nf-core_configs)). See below for more information about profiles.
+
+In case organelles subworkflow is switched on you will also need to set a nextflow secret to store the API key belonging to your user.
+
+```bash
+  nextflow secrets set TOL_API_KEY '[API key]'
+```
 
 Note that the pipeline will create the following files in your working directory:
 
-```bash
+```console
 work                # Directory containing the nextflow working files
 <OUTDIR>            # Finished results in specified location (defined with --outdir)
 .nextflow_log       # Log file from Nextflow
@@ -96,7 +198,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```bash
+```console
 nextflow pull sanger-tol/genomeassembly
 ```
 
@@ -104,7 +206,7 @@ nextflow pull sanger-tol/genomeassembly
 
 It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [sanger-tol/genomeassembly releases page](https://github.com/sanger-tol/genomeassembly/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [sanger-tol/genomeassembly releases page](https://github.com/sanger-tol/genomeassembly/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -122,7 +224,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Conda) - see below. When using Biocontainers, most of these software packaging methods pull Docker containers from quay.io e.g [FastQC](https://quay.io/repository/biocontainers/fastqc) except for Singularity which directly downloads Singularity images via https hosted by the [Galaxy project](https://depot.galaxyproject.org/singularity/) and Conda which downloads and installs software locally from [Bioconda](https://bioconda.github.io/).
 
 > [!IMPORTANT]
 > We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
@@ -134,9 +236,6 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
 
-- `test`
-  - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
 - `singularity`
@@ -152,7 +251,10 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `wave`
   - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
-  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `-resume`
 
@@ -206,6 +308,6 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
-```bash
+```console
 NXF_OPTS='-Xms1g -Xmx4g'
 ```

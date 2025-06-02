@@ -1,0 +1,28 @@
+metadata:
+  id: baUndUnlc1
+  species: "Caradrina clavipalpis"
+  mitochondrial_code: 5
+sequencing_data:
+  long_reads:
+    platform: "pacbio"
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  hic:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+  illumina_10x:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz
+databases:
+  busco:
+    lineage: bacteria_odb10
+  oatk:
+    mito_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
+    plastid_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam

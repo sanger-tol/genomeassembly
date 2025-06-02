@@ -8,14 +8,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap        } from 'plugin/nf-schema'
+include { samplesheetToList       } from 'plugin/nf-schema'
+include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
+include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
+include { READ_YAML               } from '../../../modules/local/read_yaml'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,32 +65,50 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Module: Create channels from input file provided through params.input
     //
+    READ_YAML(file(input))
 
-    Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+    //
+    // LOGIC: Create channels for reads for raw assembly input
+    //        [meta, reads, fk_hist, fk_ktab]
+    //
+    ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() } | collect
+    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() } | collect
+    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() } | collect
+    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() } | collect
+    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() } | collect
+
+    //
+    // LOGIC: Create channels for databases
+    //
+    ch_busco        = READ_YAML.out.busco_lineage
+    ch_oatk_mito    = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() }
+    ch_oatk_plastid = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() }
+
+    //
+    // Logic: Check that purging parameter string only contains valid options
+    //
+    Channel.of(params.purging_assemblytypes)
+        | map { types ->
+            def input       = types.tokenize(",")
+            def valid_types = ["primary", "hic_phased", "trio_binned"]
+            def check       = input.collect { it in valid_types }
+            if(!check.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check].join(", ")}")
+            }
         }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
 
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    long_reads   = ch_long_reads
+    hic_reads    = ch_hic_reads
+    illumina_10x = ch_i10x_reads
+    mat_reads    = ch_mat_reads
+    pat_reads    = ch_pat_reads
+    busco        = ch_busco
+    oatk_mito    = ch_oatk_mito
+    oatk_plastid = ch_oatk_plastid
+    versions     = ch_versions
 }
 
 /*
@@ -219,4 +238,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-
