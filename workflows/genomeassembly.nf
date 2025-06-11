@@ -4,15 +4,16 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { KMERS         } from '../subworkflows/local/kmers'
-include { POLISHING_10X } from '../subworkflows/local/polishing_10X'
-include { PURGING       } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY  } from '../subworkflows/local/raw_assembly'
+include { HIC_MAPPING       } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING_STATS } from '../subworkflows/local/hic_mapping_stats'
+include { KMERS             } from '../subworkflows/local/kmers'
+include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
+include { PURGING           } from '../subworkflows/local/purging'
+include { RAW_ASSEMBLY      } from '../subworkflows/local/raw_assembly'
 
 //include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
 //include { ORGANELLES                              } from '../subworkflows/local/organelles'
 //include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY  } from '../modules/local/keep_seqnames'
-//include { HIC_MAPPING                             } from '../subworkflows/local/hic_mapping'
 //include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
 //include { CAT_CAT as CAT_CAT_MITOHIFI_READS          } from "../modules/nf-core/cat/cat/main"
 //include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_PURGEDUPS } from '../modules/nf-core/samtools/faidx/main'
@@ -62,11 +63,11 @@ workflow GENOMEASSEMBLY {
     // Drop FastK databases for all downstream uses of Hi-C
     // CRAM files
     ch_hic_reads  = hic_reads
-        | map { meta, cram, hist, ktab -> [meta, cram] }
+        | map { meta, cram, _hist, _ktab -> [meta, cram] }
         | collect
 
     ch_i10x_reads = illumina_10x
-        | map { meta, reads, hist, ktab -> [meta, reads] }
+        | map { meta, reads, _hist, _ktab -> [meta, reads] }
         | collect
 
     ch_trio_yak_dbs   = KMERS.out.trio_yakdb
@@ -80,69 +81,110 @@ workflow GENOMEASSEMBLY {
         ch_trio_yak_dbs
     )
     ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
+
+    //
+    // Logic: Identify what steps to run on each assembly, using the params
+    //
     ch_assemblies = RAW_ASSEMBLY.out.assembly_fasta
+        | map { meta, assembly ->
+            def purge_types  = params.purging_assemblytypes.tokenize(",")
+            def polish_types = params.polishing_assemblytypes.tokenize(",")
+
+            def purge        = meta.assembly_type in purge_types
+            def polish       = (meta.assembly_type in polish_types && params.enable_polishing && params.polishing_longranger_container_path)
+            def meta_new     = meta + [purge: purge, polish: polish]
+
+            [meta_new, assembly]
+        }
 
     //
     // Subworkflow: Purge dups on specified assemblies
     //
-    ch_assemblies_purge_status = ch_assemblies
-        | branch { meta, assembly ->
-            def purge_types = params.purging_assemblytypes.tokenize(",")
-            purge: meta.assembly_type in purge_types
-            no_purge: true
+    ch_assemblies_to_purge = ch_assemblies
+        | filter { meta, _assembly ->
+            meta.purge == true
         }
 
     PURGING(
-        ch_assemblies_purge_status.purge,
+        ch_assemblies_to_purge,
         ch_long_reads
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
 
+    //
+    // Logic: Add metadata to purged assemblies
+    //
+    ch_purged_assemblies = PURGING.out.assemblies
+        | map { meta, assembly ->
+            def meta_new = meta + [assembly_stage: "purged"]
+            [meta_new, assembly]
+        }
+
     ch_assemblies = ch_assemblies
-        | mix(PURGING.out.assemblies)
+        | mix(ch_purged_assemblies)
 
     //
     // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
     //        only purged assemblies are polished.
     //
     ch_assemblies_to_polish = ch_assemblies
-        | branch { meta, assembly ->
-            def purging_types   = params.purging_assemblytypes.tokenize(",")
+        | filter { meta, _assembly ->
             // If we have purged this type of assembly, remove raw stages
-            def purging_filter  = (meta.assembly_type in purging_types) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
-            def polish_types    = params.polishing_assemblytypes.tokenize(",")
-            // Only purge assembly types requested
-            def polish_filter   = (meta.assembly_type in polish_types)
-            def purging_enabled = params.enable_polishing && params.polishing_longranger_container_path
+            def purging_filter  = (meta.purge == true) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
+            def polish_filter   = (meta.polish == true)
+            def polishing_enabled = (params.enable_polishing && params.polishing_longranger_container_path)
 
-            polish: (purging_enabled && polish_filter && purging_filter)
-            no_polish: true
+            (polishing_enabled && polish_filter && purging_filter)
         }
 
     POLISHING_10X(
-        ch_assemblies_to_polish.polish,
+        ch_assemblies_to_polish,
         ch_i10x_reads
     )
     ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
 
-    ch_assemblies = ch_assemblies
-        | mix(POLISHING_10X.out.assemblies)
+    //
+    // Logic: Add metadata to polished assemblies
+    //
+    ch_polished_assemblies = POLISHING_10X.out.assemblies
+        | map { meta, fasta ->
+            [meta + [assembly_stage: "polished"], fasta]
+        }
 
-//    //
-//    // LOGIC: CREATE A CHANNEL FOR THE PATHS TO HIC DATA
-//    //
-//    hic.map{ meta, crams, motif, hic_aligner -> [meta, crams] }
-//        .set{ crams_ch }
-//
-//    hic.map{ meta, crams, motif, hic_aligner -> [meta, hic_aligner] }
-//        .set{ hic_aligner_ch }
-//
-//    //
-//    // SUBWORKFLOW: MAP HIC DATA TO THE PRIMARY ASSEMBLY
-//    //
-//    HIC_MAPPING ( primary_contigs_ch,crams_ch,hic_aligner_ch, "")
-//    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
-//
+    ch_assemblies = ch_assemblies
+        | mix(ch_polished_assemblies)
+
+    //
+    // Logic: Filter the assemblies to keep those for hi-c mapping
+    //
+    ch_assemblies_for_hic_mapping = ch_assemblies
+        | filter { meta, _assembly ->
+            if(meta.assembly_stage == "polished") { return true }
+            else if(meta.assembly_stage == "purged" && !meta.polish) { return true }
+            else if(meta.assembly_stage == "raw" && !meta.purge && !meta.polish) { return true }
+            else { return false }
+        }
+
+    //
+    // Subworkflow: Map Hi-C data to each assembly
+    //
+    HIC_MAPPING(
+        ch_assemblies_for_hic_mapping,
+        ch_hic_reads,
+        params.hic_aligner,
+        params.hic_mapping_cram_chunk_size
+    )
+    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
+
+    //
+    // Subworkflow: Calculate stats for Hi-C mapping
+    //
+    HIC_MAPPING_STATS(
+        HIC_MAPPING.out.bam,
+        ch_assemblies_for_hic_mapping
+    )
+    ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
+
 //    //
 //    // SUBWORKFLOW: SCAFFOLD THE PRIMARY ASSEMBLY
 //    //

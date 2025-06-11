@@ -17,7 +17,7 @@ workflow KMERS {
     // Module: Generate FastK databases for all read sets without one
     //
     ch_fastk_status = long_reads.mix(maternal_reads, paternal_reads)
-        | branch { meta, reads, hist, ktab ->
+        | branch { _meta, _reads, hist, _ktab ->
             has_fastk: !hist.isEmpty()
             no_fastk: true
         }
@@ -65,7 +65,7 @@ workflow KMERS {
 
     ch_long_reads_out = long_reads
         | combine(ch_coverage.ifEmpty([[:], -1]))
-        | map { lr_meta, reads, hist, ktab, cov_meta, cov ->
+        | map { lr_meta, reads, _hist, _ktab, _cov_meta, cov ->
             def outcov = lr_meta.coverage != -1 ? lr_meta.coverage : cov
             if(outcov == -1) {
                 log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope2 failed!")

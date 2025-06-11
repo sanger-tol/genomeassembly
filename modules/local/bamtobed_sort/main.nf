@@ -1,16 +1,10 @@
-//
-// Copied from https://github.com/sanger-tol/treeval/blob/28309b7a1faf3aee5627f497c7cfa62d12ac65b8/modules/local/bamtobed_sort.nf
-// from Sanger TOL treeval pipeline
-//
-
-
 process BAMTOBED_SORT {
     tag "$meta.id"
     label "process_high"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-9d3a458f6420e5712103ae2af82c94d26d63f059:60b54b43045e8cf39ba307fd683c69d4c57240ce-0' :
-        'biocontainers/mulled-v2-9d3a458f6420e5712103ae2af82c94d26d63f059:60b54b43045e8cf39ba307fd683c69d4c57240ce-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/78/78feb7cf247c725d82ce8dc3b4cd2ea99be7e0034934485b4a44f79ee6edaf6a/data' :
+        'community.wave.seqera.io/library/bedtools_samtools:73f3ef465b3bd116' }"
 
     input:
     tuple val(meta), path(bam)
@@ -20,11 +14,18 @@ process BAMTOBED_SORT {
     path "versions.yml"           , emit: versions
 
     script:
-    def prefix      = args.ext.prefix ?: "${meta.id}"
+    def prefix      = task.ext.prefix ?: "${meta.id}"
+    def args1       = task.ext.args1  ?: ""
+    def args2       = task.ext.args2  ?: ""
     def st_cores    = task.cpus > 4 ? 4 : "${task.cpus}"
     def buffer_mem  = (task.memory.toGiga() / 2).round()
     """
-    samtools view -@${st_cores} -u -F0x400 ${bam} | bamToBed | sort -k4 --parallel=${task.cpus} -S ${buffer_mem}G -T . > ${prefix}_merged_sorted.bed
+    samtools view \\
+        -@${st_cores} \\
+        ${args1} ${bam} | \\
+        bamToBed ${args2} -i stdin | \\
+        sort -k4 --parallel=${task.cpus} -S ${buffer_mem}G -T . > \\
+        ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -34,9 +35,9 @@ process BAMTOBED_SORT {
     """
 
     stub:
-    def prefix = args.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_merged_sorted.bed
+    touch ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

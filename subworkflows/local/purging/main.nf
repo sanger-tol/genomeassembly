@@ -31,7 +31,7 @@ workflow PURGING {
     //
 
     ch_assemblies_split = assemblies
-        | branch { meta, assembly ->
+        | branch { meta, _assembly ->
             primary: meta.haplotype == "hap1"
             alternate: meta.haplotype == "hap2"
             unknown: true
@@ -123,10 +123,6 @@ workflow PURGING {
     //
     ch_assemblies  = PURGEDUPS_GETSEQS.out.purged
         | mix(CAT_PURGED_HAPS_TO_ALT.out.file_out)
-        | map { meta, assembly ->
-            def meta_new = meta + [assembly_stage: "purged"]
-            [meta_new, assembly]
-        }
 
     emit:
     assemblies = ch_assemblies
