@@ -52,6 +52,11 @@ Overhaul polishing subworkflow (by @prototaxites):
 - Move the hap1/hap2 splitting inside the subworkflow and accomplish this with Seqkit grep + known regular expressions
 - Update all nf-core modules used by the subworkflow
 
+Overhaul Hi-C mapping subworkflow (by @prototaxites):
+
+- Use new sanger-tol shared Hi-C mapping subworkflow
+- This can map with both bwa-mem2 or minimap + implements CRAM chunking
+
 ### `Fixed`
 
 ### `Dependencies`
