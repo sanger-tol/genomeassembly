@@ -1,7 +1,8 @@
 channels:
   - conda-forge
   - bioconda
+
 dependencies:
-  - bioconda::samtools=1.21
-  - bioconda::staden_io_lib=1.15.0
   - bioconda::bwa-mem2=2.2.1
+  - bioconda::htslib=1.22.1
+  - bioconda::samtools=1.22.1

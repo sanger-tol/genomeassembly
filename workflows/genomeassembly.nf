@@ -4,7 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { HIC_MAPPING       } from '../subworkflows/local/hic_mapping'
+include { HIC_MAPPING       } from '../subworkflows/sanger-tol/hic_mapping'
 include { HIC_MAPPING_STATS } from '../subworkflows/local/hic_mapping_stats'
 include { KMERS             } from '../subworkflows/local/kmers'
 include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
@@ -172,7 +172,8 @@ workflow GENOMEASSEMBLY {
         ch_assemblies_for_hic_mapping,
         ch_hic_reads,
         params.hic_aligner,
-        params.hic_mapping_cram_chunk_size
+        params.hic_mapping_cram_chunk_size,
+        true // mark duplicates
     )
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 

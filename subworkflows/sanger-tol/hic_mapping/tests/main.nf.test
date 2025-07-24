@@ -1,0 +1,239 @@
+nextflow_workflow {
+
+    name "Test Subworkflow HIC_MAPPING"
+    script "../main.nf"
+    workflow "HIC_MAPPING"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/hic_mapping"
+    tag "hiccramalign/chunks"
+    tag "hiccramalign/bwamem2align"
+    tag "hiccramalign/minimap2align"
+    tag "subworkflows/../../modules/nf-core/samtools/markdup"
+    tag "subworkflows/../../modules/nf-core/minimap2/index"
+    tag "subworkflows/../../modules/nf-core/samtools/merge"
+    tag "subworkflows/../../modules/nf-core/samtools/index"
+    tag "subworkflows/../../modules/nf-core/samtools/faidx"
+    tag "subworkflows/../../modules/nf-core/bwamem2/index"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                "bwamem2/index",
+                "minimap2/index",
+                "samtools/index",
+                "samtools/merge",
+                "samtools/markdup",
+                "samtools/faidx"
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+    }
+
+    test("meles meles - bwamem2 - markdup") {
+
+        when {
+
+            params {
+                samtools_cat_args = ""
+                samtools_fastq_args = "-F0xB00 -nt"
+                bwamem2_mem_args = "-5SPp"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args = "-q 0 -F 0x904"
+                samtools_sort_args = "--write-index -l1"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "bwamem2"
+                input[3] = 10
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                {
+                    assert snapshot(
+                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.versions.collect{ path(it).yaml }
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - bwamem2 - no markdup") {
+
+        when {
+
+            params {
+                samtools_cat_args = ""
+                samtools_fastq_args = "-F0xB00 -nt"
+                bwamem2_mem_args = "-5SPp"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args = "-q 0 -F 0x904"
+                samtools_sort_args = "--write-index -l1"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "bwamem2"
+                input[3] = 10
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                {
+                    assert snapshot(
+                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.versions.collect{ path(it).yaml }
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - minimap2 - markdup") {
+
+        when {
+            params {
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                minimap2_args         = "-ax sr"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "minimap2"
+                input[3] = 10
+                input[4] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                {
+                    assert snapshot(
+                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.versions.collect{ path(it).yaml }
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - minimap2 - no markdup") {
+
+        when {
+            params {
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                minimap2_args         = "-ax sr"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "minimap2"
+                input[3] = 10
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                {
+                    assert snapshot(
+                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.versions.collect{ path(it).yaml }
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+}

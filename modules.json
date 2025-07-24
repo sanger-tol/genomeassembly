@@ -43,7 +43,7 @@
                     "bwamem2/index": {
                         "branch": "master",
                         "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
-                        "installed_by": ["modules"]
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "cat/cat": {
                         "branch": "master",
@@ -127,7 +127,7 @@
                     "minimap2/index": {
                         "branch": "master",
                         "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
-                        "installed_by": ["modules"],
+                        "installed_by": ["hic_mapping", "modules"],
                         "patch": "modules/nf-core/minimap2/index/minimap2-index.diff"
                     },
                     "mitohifi/findmitoreference": {
@@ -191,7 +191,7 @@
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "samtools/fixmate": {
                         "branch": "master",
@@ -211,17 +211,17 @@
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "samtools/markdup": {
                         "branch": "master",
                         "git_sha": "c726d63739c90251337733c6d0b061d0ee8878aa",
-                        "installed_by": ["modules"]
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "samtools/merge": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "samtools/sort": {
                         "branch": "master",
@@ -277,6 +277,36 @@
                     "utils_nfschema_plugin": {
                         "branch": "master",
                         "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+                        "installed_by": ["subworkflows"]
+                    }
+                }
+            }
+        },
+        "https://github.com/sanger-tol/nf-core-modules.git": {
+            "modules": {
+                "sanger-tol": {
+                    "hiccramalign/bwamem2align": {
+                        "branch": "main",
+                        "git_sha": "37dfa6e807cee605fbeac6c2be51a16cd60e0d27",
+                        "installed_by": ["hic_mapping"]
+                    },
+                    "hiccramalign/chunks": {
+                        "branch": "main",
+                        "git_sha": "ca3808e52e3cb978342f2cad64505bed08dbee57",
+                        "installed_by": ["hic_mapping"]
+                    },
+                    "hiccramalign/minimap2align": {
+                        "branch": "main",
+                        "git_sha": "37dfa6e807cee605fbeac6c2be51a16cd60e0d27",
+                        "installed_by": ["hic_mapping"]
+                    }
+                }
+            },
+            "subworkflows": {
+                "sanger-tol": {
+                    "hic_mapping": {
+                        "branch": "main",
+                        "git_sha": "7630a50ed6f61d0cdc2ed1ce89f0736310d085f4",
                         "installed_by": ["subworkflows"]
                     }
                 }
