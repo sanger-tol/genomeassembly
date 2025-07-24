@@ -3,10 +3,10 @@
 // from Sanger readmapping pipeline by @priyanka-surana
 //
 
-include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_HIC_MAP } from '../../../modules/nf-core/samtools/index'
-include { SAMTOOLS_STATS                           } from '../../../modules/nf-core/samtools/stats'
-include { SAMTOOLS_FLAGSTAT                        } from '../../../modules/nf-core/samtools/flagstat'
-include { SAMTOOLS_IDXSTATS                        } from '../../../modules/nf-core/samtools/idxstats'
+include { SAMTOOLS_INDEX as SAMTOOLS_INDEX } from '../../../modules/nf-core/samtools/index'
+include { SAMTOOLS_STATS                   } from '../../../modules/nf-core/samtools/stats'
+include { SAMTOOLS_FLAGSTAT                } from '../../../modules/nf-core/samtools/flagstat'
+include { SAMTOOLS_IDXSTATS                } from '../../../modules/nf-core/samtools/idxstats'
 
 workflow HIC_MAPPING_STATS {
     take:
@@ -19,11 +19,11 @@ workflow HIC_MAPPING_STATS {
     //
     // Module: index bam
     //
-    SAMTOOLS_INDEX_HIC_MAP(bam)
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_HIC_MAP.out.versions)
+    SAMTOOLS_INDEX(bam)
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
 
     ch_bam_bai = bam
-        | combine(SAMTOOLS_INDEX_HIC_MAP.out.bai, by: 0)
+        | combine(SAMTOOLS_INDEX.out.bai, by: 0)
 
     ch_stats_input = ch_bam_bai
         | combine(assemblies, by: 0)

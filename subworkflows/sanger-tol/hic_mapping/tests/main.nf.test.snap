@@ -1,0 +1,166 @@
+{
+    "meles meles - minimap2 - no markdup": {
+        "content": [
+            "cadae29d5849e3c4b7328c3eb8cc239d",
+            [
+                {
+                    "HIC_MAPPING:SAMTOOLS_FAIDX": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:HICCRAMALIGN_MINIMAP2ALIGN": {
+                        "samtools": "1.22.1",
+                        "minimap2": "2.30-r1287",
+                        "gawk": "5.3.1"
+                    }
+                },
+                {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.0"
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MERGE": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:MINIMAP2_INDEX": {
+                        "minimap2": "2.29-r1283"
+                    }
+                }
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-23T10:11:31.789347"
+    },
+    "meles meles - bwamem2 - no markdup": {
+        "content": [
+            "7d1eeee0a6762dd68a561558e2aa63a2",
+            [
+                {
+                    "HIC_MAPPING:SAMTOOLS_FAIDX": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.0"
+                    }
+                },
+                {
+                    "HIC_MAPPING:HICCRAMALIGN_BWAMEM2ALIGN": {
+                        "samtools": "1.22.1",
+                        "bwamem2": "2.2.1"
+                    }
+                },
+                {
+                    "HIC_MAPPING:BWAMEM2_INDEX": {
+                        "bwamem2": "2.2.1"
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MERGE": {
+                        "samtools": 1.21
+                    }
+                }
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-23T10:09:47.382064"
+    },
+    "meles meles - minimap2 - markdup": {
+        "content": [
+            "cadae29d5849e3c4b7328c3eb8cc239d",
+            [
+                {
+                    "HIC_MAPPING:SAMTOOLS_FAIDX": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MARKDUP": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:HICCRAMALIGN_MINIMAP2ALIGN": {
+                        "samtools": "1.22.1",
+                        "minimap2": "2.30-r1287",
+                        "gawk": "5.3.1"
+                    }
+                },
+                {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.0"
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MERGE": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:MINIMAP2_INDEX": {
+                        "minimap2": "2.29-r1283"
+                    }
+                }
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-23T10:10:43.208374"
+    },
+    "meles meles - bwamem2 - markdup": {
+        "content": [
+            "7d1eeee0a6762dd68a561558e2aa63a2",
+            [
+                {
+                    "HIC_MAPPING:SAMTOOLS_FAIDX": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MARKDUP": {
+                        "samtools": 1.21
+                    }
+                },
+                {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.0"
+                    }
+                },
+                {
+                    "HIC_MAPPING:HICCRAMALIGN_BWAMEM2ALIGN": {
+                        "samtools": "1.22.1",
+                        "bwamem2": "2.2.1"
+                    }
+                },
+                {
+                    "HIC_MAPPING:BWAMEM2_INDEX": {
+                        "bwamem2": "2.2.1"
+                    }
+                },
+                {
+                    "HIC_MAPPING:SAMTOOLS_MERGE": {
+                        "samtools": 1.21
+                    }
+                }
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-23T10:08:55.207581"
+    }
+}
