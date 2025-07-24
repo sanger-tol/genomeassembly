@@ -41,15 +41,17 @@ workflow HIC_MAPPING {
     SAMTOOLS_INDEX(ch_hic_cram_raw.no_index)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
 
-    ch_hic_cram = ch_hic_cram_raw.have_index
-        | mix(SAMTOOLS_INDEX.out.crai)
+    ch_hic_cram_indexed = ch_hic_cram_raw.have_index
+        | mix(
+            ch_hic_cram_raw.no_index.join(SAMTOOLS_INDEX.out.crai)
+        )
 
     //
     // Module: Process the cram index files to determine how many
     //         chunks to split into for mapping
     //
     HICCRAMALIGN_CHUNKS(
-        ch_hic_cram,
+        ch_hic_cram_indexed,
         val_cram_chunk_size
     )
     ch_versions = ch_versions.mix(HICCRAMALIGN_CHUNKS.out.versions)

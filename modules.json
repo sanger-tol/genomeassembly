@@ -42,7 +42,7 @@
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["hic_mapping", "modules"]
                     },
                     "cat/cat": {
@@ -126,7 +126,7 @@
                     },
                     "minimap2/index": {
                         "branch": "master",
-                        "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["hic_mapping", "modules"],
                         "patch": "modules/nf-core/minimap2/index/minimap2-index.diff"
                     },
@@ -306,7 +306,7 @@
                 "sanger-tol": {
                     "hic_mapping": {
                         "branch": "main",
-                        "git_sha": "7630a50ed6f61d0cdc2ed1ce89f0736310d085f4",
+                        "git_sha": "a875b9f4800dcfe6682423ed9793ce7c9f1f50a2",
                         "installed_by": ["subworkflows"]
                     }
                 }
