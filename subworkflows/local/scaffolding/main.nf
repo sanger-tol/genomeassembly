@@ -36,7 +36,7 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(BAMTOBED_SORT.out.versions)
 
     ch_bed = ch_map_split.bed
-        | mix(BAMTOBED_SORT.out.sorted_bam)
+        | mix(BAMTOBED_SORT.out.sorted_bed)
 
     //
     // Module: Index input assemblies
