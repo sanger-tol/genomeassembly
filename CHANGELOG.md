@@ -57,6 +57,11 @@ Overhaul Hi-C mapping subworkflow (by @prototaxites):
 - Use new sanger-tol shared Hi-C mapping subworkflow
 - This can map with both bwa-mem2 or minimap + implements CRAM chunking
 
+Overhaul scaffolding subworkflow (by @prototaxites):
+
+- Update YaHS to newest version
+- TODO: Move Hi-C contact map generation to new subworkflow(s)
+
 ### `Fixed`
 
 ### `Dependencies`
