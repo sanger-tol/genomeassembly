@@ -46,7 +46,7 @@ workflow SCAFFOLDING {
         [[],[]],
         false
     )
-    ch_versions = ch_versions.mix(CONTIGS_FAIDX.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_CONTIGS.out.versions)
 
 
     //
