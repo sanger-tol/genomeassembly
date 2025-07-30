@@ -186,15 +186,15 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
-   //
-   // Subworkflow: scaffold assemblies
-   //
-   SCAFFOLDING(
+    //
+    // Subworkflow: scaffold assemblies
+    //
+    SCAFFOLDING(
         ch_assemblies_for_hic_mapping,
         HIC_MAPPING.out.bam,
         params.cool_bin
     )
-   ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 //
 //    //
 //    // LOGIC: CREATE A CHANNEL FOR THE FINAL ASSEMBLY REPRESENTED BY
