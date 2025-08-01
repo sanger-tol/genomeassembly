@@ -252,7 +252,7 @@
                     },
                     "yahs": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "f23a6c5a54a3c47392f87ec1ab27b529383ddda0",
                         "installed_by": ["modules"]
                     },
                     "yak/count": {
