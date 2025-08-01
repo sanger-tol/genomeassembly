@@ -147,6 +147,6 @@ workflow SCAFFOLDING {
 
     emit:
     fasta = YAHS.out.scaffolds_fasta
-    agp   = YAHS.out.agp
+    agp   = YAHS.out.scaffolds_agp
     versions = ch_versions
 }
