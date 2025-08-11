@@ -52,12 +52,12 @@
                     },
                     "cooler/cload": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "d7a16997e642d48dfdcfbd5e7cb4f886c443230f",
                         "installed_by": ["modules"]
                     },
                     "cooler/zoomify": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "528e4142f86093d92c72f90d40bff9b5131747ca",
                         "installed_by": ["modules"]
                     },
                     "fastk/fastk": {
@@ -107,6 +107,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/hifiasm/hifiasm.diff"
                     },
+                    "juicertools/pre": {
+                        "branch": "master",
+                        "git_sha": "af05fd9d2209e6daaf48a8d8b4739651a1ed5316",
+                        "installed_by": ["modules"]
+                    },
                     "merquryfk/hapmaker": {
                         "branch": "master",
                         "git_sha": "26ae0455fc69b3fbf542ec506c71bce44ddddc4e",
@@ -148,7 +153,7 @@
                     },
                     "pretextmap": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "pretextsnapshot": {
