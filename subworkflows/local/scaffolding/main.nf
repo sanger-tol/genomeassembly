@@ -1,4 +1,6 @@
 include { BAMTOBED_SORT                              } from '../../../modules/local/bamtobedsort/main.nf'
+include { COOLER_CLOAD                               } from '../../../modules/nf-core/cooler/cload/main.nf'
+include { COOLER_ZOOMIFY                             } from '../../../modules/nf-core/cooler/zoomify/main.nf'
 include { JUICERTOOLS_PRE                            } from '../../../modules/nf-core/juicertools/pre/main'
 include { MAKE_PAIRS_FILE                            } from '../../../modules/local/make_pairs_file/main.nf'
 include { PRETEXTMAP                                 } from '../../../modules/nf-core/pretextmap/main.nf'
