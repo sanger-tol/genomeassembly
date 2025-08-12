@@ -5,8 +5,8 @@ process MINIMAP2_ALIGN {
     // Note: the versions here need to match the versions used in the mulled container below and minimap2/index
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4:3161f532a5ea6f1dec9be5667c9efc2afdac6104-0' :
-        'biocontainers/mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4:3161f532a5ea6f1dec9be5667c9efc2afdac6104-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/66/66dc96eff11ab80dfd5c044e9b3425f52d818847b9c074794cf0c02bfa781661/data' :
+        'community.wave.seqera.io/library/minimap2_samtools:33bb43c18d22e29c' }"
 
     input:
     tuple val(meta), path(reads)
@@ -15,13 +15,12 @@ process MINIMAP2_ALIGN {
     val bam_index_extension
     val cigar_paf_format
     val cigar_bam
-    val output_meta
 
     output:
-    tuple val(meta_out), path("*.paf")                       , optional: true, emit: paf
-    tuple val(meta_out), path("*.bam")                       , optional: true, emit: bam
-    tuple val(meta_out), path("*.bam.${bam_index_extension}"), optional: true, emit: index
-    path "versions.yml"                                      , emit: versions
+    tuple val(meta), path("*.paf")                       , optional: true, emit: paf
+    tuple val(meta), path("*.bam")                       , optional: true, emit: bam
+    tuple val(meta), path("*.bam.${bam_index_extension}"), optional: true, emit: index
+    path "versions.yml"                                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -40,12 +39,7 @@ process MINIMAP2_ALIGN {
     def samtools_reset_fastq = bam_input ? "samtools reset --threads ${task.cpus-1} $args3 $reads | samtools fastq --threads ${task.cpus-1} $args4 |" : ''
     def query = bam_input ? "-" : reads
     def target = reference ?: (bam_input ? error("BAM input requires reference") : reads)
-    if (!(output_meta in ['reads', 'reference', 'combine'])){
-        log.error("Error: Invalid value for output_meta")
-    }
-    if(output_meta == 'reads')     { meta_out = meta         }
-    if(output_meta == 'reference') { meta_out = meta2        }
-    if(output_meta == 'combine'  ) { meta_out = meta + meta2 }
+
     """
     $samtools_reset_fastq \\
     minimap2 \\
