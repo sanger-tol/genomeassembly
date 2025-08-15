@@ -106,7 +106,7 @@ workflow SCAFFOLDING {
     //
     // Module: Generate juicer .hic map
     //
-    ch_juicertools_pre_chrom_sizes = SAMTOOLS_FAIDX_SCAFFOLDS.out.chrom_sizes
+    ch_juicertools_pre_chrom_sizes = SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes
         | map { meta, sizes ->
             [ meta, [], sizes ]
         }
