@@ -47,9 +47,9 @@ workflow SCAFFOLDING {
     //
     // Module: scaffold contigs with YaHS
     //
-    ch_yahs_input = ch_bed
-        | combine(ch_fasta, by: 0)
+    ch_yahs_input = ch_fasta
         | combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
+        | combine(ch_bed, by: 0)
 
     YAHS(ch_yahs_input)
     ch_versions = ch_versions.mix(YAHS.out.versions)
@@ -65,12 +65,12 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_SCAFFOLDS.out.versions)
 
     //
-    // Module: Make pairs file for PretextMap
+    // Module: Make pairs file to build contact maps with
     //
     ch_pairs_input = SAMTOOLS_FAIDX_SCAFFOLDS.out.fai
-        | combine(YAHS.out.scaffolds_agp, by: 0)
-        | combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
-        | combine(YAHS.out.binary)
+        | join(YAHS.out.scaffolds_agp, by: 0)
+        | join(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
+        | join(YAHS.out.binary, by: 0)
 
     MAKE_PAIRS_FILE(ch_pairs_input)
     ch_versions = ch_versions.mix(MAKE_PAIRS_FILE.out.versions)

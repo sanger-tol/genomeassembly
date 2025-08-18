@@ -133,14 +133,14 @@ workflow HIC_MAPPING {
         }
         | groupTuple()
         | map { key, bam -> [key.target, bam] } // Get meta back out of groupKey
-        | combine(ch_assemblies, by: 0)
-        | combine(SAMTOOLS_FAIDX.out.fai, by: 0)
-        | combine(SAMTOOLS_FAIDX.out.gzi.ifEmpty([[], []]), by: 0)
+        | join(ch_assemblies, by: 0)
+        | join(SAMTOOLS_FAIDX.out.fai, by: 0)
+        | join(SAMTOOLS_FAIDX.out.gzi, by: 0, remainder: true)
         | multiMap { meta, bams, assembly, fai, gzi ->
             bam:   [meta, bams]
             fasta: [meta, assembly]
             fai:   [meta, fai]
-            gzi:   [meta, gzi]
+            gzi:   [meta, gzi ?: []]
         }
 
     //
