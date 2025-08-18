@@ -18,7 +18,7 @@ process MAKE_PAIRS_FILE {
     """
     gawk '
         BEGIN {
-            OFS = "\t"
+            OFS = " "
             print "## pairs format v1.0"
         }
         { print "#chromsize:", \$1, \$2 }
@@ -34,7 +34,7 @@ process MAKE_PAIRS_FILE {
             BEGIN { OFS = "\t" }
             \$3 > 0 && \$7 > 0 {print ".", \$2, \$3, \$6, \$7, ".", "."}
         ' |\\
-        LC_ALL=C sort -k2,2d -k6,6d -S50G >>\\
+        LC_ALL=C sort -k2,2d -k4,4d -S50G >>\\
         ${prefix}.pairs
 
     bgzip -@${task.cpus} ${prefix}.pairs
