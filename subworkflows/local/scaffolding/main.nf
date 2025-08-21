@@ -5,6 +5,7 @@ include { GAWK as GAWK_PROCESS_PAIRS_FILE            } from '../../../modules/nf
 include { JUICERTOOLS_PRE                            } from '../../../modules/nf-core/juicertools/pre/main'
 include { MAKE_PAIRS_FILE                            } from '../../../modules/local/make_pairs_file/main.nf'
 include { PRETEXTMAP                                 } from '../../../modules/nf-core/pretextmap/main.nf'
+include { PRETEXTSNAPSHOT                            } from '../../../modules/nf-core/pretextsnapshot/main.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_CONTIGS   } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_SCAFFOLDS } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS                                       } from '../../../modules/nf-core/yahs/main'
@@ -83,6 +84,13 @@ workflow SCAFFOLDING {
         MAKE_PAIRS_FILE.out.pairs, // Pairs file
         [[], [], []]
     )
+    ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
+
+    //
+    // Module: Make a PNG of the PretextMap for fast viz
+    //
+    PRETEXTSNAPSHOT(PRETEXTMAP.out.pretext)
+    ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
 
     //
     // Module: Generate a multi-resolution cooler file by coarsening
@@ -114,6 +122,7 @@ workflow SCAFFOLDING {
         "${projectDir}/bin/pairs_remove_chromsizes.awk",
         false
     )
+    ch_versions = ch_versions.mix(GAWK_PROCESS_PAIRS_FILE.out.versions)
 
     //
     // Module: Generate juicer .hic map
@@ -130,9 +139,11 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(JUICERTOOLS_PRE.out.versions)
 
     emit:
-    fasta    = YAHS.out.scaffolds_fasta
-    agp      = YAHS.out.scaffolds_agp
-    cool     = COOLER_ZOOMIFY.out.mcool
-    hic      = JUICERTOOLS_PRE.out.hic
-    versions = ch_versions
+    fasta       = YAHS.out.scaffolds_fasta
+    agp         = YAHS.out.scaffolds_agp
+    pretext     = PRETEXTMAP.out.pretext
+    pretext_png = PRETEXTSNAPSHOT.out.image
+    cool        = COOLER_ZOOMIFY.out.mcool
+    hic         = JUICERTOOLS_PRE.out.hic
+    versions    = ch_versions
 }
