@@ -1,6 +1,7 @@
 include { BAMTOBED_SORT                              } from '../../../modules/local/bamtobedsort/main.nf'
 include { COOLER_CLOAD                               } from '../../../modules/nf-core/cooler/cload/main.nf'
 include { COOLER_ZOOMIFY                             } from '../../../modules/nf-core/cooler/zoomify/main.nf'
+include { GAWK as GAWK_PROCESS_PAIRS_FILE            } from '../../../modules/nf-core/gawk/main.nf'
 include { JUICERTOOLS_PRE                            } from '../../../modules/nf-core/juicertools/pre/main'
 include { MAKE_PAIRS_FILE                            } from '../../../modules/local/make_pairs_file/main.nf'
 include { PRETEXTMAP                                 } from '../../../modules/nf-core/pretextmap/main.nf'
@@ -103,6 +104,17 @@ workflow SCAFFOLDING {
     COOLER_ZOOMIFY(COOLER_CLOAD.out.cool)
     ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
 
+
+    //
+    // Module: process .pairs file to remove the chromsize lines as juicer_pre
+    // does not like them
+    //
+    GAWK_PROCESS_PAIRS_FILE(
+        MAKE_PAIRS_FILE.out.pairs,
+        "${projectDir}/bin/pairs_remove_chromsizes.awk",
+        false
+    )
+
     //
     // Module: Generate juicer .hic map
     //
@@ -112,7 +124,7 @@ workflow SCAFFOLDING {
         }
 
     JUICERTOOLS_PRE(
-        MAKE_PAIRS_FILE.out.pairs,
+        GAWK_PROCESS_PAIRS_FILE.out.output,
         ch_juicertools_pre_chrom_sizes
     )
     ch_versions = ch_versions.mix(JUICERTOOLS_PRE.out.versions)
