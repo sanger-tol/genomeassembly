@@ -18,7 +18,7 @@ process MAKE_PAIRS_FILE {
     """
     gawk '
         BEGIN {
-            OFS = " "
+            OFS = "\t"
             print "## pairs format v1.0"
         }
         { print "#chromsize:", \$1, \$2 }
