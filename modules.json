@@ -52,17 +52,17 @@
                     },
                     "cooler/cload": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "d7a16997e642d48dfdcfbd5e7cb4f886c443230f",
                         "installed_by": ["modules"]
                     },
                     "cooler/zoomify": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "528e4142f86093d92c72f90d40bff9b5131747ca",
                         "installed_by": ["modules"]
                     },
                     "fastk/fastk": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "fastk/histex": {
@@ -92,9 +92,8 @@
                     },
                     "gfastats": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gfastats/gfastats.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "gunzip": {
                         "branch": "master",
@@ -107,38 +106,40 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/hifiasm/hifiasm.diff"
                     },
+                    "juicertools/pre": {
+                        "branch": "master",
+                        "git_sha": "af05fd9d2209e6daaf48a8d8b4739651a1ed5316",
+                        "installed_by": ["modules"]
+                    },
                     "merquryfk/hapmaker": {
                         "branch": "master",
-                        "git_sha": "26ae0455fc69b3fbf542ec506c71bce44ddddc4e",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
-                        "git_sha": "95f7516731f960e86bff900b9f1d80a8904bffd8",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/merquryfk/merquryfk/merquryfk-merquryfk.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "minimap2/align": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/minimap2/align/minimap2-align.diff"
                     },
                     "minimap2/index": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["hic_mapping", "modules"],
-                        "patch": "modules/nf-core/minimap2/index/minimap2-index.diff"
+                        "installed_by": ["hic_mapping", "modules"]
                     },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
-                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/mitohifi/findmitoreference/mitohifi-findmitoreference.diff"
+                        "git_sha": "e667697bd391dba163bf10eda86fc26634304667",
+                        "installed_by": ["modules"]
                     },
                     "mitohifi/mitohifi": {
                         "branch": "master",
-                        "git_sha": "45bd069e0d8fc926d8d40d5da81489e70f03aac2",
+                        "git_sha": "e667697bd391dba163bf10eda86fc26634304667",
                         "installed_by": ["modules"]
                     },
                     "oatk": {
@@ -148,20 +149,18 @@
                     },
                     "pretextmap": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "pretextsnapshot": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/pretextsnapshot/pretextsnapshot.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "purgedups/calcuts": {
                         "branch": "master",
                         "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/purgedups/calcuts/purgedups-calcuts.diff"
+                        "installed_by": ["modules"]
                     },
                     "purgedups/getseqs": {
                         "branch": "master",
@@ -215,7 +214,7 @@
                     },
                     "samtools/markdup": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "e89ff68a46b848c4d8aabb8569767516d46db319",
                         "installed_by": ["hic_mapping", "modules"]
                     },
                     "samtools/merge": {
@@ -244,15 +243,9 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/seqkit/grep/seqkit-grep.diff"
                     },
-                    "seqtk/subseq": {
-                        "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/seqtk/subseq/seqtk-subseq.diff"
-                    },
                     "yahs": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "2710e8fa2b359cd82cf3ca4113a7a2df0a64490d",
                         "installed_by": ["modules"]
                     },
                     "yak/count": {
@@ -306,7 +299,7 @@
                 "sanger-tol": {
                     "hic_mapping": {
                         "branch": "main",
-                        "git_sha": "a875b9f4800dcfe6682423ed9793ce7c9f1f50a2",
+                        "git_sha": "170386669244a9b418b19c87715516b0ca947cef",
                         "installed_by": ["subworkflows"]
                     }
                 }

@@ -10,8 +10,8 @@ include { KMERS             } from '../subworkflows/local/kmers'
 include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
 include { PURGING           } from '../subworkflows/local/purging'
 include { RAW_ASSEMBLY      } from '../subworkflows/local/raw_assembly'
+include { SCAFFOLDING       } from '../subworkflows/local/scaffolding'
 
-//include { SCAFFOLDING                             } from '../subworkflows/local/scaffolding'
 //include { ORGANELLES                              } from '../subworkflows/local/organelles'
 //include { KEEP_SEQNAMES as KEEP_SEQNAMES_PRIMARY  } from '../modules/local/keep_seqnames'
 //include { GENOME_STATISTICS } from '../subworkflows/local/genome_statistics'
@@ -186,11 +186,15 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
-//    //
-//    // SUBWORKFLOW: SCAFFOLD THE PRIMARY ASSEMBLY
-//    //
-//    SCAFFOLDING( HIC_MAPPING.out.bed, primary_contigs_ch, params.cool_bin, "")
-//    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+    //
+    // Subworkflow: scaffold assemblies
+    //
+    SCAFFOLDING(
+        ch_assemblies_for_hic_mapping,
+        HIC_MAPPING.out.bam,
+        params.cool_bin
+    )
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 //
 //    //
 //    // LOGIC: CREATE A CHANNEL FOR THE FINAL ASSEMBLY REPRESENTED BY

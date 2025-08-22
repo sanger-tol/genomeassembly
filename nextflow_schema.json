@@ -155,6 +155,35 @@
             "description": "",
             "default": "",
             "properties": {
+                "enable_scaffolding": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable scaffolding of assembled contigs with Hi-C."
+                },
+                "yahs_break_contigs": {
+                    "type": "boolean",
+                    "description": "Allow YaHS to break contigs at putative misassemblies using Hi-C data prior to scaffolding.",
+                    "default": true
+                },
+                "yahs_resolutions": {
+                    "type": "string",
+                    "pattern": "^\\d+(,\\d+)*$",
+                    "description": "A comma-separated list of resolutions for YaHS to examine when scaffolding.",
+                    "help_text": "For highly fragmented assemblies, including higher resolutions by adding lower values to the string may improve results."
+                },
+                "yahs_min_contig_length": {
+                    "type": "integer",
+                    "description": "The minimum contig length to be considered by YaHS for scaffolding.",
+                    "help_text": "YaHS can only handle up to 45,000 contigs. If you have more, you can adjust the number of contigs going into YaHS by setting a length threshold."
+                }
+            }
+        },
+        "contact_map_options": {
+            "title": "Contact map options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
                 "cool_bin": {
                     "type": "integer",
                     "default": 1000,
@@ -316,6 +345,9 @@
         },
         {
             "$ref": "#/$defs/scaffolding_options"
+        },
+        {
+            "$ref": "#/$defs/contact_map_options"
         },
         {
             "$ref": "#/$defs/organelle_assembly"

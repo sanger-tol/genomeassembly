@@ -57,6 +57,16 @@ Overhaul Hi-C mapping subworkflow (by @prototaxites):
 - Use new sanger-tol shared Hi-C mapping subworkflow
 - This can map with both bwa-mem2 or minimap + implements CRAM chunking
 
+Overhaul scaffolding subworkflow (by @prototaxites):
+
+- Update YaHS to newest version
+- new module MAKE_PAIRS_FILE which creates a pairs file of reads mapping to scaffolds - replaces PREPARE_PRETEXTMAP_INPUT
+- Update PretextMap + PretextSnapshot to latest versions
+- Update Cooler modules, overhauling their inputs
+- Use new JUICERTOOLS_PRE nf-core module, so we don't have to ship the jar any more
+  - Supports multi-threading
+  - This module has `errorStragegy = "ignore"` set to skip failures.
+
 ### `Fixed`
 
 ### `Dependencies`
