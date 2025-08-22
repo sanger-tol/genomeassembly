@@ -64,8 +64,8 @@ Overhaul scaffolding subworkflow (by @prototaxites):
 - Update PretextMap + PretextSnapshot to latest versions
 - Update Cooler modules, overhauling their inputs
 - Use new JUICERTOOLS_PRE nf-core module, so we don't have to ship the jar any more
-    - Supports multi-threading
-    - This module has `errorStragegy = "ignore"` set to skip failures.
+  - Supports multi-threading
+  - This module has `errorStragegy = "ignore"` set to skip failures.
 
 ### `Fixed`
 
