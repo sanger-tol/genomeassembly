@@ -167,7 +167,7 @@
                 },
                 "yahs_resolutions": {
                     "type": "string",
-                    "pattern": "^\d+(,\d+)*$",
+                    "pattern": "^\\d+(,\\d+)*$",
                     "description": "A comma-separated list of resolutions for YaHS to examine when scaffolding.",
                     "help_text": "For highly fragmented assemblies, including higher resolutions by adding lower values to the string may improve results."
                 },
