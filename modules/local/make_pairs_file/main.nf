@@ -30,12 +30,12 @@ process MAKE_PAIRS_FILE {
         ${contigs_bin} \\
         ${scaffolds_agp} \\
         ${contigs_fai} |\\
-        gawk '
-            BEGIN { OFS = "\t" }
-            \$3 > 0 && \$7 > 0 {print ".", \$2, \$3, \$6, \$7, ".", "."}
-        ' |\\
-        LC_ALL=C sort -k2,2d -k4,4d -S50G >>\\
-        ${prefix}.pairs
+    gawk '
+        BEGIN { OFS = "\t" }
+        \$3 > 0 && \$7 > 0 {print ".", \$2, \$3, \$6, \$7, ".", "."}
+    ' |\\
+    LC_ALL=C sort -k2,2d -k4,4d -S50G >>\\
+    ${prefix}.pairs
 
     bgzip -@${task.cpus} ${prefix}.pairs
 
