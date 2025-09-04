@@ -5,54 +5,34 @@ include { BCFTOOLS_CONCAT                          } from '../../../modules/nf-c
 include { BCFTOOLS_SORT                            } from '../../../modules/nf-core/bcftools/sort'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB      } from '../../../modules/nf-core/bcftools/index'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM    } from '../../../modules/nf-core/bcftools/index'
-include { CAT_CAT as CONCATENATE_ASSEMBLIES        } from '../../../modules/nf-core/cat/cat'
 include { GATK4_MERGEVCFS as GATK4_MERGE_FREEBAYES } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GAWK as GAWK_BED_CHUNKS                  } from '../../../modules/nf-core/gawk'
 include { FREEBAYES                                } from '../../../modules/nf-core/freebayes/main'
 include { LONGRANGER_MKREF                         } from '../../../modules/local/longranger/mkref'
 include { LONGRANGER_ALIGN                         } from '../../../modules/local/longranger/align'
 include { SAMTOOLS_FAIDX                           } from '../../../modules/nf-core/samtools/faidx'
-include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS    } from '../../../modules/nf-core/seqkit/grep/main'
 
 workflow POLISHING_10X {
     take:
-    assemblies             // [meta, fasta]
-    illumina_10x_reads     // [meta, reads]
+    ch_assemblies             // [meta, assembly]
+    val_illumina_10x_reads    // [meta, reads]
 
     main:
     ch_versions = Channel.empty()
 
-    //
-    // Module: concatenate hap1 and hap2 assemblies together
-    //
-    ch_assemblies_to_concatenate = assemblies
-        | map { meta, asm ->
-            def meta_new = meta - meta.subMap('haplotype')
-            [meta_new, asm]
-        }
-        | groupTuple(by: 0, size: 2)
-
-    CONCATENATE_ASSEMBLIES(ch_assemblies_to_concatenate)
-    ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
-
-    //
-    // Module: Index merged assemblies
-    //
-    ch_merged_assemblies_to_index = CONCATENATE_ASSEMBLIES.out.file_out
-
     SAMTOOLS_FAIDX(
-        ch_merged_assemblies_to_index,
+        assemblies,
         [[:], []],
         false)
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    ch_assemblies_with_index = ch_merged_assemblies_to_index
+    ch_assemblies_with_index = assemblies
         | join(SAMTOOLS_FAIDX.out.fai)
 
     //
     // Module: Generate references
     //
-    LONGRANGER_MKREF(CONCATENATE_ASSEMBLIES.out.file_out)
+    LONGRANGER_MKREF(assemblies)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
     //
@@ -193,24 +173,7 @@ workflow POLISHING_10X {
     BCFTOOLS_CONSENSUS(ch_bcftools_consensus_input)
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
-    //
-    // Module: Separate back out primary/alt/hap1/hap2 contigs
-    //
-    ch_haps = Channel.of("hap1", "hap2")
-    ch_assemblies_to_separate = BCFTOOLS_CONSENSUS.out.fasta
-        | combine(ch_haps)
-        | map { meta, asm, hap ->
-            [meta + [haplotype: hap], asm]
-        }
-
-    SEQKIT_GREP_SPLIT_HAPS(
-        ch_assemblies_to_separate,
-        []
-    )
-    ch_versions         = ch_versions.mix(SEQKIT_GREP_SPLIT_HAPS.out.versions)
-    ch_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
-
     emit:
-    assemblies = ch_assemblies_split
+    assemblies = BCFTOOLS_CONSENSUS.out.fasta
     versions   = ch_versions
 }

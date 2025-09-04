@@ -11,7 +11,10 @@ workflow RAW_ASSEMBLY {
     main:
     ch_versions   = Channel.empty()
 
-    // Hifiasm input channel expects [meta, reads, ul_reads]
+    //
+    // Logic: Hifiasm input channel expects [meta, reads, ul_reads]
+    //
+
     ch_long_reads_input = long_reads
         | map { meta, reads -> [meta, reads, []] }
 
@@ -39,10 +42,14 @@ workflow RAW_ASSEMBLY {
     ch_trio_in = trio_dbs
         | mix(Channel.of([[:], [], []]))
 
-    // Get all combinations of input channels:
-    //      [long reads, hic/no hic, trio/no trio, bin files]
-    // Then filter out disallowed combinations
-    // Then multimap so that we have the files in the correct channels
+    //
+    // Logic: Get all combinations of input channels:
+    //        [long reads, hic/no hic, trio/no trio, bin files]
+    //
+    //        Then filter out disallowed combinations
+    //
+    //        Then multimap so that we have the files in the correct channels
+    //
     ch_hifiasm_input = long_reads
         | combine(ch_hic_in)
         | combine(ch_trio_in)
@@ -71,6 +78,9 @@ workflow RAW_ASSEMBLY {
             bin: [bin_meta, bin]
         }
 
+    //
+    // Module: run Hifiasm + resume from bin files
+    //
     HIFIASM(
         ch_hifiasm_input.long_reads,
         ch_hifiasm_input.trio,
@@ -79,10 +89,13 @@ workflow RAW_ASSEMBLY {
     )
     ch_versions = ch_versions.mix(HIFIASM.out.versions)
 
-    // Mix all the possible Hifiasm GFA assembly channels that
-    // we could be interested in together
-    // Then group them together and filter so that we retain
-    // the correct pair of assemblies in the correct order
+    //
+    // Logic: Mix all the possible Hifiasm GFA assembly channels that
+    //        we could be interested in together
+    //
+    //        Then group them together and filter so that we retain
+    //        the correct pair of assemblies in the correct order
+    //
     ch_assembly_gfa = Channel.empty()
         | mix(HIFIASM.out.primary_contigs)
         | mix(HIFIASM.out.alternate_contigs)
@@ -102,7 +115,24 @@ workflow RAW_ASSEMBLY {
     //
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
-    ch_assemblies = GAWK_GFA_TO_FASTA.out.output
+    ch_assemblies_gfa = ch_assembly_gfa
+        | groupTuple(by: 0, size: 4, remainder: true)
+        | map { meta, asms ->
+            if(asms.size() == 1) { return null }
+            def pri = /hap1.p_ctg.gfa$/
+            def alt = /hap2.p_ctg.gfa$/
+            if(meta.assembly_type == "primary") {
+                if(asms.findAll { it.name =~ /hap/ }.size() == 0) {
+                    pri = /^[^.]+\.p_ctg\.gfa$/
+                    alt = /a_ctg.gfa$/
+                }
+            }
+
+            return [meta, asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]
+        }
+        | filter { it != null }
+
+    ch_assemblies_fasta = GAWK_GFA_TO_FASTA.out.output
         | groupTuple(by: 0, size: 4, remainder: true)
         | map { meta, asms ->
             if(asms.size() == 1) { return null }
@@ -115,23 +145,12 @@ workflow RAW_ASSEMBLY {
                 }
             }
 
-            return [meta, [asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]]
+            return [meta, asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]
         }
         | filter { it != null }
-        | transpose
-        | map { meta, asm ->
-            def haplotype = ""
-            if(asm.name =~ /hap1.p_ctg.fa$/ || asm.name =~ /^[^.]+\.p_ctg\.fa$/) {
-                haplotype = "hap1"
-            } else {
-                haplotype = "hap2"
-            }
-            def meta_new = meta + [haplotype: haplotype]
-            [meta_new, asm]
-        }
 
     emit:
-    assembly_gfa   = ch_assembly_gfa
-    assembly_fasta = ch_assemblies
+    assembly_gfa   = ch_assemblies_gfa
+    assembly_fasta = ch_assemblies_fasta
     versions       = ch_versions
 }

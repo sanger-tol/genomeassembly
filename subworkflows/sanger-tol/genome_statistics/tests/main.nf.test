@@ -1,0 +1,209 @@
+nextflow_workflow {
+
+    name "Test Subworkflow GENOME_STATISTICS"
+    script "../main.nf"
+    workflow "GENOME_STATISTICS"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/genome_statistics"
+    tag "asmstats"
+    tag "subworkflows/../../modules/nf-core/busco/busco"
+    tag "subworkflows/../../modules/nf-core/gfastats"
+    tag "subworkflows/../../modules/nf-core/merquryfk/merquryfk"
+    tag "modules/nf-core/fastk/fastk"
+
+    test("meles meles - no trio - no busco - no fastk") {
+
+        config "./no_fastk.config"
+
+        setup {
+            nfcoreInitialise("${launchDir}/library/")
+            nfcoreInstall(
+                "${launchDir}/library/",
+                [
+                    "busco/busco",
+                    "gfastats",
+                    "merquryfk/merquryfk",
+                ]
+            )
+            nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+        }
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id: "test"],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
+                ])
+                input[1] = Channel.empty()
+                input[2] = Channel.empty()
+                input[3] = Channel.empty()
+                input[4] = ""
+                input[5] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success               },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - no trio - no fastk") {
+
+        config "./no_fastk.config"
+
+        setup {
+            nfcoreInitialise("${launchDir}/library/")
+            nfcoreInstall(
+                "${launchDir}/library/",
+                [
+                    "busco/busco",
+                    "gfastats",
+                    "merquryfk/merquryfk",
+                ]
+            )
+            nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+        }
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id: "test"],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
+                ])
+                input[1] = Channel.empty()
+                input[2] = Channel.empty()
+                input[3] = Channel.empty()
+                input[4] = "bacteria_odb12"
+                input[5] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.busco_summary_txt
+                    .collect { meta, txt -> path(txt).text.contains("Complete BUSCOs") }
+                    .every()
+                },
+                { assert workflow.out.busco_summary_json
+                    .collect { meta, json -> path(json).text.contains("one_line_summary") }
+                    .every()
+                },
+                { assert snapshot(
+                    workflow.out.asmstats,
+                    workflow.out.gfastats,
+                    workflow.out.merqury_qv,
+                    workflow.out.merqury_completeness,
+                    workflow.out.merqury_phased_stats,
+                    workflow.out.merqury_images.collect { meta, image -> [meta, file(image).name] },
+                    workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - no trio - fastk") {
+
+        config "./fastk.config"
+
+        setup {
+            nfcoreInitialise("${launchDir}/library/")
+            nfcoreInstall(
+                "${launchDir}/library/",
+                [
+                    "busco/busco",
+                    "gfastats",
+                    "merquryfk/merquryfk",
+                    "fastk/fastk",
+                ]
+            )
+            nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+
+            run("FASTK_FASTK") {
+                script "../../../../modules/nf-core/fastk/fastk/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id: "test" ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true)
+                    ]
+                    """
+                }
+            }
+
+        }
+
+        when {
+
+            params {
+                fastk_args = "-t"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id: "test"],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
+                ])
+                input[1] = FASTK_FASTK.out.hist.join(FASTK_FASTK.out.ktab)
+                input[2] = Channel.empty()
+                input[3] = Channel.empty()
+                input[4] = "bacteria_odb12"
+                input[5] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.busco_summary_txt
+                    .collect { meta, txt -> path(txt).text.contains("Complete BUSCOs") }
+                    .every()
+                },
+                { assert workflow.out.busco_summary_json
+                    .collect { meta, json -> path(json).text.contains("one_line_summary") }
+                    .every()
+                },
+                { assert snapshot(
+                    workflow.out.asmstats,
+                    workflow.out.gfastats,
+                    workflow.out.merqury_qv,
+                    workflow.out.merqury_completeness,
+                    workflow.out.merqury_phased_stats,
+                    workflow.out.merqury_images.collect { meta, image -> [meta, file(image).name] },
+                    workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+}

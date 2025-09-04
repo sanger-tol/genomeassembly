@@ -139,7 +139,7 @@ workflow SCAFFOLDING {
     ch_versions = ch_versions.mix(JUICERTOOLS_PRE.out.versions)
 
     emit:
-    fasta       = YAHS.out.scaffolds_fasta
+    assemblies  = YAHS.out.scaffolds_fasta
     agp         = YAHS.out.scaffolds_agp
     pretext     = PRETEXTMAP.out.pretext
     pretext_png = PRETEXTSNAPSHOT.out.image

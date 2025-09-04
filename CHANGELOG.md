@@ -56,6 +56,7 @@ Overhaul Hi-C mapping subworkflow (by @prototaxites):
 
 - Use new sanger-tol shared Hi-C mapping subworkflow
 - This can map with both bwa-mem2 or minimap + implements CRAM chunking
+- only runs if --enable_scaffolding set
 
 Overhaul scaffolding subworkflow (by @prototaxites):
 
@@ -66,6 +67,11 @@ Overhaul scaffolding subworkflow (by @prototaxites):
 - Use new JUICERTOOLS_PRE nf-core module, so we don't have to ship the jar any more
   - Supports multi-threading
   - This module has `errorStragegy = "ignore"` set to skip failures.
+
+Overhaul genome statistics subworkflow (by @prototaxites):
+
+- Use new sanger-tol shared genome statistics subworkflow
+- Update to BUSCO 6.0
 
 ### `Fixed`
 
