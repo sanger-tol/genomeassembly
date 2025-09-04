@@ -109,7 +109,7 @@ workflow PIPELINE_INITIALISATION {
     illumina_10x  = ch_i10x_reads
     mat_reads     = ch_mat_reads
     pat_reads     = ch_pat_reads
-    busco_lineage = ch_busco
+    busco_lineage = ch_busco_lineage
     oatk_mito     = ch_oatk_mito
     oatk_plastid  = ch_oatk_plastid
     versions      = ch_versions
