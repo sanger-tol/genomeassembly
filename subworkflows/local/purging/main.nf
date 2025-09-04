@@ -30,7 +30,7 @@ workflow PURGING {
     // Logic: split assemblies into primary and alternate
     //
 
-    ch_assemblies_split = assemblies
+    ch_assemblies_split = ch_assemblies
         | multiMap { meta, hap1, hap2 ->
             primary:  [meta, hap1]
             alternate:[meta, hap2]
