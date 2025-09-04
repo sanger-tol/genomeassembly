@@ -86,7 +86,8 @@
                 "purging_assemblytypes": {
                     "type": "string",
                     "default": "primary",
-                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\".",
+                    "enum": ["none", "primary", "hic_phased", "trio_binned"]
                 },
                 "purging_purge_middle": {
                     "type": "boolean",
@@ -112,7 +113,8 @@
                 "polishing_assemblytypes": {
                     "type": "string",
                     "default": "primary",
-                    "description": "A comma-separated list defining which types of assemblies to polish. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\"."
+                    "description": "A comma-separated list defining which types of assemblies to polish. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\".",
+                    "enum": ["none", "primary", "hic_phased", "trio_binned"]
                 },
                 "polishing_longranger_container_path": {
                     "type": "string",
@@ -201,6 +203,20 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable organellar assembly subroutines."
+                }
+            }
+        },
+        "new_group_1": {
+            "title": "New Group 1",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "busco_lineage_directory": {
+                    "type": "string",
+                    "description": "Path to a local directory containing pre-downloade BUSCO lineages.",
+                    "help_text": "Lineage datasets can be downloaded using `busco --download`.",
+                    "format": "directory-path"
                 }
             }
         },
@@ -351,6 +367,9 @@
         },
         {
             "$ref": "#/$defs/organelle_assembly"
+        },
+        {
+            "$ref": "#/$defs/new_group_1"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
