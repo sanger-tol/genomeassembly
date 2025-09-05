@@ -21,18 +21,18 @@ workflow POLISHING_10X {
     ch_versions = Channel.empty()
 
     SAMTOOLS_FAIDX(
-        assemblies,
+        ch_assemblies,
         [[:], []],
         false)
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    ch_assemblies_with_index = assemblies
+    ch_assemblies_with_index = ch_assemblies
         | join(SAMTOOLS_FAIDX.out.fai)
 
     //
     // Module: Generate references
     //
-    LONGRANGER_MKREF(assemblies)
+    LONGRANGER_MKREF(ch_assemblies)
     ch_versions = ch_versions.mix(LONGRANGER_MKREF.out.versions)
 
     //
