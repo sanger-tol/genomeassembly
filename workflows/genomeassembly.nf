@@ -139,7 +139,7 @@ workflow GENOMEASSEMBLY {
     //
     // Module: Concatenate hap1/hap2 together for polishing
     //
-    CONCATENATE_ASSEMBLIES(ch_assemblies_to_polish)
+    CONCATENATE_ASSEMBLIES(ch_assemblies_to_concat_for_polish)
     ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
 
     //
