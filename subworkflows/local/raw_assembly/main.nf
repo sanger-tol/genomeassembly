@@ -14,7 +14,6 @@ workflow RAW_ASSEMBLY {
     //
     // Logic: Hifiasm input channel expects [meta, reads, ul_reads]
     //
-
     ch_long_reads_input = long_reads
         | map { meta, reads -> [meta, reads, []] }
 
@@ -103,7 +102,7 @@ workflow RAW_ASSEMBLY {
         | mix(HIFIASM.out.hap2_contigs)
 
     //
-    // Module: Convert GFA to FASTA and compres with bgzip
+    // Module: Convert GFA to FASTA
     //
     GAWK_GFA_TO_FASTA(
         ch_assembly_gfa,

@@ -96,7 +96,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: Purge dups on specified assemblies
     //
     ch_assemblies_to_purge = ch_assemblies
-        | filter { meta, _assembly ->
+        | filter { meta, _hap1, _hap2 ->
             meta.purge == true
         }
 
@@ -112,7 +112,7 @@ workflow GENOMEASSEMBLY {
     ch_purged_assemblies = PURGING.out.assemblies
         | map { meta, hap1, hap2 ->
             def meta_new = meta + [assembly_stage: "purged"]
-            [meta_new, asm1, asm2]
+            [meta_new, hap1, hap2]
         }
 
     ch_assemblies = ch_assemblies.mix(ch_purged_assemblies)
@@ -253,7 +253,6 @@ workflow GENOMEASSEMBLY {
         | join(ch_assemblies_scaffolded_split.hap2)
 
     ch_assemblies = ch_assemblies.mix(ch_assemblies_scaffolded)
-
     //
     // Subworkflow: calculate assembly QC metrics
     //

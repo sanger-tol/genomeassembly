@@ -84,8 +84,8 @@ process READ_YAML {
     pat_meta  = meta + [read_type: "pat" , kmer_size: pat.kmer_size ]
 
     // Databases
-    busco_lineage = db?.busco_lineage     ? db.busco_lineage : "auto_euk"
-    oatk_mito     = db?.oatk?.mito_hmm    ? get_all_hmm(db.oatk.mito_hmm)     : []
-    oatk_plastid  = db?.oatk?.plastid_hmm ? get_all_hmm(db.oatk.plastid_hmm)  : []
+    busco_lineage = databases?.busco?.lineage    ?: "auto_euk"
+    oatk_mito     = databases?.oatk?.mito_hmm    ? get_all_hmm(databases.oatk.mito_hmm)     : []
+    oatk_plastid  = databases?.oatk?.plastid_hmm ? get_all_hmm(databases.oatk.plastid_hmm)  : []
 
 }

@@ -99,7 +99,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // LOGIC: Create channels for databases
     //
-    ch_busco_lineage = READ_YAML.out.busco_lineage    | collect
+    ch_busco_lineage = READ_YAML.out.busco_lineage
     ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() } | collect
     ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() } | collect
 
