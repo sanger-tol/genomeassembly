@@ -241,7 +241,7 @@ workflow GENOMEASSEMBLY {
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
     ch_assemblies_scaffolded_split = SCAFFOLDING.out.assemblies
-        | map { meta, assembly ->
+        | branch { meta, assembly ->
             def meta_new = meta - meta.subMap("_hap")
             hap1: meta._hap == "hap1"
                 return [meta_new, assembly]
