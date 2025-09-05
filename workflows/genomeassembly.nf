@@ -204,7 +204,7 @@ workflow GENOMEASSEMBLY {
         }
 
     ch_assemblies_for_hic_mapping = ch_assemblies_for_hic_mapping_split.hap1
-        | mix(ch_assemblies_for_hic_mapping.hap2)
+        | mix(ch_assemblies_for_hic_mapping_split.hap2)
 
     //
     // Subworkflow: Map Hi-C data to each assembly
