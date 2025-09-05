@@ -308,7 +308,7 @@
                 "sanger-tol": {
                     "genome_statistics": {
                         "branch": "main",
-                        "git_sha": "d598dd10a2d8fd02c506a436ee63b8025f675e12",
+                        "git_sha": "728c0130ddd81ca3a2abbcde2b3724ceb44707d0",
                         "installed_by": ["subworkflows"]
                     },
                     "hic_mapping": {
