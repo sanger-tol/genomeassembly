@@ -40,7 +40,7 @@ workflow POLISHING_10X {
     //
     LONGRANGER_ALIGN(
         LONGRANGER_MKREF.out.folder,
-        illumina_10x_reads
+        val_illumina_10x_reads
     )
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
