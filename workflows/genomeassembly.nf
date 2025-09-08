@@ -5,8 +5,6 @@
 */
 
 include { GENOME_STATISTICS } from '../subworkflows/sanger-tol/genome_statistics'
-include { HIC_MAPPING       } from '../subworkflows/sanger-tol/hic_mapping'
-include { HIC_MAPPING_STATS } from '../subworkflows/local/hic_mapping_stats'
 include { KMERS             } from '../subworkflows/local/kmers'
 include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
 include { PURGING           } from '../subworkflows/local/purging'
@@ -42,7 +40,6 @@ workflow GENOMEASSEMBLY {
     plastid_hmm
 
     main:
-
     ch_versions = Channel.empty()
 
     //
@@ -80,7 +77,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: Identify what steps to run on each assembly, using the params
     //
-    ch_assemblies = RAW_ASSEMBLY.out.assembly_fasta
+    ch_assemblies_raw = RAW_ASSEMBLY.out.assembly_fasta
         | map { meta, hap1, hap2 ->
             def purge_types  = params.purging_assemblytypes.tokenize(",")
             def polish_types = params.polishing_assemblytypes.tokenize(",")
@@ -95,13 +92,14 @@ workflow GENOMEASSEMBLY {
     //
     // Subworkflow: Purge dups on specified assemblies
     //
-    ch_assemblies_to_purge = ch_assemblies
-        | filter { meta, _hap1, _hap2 ->
-            meta.purge == true
+    ch_assemblies_to_purge = ch_assemblies_raw
+        | branch { meta, _hap1, _hap2 ->
+            purge: meta.purge == true
+            no_purge: true
         }
 
     PURGING(
-        ch_assemblies_to_purge,
+        ch_assemblies_to_purge.purge,
         ch_long_reads
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
@@ -115,7 +113,7 @@ workflow GENOMEASSEMBLY {
             [meta_new, hap1, hap2]
         }
 
-    ch_assemblies = ch_assemblies.mix(ch_purged_assemblies)
+    ch_all_assemblies_after_purging = ch_assemblies_to_purge.no_purge.mix(ch_purged_assemblies)
 
     //
     // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
@@ -123,23 +121,22 @@ workflow GENOMEASSEMBLY {
     //
     //        Reshape so that we can concatenate hap1/hap2 together.
     //
-    ch_assemblies_to_concat_for_polish = ch_assemblies
-        | filter { meta, _hap1, _hap2 ->
+    ch_assemblies_to_polish = ch_all_assemblies_after_purging
+        | branch { meta, hap1, hap2 ->
             // If we have purged this type of assembly, remove raw stages
             def purging_filter  = (meta.purge == true) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
             def polish_filter   = (meta.polish == true)
             def polishing_enabled = (params.enable_polishing && params.polishing_longranger_container_path)
 
-            (polishing_enabled && polish_filter && purging_filter)
-        }
-        | map { meta, hap1, hap2 ->
-            [meta, [hap1, hap2]]
+            polish: (polishing_enabled && polish_filter && purging_filter)
+                return [meta, hap1, hap2]
+            no_polish: true
         }
 
     //
     // Module: Concatenate hap1/hap2 together for polishing
     //
-    CONCATENATE_ASSEMBLIES(ch_assemblies_to_concat_for_polish)
+    CONCATENATE_ASSEMBLIES(ch_assemblies_to_polish.polish)
     ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
 
     //
@@ -176,88 +173,53 @@ workflow GENOMEASSEMBLY {
             [meta + [assembly_stage: "polished"], asm]
         }
         | branch { meta, asm ->
+            def meta_new = meta - meta.subMap("hap")
             hap1: meta._hap == "hap1"
+                return [meta_new, asm]
             hap2: meta._hap == "hap2"
+                return [meta_new, asm]
         }
 
     ch_polished_assemblies = ch_polished_assemblies_split.hap1
         | join(ch_polished_assemblies_split.hap2)
 
-    ch_assemblies = ch_assemblies.mix(ch_polished_assemblies)
+    ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
+        | mix(ch_polished_assemblies)
 
     //
-    // Logic: Filter the assemblies to keep those for hi-c mapping
+    // Logic: set up for scaffolding
     //
-    //
-    ch_assemblies_for_hic_mapping_split = ch_assemblies
-        | filter { meta, _hap1, _hap2 ->
-            if(params.enable_scaffolding) {
-                if(meta.assembly_stage == "polished") { return true }
-                else if(meta.assembly_stage == "purged" && !meta.polish) { return true }
-                else if(meta.assembly_stage == "raw" && !meta.purge && !meta.polish) { return true }
-                else { return false }
-            } else { return false }
-        }
-        | multiMap { meta, hap1, hap2 ->
-            hap1: [meta + [_hap: "hap1"], hap1]
-            hap2: [meta + [_hap: "hap2"], hap2]
+    ch_assemblies_for_scaffolding_split = ch_assemblies
+        | branch { meta, _hap1, _hap2 ->
+                def scaffold = false
+                if(meta.assembly_stage == "polished") { scaffold = true }
+                else if(meta.assembly_stage == "purged" && !meta.polish) { scaffold = true }
+                else if(meta.assembly_stage == "raw" && !meta.purge && !meta.polish) { scaffold = true }
+
+                scaffold: params.enable_scaffolding && scaffold
+                no_scaffold: true
         }
 
-    ch_assemblies_for_hic_mapping = ch_assemblies_for_hic_mapping_split.hap1
-        | mix(ch_assemblies_for_hic_mapping_split.hap2)
-
     //
-    // Subworkflow: Map Hi-C data to each assembly
+    // Subworkflow: run hic-mapping and scaffolding
     //
-    HIC_MAPPING(
-        ch_assemblies_for_hic_mapping,
+    SCAFFOLDING(
+        ch_assemblies_for_scaffolding_split,
         ch_hic_reads,
         params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
-        true // mark duplicates
-    )
-    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
-
-    //
-    // Subworkflow: Calculate stats for Hi-C mapping
-    //
-    HIC_MAPPING_STATS(
-        HIC_MAPPING.out.bam,
-        ch_assemblies_for_hic_mapping
-    )
-    ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
-
-    //
-    // Subworkflow: scaffold assemblies
-    //
-    SCAFFOLDING(
-        ch_assemblies_for_hic_mapping,
-        HIC_MAPPING.out.bam,
         params.cool_bin
     )
-    ch_versions   = ch_versions.mix(SCAFFOLDING.out.versions)
+    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
-    //
-    // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
-    //
-    ch_assemblies_scaffolded_split = SCAFFOLDING.out.assemblies
-        | branch { meta, assembly ->
-            def meta_new = meta - meta.subMap("_hap")
-            hap1: meta._hap == "hap1"
-                return [meta_new, assembly]
-            hap2: meta._hap == "hap2"
-                return [meta_new, assembly]
-        }
+    ch_all_assemblies_after_scaffolding = ch_assemblies_for_scaffolding_split.scaffold
+        | mix(ch_assemblies_for_scaffolding_split.no_scaffold)
 
-    ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1
-        | join(ch_assemblies_scaffolded_split.hap2)
-
-    ch_assemblies = ch_assemblies.mix(ch_assemblies_scaffolded)
     //
     // Subworkflow: calculate assembly QC metrics
     //
     GENOME_STATISTICS(
-        ch_assemblies,
+        ch_all_assemblies_after_scaffolding,
         KMERS.out.fastk,
         KMERS.out.maternal_hapdb,
         KMERS.out.paternal_hapdb,
