@@ -1,6 +1,8 @@
-dataset:
-  illumina_10X:
-    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/10x
+metadata:
+  id: iyVesGerm1
+  species: "Vespula germanica"
+  mitochondrial_code: 4
+sequencing_data:
   long_reads:
     platform: pacbio
     reads:

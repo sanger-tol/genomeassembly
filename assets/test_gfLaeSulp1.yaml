@@ -7,14 +7,14 @@ sequencing_data:
     platform: "pacbio"
     reads:
       - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.trim.fasta.gz
-    hic:
-      reads:
-        - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
-      hic_motif:
-        - GATC
-        - GANTC
-        - CTNAG
-        - TTAA
+  hic:
+    reads:
+      - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
 databases:
   busco:
     lineage: fungi_odb12
