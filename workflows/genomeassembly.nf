@@ -226,7 +226,7 @@ workflow GENOMEASSEMBLY {
         )
 
     GENOME_STATISTICS(
-        ch_all_assemblies_after_scaffolding,
+        ch_assemblies_for_statistics,
         KMERS.out.fastk,
         KMERS.out.maternal_hapdb,
         KMERS.out.paternal_hapdb,
