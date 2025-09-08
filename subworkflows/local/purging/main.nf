@@ -111,10 +111,6 @@ workflow PURGING {
     //         into the alternate assembly
     //
     ch_alt_to_cat = PURGEDUPS_GETSEQS.out.haplotigs
-        | map { meta, asm ->
-            def meta_new = meta + [haplotype: "hap2"]
-            [meta_new, asm]
-        }
         | join(ch_assemblies_split.alternate)
         | map { meta, haps, alt -> [meta, [alt, haps]] }
 
@@ -122,8 +118,8 @@ workflow PURGING {
     ch_versions = ch_versions.mix(CAT_PURGED_HAPS_TO_ALT.out.versions)
 
     //
-    // Logic: Relabel purged assemblies as "purged" and combine
-    //        back into a single output channel
+    // Logic: Combine purged primary and alternate assemblies back into
+    //        a single output channel
     //
     ch_assemblies  = PURGEDUPS_GETSEQS.out.purged
         | join(CAT_PURGED_HAPS_TO_ALT.out.file_out)

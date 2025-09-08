@@ -74,5 +74,5 @@ workflow SCAFFOLDING {
     emit:
     assemblies = ch_assemblies_scaffolded
     bam        = HIC_MAPPING.out.bam
-    versions   = ch_verions
+    versions   = ch_versions
 }
