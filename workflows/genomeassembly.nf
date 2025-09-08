@@ -107,13 +107,13 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: Add metadata to purged assemblies
     //
-    ch_purged_assemblies = PURGING.out.assemblies
+    ch_assemblies_purged = PURGING.out.assemblies
         | map { meta, hap1, hap2 ->
             def meta_new = meta + [assembly_stage: "purged"]
             [meta_new, hap1, hap2]
         }
 
-    ch_all_assemblies_after_purging = ch_assemblies_to_purge.no_purge.mix(ch_purged_assemblies)
+    ch_all_assemblies_after_purging = ch_assemblies_to_purge.no_purge.mix(ch_assemblies_purged)
 
     //
     // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
@@ -180,11 +180,11 @@ workflow GENOMEASSEMBLY {
                 return [meta_new, asm]
         }
 
-    ch_polished_assemblies = ch_polished_assemblies_split.hap1
+    ch_assemblies_polished = ch_polished_assemblies_split.hap1
         | join(ch_polished_assemblies_split.hap2)
 
     ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
-        | mix(ch_polished_assemblies)
+        | mix(ch_assemblies_polished)
 
     //
     // Logic: set up for scaffolding
@@ -212,12 +212,19 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
-    ch_all_assemblies_after_scaffolding = ch_assemblies_for_scaffolding_split.scaffold
-        | mix(ch_assemblies_for_scaffolding_split.no_scaffold)
+    ch_assemblies_scaffolded = SCAFFOLDING.out.assemblies
 
     //
-    // Subworkflow: calculate assembly QC metrics
+    // Subworkflow: collect all assemblies and calculate assembly QC metrics
     //
+    ch_assemblies_for_statistics = Channel.empty()
+        | mix(
+            ch_assemblies_raw,
+            ch_assemblies_purged,
+            ch_assemblies_polished,
+            ch_assemblies_scaffolded
+        )
+
     GENOME_STATISTICS(
         ch_all_assemblies_after_scaffolding,
         KMERS.out.fastk,
