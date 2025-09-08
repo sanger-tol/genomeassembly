@@ -108,13 +108,11 @@ workflow KMERS {
     MERQURYFK_HAPMAKER(ch_mat_fk, ch_pat_fk, ch_child_fk)
     ch_versions = ch_versions.mix(MERQURYFK_HAPMAKER.out.versions)
 
-    ch_trio_hap_dbs = MERQURYFK_HAPMAKER.out.pat_hap_ktab
-        | combine(MERQURYFK_HAPMAKER.out.mat_hap_ktab, by: 0)
-
     emit:
-    long_reads = ch_long_reads_out
-    fastk      = ch_fastk.filter { it[0].read_type == "long" }
-    trio_yakdb = ch_trio_yak_dbs
-    trio_hapdb = ch_trio_hap_dbs
-    versions   = ch_versions
+    long_reads     = ch_long_reads_out
+    fastk          = ch_fastk.filter { it[0].read_type == "long" }
+    trio_yakdb     = ch_trio_yak_dbs
+    maternal_hapdb = MERQURYFK_HAPMAKER.out.mat_hap_ktab
+    paternal_hapdb = MERQURYFK_HAPMAKER.out.pat_hap_ktab
+    versions       = ch_versions
 }

@@ -1,149 +1,78 @@
-include { BAMTOBED_SORT                              } from '../../../modules/local/bamtobedsort/main.nf'
-include { COOLER_CLOAD                               } from '../../../modules/nf-core/cooler/cload/main.nf'
-include { COOLER_ZOOMIFY                             } from '../../../modules/nf-core/cooler/zoomify/main.nf'
-include { GAWK as GAWK_PROCESS_PAIRS_FILE            } from '../../../modules/nf-core/gawk/main.nf'
-include { JUICERTOOLS_PRE                            } from '../../../modules/nf-core/juicertools/pre/main'
-include { MAKE_PAIRS_FILE                            } from '../../../modules/local/make_pairs_file/main.nf'
-include { PRETEXTMAP                                 } from '../../../modules/nf-core/pretextmap/main.nf'
-include { PRETEXTSNAPSHOT                            } from '../../../modules/nf-core/pretextsnapshot/main.nf'
-include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_CONTIGS   } from '../../../modules/nf-core/samtools/faidx/main.nf'
-include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_SCAFFOLDS } from '../../../modules/nf-core/samtools/faidx/main.nf'
-include { YAHS                                       } from '../../../modules/nf-core/yahs/main'
+include { HIC_MAPPING       } from '../../../subworkflows/sanger-tol/hic_mapping'
+include { HIC_MAPPING_STATS } from '../../../subworkflows/local/hic_mapping_stats'
+include { SCAFFOLDING_YAHS  } from '../../../subworkflows/local/scaffolding_yahs'
 
 workflow SCAFFOLDING {
     take:
-    ch_fasta      // [meta, assembly]
-    ch_map        // [meta, bam/bed]
-    val_cool_bin  // val: cooler cload parameter
+    ch_assemblies                   // [meta, hap1, hap2]
+    val_hic_reads                   // [meta, [reads]]
+    val_hic_aligner                 // "bwamem2" or "minimap2"
+    val_hic_mapping_cram_chunk_size // int > 1
+    val_cool_bin                    // int > 1
 
     main:
     ch_versions = Channel.empty()
 
-    ch_map_split = ch_map
-        | branch { meta, map ->
-            bam: map.getExtension() == "bam"
-            bed: map.getExtension() == "bed"
+    //
+    // Logic: Separate hap1/hap2 into separate channel entries, but tag them
+    //
+    ch_assemblies_split = ch_assemblies
+        | multiMap { meta, hap1, hap2 ->
+            hap1: [meta + [_hap: "hap1"], hap1]
+            hap2: [meta + [_hap: "hap2"], hap2]
         }
 
+    ch_assemblies_for_hic_mapping = ch_assemblies_split.hap1
+        | mix(ch_assemblies_split.hap2)
+
     //
-    // Module: If map provided as BAM file - convert to name-sorted BED
+    // Subworkflow: Map Hi-C data to each assembly
     //
-    BAMTOBED_SORT(
-        ch_map_split.bam
+    HIC_MAPPING(
+        ch_assemblies_for_hic_mapping,
+        val_hic_reads,
+        val_hic_aligner,
+        val_hic_mapping_cram_chunk_size,
+        true // mark duplicates
     )
-    ch_versions = ch_versions.mix(BAMTOBED_SORT.out.versions)
-
-    ch_bed = ch_map_split.bed
-        | mix(BAMTOBED_SORT.out.sorted_bed)
+    ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
     //
-    // Module: Index input assemblies
+    // Subworkflow: Calculate stats for Hi-C mapping
     //
-    SAMTOOLS_FAIDX_CONTIGS(
-        ch_fasta,
-        [[],[]],
-        false
+    HIC_MAPPING_STATS(
+        HIC_MAPPING.out.bam,
+        ch_assemblies_for_hic_mapping
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_CONTIGS.out.versions)
+    ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
     //
-    // Module: scaffold contigs with YaHS
+    // Subworkflow: scaffold assemblies using yahs and create contact maps
     //
-    ch_yahs_input = ch_fasta
-        | combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
-        | combine(ch_bed, by: 0)
-
-    YAHS(ch_yahs_input)
-    ch_versions = ch_versions.mix(YAHS.out.versions)
-
-    //
-    // Module: Index output scaffolds
-    //
-    SAMTOOLS_FAIDX_SCAFFOLDS(
-        YAHS.out.scaffolds_fasta,
-        [[],[]],
-        true
-    )
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_SCAFFOLDS.out.versions)
-
-    //
-    // Module: Make pairs file to build contact maps with
-    //
-    ch_pairs_input = SAMTOOLS_FAIDX_SCAFFOLDS.out.fai
-        | join(YAHS.out.scaffolds_agp, by: 0)
-        | join(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
-        | join(YAHS.out.binary, by: 0)
-
-    MAKE_PAIRS_FILE(ch_pairs_input)
-    ch_versions = ch_versions.mix(MAKE_PAIRS_FILE.out.versions)
-
-    //
-    // Module: Build PretextMap
-    //
-    PRETEXTMAP(
-        MAKE_PAIRS_FILE.out.pairs, // Pairs file
-        [[], [], []]
-    )
-    ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
-
-    //
-    // Module: Make a PNG of the PretextMap for fast viz
-    //
-    PRETEXTSNAPSHOT(PRETEXTMAP.out.pretext)
-    ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
-
-    //
-    // Module: Generate a multi-resolution cooler file by coarsening
-    //
-    ch_cooler_input = MAKE_PAIRS_FILE.out.pairs
-        | map { meta, pairs -> [meta, pairs, []] }
-
-    COOLER_CLOAD(
-        ch_cooler_input,
-        SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes,
-        "pairs",
+    SCAFFOLDING_YAHS(
+        ch_assemblies_for_hic_mapping,
+        HIC_MAPPING.out.bam,
         val_cool_bin
     )
-    ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
+    ch_versions   = ch_versions.mix(SCAFFOLDING_YAHS.out.versions)
 
     //
-    // Module: Zoom cool to mcool
+    // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
-    COOLER_ZOOMIFY(COOLER_CLOAD.out.cool)
-    ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
-
-
-    //
-    // Module: process .pairs file to remove the chromsize lines as juicer_pre
-    // does not like them
-    //
-    GAWK_PROCESS_PAIRS_FILE(
-        MAKE_PAIRS_FILE.out.pairs,
-        "${projectDir}/bin/pairs_remove_chromsizes.awk",
-        false
-    )
-    ch_versions = ch_versions.mix(GAWK_PROCESS_PAIRS_FILE.out.versions)
-
-    //
-    // Module: Generate juicer .hic map
-    //
-    ch_juicertools_pre_chrom_sizes = SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes
-        | map { meta, sizes ->
-            [ meta, [], sizes ]
+    ch_assemblies_scaffolded_split = SCAFFOLDING_YAHS.out.assemblies
+        | branch { meta, assembly ->
+            def meta_new = meta - meta.subMap("_hap")
+            hap1: meta._hap == "hap1"
+                return [meta_new, assembly]
+            hap2: meta._hap == "hap2"
+                return [meta_new, assembly]
         }
 
-    JUICERTOOLS_PRE(
-        GAWK_PROCESS_PAIRS_FILE.out.output,
-        ch_juicertools_pre_chrom_sizes
-    )
-    ch_versions = ch_versions.mix(JUICERTOOLS_PRE.out.versions)
+    ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1
+        | join(ch_assemblies_scaffolded_split.hap2)
 
     emit:
-    fasta       = YAHS.out.scaffolds_fasta
-    agp         = YAHS.out.scaffolds_agp
-    pretext     = PRETEXTMAP.out.pretext
-    pretext_png = PRETEXTSNAPSHOT.out.image
-    cool        = COOLER_ZOOMIFY.out.mcool
-    hic         = JUICERTOOLS_PRE.out.hic
-    versions    = ch_versions
+    assemblies = ch_assemblies_scaffolded
+    bam        = HIC_MAPPING.out.bam
+    versions   = ch_versions
 }

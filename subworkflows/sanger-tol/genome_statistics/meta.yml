@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+name: "genome_statistics"
+description: |
+  Evaluate a number of standard metrics for a genome assembly, including
+  basic statistics, MerquryFK for completeness/QV scores, and BUSCO
+keywords:
+  - assembly
+  - qc
+  - busco
+  - merqury
+components:
+  - asmstats
+  - gfastats:
+      git_remote: https://github.com/nf-core/modules.git
+  - busco/busco:
+      git_remote: https://github.com/nf-core/modules.git
+  - merquryfk/merquryfk:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_assemblies:
+      type: file
+      description: |
+        The input channel containing a pair of assemblies for QC (hap1/hap2).
+        Hap2 can optionally be an empty list if there is no second hap.
+
+        Structure: [ val(meta), path(asm1), path(asm2) ]
+      pattern: "*.{fa,fa.gz}"
+  - ch_reads_fastk:
+      type: file
+      description: |
+        A channel containing FastK databases built from reads to compare the assemblies
+        against in MerquryFK.
+
+        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
+      pattern: "*.{.hist,.ktab}"
+  - ch_mat_fastk:
+      type: file
+      description: |
+        A channel containing a FastK database from MerquryFk/hapmaper containing maternal
+        kmers.
+
+        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
+      pattern: "*.{.hist,.ktab}"
+  - ch_pat_fastk:
+      type: file
+      description: |
+        A channel containing a FastK database from MerquryFk/hapmaper containing paternal
+        kmers.
+
+        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
+      pattern: "*.{.hist,.ktab}"
+  - val_busco_lineage:
+      type: string
+      description: |
+        The BUSCO lineage to use when assessing genome completeness with BUSCO.
+        Either the name of a lineage (e.g. "lepidoptera_odb12") or one of
+        "auto", "auto_euk", "auto_prok" to enable automatic lineage selection.
+  - val_busco_lineage_directory:
+      type: file
+      description: |
+        A path to a local directory containing pre-downloaded BUSCO lineages.
+output:
+  - asmstats:
+      type: file
+      description: |
+        Channel containing assembly statistics from asmstats.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.stats"
+  - asmstats:
+      type: file
+      description: |
+        Channel containing assembly statistics from asmstats.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.bam"
+  - busco_summary_txt:
+      type: file
+      description: |
+        BUSCO summary in txt format.
+        Structure: [ val(meta), path(summary) ]
+      pattern: "*.txt"
+  - busco_summary_json:
+      type: file
+      description: |
+        BUSCO summary in JSON format.
+        Structure: [ val(meta), path(summary) ]
+      pattern: "*.json"
+  - merqury_qv:
+      type: file
+      description: |
+        MerquryFK QV estimates for each assembly.
+        Structure: [ val(meta), path(qv) ]
+      pattern: "*.qv"
+  - merqury_completeness:
+      type: file
+      description: |
+        MerquryFK kmer completeness estimates for each assembly.
+        Structure: [ val(meta), path(completeness) ]
+      pattern: "*.completeness.stats"
+  - merqury_phased_stats:
+      type: file
+      description: |
+        MerquryFK kmer phasing estimates for each assembly.
+        Structure: [ val(meta), path(phasing) ]
+      pattern: "*.phased_block.stats"
+  - merqury_images:
+      type: file
+      description: |
+        MerquryFK plots - both CNI, ASM and phasing.
+
+        Structure: [ val(meta), path(image) ]
+      pattern: "*.{png,pdf}"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

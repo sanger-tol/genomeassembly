@@ -1,7 +1,7 @@
 {
     "meles meles - minimap2 - no markdup": {
         "content": [
-            "cadae29d5849e3c4b7328c3eb8cc239d",
+            "3196a1997c55d543d773a1af0595fa6d",
             [
                 {
                     "HIC_MAPPING:SAMTOOLS_FAIDX": {
@@ -17,7 +17,7 @@
                 },
                 {
                     "HICCRAMALIGN_CHUNKS": {
-                        "hiccramalign_chunks": "1.0.0"
+                        "hiccramalign_chunks": "1.0.1"
                     }
                 },
                 {
@@ -34,22 +34,17 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-07-23T10:11:31.789347"
+        "timestamp": "2025-09-03T14:41:21.531134461"
     },
     "meles meles - bwamem2 - no markdup": {
         "content": [
-            "7d1eeee0a6762dd68a561558e2aa63a2",
+            "12bbc3437515580a7dcc3c0d677c225a",
             [
                 {
                     "HIC_MAPPING:SAMTOOLS_FAIDX": {
                         "samtools": 1.21
-                    }
-                },
-                {
-                    "HICCRAMALIGN_CHUNKS": {
-                        "hiccramalign_chunks": "1.0.0"
                     }
                 },
                 {
@@ -64,6 +59,11 @@
                     }
                 },
                 {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.1"
+                    }
+                },
+                {
                     "HIC_MAPPING:SAMTOOLS_MERGE": {
                         "samtools": 1.21
                     }
@@ -72,13 +72,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-07-23T10:09:47.382064"
+        "timestamp": "2025-09-03T14:38:28.123621975"
     },
     "meles meles - minimap2 - markdup": {
         "content": [
-            "cadae29d5849e3c4b7328c3eb8cc239d",
+            "3196a1997c55d543d773a1af0595fa6d",
             [
                 {
                     "HIC_MAPPING:SAMTOOLS_FAIDX": {
@@ -99,7 +99,7 @@
                 },
                 {
                     "HICCRAMALIGN_CHUNKS": {
-                        "hiccramalign_chunks": "1.0.0"
+                        "hiccramalign_chunks": "1.0.1"
                     }
                 },
                 {
@@ -116,13 +116,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-07-23T10:10:43.208374"
+        "timestamp": "2025-09-03T14:39:54.930303461"
     },
     "meles meles - bwamem2 - markdup": {
         "content": [
-            "7d1eeee0a6762dd68a561558e2aa63a2",
+            "12bbc3437515580a7dcc3c0d677c225a",
             [
                 {
                     "HIC_MAPPING:SAMTOOLS_FAIDX": {
@@ -132,11 +132,6 @@
                 {
                     "HIC_MAPPING:SAMTOOLS_MARKDUP": {
                         "samtools": 1.21
-                    }
-                },
-                {
-                    "HICCRAMALIGN_CHUNKS": {
-                        "hiccramalign_chunks": "1.0.0"
                     }
                 },
                 {
@@ -151,6 +146,11 @@
                     }
                 },
                 {
+                    "HICCRAMALIGN_CHUNKS": {
+                        "hiccramalign_chunks": "1.0.1"
+                    }
+                },
+                {
                     "HIC_MAPPING:SAMTOOLS_MERGE": {
                         "samtools": 1.21
                     }
@@ -159,8 +159,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-07-23T10:08:55.207581"
+        "timestamp": "2025-09-03T14:36:54.570075599"
     }
 }

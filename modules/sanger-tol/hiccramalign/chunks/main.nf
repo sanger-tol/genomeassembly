@@ -16,7 +16,7 @@ process HICCRAMALIGN_CHUNKS {
 
     exec:
     // Note: Manually bump version number when updating module
-    def VERSION = "1.0.0"
+    def VERSION = "1.0.1"
 
     def n_slices = file(crai).countLines(decompress: true) - 1
     def size     = cram_bin_size
@@ -24,7 +24,7 @@ process HICCRAMALIGN_CHUNKS {
     chunkn       = (0..n_bins)
     slices       = chunkn.collect { chunk ->
         def lower = chunk * size
-        def upper = [lower + size - 1, n_slices - 1].min()
+        def upper = [lower + size - 1, n_slices].min()
 
         return [ lower, upper ]
     }

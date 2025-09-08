@@ -33,7 +33,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     illumina_10x
     mat_reads
     pat_reads
-    busco
+    busco_lineage
+    busco_lineage_directory
     oatk_mito
     oatk_plastid
 
@@ -48,7 +49,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         illumina_10x,
         mat_reads,
         pat_reads,
-        busco,
+        busco_lineage,
+        busco_lineage_directory,
         oatk_mito,
         oatk_plastid
     )
@@ -83,7 +85,8 @@ workflow {
         PIPELINE_INITIALISATION.out.illumina_10x,
         PIPELINE_INITIALISATION.out.mat_reads,
         PIPELINE_INITIALISATION.out.pat_reads,
-        PIPELINE_INITIALISATION.out.busco,
+        PIPELINE_INITIALISATION.out.busco_lineage,
+        params.busco_lineage_directory,
         PIPELINE_INITIALISATION.out.oatk_mito,
         PIPELINE_INITIALISATION.out.oatk_plastid
     )
