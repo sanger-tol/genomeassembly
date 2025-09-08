@@ -189,7 +189,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: set up for scaffolding
     //
-    ch_assemblies_for_scaffolding_split = ch_assemblies
+    ch_assemblies_for_scaffolding_split = ch_all_assemblies_after_polishing
         | branch { meta, _hap1, _hap2 ->
                 def scaffold = false
                 if(meta.assembly_stage == "polished") { scaffold = true }
