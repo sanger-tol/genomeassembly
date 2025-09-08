@@ -41,7 +41,7 @@ workflow PURGING {
     //
     ch_input_for_minimap2_align_reads = ch_assemblies_split.primary
         | combine(val_long_reads)
-        | multiMap { meta, asm, meta_reads, reads ->
+        | multiMap { meta, asm, _meta_reads, reads ->
             reads: [meta, reads]
             asm:   [meta, asm]
         }

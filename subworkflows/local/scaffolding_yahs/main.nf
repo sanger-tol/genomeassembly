@@ -20,7 +20,7 @@ workflow SCAFFOLDING_YAHS {
     ch_versions = Channel.empty()
 
     ch_map_split = ch_map
-        | branch { meta, map ->
+        | branch { _meta, map ->
             bam: map.getExtension() == "bam"
             bed: map.getExtension() == "bed"
         }
