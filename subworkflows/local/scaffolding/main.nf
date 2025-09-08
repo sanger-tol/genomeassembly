@@ -54,12 +54,12 @@ workflow SCAFFOLDING {
         HIC_MAPPING.out.bam,
         val_cool_bin
     )
-    ch_versions   = ch_versions.mix(SCAFFOLDING.out.versions)
+    ch_versions   = ch_versions.mix(SCAFFOLDING_YAHS.out.versions)
 
     //
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
-    ch_assemblies_scaffolded_split = SCAFFOLDING.out.assemblies
+    ch_assemblies_scaffolded_split = SCAFFOLDING_YAHS.out.assemblies
         | branch { meta, assembly ->
             def meta_new = meta - meta.subMap("_hap")
             hap1: meta._hap == "hap1"
