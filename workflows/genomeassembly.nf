@@ -204,7 +204,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: run hic-mapping and scaffolding
     //
     SCAFFOLDING(
-        ch_assemblies_for_scaffolding_split,
+        ch_assemblies_for_scaffolding_split.scaffold,
         ch_hic_reads,
         params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
