@@ -206,10 +206,10 @@
                 }
             }
         },
-        "new_group_1": {
-            "title": "New Group 1",
+        "assembly_qc_options": {
+            "title": "Assembly QC options",
             "type": "object",
-            "description": "",
+            "description": "Parameters to configure the assembly QC steps that run for each assembly generated.",
             "default": "",
             "properties": {
                 "busco_lineage_directory": {
@@ -369,7 +369,7 @@
             "$ref": "#/$defs/organelle_assembly"
         },
         {
-            "$ref": "#/$defs/new_group_1"
+            "$ref": "#/$defs/assembly_qc_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

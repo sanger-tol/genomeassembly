@@ -212,7 +212,14 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
+    //
+    // Logic: Mark scaffolded assemblies as scaffolded
+    //
     ch_assemblies_scaffolded = SCAFFOLDING.out.assemblies
+        | map { meta, asm1, asm2 ->
+            def meta_new = meta + [assembly_stage: "scaffolded"]
+            [meta_new, asm1, asm2]
+        }
 
     //
     // Subworkflow: collect all assemblies and calculate assembly QC metrics
