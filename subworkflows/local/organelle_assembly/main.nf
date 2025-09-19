@@ -54,7 +54,7 @@ workflow ORGANELLES {
         // Module: Concatenate assembly pairs for Mitohifi
         //
         ch_concat_input = ch_assemblies
-            | map { meta, asm1, asm2 -> [ meta, [asm1, asm2] ]
+            | map { meta, asm1, asm2 -> [ meta, [asm1, asm2] ] }
 
         CONCATENATE_ASSEMBLIES(ch_concat_input)
         ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
