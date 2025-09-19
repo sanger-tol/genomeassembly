@@ -5,7 +5,7 @@ include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS } from '../../../module
 include { OATK                                           } from '../../../modules/nf-core/oatk/main'
 
 
-workflow ORGANELLES {
+workflow ORGANELLE_ASSEMBLY {
     take:
     ch_assemblies   // channel: [ val(meta), asm1, asm2  ]
     ch_long_reads   // channel: [ val(meta), long_reads  ]

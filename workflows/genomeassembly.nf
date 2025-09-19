@@ -11,7 +11,7 @@ include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS } from '../modules/nf-core/seqki
 // Subworkflows
 include { GENOME_STATISTICS                     } from '../subworkflows/sanger-tol/genome_statistics'
 include { KMERS                                 } from '../subworkflows/local/kmers'
-include { ORGANELLES                            } from '../subworkflows/local/organelle_assembly'
+include { ORGANELLE_ASSEMBLY                    } from '../subworkflows/local/organelle_assembly'
 include { POLISHING_10X                         } from '../subworkflows/local/polishing_10X'
 include { PURGING                               } from '../subworkflows/local/purging'
 include { RAW_ASSEMBLY                          } from '../subworkflows/local/raw_assembly'
