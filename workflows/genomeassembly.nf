@@ -4,21 +4,23 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GENOME_STATISTICS } from '../subworkflows/sanger-tol/genome_statistics'
-include { KMERS             } from '../subworkflows/local/kmers'
-include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
-include { PURGING           } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY      } from '../subworkflows/local/raw_assembly'
-include { SCAFFOLDING       } from '../subworkflows/local/scaffolding'
-
+// Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES     } from '../modules/nf-core/cat/cat'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS } from '../modules/nf-core/seqkit/grep/main'
 
+// Subworkflows
+include { GENOME_STATISTICS                     } from '../subworkflows/sanger-tol/genome_statistics'
+include { KMERS                                 } from '../subworkflows/local/kmers'
+include { ORGANELLES                            } from '../subworkflows/local/organelle_assembly'
+include { POLISHING_10X                         } from '../subworkflows/local/polishing_10X'
+include { PURGING                               } from '../subworkflows/local/purging'
+include { RAW_ASSEMBLY                          } from '../subworkflows/local/raw_assembly'
+include { SCAFFOLDING                           } from '../subworkflows/local/scaffolding'
 
-//include { ORGANELLES                              } from '../subworkflows/local/organelles'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+// Functions
+include { paramsSummaryMap                      } from 'plugin/nf-schema'
+include { softwareVersionsToYAML                } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,38 +244,21 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
+    if(params.enable_organelle_assembly) {
+        ch_species = ch_long_reads
+            | map { meta, reads -> [meta, meta.species] }
+            | unique
+            | collect
 
-//    if ( params.organelles_on ) {
-//        //
-//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
-//        //
-//        primary_contigs_ch.join(haplotigs_ch)
-//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
-//            .set{ raw_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_RAW( raw_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
-//
-//        //
-//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-//        //
-//        CAT_CAT_MITOHIFI_READS(hifi_reads)
-//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-//
-//        //
-//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
-//        //
-//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
-//            mito, plastid)
-//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
-//    }
-//
+        ORGANELLE_ASSEMBLY(
+            ch_assemblies_raw,
+            ch_long_reads,
+            ch_species,
+            mito_hmm,
+            pltd_hmm
+        )
+        ch_versions = ch_versions.mix(ORGANELLE_ASSEMBLY.out.versions)
+    }
 
     //
     // Collate and save software versions
