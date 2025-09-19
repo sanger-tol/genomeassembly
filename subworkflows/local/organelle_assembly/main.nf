@@ -9,6 +9,7 @@ workflow ORGANELLE_ASSEMBLY {
     take:
     ch_assemblies   // channel: [ val(meta), asm1, asm2  ]
     ch_long_reads   // channel: [ val(meta), long_reads  ]
+    val_species     // channel: [ val(meta), val(species) ]
     val_mito_hmm    // list: [ hmm_files ]
     val_plastid_hmm // list: [ hmm_files ]
 
