@@ -63,11 +63,11 @@ workflow ORGANELLE_ASSEMBLY {
         //
         // Module: Identify organelle from assembled contigs with Mitohifi
         //
-        ch_mitohifi_contigs_input = ch_assemblies
+        ch_mitohifi_contigs_input = CONCATENATE_ASSEMBLIES.out.file_out
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
             | multiMap { meta, asm, meta_fasta, fasta, meta_gb, gb ->
-                asm: [ meta, reads ]
+                asm: [ meta, asm ]
                 fasta: [ meta, fasta ]
                 gb:    [ meta, gb ]
                 method: "contigs"
@@ -137,7 +137,7 @@ workflow ORGANELLE_ASSEMBLY {
     )
     ch_versions = ch_versions.mix(OATK.out.versions)
 
-    ch_oatk_out_mito = Channel.empty()
+    ch_oatk_out = Channel.empty()
         | mix(
             OATK.out.mito_fasta,
             OATK.out.pltd_fasta,

@@ -249,10 +249,10 @@ workflow GENOMEASSEMBLY {
             | map { meta, reads -> [meta, meta.species] }
             | unique
             | collect
-
+			| view
         ORGANELLE_ASSEMBLY(
             ch_assemblies_raw,
-            ch_long_reads,
+            ch_long_reads_after_kmers,
             ch_species,
             val_mito_hmm,
             val_plastid_hmm
