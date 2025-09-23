@@ -73,6 +73,13 @@ Overhaul genome statistics subworkflow (by @prototaxites):
 - Use new sanger-tol shared genome statistics subworkflow
 - Update to BUSCO 6.0
 
+Overhaul organelle assembly subworkflow (by @prototaxites)
+
+- Added parameters to control behaviour of oatk and mitohifi
+  - sets `errorStragegy = "ignore"` for mitohifi/findmitoreference and mitohifi/mitohifi itself
+  - `--oatk_kmer_size` and `--oatk_coverage`
+  - `--mitohifi_min_ref_len`, `--mitohifi_reads_args` and `--mitohifi_contigs_args`
+
 ### `Fixed`
 
 ### `Dependencies`

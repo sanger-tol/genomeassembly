@@ -4,21 +4,23 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GENOME_STATISTICS } from '../subworkflows/sanger-tol/genome_statistics'
-include { KMERS             } from '../subworkflows/local/kmers'
-include { POLISHING_10X     } from '../subworkflows/local/polishing_10X'
-include { PURGING           } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY      } from '../subworkflows/local/raw_assembly'
-include { SCAFFOLDING       } from '../subworkflows/local/scaffolding'
-
+// Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES     } from '../modules/nf-core/cat/cat'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS } from '../modules/nf-core/seqkit/grep/main'
 
+// Subworkflows
+include { GENOME_STATISTICS                     } from '../subworkflows/sanger-tol/genome_statistics'
+include { KMERS                                 } from '../subworkflows/local/kmers'
+include { ORGANELLE_ASSEMBLY                    } from '../subworkflows/local/organelle_assembly'
+include { POLISHING_10X                         } from '../subworkflows/local/polishing_10X'
+include { PURGING                               } from '../subworkflows/local/purging'
+include { RAW_ASSEMBLY                          } from '../subworkflows/local/raw_assembly'
+include { SCAFFOLDING                           } from '../subworkflows/local/scaffolding'
 
-//include { ORGANELLES                              } from '../subworkflows/local/organelles'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+// Functions
+include { paramsSummaryMap                      } from 'plugin/nf-schema'
+include { softwareVersionsToYAML                } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,15 +31,15 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_geno
 workflow GENOMEASSEMBLY {
 
     take:
-    long_reads
-    hic_reads
-    illumina_10x
-    mat_reads
-    pat_reads
-    busco_lineage
-    busco_lineage_directory
-    mito_hmm
-    plastid_hmm
+    ch_long_reads
+    ch_hic_reads
+    ch_illumina_10x
+    ch_mat_reads
+    ch_pat_reads
+    val_busco_lineage
+    val_busco_lineage_directory
+    val_mito_hmm
+    val_plastid_hmm
 
     main:
     ch_versions = Channel.empty()
@@ -46,21 +48,21 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: generate Kmer databases and estimate
     //     coverage if not provided
     //
-    KMERS(long_reads, mat_reads, pat_reads)
+    KMERS(ch_long_reads, ch_mat_reads, ch_pat_reads)
     ch_versions = ch_versions.mix(KMERS.out.versions)
 
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
-    ch_long_reads = KMERS.out.long_reads
+    ch_long_reads_after_kmers = KMERS.out.long_reads
         | collect
 
     // Drop FastK databases for all downstream uses of Hi-C
     // CRAM files
-    ch_hic_reads  = hic_reads
+    ch_hic_reads  = ch_hic_reads
         | map { meta, cram, _hist, _ktab -> [meta, cram] }
         | collect
 
-    ch_i10x_reads = illumina_10x
+    ch_i10x_reads = ch_illumina_10x
         | map { meta, reads, _hist, _ktab -> [meta, reads] }
         | collect
 
@@ -68,7 +70,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     RAW_ASSEMBLY(
-        ch_long_reads,
+        ch_long_reads_after_kmers,
         ch_hic_reads,
         KMERS.out.trio_yakdb
     )
@@ -100,7 +102,7 @@ workflow GENOMEASSEMBLY {
 
     PURGING(
         ch_assemblies_to_purge.purge,
-        ch_long_reads
+        ch_long_reads_after_kmers
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
 
@@ -237,43 +239,26 @@ workflow GENOMEASSEMBLY {
         KMERS.out.fastk,
         KMERS.out.maternal_hapdb,
         KMERS.out.paternal_hapdb,
-        busco_lineage,
-        busco_lineage_directory
+        val_busco_lineage,
+        val_busco_lineage_directory
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
+    if(params.enable_organelle_assembly) {
+        ch_species = ch_long_reads_after_kmers
+            | map { meta, reads -> [meta, meta.species] }
+            | unique
+            | collect
 
-//    if ( params.organelles_on ) {
-//        //
-//        // LOGIC: CREATE CHANNEL FOR PRIMARY AND ALT CONTIGS
-//        //
-//        primary_contigs_ch.join(haplotigs_ch)
-//            .map{ meta, pri, alt -> [meta, [pri, alt]]}
-//            .set{ raw_pri_alt_ch }
-//        //
-//        // MODULE: MERGE PAW CONTIGS AND HAPLOTIGS INTO ONE FILE
-//        //
-//        CAT_CAT_RAW( raw_pri_alt_ch )
-//
-//        //
-//        // LOGIC: DEFINE MERGED ASSEMBLY
-//        //
-//        merged_pri_alt_raw = CAT_CAT_RAW.out.file_out
-//
-//        //
-//        // MODULE: MERGE INPUT FASTA FILES WITH PACBIO READS
-//        //
-//        CAT_CAT_MITOHIFI_READS(hifi_reads)
-//        ch_versions = ch_versions.mix(CAT_CAT_MITOHIFI_READS.out.versions)
-//
-//        //
-//        // SUBWORKFLOW: INDETIFY MITO IN THE RAW READS AND ASSEMBLY CONTIGS
-//        //
-//        ORGANELLES(CAT_CAT_MITOHIFI_READS.out.file_out, merged_pri_alt_raw,
-//            mito, plastid)
-//        ch_versions = ch_versions.mix(ORGANELLES.out.versions)
-//    }
-//
+        ORGANELLE_ASSEMBLY(
+            ch_assemblies_raw,
+            ch_long_reads_after_kmers,
+            ch_species,
+            val_mito_hmm,
+            val_plastid_hmm
+        )
+        ch_versions = ch_versions.mix(ORGANELLE_ASSEMBLY.out.versions)
+    }
 
     //
     // Collate and save software versions

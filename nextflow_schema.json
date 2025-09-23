@@ -193,16 +193,38 @@
                 }
             }
         },
-        "organelle_assembly": {
-            "title": "Organelle assembly",
+        "organelle_assembly_options": {
+            "title": "Organelle assembly options",
             "type": "object",
             "description": "",
             "default": "",
             "properties": {
-                "enable_organelles": {
+                "enable_organelle_assembly": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Enable organellar assembly subroutines."
+                    "description": "Enable the organellar assembly subworkflow."
+                },
+                "mitohifi_min_ref_len": {
+                    "type": "integer",
+                    "default": 15000,
+                    "description": "Minumum length of the reference mitochondrial genome to download for reference-based assembly with Mitohifi."
+                },
+                "mitohifi_reads_args": {
+                    "type": "string",
+                    "description": "Optional additional arguments to supply to Mitohifi when doing reference-based assembly with reads mapping to the downloaded reference."
+                },
+                "mitohifi_contigs_args": {
+                    "type": "string",
+                    "description": "Optional additional arguments to supply to Mitohifi when identifying mitochondrial genomes from contigs aligning to the downloaded reference."
+                },
+                "oatk_kmer_size": {
+                    "type": "integer",
+                    "default": 1001,
+                    "description": "Kmer size size for assembly of organellar genomes with Oatk."
+                },
+                "oatk_coverage": {
+                    "type": "integer",
+                    "description": "Coverage cutoff for syncmers to be assembled by Oatk. Defaults to 5x nuclear coverage."
                 }
             }
         },
@@ -366,7 +388,7 @@
             "$ref": "#/$defs/contact_map_options"
         },
         {
-            "$ref": "#/$defs/organelle_assembly"
+            "$ref": "#/$defs/organelle_assembly_options"
         },
         {
             "$ref": "#/$defs/assembly_qc_options"
