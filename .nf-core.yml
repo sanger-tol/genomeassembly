@@ -38,7 +38,7 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-nf_core_version: 3.2.1
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   org: sanger-tol
@@ -53,4 +53,8 @@ template:
     - igenomes
     - multiqc
     - fastqc
+<<<<<<< HEAD
   is_nfcore: false
+=======
+  version: 0.10.1dev
+>>>>>>> TEMPLATE
