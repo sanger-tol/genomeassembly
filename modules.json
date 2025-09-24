@@ -35,11 +35,6 @@
                         "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
                         "installed_by": ["modules"]
                     },
-                    "busco": {
-                        "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
-                    },
                     "busco/busco": {
                         "branch": "master",
                         "git_sha": "36c6c8445284e021d95ce30cdf743baef66b21aa",
