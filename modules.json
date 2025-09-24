@@ -52,7 +52,7 @@
                     },
                     "cooler/cload": {
                         "branch": "master",
-                        "git_sha": "d7a16997e642d48dfdcfbd5e7cb4f886c443230f",
+                        "git_sha": "e36263e74125f9c7c400f4a0faafa006408f57ed",
                         "installed_by": ["modules"]
                     },
                     "cooler/zoomify": {
