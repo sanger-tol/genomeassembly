@@ -15,7 +15,7 @@ repos:
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
               subworkflows/nf-core/.*|
-              *.drawio$|
+              .*\.drawio$|
               .*\.snap$
           )$
       - id: end-of-file-fixer
@@ -24,6 +24,6 @@ repos:
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
               subworkflows/nf-core/.*|
-              *.drawio$|
+              .*\.drawio$|
               .*\.snap$
           )$

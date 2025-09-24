@@ -46,15 +46,11 @@ template:
   description: A bioinformatics best-practice analysis pipeline for genome assembly
     from PacBio CCS and HiC reads
   author: "Ksenia Krashennikova"
-  version: 0.10.1dev
   force: true
   outdir: .
   skip_features:
     - igenomes
     - multiqc
     - fastqc
-<<<<<<< HEAD
   is_nfcore: false
-=======
   version: 0.10.1dev
->>>>>>> TEMPLATE
