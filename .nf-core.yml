@@ -38,7 +38,7 @@ lint:
     - validation.help.afterText
     - validation.summary.beforeText
     - validation.summary.afterText
-nf_core_version: 3.2.1
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: Ksenia Krashennikova
@@ -53,5 +53,4 @@ template:
     - igenomes
     - multiqc
     - fastqc
-    - rocrate
   version: 0.10.1dev
