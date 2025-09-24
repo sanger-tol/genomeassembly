@@ -74,7 +74,7 @@ nextflow_workflow {
                 {
                     assert snapshot(
                         bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
-                        workflow.out.versions.collect{ path(it).yaml }
+                        workflow.out.versions
                     ).match()
                 }
             )
@@ -125,7 +125,7 @@ nextflow_workflow {
                 {
                     assert snapshot(
                         bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
-                        workflow.out.versions.collect{ path(it).yaml }
+                        workflow.out.versions
                     ).match()
                 }
             )
@@ -175,7 +175,7 @@ nextflow_workflow {
                 {
                     assert snapshot(
                         bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
-                        workflow.out.versions.collect{ path(it).yaml }
+                        workflow.out.versions
                     ).match()
                 }
             )
@@ -225,7 +225,7 @@ nextflow_workflow {
                 {
                     assert snapshot(
                         bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
-                        workflow.out.versions.collect{ path(it).yaml }
+                        workflow.out.versions
                     ).match()
                 }
             )
