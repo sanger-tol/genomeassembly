@@ -53,5 +53,4 @@ template:
     - igenomes
     - multiqc
     - fastqc
-    - rocrate
   is_nfcore: false
