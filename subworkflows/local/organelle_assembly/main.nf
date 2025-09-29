@@ -1,4 +1,5 @@
 include { CAT_CAT as CONCATENATE_ASSEMBLIES              } from '../../../modules/nf-core/cat/cat/main'
+include { CAT_CAT as CONCATENATE_INPUT_READS             } from '../../../modules/nf-core/cat/cat/main'
 include { MITOHIFI_FINDMITOREFERENCE                     } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
 include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS   } from '../../../modules/nf-core/mitohifi/mitohifi/main'
 include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS } from '../../../modules/nf-core/mitohifi/mitohifi/main'
@@ -31,6 +32,10 @@ workflow ORGANELLE_ASSEMBLY {
         //
         // Module: Assemble mitogenome from reads using MitoHiFi
         //
+        //
+        CONCATENATE_INPUT_READS(ch_long_reads)
+        ch_versions = ch_versions.mix(CONCATENATE_INPUT_READS.out.versions)
+
         ch_mitohifi_reads_input = ch_long_reads
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
