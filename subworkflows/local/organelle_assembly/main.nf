@@ -71,11 +71,11 @@ workflow ORGANELLE_ASSEMBLY {
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
             | multiMap { meta, asm, meta_fasta, fasta, meta_gb, gb ->
-                asm: [ meta, asm ]
+                asm:   [ meta, asm ]
                 fasta: [ meta, fasta ]
                 gb:    [ meta, gb ]
                 method: "contigs"
-                code: meta.code
+                code: meta.mitochondrial_code
             }
         MITOHIFI_MITOHIFI_CONTIGS(
             ch_mitohifi_contigs_input.asm,
