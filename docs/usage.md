@@ -22,65 +22,64 @@ An list of all the possible fields is given below, with their contents described
 
 ```yaml
 metadata:
-  id: sampleID                     # str: unique identifier for the sample
-  species: Bellis perennis         # str: binomial name of species being assembled
-  mitochondrial_code: 1            # int: mitochondrial genetic code (https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
+  id: sampleID # str: unique identifier for the sample
+  species: Bellis perennis # str: binomial name of species being assembled
+  mitochondrial_code: 1 # int: mitochondrial genetic code (https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
 sequencing_data:
-  long_reads:                      # mandatory - information about location and platform of long reads
-    platform: "pacbio"             # str: "PacBio" or "ONT"
-    reads:                         # List of str: Paths to long-read read files in FASTA or FASTQ format
+  long_reads: # mandatory - information about location and platform of long reads
+    platform: "pacbio" # str: "PacBio" or "ONT"
+    reads: # List of str: Paths to long-read read files in FASTA or FASTQ format
       - /path/to/reads1.fa.gz
       - /path/to/reads2.fa.gz
-    fastk:                         # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir   # str: path to directory containing FastK .ktab and .hist files for the long reads
-      basename: basename           # str: Basename of the FastK database in the directory
-      kmer_size: 31                # int: Kmer size used to generate the FastK database
-    coverage: 25                   # (optional): int: haploid coverage of the genome to assemble.
-  hic:                             # (optional): if not specified, no scaffolding will be run.
-    reads:                         # List of str: Paths to Hi-C read files in CRAM format
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+    coverage: 25 # (optional): int: haploid coverage of the genome to assemble.
+  hic: # (optional): if not specified, no scaffolding will be run.
+    reads: # List of str: Paths to Hi-C read files in CRAM format
       - /path/to/reads1.cram
       - /path/to/reads2.cram
-    hic_motif:                     # List of str: Cutting motifs of enzymes used in Hi-C library preparation
+    hic_motif: # List of str: Cutting motifs of enzymes used in Hi-C library preparation
       - GATC
       - GANTC
       - CTNAG
       - TTAA
-    fastk:                         # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir   # str: path to directory containing FastK .ktab and .hist files for the Hi-C reads
-      basename: basename           # str: Basename of the FastK database in the directory
-      kmer_size: 31                # int: Kmer size used to generate the FastK database
-  illumina_10x:                    # (optional): if not specified, no polishing can be run.
-    reads:                         # List of str: Paths to Illumina 10X read files in Fastq format
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the Hi-C reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+  illumina_10x: # (optional): if not specified, no polishing can be run.
+    reads: # List of str: Paths to Illumina 10X read files in Fastq format
       - /path/to/fastq1.fq.gz
       - /path/to/fastq2.fq.gz
-    fastk:                         # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir   # str: path to directory containing FastK .ktab and .hist files for the long reads
-      basename: basename           # str: Basename of the FastK database in the directory
-      kmer_size: 31                # int: Kmer size used to generate the FastK database
-  trio:                            # (optional) - if specified, both maternal and paternal must be specified
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+  trio: # (optional) - if specified, both maternal and paternal must be specified
     maternal:
-      reads:                       # List of str: Paths to Illumina WGS read files in Fastq format
+      reads: # List of str: Paths to Illumina WGS read files in Fastq format
         - /path/to/fastq1.fq.gz
         - /path/to/fastq2.fq.gz
-      fastk:                       # (optional): if specified, all sub-fields must be present.
+      fastk: # (optional): if specified, all sub-fields must be present.
         directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-        basename: basename         # str: Basename of the FastK database in the directory
-        kmer_size: 31              # int: Kmer size used to generate the FastK database
+        basename: basename # str: Basename of the FastK database in the directory
+        kmer_size: 31 # int: Kmer size used to generate the FastK database
     paternal:
-      reads:                       # List of str: Paths to Illumina WGS read files in Fastq format
+      reads: # List of str: Paths to Illumina WGS read files in Fastq format
         - /path/to/fastq1.fq.gz
         - /path/to/fastq2.fq.gz
-      fastk:                       # (optional): if specified, all sub-fields must be present.
+      fastk: # (optional): if specified, all sub-fields must be present.
         directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-        basename: basename         # str: Basename of the FastK database in the directory
-        kmer_size: 31              # int: Kmer size used to generate the FastK database
+        basename: basename # str: Basename of the FastK database in the directory
+        kmer_size: 31 # int: Kmer size used to generate the FastK database
 databases:
   busco:
-    lineage: bacteria_odb10        # str: BUSCO lineage name to use for QC
+    lineage: bacteria_odb10 # str: BUSCO lineage name to use for QC
   oatk:
-    mito_hmm: /path/to/.hmm        # str: Path to oatk HMM database
-    plastid_hmm: /path/to/.hmm     # str: Path to oatk HMM database
-
+    mito_hmm: /path/to/.hmm # str: Path to oatk HMM database
+    plastid_hmm: /path/to/.hmm # str: Path to oatk HMM database
 ```
 
 ## Additional setup procedures
@@ -142,7 +141,6 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-
 > [!WARNING]
 > Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
@@ -169,7 +167,6 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 ```console
 nextflow pull sanger-tol/genomeassembly
 ```
-
 
 ### Reproducibility
 
