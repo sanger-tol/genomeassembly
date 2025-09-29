@@ -32,11 +32,10 @@ workflow ORGANELLE_ASSEMBLY {
         //
         // Module: Assemble mitogenome from reads using MitoHiFi
         //
-        //
         CONCATENATE_INPUT_READS(ch_long_reads)
         ch_versions = ch_versions.mix(CONCATENATE_INPUT_READS.out.versions)
 
-        ch_mitohifi_reads_input = ch_long_reads
+        ch_mitohifi_reads_input = CONCATENATE_INPUT_READS.out.file_out
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
             | multiMap { meta, reads, meta_fasta, fasta, meta_gb, gb ->
@@ -44,7 +43,7 @@ workflow ORGANELLE_ASSEMBLY {
                 fasta: [ meta, fasta ]
                 gb:    [ meta, gb ]
                 method: "reads"
-                code: meta.code
+                code: meta.mitochondrial_code
             }
 
         MITOHIFI_MITOHIFI_READS(
