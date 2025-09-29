@@ -147,7 +147,7 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run {{ name }} -profile docker -params-file params.yaml
+nextflow run sanger-tol/genomeassembly -profile docker -params-file params.yaml
 ```
 
 with:
