@@ -171,11 +171,8 @@ workflow GENOMEASSEMBLY {
     //        and add metadata
     //
     ch_polished_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
-        | map { meta, asm ->
-            [meta + [assembly_stage: "polished"], asm]
-        }
         | branch { meta, asm ->
-            def meta_new = meta - meta.subMap("hap")
+            def meta_new = meta - meta.subMap("_hap") + [assembly_stage: "polished"]
             hap1: meta._hap == "hap1"
                 return [meta_new, asm]
             hap2: meta._hap == "hap2"
@@ -183,7 +180,7 @@ workflow GENOMEASSEMBLY {
         }
 
     ch_assemblies_polished = ch_polished_assemblies_split.hap1
-        | join(ch_polished_assemblies_split.hap2)
+        | combine(ch_polished_assemblies_split.hap2, by: 0)
 
     ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
         | mix(ch_assemblies_polished)
