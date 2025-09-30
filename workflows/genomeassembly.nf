@@ -131,7 +131,7 @@ workflow GENOMEASSEMBLY {
             def polishing_enabled = (params.enable_polishing && params.polishing_longranger_container_path)
 
             polish: (polishing_enabled && polish_filter && purging_filter)
-                return [meta, hap1, hap2]
+                return [meta, [hap1, hap2]]
             no_polish: true
         }
 
