@@ -186,7 +186,17 @@ in directory `mito`.
 - `mito(.reads)?/contigs_stats.tsv`: Statistics of all mitochondrial contigs identified by MitoHiFi.
 - `mito(.reads)?/final_mitogenome.fasta`: Mitochondrial genome in FASTA format chosen by MitoHiFi.
 - `mito(.reads)?/final_mitogenome.gb`: Mitochondrial genome annotation in GB format chosen by MitoHiFi.
-- `mito.oatk/`:
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.utg.final.gfa`: the GFA file for the final oatk genome assembly:
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.annot_mito.txt`: the MT gene annotation file for assembled sequences
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.annot_pltd.txt`: the PT gene annotation file for assembled sequences
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.gfa`: the subgraph for the MT genome
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.bed`: the gene annotation for the MT sequences
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.fasta`: the structure-solved MT contigs
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.bed`: the genome annotation for MT contigs
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.gfa`: the subgraph for the: PT genome
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.bed`: the gene annotation for the PT sequences
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.fasta`: the structure-solved PT contigs
+- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.bed`: the genome annotation for PT: contigs
 
 </details>
 
