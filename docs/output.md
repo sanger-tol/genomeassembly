@@ -4,213 +4,193 @@
 
 This document describes the output produced by the pipeline.
 
-The standard assembly pipeline contains running <code>hifiasm</code> on the HiFi reads, purging the primary contigs with <code>purge_dups</code>, and scaffolding them up with <code>YaHS</code>.
-Optionally, if Illumina 10X data is provided, the purged contigs and haplotigs can be polished.
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-In case of a diploid genome when HiFi and HiC data come from the same individual an additional hifiasm run in HiC mode produces two balanced fully phased haplotypes. The haplotypes are not purged but scaffolded up directly with <code>YaHS</code>.
+## Kmer pre-processing subworkflow
 
-Optionally, the organelles assembly can be triggered. The mitochondrion and (if relevant) plastid sequences are produced using <code>MitoHiFi</code> and <code>OATK</code>.
+If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases are provided, the pipeline will generate them. These databases
+are output in the `kmer` subdirectory. FastK databases will be generated for the input long reads, and if provided, the maternal and paternal
+reads. For maternal and paternal reads, FastK databases are also generated containing only kmers from each parent using MerquryFK's
+[hapmaker](https://github.com/thegenemyers/MERQURY.FK) tool.
 
-The directories listed below will be created in the <code>--outdir</code> directory after the pipeline has finished. All paths are relative to the top-level <code>--outdir</code> directory.
-
-## Subworkflows
-
-The pipeline is built using [Nextflow](https://www.nextflow.io/) DSL2.
-
-### PREPARE_INPUT
-
-Here the input YAML is being processed. This subworkflow generates the input channels used as by the other subworkflows.</p>
-
-### GENOMESCOPE_MODEL
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>kmer/\*ktab</code>
-  - kmer table file
-- <code>kmer/\*hist</code>
-  - kmer histogram file
-- <code>kmer/\*model.txt</code>
-  - genomescope model in text format
-- <code>kmer/\*[linear,log]\_plot.png</code>
-  - genomescope kmer plots
-
-</details>
-
-This subworkflow generates a KMER database and coverage model used in [PURGE_DUPS](#purge_dups) and [GENOME_STATISTICS](#genome_statistics) </p>
-
-![Subworkflow for kmer profile](images/v1/genomescope_model.png)
-
-### RAW_ASSEMBLY
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>.\*hifiasm.\*/.\*p_ctg.[g]fa</code>
-  - primary assembly in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-- <code>.\*hifiasm.\*/.\*a_ctg.[g]fa</code>
-  - haplotigs in GFA and FASTA format; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-- <code>.\*hifiasm-hic.\*/.\*hap1.p_ctg.[g]fa</code>
-  - fully phased hap1 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-- <code>.\*hifiasm-hic.\*/.\*hap2.p_ctg.[g]fa</code>
-  - fully phased hap2 if hifiasm is run in HiC mode; for more details refer to [hifiasm output](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
-- <code>.\*hifiasm.\*/.\*bin</code>
-  - internal binary hifiasm files; for more details refer [here](https://hifiasm.readthedocs.io/en/latest/faq.html#id12)
-
-</details>
-
-This subworkflow generates a raw assembly(-ies). First, hifiasm is run on the input HiFi reads then raw contigs are converted from GFA into FASTA format, this assembly is due to purging, polishing (optional) and scaffolding further down the pipeline.
-
-![Raw assembly subworkflow](images/v1/raw_assembly.png)
-
-### PURGE_DUPS
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm..\*/purged.fa</code>
-  - purged primary contigs
-- <code>\*.hifiasm..\*/purged.htigs.fa</code>
-  - haplotigs after purging
-- other files from the purge_dups pipeline - for details refer [here](https://github.com/dfguan/purge_dups)
-</details>
-
-Retained haplotype is identified in primary assembly. The alternate contigs are updated correspondingly.
-The subworkflow relies on kmer coverage model to identify coverage thresholds. For more details see [purge_dups](https://github.com/dfguan/purge_dups)
-The two haplotype assemblies produced by hifiasm in HiC mode are not purged.
-
-</p>
-
-![Subworkflow for purging haplotigs](images/v1/purge_dups.png)
-
-### POLISHING
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm..\*/polishing/.\*consensus.fa</code>
-  - polished joined primary and haplotigs assembly
-- <code>\*.hifiasm..\*/polishing/merged.vcf.gz</code>
-  - unfiltered variants
-- <code>\*.hifiasm..\*/polishing/merged.vcf.gz.tbi</code>
-  - index file
-- <code>\*.hifiasm..\*/polishing/refdata-\*</code>
-  - Longranger assembly indices
-
-</details>
-
-This subworkflow uses read mapping of the Illumina 10X short read data to fix short errors in primary contigs and haplotigs.</p>
-
-![Subworkflow for purging haplotigs](images/v1/polishing.png)
-
-### HIC_MAPPING
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*\_merged_sorted.bed</code>
-  - bed file obtained from merged mkdup bam
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*mkdup.bam</code> - final read mapping bam with mapped reads
-</details>
-
-This subworkflow implements alignment of the Illumina HiC short reads to the primary assembly. Uses [`CONVERT_STATS`](#convert_stats) as internal subworkflow to calculate read mapping stats.</p>
-
-![HiC mapping subworkflow](images/v1/hic-mapping.png)
-
-### CONVERT_STATS
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.stats</code>
-  - output of samtools stats
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.idxstats</code>
-  - output of samtools idxstats
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/.\*.flagstat</code> - output of samtools flagstat
-</details>
-
-This subworkflow produces statistcs for a bam file containing read mapping. It is executed within [`HIC_MAPPING`](#hic_mapping) subworkflow.</p>
-
-### SCAFFOLDING
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.fa</code>
-  - scaffolds in FASTA format
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/out_scaffolds_final.agp</code>
-  - coordinates of contigs relative to scaffolds
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/alignments_sorted.txt</code>
-  - Alignments for Juicer in text format
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/yahs_scaffolds.hic</code>
-  - Juicer HiC map
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/\*cool</code>
-  - HiC map for cooler
-- <code>\*.hifiasm.\*/scaffolding[_hap1/_hap2/^$]/yahs/out.break.yahs/\*.FullMap.png</code>
-  - Pretext snapshot
-
-</details>
-The subworkflow performs scaffolding of the primary contigs using HiC mapping generated in [`HIC_MAPPING`](hic_mapping). It also performs some postprocessing steps such as generating cooler and pretext files</p>
-
-![Scaffolding subworkflow](images/v1/scaffolding.png)
-
-### GENOME_STATISTICS
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>.\*.assembly_summary</code>
-  - numeric statistics for pri and alt sequences
-- <code>.\*ccs.merquryk</code>
-  - folder with merqury plots and kmer statistics
-- <code>.\*busco</code>
-  - folder with BUSCO results
-
-</details>
-
-This subworkflow is used to evaluate the quality of sequences. It is performed after the intermidate steps, such as raw assembly generation, purging and polishing, and also at the end of the pipeline when scaffolds are produced.</p>
-
-![Genome statistics subworkflow](images/v1/genome_statistics.png)
-
-### ORGANELLES
-
-<details markdown="1">
-  <summary>Output files</summary>
-
-- <code>\*.hifiasm.\*/mito..\*/final_mitogenome.fasta</code>
-  - organelle assembly
-- <code>\*.hifiasm.\*/mito..\*/final_mitogenome.[gb,gff]</code>
-  - organelle gene annotation
-- <code>\*.hifiasm.\*/mito..\*/contigs_stats.tsv</code>
-  - summary of mitochondrial findings
-- output also includes other output files produced by MitoHiFi
-- <code>\*.hifiasm.\*/oatk/.\*mito.ctg.fasta</code>
-  - mitochondrion assembly
-- <code>\*.hifiasm.\*/oatk/.\*mito.gfa</code>
-  - assembly graph for the mitochondrion assembly
-- <code>\*.hifiasm.\*/oatk/.\*pltd.ctg.fasta</code>
-  - plastid assembly
-- <code>\*.hifiasm.\*/oatk/.\*pltd.gfa</code>
-  - assembly graph for the plastid assembly
-- output also includes other output files produced by oatk
-
-</details>
-
-This subworkflow implements assembly of organelles. First it identifies a reference mitochondrion assembly by quering NCBI then MitoHiFi is called on raw HIFI reads and separately on the assembled contigs using the queried reference. Separately OATK is called on the raw reads. For plants an optional path to plastid HMM can be provided in YAML then OATK will be tried for both types of organelles </p>
-
-![Organelles subworkflow](images/v1/organelles.png)
-
-### Pipeline information
-
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+If no coverage value is provided for the long reads, then [GenomeScope 2.0](https://github.com/tbenavi1/genomescope2.0) is run to estimate
+the coverage of the genome prior to assembly.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `genomeassembly_info/`
+- `kmer/{kmer_size}/long/`
+  - `{id}.long.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
+  - `{id}.long.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
+  - `{id}.long..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
+  - `.{id}.long.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer.
+  - `.{id}.long.{kmer_size}_model.txt`: GenomeScope2.0 model fit file containing the model parameters.
+  - `.{id}.long.{kmer_size}_summary.txt`: Summary file for the GenomeScope2.0 model.
+  - `.{id}.long.{kmer_size}_*.png`: GenomeScope2.0 graphical plots showing the model fit against the kmer spectrum.
+- `kmer/{kmer_size}/{mat/pat}/`
+  - `{id}.{mat/pat}.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
+  - `{id}.{mat/pat}.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
+  - `{id}.{mat/pat}..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
+  - `.{id}.{mat/pat}.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
+  - `{id}_{mat/pat}.yak`: Yak Kmer database for the maternal or paternal reads.
+- `kmer/{kmer_size}/trio`
+  - `{id}.mat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `.{id}.mat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `{id}.pat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and paternal genome.
+  - `.{id}.pat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and paternal genome.
+
+</details>
+
+## Assemblies
+
+Each assembly generated is output in a separate directory in the output directory. Each assembly directory is named using the following schema:
+`{id}.hifiasm(-hic/-trio)?.{date}`, where `id` is the provided sample ID, `-hic` or `-trio` are present if the assembly is Hi-C phased or
+trio-binned, respectively, and `date` is the date the Nextflow workflow was started.
+
+The following sections all describe the contents of these assembly directories.
+
+### Hifiasm raw assembly
+
+The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly of the long reads are located in the base of each assembly directory.
+For full details describing hifiasm outputs, please refer to the hifiasm documentation: [https://hifiasm.readthedocs.io/en/latest/interpreting-output.html](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `{id}.p_ctg.(g)?fa`: primary assembly in GFA and FASTA format.
+- `{id}.a_ctg.(g)?fa`: haplotig assembly in GFA and FASTA format.
+- `{id}.hap1.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `{id}.hap2.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `{id}.hap2.p_utg.gfa`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
+- `{id}.hap2.r_utg.gfa`: haplotype-resolved raw unitig graph in GFA format.
+- `{id}.stderr.log`: hifiasm run log file.
+- `*.bin`: internal binary hifiasm files. Can be used to re-run hifiasm.
+
+</details>
+
+### Purging
+
+After raw assembly with hifiasm, an assembly can optionally be purged of retained haplotype using [purge_dups](https://github.com/dfguan/purge_dups). If purge_dups is run,
+the purged assemblies and other associated output will be available in the `purging` directory within an assembly directory.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `purging/purged.fa`: purged primary contigs in FASTA format
+- `purging/purged.htigs.all`: raw hifiasm haplotigs and haplotigs purged from the primary assembly in FASTA format
+- `purging/split_aln/{id}_{assembly_type}.self_aln.split.fasta.gz`: Gzipped fasta containing fragmented primary assembly for self-alignment
+- `purging/coverage/{id}_{assembly_type}.calcuts.log`: log file for purge_dups calcuts
+- `purging/coverage/{id}_{assembly_type}.cutoffs`: purge_dups cutoffs file
+- `purging/coverage/{id}_{assembly_type}.PB.base.cov`: purge_dups base-level read depth
+- `purging/coverage/{id}_{assembly_type}.PB.stat`: purge_dups read depth histogram
+- `purging/coverage/{id}_{assembly_type}.self_aln.paf`: PAF format self-alignment of the split primary assembly
+- `purging/purge_dups/baUndUnlc1.dups.bed`: BED file describing identified retained haplotype in the primary assembly
+- `purging/purge_dups/baUndUnlc1.purge_dups.log`: purge_dups log file
+
+</details>
+
+### Polishing
+
+Prior to scaffolding, an assembly can be polishied using Illumina 10X reads. If purging is run, the purged assembly is polished, otherwise the raw hifiasm assembly
+is polished. [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes)
+are used to polish the assemblies.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `polishing/{id}.consensus.fa`: Consensus polished assembly (both haplotypes) in FASTA format.
+- `polishing/{id}_{assembly_type}_hap1.fa`: Consensus polished assembly (primary/hap1) in FASTA format.
+- `polishing/{id}_{assembly_type}_hap2.fa`: Consensus polished assembly (alt/hap2) in FASTA format.
+- `polishing/{id}_{assembly_type}_merged.vcf.gz`: VCF of assembly from Freebayes
+- `polishing/{id}_{assembly_type}_merged.vcf.gz.tbi`: TBI index of VCF of assembly from Freebayes
+- `polishing/chunks/*.bed`: BED files describing assembly regions polished independently
+- `polishing/{id}/outs/possorted_bam.bam`: BAM file of Illumina 10X reads mapped to the combined assembly by Longranger
+- `polishing/{id}/outs/possorted_bam.bam.bai`: BAM index
+- `polishing/{id}/outs/summary.csv`: Longranger summary information
+
+</details>
+
+### Hi-C mapping and Hi-C mapping statistics
+
+Illumina Hi-C reads are mapped to each assembly using either [bwa-mem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/). The mapping is performed in chunks to parallelise the process,
+and the chunked BAM files are sorted by co-ordinate. The chunked BAM files are then merged, and duplicates are marked with [samtools](https://www.htslib.org/) markdup. Mapping
+statistics are calculated for each mapped BAM using samtools flagstat, idxstats, and stats.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.bam`: Coordinate-sorted BAM file of Hi-C reads mapped to the assembly, with duplicates marked.
+- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.flagstat`: Samtools flagstats for the BAM file of Hi-C reads mapped to the assembly.
+- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.idxstats`: Samtools idxstats for the BAM file of Hi-C reads mapped to the assembly.
+- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.stats`: Samtools stats for the BAM file of Hi-C reads mapped to the assembly.
+
+</details>
+
+### Scaffolding
+
+Scaffolding is performed using the long-range information from the Hi-C alignments using [YaHS](https://github.com/c-zhou/yahs).
+Alignments are converted to a name-sorted BED file, and then the assembly is scaffolded. Following scaffolding, Hi-C contact maps
+in [Pretext](https://github.com/sanger-tol/PretextMap), [Juicer](https://github.com/aidenlab/juicer),
+and [Cooler](https://github.com/open2c/cooler) are generated for visualisation. A PNG image of the Pretext map is generated for
+quick visualisation of the results.
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.bed`: Read name sorted BED file of Hi-C reads mapped to the assembly, generated by bedtools bamToBed.
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.fa`: final scaffolds in FASTA format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.agp`: AGP file translating input contigs to scaffolds
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.bin`: YaHS bin file containing Hi-C contacts
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.pretext`: Hi-C contact map in Pretext format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_finalFullMap.png`: PNG image of Pretext contact map
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.cool`: Hi-C contact map in Cooler format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.hic`: Hi-C contact map in Juicer format
+
+</details>
+
+### Genome statistics
+
+Accompanying every genome assembly FASTA file from the previous step are a range of genome statistics to assess the
+contiguity, quality and completeness of the genome assembly. The statistics generated are: basic assembly
+statistics with asmstats and [gfastats](https://github.com/vgl-hub/gfastats), BUSCO ortholog scoring with
+[BUSCO](https://busco.ezlab.org/), and QV, kmer completeness and graphical visualisations
+with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+- `{assembly fasta}.assembly_summary`: GFAStats output for the individual assembly
+- `{assembly fasta}.stats`: asmstats output for the individual assembly
+- `{assembly fasta}.stats`: asmstats output for the individual assembly
+- `{assembly fasta}.{busco_lineage}.busco/*`: BUSCO output directory for the individual assembly
+- `{assembly fasta}.ccs.merquryk/*`: MerquryFK output directory for the pair (pri/alt, hap1/hap2) of assemblies
+
+</details>
+
+### Organelle assembly
+
+<details markdown="1">
+  <summary>Output files</summary>
+
+</details>
+
+## Pipeline overview
+
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+
+- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+
+### Pipeline information
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `pipeline_info/`
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
   - Parameters used by the pipeline run: `params.json`.
 
 </details>
+
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
