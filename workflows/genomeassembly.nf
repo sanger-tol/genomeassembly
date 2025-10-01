@@ -233,9 +233,9 @@ workflow GENOMEASSEMBLY {
 
     GENOME_STATISTICS(
         ch_assemblies_for_statistics,
-        KMERS.out.fastk,
-        KMERS.out.maternal_hapdb,
-        KMERS.out.paternal_hapdb,
+        KMERS.out.fastk.collect(),
+        KMERS.out.maternal_hapdb.collect(),
+        KMERS.out.paternal_hapdb.collect(),
         val_busco_lineage,
         val_busco_lineage_directory
     )
