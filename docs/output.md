@@ -169,8 +169,24 @@ with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
 
 ### Organelle assembly
 
+Assembly of organelle genomes is accomplished with [MitoHiFi](github.com/marcelauliano/MitoHiFi) and [oatk](github.com/c-zhou/oatk).
+MitoHiFi uses a reference-based approach, downloading a reference mitochondial genome for a closely-related species and
+either identifying mitochondrial contigs from an existing hifiasm assembly, or assembling a mitochondial genome using reads
+mapping to that reference. Oatk is a de-novo assembler that can assemble both mitochondrial and plastid genomes,
+using the presence of genes to pick a path through the assembly graph.
+
+The output of MitoHiFi in reads mode appears in the assembly directory of the standard hifiasm assembly in the directory `mito.reads`, and
+the output of oatk in the directory `mito.oatk`. The output of MitoHiFi in contigs mode appears in the relevant assembly directory for the contigs
+in directory `mito`.
+
 <details markdown="1">
   <summary>Output files</summary>
+
+- `mito(.reads)?/`: Output directory of Mitohifi in contigs mode. See the [MitoHiFi](https://github.com/marcelauliano/MitoHiFi) documentation for a full account of all files.
+- `mito(.reads)?/contigs_stats.tsv`: Statistics of all mitochondrial contigs identified by MitoHiFi.
+- `mito(.reads)?/final_mitogenome.fasta`: Mitochondrial genome in FASTA format chosen by MitoHiFi.
+- `mito(.reads)?/final_mitogenome.gb`: Mitochondrial genome annotation in GB format chosen by MitoHiFi.
+- `mito.oatk/`:
 
 </details>
 
