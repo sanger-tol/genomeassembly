@@ -30,7 +30,7 @@ the coverage of the genome prior to assembly.
 - `kmer/{kmer_size}/{mat/pat}/`
   - `{id}.{mat/pat}.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
   - `{id}.{mat/pat}.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
-  - `{id}.{mat/pat}..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
+  - `{id}.{mat/pat}.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
   - `.{id}.{mat/pat}.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
   - `{id}_{mat/pat}.yak`: Yak Kmer database for the maternal or paternal reads.
 - `kmer/{kmer_size}/trio`
@@ -98,9 +98,9 @@ are used to polish the assemblies.
 <details markdown="1">
   <summary>Output files</summary>
 
-- `polishing/{id}.consensus.fa`: Consensus polished assembly (both haplotypes) in FASTA format.
-- `polishing/{id}_{assembly_type}_hap1.fa`: Consensus polished assembly (primary/hap1) in FASTA format.
-- `polishing/{id}_{assembly_type}_hap2.fa`: Consensus polished assembly (alt/hap2) in FASTA format.
+- `polishing/{id}.consensus.fa`: Consensus polished assembly (both haplotypes) in FASTA format
+- `polishing/{id}_{assembly_type}_hap1.fa`: Consensus polished assembly (primary/hap1) in FASTA format
+- `polishing/{id}_{assembly_type}_hap2.fa`: Consensus polished assembly (alt/hap2) in FASTA format
 - `polishing/{id}_{assembly_type}_merged.vcf.gz`: VCF of assembly from Freebayes
 - `polishing/{id}_{assembly_type}_merged.vcf.gz.tbi`: TBI index of VCF of assembly from Freebayes
 - `polishing/chunks/*.bed`: BED files describing assembly regions polished independently
