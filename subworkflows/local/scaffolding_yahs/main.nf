@@ -95,7 +95,7 @@ workflow SCAFFOLDING_YAHS {
     //
     // Module: Generate a multi-resolution cooler file by coarsening
     //
-    ch_cooler_input = MAKE_PAIRS_FILE.out.pairs
+    ch_cooler_input = YAHS_MAKEPAIRSFILE.out.pairs
         | map { meta, pairs -> [meta, pairs, []] }
 
     COOLER_CLOAD(
@@ -118,7 +118,7 @@ workflow SCAFFOLDING_YAHS {
     // does not like them
     //
     GAWK_PROCESS_PAIRS_FILE(
-        YAHS_MAKE_PAIRS_FILE.out.pairs,
+        YAHS_MAKEPAIRSFILE.out.pairs,
         "${projectDir}/bin/pairs_remove_chromsizes.awk",
         false
     )
