@@ -1,14 +1,14 @@
-include { BAMTOBED_SORT                              } from '../../../modules/local/bamtobedsort/main.nf'
+include { BEDTOOLS_BAMTOBED_SORT                     } from '../../../modules/sanger-tol/bedtools/bamtobedsort/main.nf'
 include { COOLER_CLOAD                               } from '../../../modules/nf-core/cooler/cload/main.nf'
 include { COOLER_ZOOMIFY                             } from '../../../modules/nf-core/cooler/zoomify/main.nf'
 include { GAWK as GAWK_PROCESS_PAIRS_FILE            } from '../../../modules/nf-core/gawk/main.nf'
 include { JUICERTOOLS_PRE                            } from '../../../modules/nf-core/juicertools/pre/main'
-include { MAKE_PAIRS_FILE                            } from '../../../modules/local/make_pairs_file/main.nf'
 include { PRETEXTMAP                                 } from '../../../modules/nf-core/pretextmap/main.nf'
 include { PRETEXTSNAPSHOT                            } from '../../../modules/nf-core/pretextsnapshot/main.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_CONTIGS   } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_SCAFFOLDS } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS                                       } from '../../../modules/nf-core/yahs/main'
+include { YAHS_MAKE_PAIRS_FILE                       } from '../../../modules/sanger-tol/yahs/make_pairs_file/main.nf'
 
 workflow SCAFFOLDING_YAHS {
     take:
@@ -28,13 +28,13 @@ workflow SCAFFOLDING_YAHS {
     //
     // Module: If map provided as BAM file - convert to name-sorted BED
     //
-    BAMTOBED_SORT(
+    BEDTOOLS_BAMTOBED_SORT(
         ch_map_split.bam
     )
-    ch_versions = ch_versions.mix(BAMTOBED_SORT.out.versions)
+    ch_versions = ch_versions.mix(BEDTOOLS_BAMTOBED_SORT.out.versions)
 
     ch_bed = ch_map_split.bed
-        | mix(BAMTOBED_SORT.out.sorted_bed)
+        | mix(BEDTOOLS_BAMTOBED_SORT.out.sorted_bed)
 
     //
     // Module: Index input assemblies
@@ -74,14 +74,14 @@ workflow SCAFFOLDING_YAHS {
         | join(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
         | join(YAHS.out.binary, by: 0)
 
-    MAKE_PAIRS_FILE(ch_pairs_input)
-    ch_versions = ch_versions.mix(MAKE_PAIRS_FILE.out.versions)
+    YAHS_MAKE_PAIRS_FILE(ch_pairs_input)
+    ch_versions = ch_versions.mix(YAHS_MAKE_PAIRS_FILE.out.versions)
 
     //
     // Module: Build PretextMap
     //
     PRETEXTMAP(
-        MAKE_PAIRS_FILE.out.pairs, // Pairs file
+        YAHS_MAKE_PAIRS_FILE.out.pairs, // Pairs file
         [[], [], []]
     )
     ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
@@ -118,7 +118,7 @@ workflow SCAFFOLDING_YAHS {
     // does not like them
     //
     GAWK_PROCESS_PAIRS_FILE(
-        MAKE_PAIRS_FILE.out.pairs,
+        YAHS_MAKE_PAIRS_FILE.out.pairs,
         "${projectDir}/bin/pairs_remove_chromsizes.awk",
         false
     )
