@@ -8,7 +8,7 @@ include { PRETEXTSNAPSHOT                            } from '../../../modules/nf
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_CONTIGS   } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_SCAFFOLDS } from '../../../modules/nf-core/samtools/faidx/main.nf'
 include { YAHS                                       } from '../../../modules/nf-core/yahs/main'
-include { YAHS_MAKE_PAIRS_FILE                       } from '../../../modules/sanger-tol/yahs/make_pairs_file/main.nf'
+include { YAHS_MAKEPAIRSFILE                         } from '../../../modules/sanger-tol/yahs/makepairsfile/main.nf'
 
 workflow SCAFFOLDING_YAHS {
     take:
@@ -74,14 +74,14 @@ workflow SCAFFOLDING_YAHS {
         | join(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
         | join(YAHS.out.binary, by: 0)
 
-    YAHS_MAKE_PAIRS_FILE(ch_pairs_input)
-    ch_versions = ch_versions.mix(YAHS_MAKE_PAIRS_FILE.out.versions)
+    YAHS_MAKEPAIRSFILE(ch_pairs_input)
+    ch_versions = ch_versions.mix(YAHS_MAKEPAIRSFILE.out.versions)
 
     //
     // Module: Build PretextMap
     //
     PRETEXTMAP(
-        YAHS_MAKE_PAIRS_FILE.out.pairs, // Pairs file
+        YAHS_MAKEPAIRSFILE.out.pairs, // Pairs file
         [[], [], []]
     )
     ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
