@@ -1,4 +1,4 @@
-include { BEDTOOLS_BAMTOBED_SORT                     } from '../../../modules/sanger-tol/bedtools/bamtobedsort/main.nf'
+include { BEDTOOLS_BAMTOBEDSORT                      } from '../../../modules/sanger-tol/bedtools/bamtobedsort/main.nf'
 include { COOLER_CLOAD                               } from '../../../modules/nf-core/cooler/cload/main.nf'
 include { COOLER_ZOOMIFY                             } from '../../../modules/nf-core/cooler/zoomify/main.nf'
 include { GAWK as GAWK_PROCESS_PAIRS_FILE            } from '../../../modules/nf-core/gawk/main.nf'
@@ -28,13 +28,13 @@ workflow SCAFFOLDING_YAHS {
     //
     // Module: If map provided as BAM file - convert to name-sorted BED
     //
-    BEDTOOLS_BAMTOBED_SORT(
+    BEDTOOLS_BAMTOBEDSORT(
         ch_map_split.bam
     )
-    ch_versions = ch_versions.mix(BEDTOOLS_BAMTOBED_SORT.out.versions)
+    ch_versions = ch_versions.mix(BEDTOOLS_BAMTOBEDSORT.out.versions)
 
     ch_bed = ch_map_split.bed
-        | mix(BEDTOOLS_BAMTOBED_SORT.out.sorted_bed)
+        | mix(BEDTOOLS_BAMTOBEDSORT.out.sorted_bed)
 
     //
     // Module: Index input assemblies
