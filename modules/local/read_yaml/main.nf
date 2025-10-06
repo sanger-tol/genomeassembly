@@ -28,8 +28,8 @@ def get_seq_data(map) {
                 it.name =~ fastk.basename
             }
 
-        def fk_hist = fastk_files.findAll { it =~ /\.hist$/ }
-        def fk_ktab = fastk_files.findAll { it =~ /\.ktab(\.\d+)?$/ }
+        def fk_hist = file(fastk_files.find { it =~ /\.hist$/ })
+        def fk_ktab = fastk_files.findAll { it =~ /\.ktab(\.\d+)?$/ }.collect { file(it) }
 
         if([fk_hist, fk_ktab].every { !it.isEmpty() } ){
             output = output + [hist: fk_hist, ktab: fk_ktab, kmer_size: fastk.kmer_size]
