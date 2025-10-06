@@ -42,7 +42,6 @@ workflow SCAFFOLDING {
         ch_hic_mapping_inputs.hic,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
-        true // mark duplicates
     )
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
