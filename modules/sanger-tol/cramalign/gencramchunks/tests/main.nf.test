@@ -1,13 +1,13 @@
 nextflow_process {
 
-    name "Test Process HICCRAMALIGN_CHUNKS"
+    name "Test Process CRAMALIGN_GENCRAMCHUNKS"
     script "../main.nf"
-    process "HICCRAMALIGN_CHUNKS"
+    process "CRAMALIGN_GENCRAMCHUNKS"
 
     tag "modules"
     tag "modules_sangertol"
-    tag "hiccramalign"
-    tag "hiccramalign/chunks"
+    tag "cramalign"
+    tag "cramalign/gencramchunks"
 
     test("cram") {
 
@@ -16,7 +16,6 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram.crai', checkIfExists: true)
                 ]
                 input[1] = 10

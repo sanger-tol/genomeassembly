@@ -287,19 +287,19 @@
                         "git_sha": "3883255e2264d88665f15424251e9db4560db35c",
                         "installed_by": ["modules"]
                     },
-                    "hiccramalign/bwamem2align": {
+                    "cramalign/bwamem2alignhic": {
                         "branch": "main",
-                        "git_sha": "c9059a703fbd588ec6eac8e5cee47cbe97945eb1",
+                        "git_sha": "af9a2354a79250dcdf2805c032b654945fd8d8e2",
                         "installed_by": ["hic_mapping"]
                     },
-                    "hiccramalign/chunks": {
+                    "cramalign/gencramchunks": {
                         "branch": "main",
-                        "git_sha": "60236b1acf69f44bee555549499fb931093a3694",
+                        "git_sha": "dd140690958d9250b0b50548fdcb9a9c7e3bf808",
                         "installed_by": ["hic_mapping"]
                     },
-                    "hiccramalign/minimap2align": {
+                    "cramalign/minimap2alignhic": {
                         "branch": "main",
-                        "git_sha": "c9059a703fbd588ec6eac8e5cee47cbe97945eb1",
+                        "git_sha": "af9a2354a79250dcdf2805c032b654945fd8d8e2",
                         "installed_by": ["hic_mapping"]
                     },
                     "yahs/makepairsfile": {
@@ -318,7 +318,7 @@
                     },
                     "hic_mapping": {
                         "branch": "main",
-                        "git_sha": "60236b1acf69f44bee555549499fb931093a3694",
+                        "git_sha": "dd140690958d9250b0b50548fdcb9a9c7e3bf808",
                         "installed_by": ["subworkflows"]
                     }
                 }

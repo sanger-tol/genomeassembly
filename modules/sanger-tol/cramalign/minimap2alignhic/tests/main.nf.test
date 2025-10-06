@@ -1,24 +1,24 @@
 
 nextflow_process {
 
-    name "Test Process HICCRAMALIGN_BWAMEM2ALIGN"
+    name "Test Process CRAMALIGN_MINIMAP2ALIGNHIC"
     script "../main.nf"
-    process "HICCRAMALIGN_BWAMEM2ALIGN"
+    process "CRAMALIGN_MINIMAP2ALIGNHIC"
 
     tag "modules"
     tag "modules_sangertol"
-    tag "bwamem2/index"
-    tag "hiccramalign"
-    tag "hiccramalign/bwamem2align"
-    tag "nf-core/bwamem2/index"
+    tag "minimap2/index"
+    tag "cramalign"
+    tag "cramalign/minimap2alignhic"
+    tag "nf-core/minimap2/index"
 
     setup {
         nfcoreInitialise("${launchDir}/library/")
-        nfcoreInstall("${launchDir}/library/", ["bwamem2/index"])
-        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+        nfcoreInstall("${launchDir}/library/", ["minimap2/index"])
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules")
 
-        run("BWAMEM2_INDEX") {
-            script "../../../../nf-core/bwamem2/index/main.nf"
+        run("MINIMAP2_INDEX") {
+            script "../../../../nf-core/minimap2/index/main.nf"
             process {
                 """
                 input[0] = Channel.of([
@@ -36,12 +36,12 @@ nextflow_process {
         when {
 
             params {
-                samtools_cat_args = ""
-                samtools_fastq_args = "-F0xB00 -nt"
-                bwamem2_mem_args = "-5SPp"
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                minimap2_args         = "-ax sr"
                 samtools_fixmate_args = "-mpu"
-                samtools_view_args = "-q 0 -F 0x904"
-                samtools_sort_args = "--write-index -l1"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
             }
 
             process {
@@ -51,12 +51,8 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram.crai', checkIfExists: true),
                     1,
-                    [0, 1],
-                    file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
-                ]).join(BWAMEM2_INDEX.out.index)
-                .map { meta, cram, crai, chunkn, range, ref, index ->
-                    [ meta, cram, crai, chunkn, range, index, ref ]
-                }
+                    [0, 1]
+                ]).join(MINIMAP2_INDEX.out.index)
                 """
             }
         }
@@ -74,7 +70,7 @@ nextflow_process {
         }
 
         cleanup {
-            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/")
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules")
         }
 
     }
@@ -91,12 +87,8 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram.crai', checkIfExists: true),
                     1,
-                    [0, 1],
-                    file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
-                ]).join(BWAMEM2_INDEX.out.index)
-                .map { meta, cram, crai, chunkn, range, ref, index ->
-                    [ meta, cram, crai, chunkn, range, index, ref ]
-                }
+                    [0, 1]
+                ]).join(MINIMAP2_INDEX.out.index)
                 """
             }
         }
@@ -109,9 +101,8 @@ nextflow_process {
         }
 
         cleanup {
-            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/")
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules")
         }
 
     }
-
 }

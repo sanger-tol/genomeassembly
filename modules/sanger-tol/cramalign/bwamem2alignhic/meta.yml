@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "hiccramalign_bwamem2align"
+name: "cramalign_bwamem2alignhic"
 description: |
   Aligns a subset of Hi-C reads from a CRAM file to a reference genome using bwa-mem2,
   pipes the resulting alignments through samtools fixmate and samtools sort, outputting

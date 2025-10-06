@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "hiccramalign_minimap2align"
+name: "cramalign_minimap2alignhic"
 description: |
   Aligns a subset of Hi-C reads from a CRAM file to a reference genome using minimap2,
     pipes the resulting alignments through filterfiveend.pl (included), samtools fixmate and samtools sort, outputting

@@ -1,12 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "HICCRAMALIGN_CHUNKS"
+name: "CRAMALIGN_GENCRAMCHUNKS"
 description: Determine the chunks to split a CRAM file into for alignment
 keywords:
   - cram
   - chunk
   - align
 tools:
-  - "hiccramalign/chunks":
+  - "cramalign/gencramchunks":
       description: "not a real tool!"
       homepage: "https://i.need.this.to.lint.org"
       documentation: "https://i.need.this.to.lint.org"
@@ -19,13 +19,6 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. `[ id:'sample1' ]`
-
-    - cram:
-        type: file
-        description: Unaligned BAM/CRAM/SAM file
-        pattern: "*.cram"
-        ontologies:
-          - edam: "http://edamontology.org/format_3462" # CRAM
 
     - crai:
         type: file
@@ -48,18 +41,6 @@ output:
           pattern: "*.cram"
           ontologies:
             - edam: "http://edamontology.org/format_3462" # CRAM
-      - cram:
-          type: string
-          description: Input CRAM file
-          pattern: "*.cram"
-          ontologies:
-            - edam: "http://edamontology.org/format_3462" # CRAM
-      - crai:
-          type: string
-          description: Input CRAM index
-          pattern: "*.cram"
-          ontologies:
-            - edam: "http://edamontology.org/format_3475" # TSV
       - chunkn:
           type: integer
           description: CRAM chunk index

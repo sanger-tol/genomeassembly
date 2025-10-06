@@ -1,4 +1,4 @@
-process HICCRAMALIGN_BWAMEM2ALIGN {
+process CRAMALIGN_BWAMEM2ALIGNHIC {
     tag "$meta.id"
     label "process_high"
 
