@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "yahs_makepairsfile"
+description: |
+  Wrapper around the YaHS juicer_pre tool to create a valid sorted pairs file describing
+  Hi-C contacts among scaffolds using contacts among contigs and the YaHS AGP file describing
+  the makeup of scaffolds from those contigs.
+keywords:
+  - hic
+  - contact map
+  - pairs
+  - scaffolding
+tools:
+  - "yahs":
+      description: "YaHS, yet another Hi-C scaffolding tool."
+      homepage: "https://github.com/c-zhou/yahs"
+      documentation: "https://github.com/c-zhou/yahs"
+      tool_dev_url: "https://github.com/c-zhou/yahs"
+      doi: "10.1093/bioinformatics/btac808"
+      licence: ["MIT"]
+      identifier: biotools:yahs
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - scaffolds_fai:
+        type: file
+        description: |
+          samtools fasta index files describing the scaffolds to
+          make a pairs file for
+        pattern: "*.fai"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475" # TSV
+    - scaffolds_agp:
+        type: file
+        description: |
+          AGP file describing the mapping of raw contigs to scaffolds
+        pattern: "*.agp"
+        ontologies:
+          - edam: "http://edamontology.org/format_3693" # AGP
+    - contigs_fai:
+        type: file
+        description: |
+          samtools fasta index files describing the scaffolds to
+          make a pairs file for
+        pattern: "*.fai"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475" # TSV
+    - contigs_contacts:
+        type: file
+        description: |
+          Supported file format (BAM, BED, pairs, YaHS binary) describing Hi-C
+          contacts between contigs
+        pattern: "*.{bam,bed,bin,pa5}"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" # BAM
+          - edam: "http://edamontology.org/format_3003" # BED
+          - edam: "http://edamontology.org/format_3475" # TSV
+output:
+  pairs:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.pairs.gz":
+          type: file
+          description: |
+            Pairs file describing Hi-C contacts between scaffolds
+          pattern: "*.pairs.gz"
+          ontologies:
+            - edam: "http://edamontology.org/format_3475" # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

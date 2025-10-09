@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "cramalign_minimap2alignhic"
+description: |
+  Aligns a subset of Hi-C reads from a CRAM file to a reference genome using minimap2,
+    pipes the resulting alignments through filterfiveend.pl (included), samtools fixmate and samtools sort, outputting
+    an alignment in BAM format.
+keywords:
+  - align
+  - cram
+  - chunk
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+  - minimap2:
+      description: |
+        A versatile pairwise aligner for genomic and spliced nucleotide sequences.
+      homepage: https://github.com/lh3/minimap2
+      documentation: https://github.com/lh3/minimap2#uguide
+      licence: ["MIT"]
+      identifier: ""
+  - filter5end.pl:
+      description: |
+        Filter alignments
+      homepage: https://github.com/ArimaGenomics/mapping_pipeline
+      documentation: https://github.com/ArimaGenomics/mapping_pipeline
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+
+    - cram:
+        type: file
+        description: CRAM file containing Hi-C sequences to align
+        pattern: "*.cram"
+        ontologies:
+          - edam: "http://edamontology.org/format_3462" # CRAM
+
+    - crai:
+        type: file
+        description: CRAM index file
+        pattern: "*.crai"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475" # TSV
+
+    - chunkn:
+        type: integer
+        description: Integer index of CRAM chunk to map
+
+    - range:
+        type: list
+        description: Start and end indices defining CRAM slices to align
+
+    - reference:
+        type: file
+        description: minimap2 index of the reference to be aligned to
+
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.bam":
+          type: file
+          description: BAM file of mapped Hi-C sequences
+          pattern: "*.bam"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572" # BAM
+
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

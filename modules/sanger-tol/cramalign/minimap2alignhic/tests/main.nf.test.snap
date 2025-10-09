@@ -1,0 +1,48 @@
+{
+    "meles meles": {
+        "content": [
+            "3196a1997c55d543d773a1af0595fa6d",
+            [
+                "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-03T10:01:40.570586"
+    },
+    "meles meles - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-03T10:02:01.084375"
+    }
+}

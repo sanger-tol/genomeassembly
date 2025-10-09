@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "CRAMALIGN_GENCRAMCHUNKS"
+description: Determine the chunks to split a CRAM file into for alignment
+keywords:
+  - cram
+  - chunk
+  - align
+tools:
+  - "cramalign/gencramchunks":
+      description: "not a real tool!"
+      homepage: "https://i.need.this.to.lint.org"
+      documentation: "https://i.need.this.to.lint.org"
+      tool_dev_url: "https://i.need.this.to.lint.org"
+      doi: no DOI available
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+
+    - crai:
+        type: file
+        description: Sorted BAM/CRAM/SAM file
+        pattern: "*.crai"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475" # TSV
+
+  - cram_bin_size:
+      type: integer
+      description: Number of CRAM slices in each CRAM chunk
+
+output:
+  cram_slices:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+          pattern: "*.cram"
+          ontologies:
+            - edam: "http://edamontology.org/format_3462" # CRAM
+      - chunkn:
+          type: integer
+          description: CRAM chunk index
+      - slices:
+          type: list
+          description: List containing the start and end slices of the CRAM chunk
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

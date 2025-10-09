@@ -1,0 +1,44 @@
+name: longranger_mkref
+description: Creates indices of a fasta file required for alignment step
+keywords:
+  - longranger
+  - mkref
+  - 10X
+  - reference
+tools:
+  - longranger:
+      description: Long Ranger is a set of analysis pipelines that processes Chromium sequencing output to align reads and call and phase SNPs, indels, and structural variants.
+      homepage: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
+      documentation: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
+      tool_dev_url: https://github.com/10XGenomics/longranger
+      doi: no DOI available
+      licence: ["https://support.10xgenomics.com/genome-exome/software/downloads/latest"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'pEimTen1' ]
+    - assembly:
+        type: file
+        description: Genome reference
+        pattern: "*.{fa,fasta}"
+output:
+  reference:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "refdata-*":
+          type: file
+          description: BAM file of mapped Hi-C sequences
+          pattern: "refdata-*"
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+authors:
+  - "@ksenia-krasheninnikova"
+  - "@prototaxites"

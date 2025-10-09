@@ -8,9 +8,9 @@ nextflow_workflow {
     tag "subworkflows"
     tag "subworkflows_sangertol"
     tag "subworkflows/hic_mapping"
-    tag "hiccramalign/chunks"
-    tag "hiccramalign/bwamem2align"
-    tag "hiccramalign/minimap2align"
+    tag "cramalign/gencramchunks"
+    tag "cramalign/bwamem2alignhic"
+    tag "cramalign/minimap2alignhic"
     tag "subworkflows/../../modules/nf-core/samtools/markdup"
     tag "subworkflows/../../modules/nf-core/minimap2/index"
     tag "subworkflows/../../modules/nf-core/samtools/merge"
@@ -34,7 +34,7 @@ nextflow_workflow {
         nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
     }
 
-    test("meles meles - bwamem2 - markdup") {
+    test("meles meles - bwamem2") {
 
         when {
 
@@ -51,7 +51,7 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
-                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        [ id:'test' ], // meta map
                         file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
                     ]
                 )
@@ -62,18 +62,18 @@ nextflow_workflow {
                     ]
                 )
                 input[2] = "bwamem2"
-                input[3] = 10
-                input[4] = true
+                input[3] = 1
                 """
             }
         }
 
         then {
             assertAll(
-                { assert workflow.success},
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 1 },
                 {
                     assert snapshot(
-                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.versions
                     ).match()
                 }
@@ -85,7 +85,7 @@ nextflow_workflow {
         }
     }
 
-    test("meles meles - bwamem2 - no markdup") {
+    test("meles meles - bwamem2 - multiple samples") {
 
         when {
 
@@ -102,29 +102,37 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
-                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2' ], // meta map
                         file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
                     ]
                 )
                 input[1] = Channel.of(
                     [
                         [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2' ],
                         file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
                     ]
                 )
                 input[2] = "bwamem2"
-                input[3] = 10
-                input[4] = false
+                input[3] = 1
                 """
             }
         }
 
         then {
             assertAll(
-                { assert workflow.success},
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 2 },
                 {
                     assert snapshot(
-                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.versions
                     ).match()
                 }
@@ -136,7 +144,66 @@ nextflow_workflow {
         }
     }
 
-    test("meles meles - minimap2 - markdup") {
+    test("meles meles - bwamem2 - multiple samples - meta mismatch") {
+
+        when {
+
+            params {
+                samtools_cat_args = ""
+                samtools_fastq_args = "-F0xB00 -nt"
+                bwamem2_mem_args = "-5SPp"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args = "-q 0 -F 0x904"
+                samtools_sort_args = "--write-index -l1"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test3' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "bwamem2"
+                input[3] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 1 },
+                {
+                    assert snapshot(
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - minimap2") {
 
         when {
             params {
@@ -152,7 +219,7 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
-                        [ id:'test', assembler: 'metamdbg' ], // meta map
+                        [ id:'test' ], // meta map
                         file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
                     ]
                 )
@@ -163,68 +230,18 @@ nextflow_workflow {
                     ]
                 )
                 input[2] = "minimap2"
-                input[3] = 10
-                input[4] = true
+                input[3] = 1
                 """
             }
         }
 
         then {
             assertAll(
-                { assert workflow.success},
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 1 },
                 {
                     assert snapshot(
-                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
-                        workflow.out.versions
-                    ).match()
-                }
-            )
-        }
-
-        cleanup {
-            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
-        }
-    }
-
-    test("meles meles - minimap2 - no markdup") {
-
-        when {
-            params {
-                samtools_cat_args     = ""
-                samtools_fastq_args   = "-F0xB00 -nt"
-                minimap2_args         = "-ax sr"
-                samtools_fixmate_args = "-mpu"
-                samtools_view_args    = "-q 0 -F 0x904"
-                samtools_sort_args    = "--write-index -l1"
-            }
-
-            workflow {
-                """
-                input[0] = Channel.of(
-                    [
-                        [ id:'test', assembler: 'metamdbg' ], // meta map
-                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
-                    ]
-                )
-                input[1] = Channel.of(
-                    [
-                        [ id:'test' ],
-                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
-                    ]
-                )
-                input[2] = "minimap2"
-                input[3] = 10
-                input[4] = false
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.success},
-                {
-                    assert snapshot(
-                        bam(workflow.out.bam.get(0).get(1)).getReadsMD5(),
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.versions
                     ).match()
                 }
