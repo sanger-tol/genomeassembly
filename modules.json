@@ -302,6 +302,16 @@
                         "git_sha": "af9a2354a79250dcdf2805c032b654945fd8d8e2",
                         "installed_by": ["hic_mapping"]
                     },
+                    "longranger/align": {
+                        "branch": "main",
+                        "git_sha": "ba362129a9fb5dec1f83ec03555a3f7551b1e822",
+                        "installed_by": ["modules"]
+                    },
+                    "longranger/mkref": {
+                        "branch": "main",
+                        "git_sha": "ba362129a9fb5dec1f83ec03555a3f7551b1e822",
+                        "installed_by": ["modules"]
+                    },
                     "yahs/makepairsfile": {
                         "branch": "main",
                         "git_sha": "3883255e2264d88665f15424251e9db4560db35c",

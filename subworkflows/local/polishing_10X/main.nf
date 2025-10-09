@@ -5,11 +5,11 @@ include { BCFTOOLS_CONCAT                          } from '../../../modules/nf-c
 include { BCFTOOLS_SORT                            } from '../../../modules/nf-core/bcftools/sort'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB      } from '../../../modules/nf-core/bcftools/index'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM    } from '../../../modules/nf-core/bcftools/index'
+include { FREEBAYES                                } from '../../../modules/nf-core/freebayes/main'
 include { GATK4_MERGEVCFS as GATK4_MERGE_FREEBAYES } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GAWK as GAWK_BED_CHUNKS                  } from '../../../modules/nf-core/gawk'
-include { FREEBAYES                                } from '../../../modules/nf-core/freebayes/main'
-include { LONGRANGER_MKREF                         } from '../../../modules/local/longranger/mkref'
-include { LONGRANGER_ALIGN                         } from '../../../modules/local/longranger/align'
+include { LONGRANGER_MKREF                         } from '../../../modules/sanger-tol/longranger/mkref'
+include { LONGRANGER_ALIGN                         } from '../../../modules/sanger-tol/longranger/align'
 include { SAMTOOLS_FAIDX                           } from '../../../modules/nf-core/samtools/faidx'
 
 workflow POLISHING_10X {
@@ -39,8 +39,8 @@ workflow POLISHING_10X {
     // Module: map 10x reads to the merged assemblies
     //
     LONGRANGER_ALIGN(
-        LONGRANGER_MKREF.out.folder,
-        val_illumina_10x_reads
+        val_illumina_10x_reads,
+        LONGRANGER_MKREF.out.reference,
     )
     ch_versions = ch_versions.mix(LONGRANGER_ALIGN.out.versions)
 
