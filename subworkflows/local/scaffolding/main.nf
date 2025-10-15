@@ -22,18 +22,26 @@ workflow SCAFFOLDING {
             hap2: [meta + [_hap: "hap2"], hap2]
         }
 
-    ch_assemblies_for_hic_mapping = ch_assemblies_split.hap1
+    //
+    // Logic: combine Hi-C to assemblies, then spit out new channels
+    //        with matching metas
+    //
+    ch_hic_mapping_inputs = ch_assemblies_split.hap1
         | mix(ch_assemblies_split.hap2)
+        | combine(val_hic_reads)
+        | multiMap { meta, asm, meta_hic, hic ->
+            asm: [ meta, asm ]
+            hic: [ meta, hic ]
+        }
 
     //
     // Subworkflow: Map Hi-C data to each assembly
     //
     HIC_MAPPING(
-        ch_assemblies_for_hic_mapping,
-        val_hic_reads,
+        ch_hic_mapping_inputs.asm,
+        ch_hic_mapping_inputs.hic,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
-        true // mark duplicates
     )
     ch_versions = ch_versions.mix(HIC_MAPPING.out.versions)
 
@@ -42,7 +50,7 @@ workflow SCAFFOLDING {
     //
     HIC_MAPPING_STATS(
         HIC_MAPPING.out.bam,
-        ch_assemblies_for_hic_mapping
+        ch_hic_mapping_inputs.asm
     )
     ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
@@ -50,7 +58,7 @@ workflow SCAFFOLDING {
     // Subworkflow: scaffold assemblies using yahs and create contact maps
     //
     SCAFFOLDING_YAHS(
-        ch_assemblies_for_hic_mapping,
+        ch_hic_mapping_inputs.asm,
         HIC_MAPPING.out.bam,
         val_cool_bin
     )
@@ -63,9 +71,9 @@ workflow SCAFFOLDING {
         | branch { meta, assembly ->
             def meta_new = meta - meta.subMap("_hap")
             hap1: meta._hap == "hap1"
-                return [meta_new, assembly]
+                return [ meta_new, assembly ]
             hap2: meta._hap == "hap2"
-                return [meta_new, assembly]
+                return [ meta_new, assembly ]
         }
 
     ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1

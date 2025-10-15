@@ -1,0 +1,156 @@
+{
+    "undibacterium unclassified": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,e5c01369a8bb02740acc39734d6abfcd",
+                                "genome.fa.amb:md5,37f8bdd8b35c5dcae03bd83e9e2490e2",
+                                "genome.fa.ann:md5,d686edce9d3d907f226fe73f895e161b",
+                                "genome.fa.bwt:md5,0572f320ccc9fbc68edcffb3ef162b0e",
+                                "genome.fa.fai:md5,feb391acd125f11289949368f10f7f79",
+                                "genome.fa.flat:md5,2837f7616db364201c813d503ea9c230",
+                                "genome.fa.gdx:md5,058439320db484c083c23d5dbf1c5c95",
+                                "genome.fa.pac:md5,25ac263cd40c04a89ed1192187d1adbd",
+                                "genome.fa.sa:md5,09a1677f1a75c3ea611fd80d8927b89b"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,920cfb4f613de6917b8562878b7ed08b",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                ],
+                "reference": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,e5c01369a8bb02740acc39734d6abfcd",
+                                "genome.fa.amb:md5,37f8bdd8b35c5dcae03bd83e9e2490e2",
+                                "genome.fa.ann:md5,d686edce9d3d907f226fe73f895e161b",
+                                "genome.fa.bwt:md5,0572f320ccc9fbc68edcffb3ef162b0e",
+                                "genome.fa.fai:md5,feb391acd125f11289949368f10f7f79",
+                                "genome.fa.flat:md5,2837f7616db364201c813d503ea9c230",
+                                "genome.fa.gdx:md5,058439320db484c083c23d5dbf1c5c95",
+                                "genome.fa.pac:md5,25ac263cd40c04a89ed1192187d1adbd",
+                                "genome.fa.sa:md5,09a1677f1a75c3ea611fd80d8927b89b"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,920cfb4f613de6917b8562878b7ed08b",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-10-03T16:15:43.575281665"
+    },
+    "undibacterium unclassified - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.flat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.gdx:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.pac:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.sa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                ],
+                "reference": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.flat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.gdx:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.pac:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.sa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-10-03T16:16:14.053862305"
+    }
+}
