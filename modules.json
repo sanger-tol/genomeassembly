@@ -314,7 +314,7 @@
                     },
                     "yahs/makepairsfile": {
                         "branch": "main",
-                        "git_sha": "3883255e2264d88665f15424251e9db4560db35c",
+                        "git_sha": "12a5521bd8ff0a62a7fa1954f76062fe4fb695aa",
                         "installed_by": ["modules"]
                     }
                 }
