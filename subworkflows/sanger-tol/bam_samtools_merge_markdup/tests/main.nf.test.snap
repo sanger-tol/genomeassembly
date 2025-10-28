@@ -1,0 +1,55 @@
+{
+    "Undibacterium unclassified - hap1 - no markdup": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 10,
+                    "meanQuality": 50,
+                    "readCount": 11583,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                }
+            ],
+            [
+                "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
+                "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-21T14:30:16.602926"
+    },
+    "Undibacterium unclassified - hap1 - markdup": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 10,
+                    "meanQuality": 50,
+                    "readCount": 11583,
+                    "duplicateReadCount": 508,
+                    "sorted": false
+                }
+            ],
+            [
+                "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
+                "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5",
+                "versions.yml:md5,9c798a363e3c7297bebbaa008aefe259"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-21T14:33:09.850931"
+    }
+}

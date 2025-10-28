@@ -1,6 +1,6 @@
-include { HIC_MAPPING       } from '../../../subworkflows/sanger-tol/hic_mapping'
-include { HIC_MAPPING_STATS } from '../../../subworkflows/local/hic_mapping_stats'
-include { SCAFFOLDING_YAHS  } from '../../../subworkflows/local/scaffolding_yahs'
+include { CRAM_MAP_ILLUMINA_HIC as HIC_MAPPING } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { HIC_MAPPING_STATS                    } from '../../../subworkflows/local/hic_mapping_stats'
+include { SCAFFOLDING_YAHS                     } from '../../../subworkflows/local/scaffolding_yahs'
 
 workflow SCAFFOLDING {
     take:

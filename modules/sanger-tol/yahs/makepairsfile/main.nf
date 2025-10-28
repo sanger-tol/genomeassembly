@@ -1,6 +1,6 @@
 process YAHS_MAKEPAIRSFILE {
     tag "${meta.id}"
-    label "process_low"
+    label "process_medium"
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -19,6 +19,7 @@ process YAHS_MAKEPAIRSFILE {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def buffer_mem  = (task.memory.toGiga() / 2).round()
     """
     gawk '
         BEGIN {
@@ -38,8 +39,11 @@ process YAHS_MAKEPAIRSFILE {
         BEGIN { OFS = "\t" }
         \$3 > 0 && \$7 > 0 {print ".", \$2, \$3, \$6, \$7, ".", "."}
     ' |\\
-    LC_ALL=C sort -k2,2d -k4,4d -S50G >>\\
-    ${prefix}.pairs
+    LC_ALL=C sort -k2,2d -k4,4d \\
+        -S${buffer_mem}G \\
+        -T . \\
+        --parallel=${task.cpus} >>\\
+        ${prefix}.pairs
 
     bgzip -@${task.cpus} ${prefix}.pairs
 

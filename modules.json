@@ -43,7 +43,7 @@
                     "bwamem2/index": {
                         "branch": "master",
                         "git_sha": "d86336f3e7ae0d5f76c67b0859409769cfeb2af2",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["cram_map_illumina_hic", "modules"]
                     },
                     "cat/cat": {
                         "branch": "master",
@@ -129,7 +129,7 @@
                     "minimap2/index": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["cram_map_illumina_hic", "modules"]
                     },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
@@ -189,7 +189,7 @@
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["bam_samtools_merge_markdup", "modules"]
                     },
                     "samtools/fixmate": {
                         "branch": "master",
@@ -209,17 +209,17 @@
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["cram_map_illumina_hic", "modules"]
                     },
                     "samtools/markdup": {
                         "branch": "master",
                         "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["bam_samtools_merge_markdup", "modules"]
                     },
                     "samtools/merge": {
                         "branch": "master",
                         "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
-                        "installed_by": ["hic_mapping", "modules"]
+                        "installed_by": ["bam_samtools_merge_markdup", "modules"]
                     },
                     "samtools/sort": {
                         "branch": "master",
@@ -290,17 +290,17 @@
                     "cramalign/bwamem2alignhic": {
                         "branch": "main",
                         "git_sha": "af9a2354a79250dcdf2805c032b654945fd8d8e2",
-                        "installed_by": ["hic_mapping"]
+                        "installed_by": ["cram_map_illumina_hic"]
                     },
                     "cramalign/gencramchunks": {
                         "branch": "main",
-                        "git_sha": "dd140690958d9250b0b50548fdcb9a9c7e3bf808",
-                        "installed_by": ["hic_mapping"]
+                        "git_sha": "a32955f23de4a104624d980899ddaeadf41ec86b",
+                        "installed_by": ["cram_map_illumina_hic"]
                     },
                     "cramalign/minimap2alignhic": {
                         "branch": "main",
                         "git_sha": "af9a2354a79250dcdf2805c032b654945fd8d8e2",
-                        "installed_by": ["hic_mapping"]
+                        "installed_by": ["cram_map_illumina_hic"]
                     },
                     "longranger/align": {
                         "branch": "main",
@@ -314,21 +314,26 @@
                     },
                     "yahs/makepairsfile": {
                         "branch": "main",
-                        "git_sha": "3883255e2264d88665f15424251e9db4560db35c",
+                        "git_sha": "12a5521bd8ff0a62a7fa1954f76062fe4fb695aa",
                         "installed_by": ["modules"]
                     }
                 }
             },
             "subworkflows": {
                 "sanger-tol": {
+                    "bam_samtools_merge_markdup": {
+                        "branch": "main",
+                        "git_sha": "032434b9a6e95f97c88d172024cbfdb735d08c52",
+                        "installed_by": ["cram_map_illumina_hic"]
+                    },
+                    "cram_map_illumina_hic": {
+                        "branch": "main",
+                        "git_sha": "5925f150652e4fe772b59bd1d6885db88d86c982",
+                        "installed_by": ["subworkflows"]
+                    },
                     "genome_statistics": {
                         "branch": "main",
                         "git_sha": "728c0130ddd81ca3a2abbcde2b3724ceb44707d0",
-                        "installed_by": ["subworkflows"]
-                    },
-                    "hic_mapping": {
-                        "branch": "main",
-                        "git_sha": "dd140690958d9250b0b50548fdcb9a9c7e3bf808",
                         "installed_by": ["subworkflows"]
                     }
                 }

@@ -1,13 +1,14 @@
 nextflow_workflow {
 
-    name "Test Subworkflow HIC_MAPPING"
+    name "Test Subworkflow CRAM_MAP_ILLUMINA_HIC"
     script "../main.nf"
-    workflow "HIC_MAPPING"
+    workflow "CRAM_MAP_ILLUMINA_HIC"
     config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows_sangertol"
-    tag "subworkflows/hic_mapping"
+    tag "subworkflows/cram_map_illumina_hic"
+    tag "subworkflows/bam_samtools_merge_markdup"
     tag "cramalign/gencramchunks"
     tag "cramalign/bwamem2alignhic"
     tag "cramalign/minimap2alignhic"
