@@ -109,11 +109,7 @@
         },
         {
             "@id": "main.nf",
-            "@type": [
-                "File",
-                "SoftwareSourceCode",
-                "ComputationalWorkflow"
-            ],
+            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
             "creator": [
                 {
                     "@id": "https://orcid.org/0000-0002-7175-0533"
@@ -125,29 +121,17 @@
             "dateCreated": "",
             "dateModified": "2025-09-24T13:44:57Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-            "keywords": [
-                "nf-core",
-                "nextflow"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "name": [
-                "sanger-tol/genomeassembly"
-            ],
+            "keywords": ["nf-core", "nextflow"],
+            "license": ["MIT"],
+            "name": ["sanger-tol/genomeassembly"],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": [
-                "https://github.com/sanger-tol/genomeassembly",
-                "https://nf-co.re/sanger-tol/genomeassembly/dev/"
-            ],
-            "version": [
-                "0.10.1dev"
-            ]
+            "url": ["https://github.com/sanger-tol/genomeassembly", "https://nf-co.re/sanger-tol/genomeassembly/dev/"],
+            "version": ["0.10.1dev"]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -159,14 +143,14 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=24.10.5"
+            "version": "!>=25.04.0"
         },
         {
-            "@id": "#5e3335f6-04a4-480a-ac2d-6186a2b5bcf2",
+            "@id": "#9c8d7f44-ff57-4320-8965-d0ffd98cf5bf",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#16167299-9b16-4b4e-8e60-440b5e282376"
+                    "@id": "#2cbbb71b-69bc-4890-b0cd-b82613f33194"
                 }
             ],
             "mainEntity": {
@@ -175,7 +159,7 @@
             "name": "Test suite for sanger-tol/genomeassembly"
         },
         {
-            "@id": "#16167299-9b16-4b4e-8e60-440b5e282376",
+            "@id": "#2cbbb71b-69bc-4890-b0cd-b82613f33194",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing sanger-tol/genomeassembly",
             "resource": "repos/sanger-tol/genomeassembly/actions/workflows/nf-test.yml",
