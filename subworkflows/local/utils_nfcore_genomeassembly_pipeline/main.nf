@@ -65,7 +65,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;34m |_____/ \\__,_|_| |_|\\__, |\\___|_|        \033[0;32m|_|\033[0;33m\\___/\033[0;31m|______|\033[0m
 \033[0;34m                      __/ |\033[0m
 \033[0;34m                     |___/\033[0m
-\033[0;35m  ${manifest.name} ${manifest.version}\033[0m
+\033[0;35m  ${workflow.manifest.name} ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
         """
     after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
