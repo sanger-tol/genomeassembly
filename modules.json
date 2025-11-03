@@ -108,7 +108,7 @@
                     },
                     "juicertools/pre": {
                         "branch": "master",
-                        "git_sha": "af05fd9d2209e6daaf48a8d8b4739651a1ed5316",
+                        "git_sha": "ea3e4d5e313c4e05720ba86c41d083c7e4517629",
                         "installed_by": ["modules"]
                     },
                     "merquryfk/hapmaker": {
