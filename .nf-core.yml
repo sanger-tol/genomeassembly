@@ -38,7 +38,7 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-nf_core_version: 3.3.2
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   org: sanger-tol

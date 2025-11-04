@@ -1,31 +1,47 @@
-cff-version: 1.2.0
-title: "sanger-tol/genomeassembly: v0.9.0 - Black Fury"
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
-type: software
 authors:
   - affiliation: Wellcome Sanger Institute
-    family-names: Krasheninnikova
-    given-names: Ksenia
-    orcid: 0000-0002-0604-2047
-  - affiliation: Wellcome Trust Sanger Institute
-    family-names: Qi
-    given-names: Guoying
-    orcid: 0000-0003-1262-8973
+    email: jd42@sanger.ac.uk
+    family-names: Downie
+    given-names: Jim
+    orcid: https://orcid.org/0000-0002-7175-0533
+    website: https://github.com/prototaxites
   - affiliation: Wellcome Sanger Institute
+    email: kk16@sanger.ac.uk
+    family-names: Krashennikova
+    given-names: Ksenia
+    orcid: https://orcid.org/0000-0002-0604-2047
+    website: https://github.com/ksenia-krasheninnikova
+  - affiliation: Wellcome Sanger Institute
+    email: mm49@sanger.ac.uk
     family-names: Muffato
     given-names: Matthieu
-    orcid: 0000-0002-7860-3560
+    orcid: https://orcid.org/0000-0002-7860-3560
+    website: https://github.com/muffato
   - affiliation: Wellcome Sanger Institute
+    email: gq2@sanger.ac.uk
+    family-names: Qi
+    given-names: Guoying
+    orcid: https://orcid.org/0000-0003-1262-8973
+    website: https://github.com/gq1
+  - affiliation: Wellcome Sanger Institute
+    email: yy5@sanger.ac.uk
+    family-names: Sims
+    given-names: Yumi
+    orcid: https://orcid.org/0000-0003-4765-4872
+    website: https://github.com/yumisims
+  - affiliation: Wellcome Sanger Institute
+    email: ps22@sanger.ac.uk
     family-names: Surana
     given-names: Priyanka
-    orcid: 0000-0002-7167-0875
-identifiers:
-  - type: doi
-    value: 10.5281/zenodo.10391852
-repository-code: "https://github.com/sanger-tol/genomeassembly"
+    orcid: https://orcid.org/0000-0002-7167-0875
+    website: https://github.com/priyanka-surana
+cff-version: 1.2.0
+date-released: "2025-11-04"
 license: MIT
-commit: TODO
-version: 0.9.0
-date-released: "2023-12-15"
+message: If you use this software, please cite it using the metadata from this file
+  and all references from CITATIONS.md .
+repository-code: https://github.com/sanger-tol/genomeassembly
+title: sanger-tol/genomeassembly v0.10.1dev
+type: software
+url: https://pipelines.tol.sanger.ac.uk/genomeassembly
+version: 0.10.1dev
