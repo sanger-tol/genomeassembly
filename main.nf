@@ -37,6 +37,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     busco_lineage_directory
     oatk_mito
     oatk_plastid
+    val_fastx_reads_per_chunk
 
     main:
 
@@ -52,7 +53,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         busco_lineage,
         busco_lineage_directory,
         oatk_mito,
-        oatk_plastid
+        oatk_plastid,
+        val_fastx_reads_per_chunk
     )
 }
 /*
@@ -91,7 +93,8 @@ workflow {
         PIPELINE_INITIALISATION.out.busco_lineage,
         params.busco_lineage_directory,
         PIPELINE_INITIALISATION.out.oatk_mito,
-        PIPELINE_INITIALISATION.out.oatk_plastid
+        PIPELINE_INITIALISATION.out.oatk_plastid,
+        params.purging_reads_map_per_chunk
     )
     //
     // SUBWORKFLOW: Run completion tasks

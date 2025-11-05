@@ -83,6 +83,11 @@
             "description": "",
             "default": "",
             "properties": {
+                "purging_reads_map_per_chunk": {
+                    "type": "integer",
+                    "default": 500000,
+                    "description": "The number of long reads to map in a single chunk to an assembly during purging."
+                },
                 "purging_assemblytypes": {
                     "type": "string",
                     "default": "primary",
@@ -98,7 +103,8 @@
                     "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
                     "pattern": "\\d+,\\d+,\\d+"
                 }
-            }
+            },
+            "required": ["purging_reads_map_per_chunk"]
         },
         "polishing_options": {
             "title": "Polishing options",

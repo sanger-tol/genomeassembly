@@ -36,12 +36,11 @@ Overhaul raw assembly subworkflow (by @prototaxites):
 
 Overhaul purging subworkflow (by @prototaxites):
 
-- Rename PURGE_DUPS to PURGING
-- Add parameter purging_assemblytypes which takes a comma-separated list of types of assembly ("primary", "hic_phased", "trio_binned") to define which assembly types to purge. (default "primary")
-- Add parameter purging_purge_middle which if set removes the -e arg from the purgedups/getseqs command, allowing purging in the middle of contigs
-- Add parameter purging_cutoffs which if set overrides the automatic setting of the purge_dups calcuts cutoff parameters. Must be a comma-separated string with three entries - e.g. "5,20,100".
-- Remove GET_CALCUTS_PARAMS and calculate these args directly from the coverage meta value
-- Move the re-concatentation of purged haplotigs and the alternate assembly inside the PURGING subworkflow
+- Use new sanger-tol fasta_purge_retained_haplotype subworkflow:
+  - Add parameter purging_reads_map_per_chunk which defines the number of long reads to map to an assembly during coverage estimation in each chunk.
+  - Add parameter purging_assemblytypes which takes a comma-separated list of types of assembly ("primary", "hic_phased", "trio_binned") to define which assembly types to purge. (default "primary")
+  - Add parameter purging_purge_middle which if set removes the -e arg from the purgedups/getseqs command, allowing purging in the middle of contigs
+  - Add parameter purging_cutoffs which if set overrides the automatic setting of the purge_dups calcuts cutoff parameters. Must be a comma-separated string with three entries - e.g. "5,20,100".
 
 Overhaul polishing subworkflow (by @prototaxites):
 
