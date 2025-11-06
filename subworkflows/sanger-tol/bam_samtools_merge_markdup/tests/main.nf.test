@@ -10,6 +10,7 @@ nextflow_workflow {
     tag "samtools"
     tag "subworkflows/../../modules/nf-core/samtools/faidx"
     tag "subworkflows/../../modules/nf-core/samtools/merge"
+    tag "subworkflows/../../modules/nf-core/samtools/index"
     tag "subworkflows/../../modules/nf-core/samtools/markdup"
 
     config "./nextflow.config"
@@ -19,9 +20,10 @@ nextflow_workflow {
         nfcoreInstall(
             "${launchDir}/library/",
             [
+                "samtools/faidx",
+                "samtools/index",
                 "samtools/merge",
-                "samtools/markdup",
-                "samtools/faidx"
+                "samtools/markdup"
             ]
         )
         nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
@@ -55,6 +57,7 @@ nextflow_workflow {
             assertAll(
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
                     workflow.out.versions
                 ).match() }
             )
@@ -93,6 +96,7 @@ nextflow_workflow {
             assertAll(
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
                     workflow.out.versions
                 ).match() }
             )
