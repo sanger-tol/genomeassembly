@@ -36,7 +36,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     busco_lineage
     busco_lineage_directory
     oatk_mito
-    oatk_plastid,
+    oatk_plastid
     val_fastx_reads_per_chunk
 
     main:
