@@ -9,7 +9,7 @@ sequencing_data:
       - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/pacbio/fasta/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.trim.fasta.gz
   hic:
     reads:
-      - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#3.cram
+      - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram
     hic_motif:
       - GATC
       - GANTC
@@ -20,3 +20,4 @@ databases:
     lineage: insecta_odb12
   oatk:
     mito_hmm: https://github.com/c-zhou/OatkDB/raw/refs/heads/main/v20230921/insecta_mito.fam
+    pltd_hmm: ""
