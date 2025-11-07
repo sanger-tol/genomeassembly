@@ -39,7 +39,8 @@ workflow GENOMEASSEMBLY {
     val_busco_lineage
     val_busco_lineage_directory
     val_mito_hmm
-    val_plastid_hmm
+    val_plastid_hmm,
+    val_fastx_reads_per_chunk
 
     main:
     ch_versions = Channel.empty()
