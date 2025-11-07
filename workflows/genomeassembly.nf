@@ -39,7 +39,7 @@ workflow GENOMEASSEMBLY {
     val_busco_lineage
     val_busco_lineage_directory
     val_mito_hmm
-    val_plastid_hmm,
+    val_plastid_hmm
     val_fastx_reads_per_chunk
 
     main:
@@ -104,8 +104,8 @@ workflow GENOMEASSEMBLY {
     ch_purging_inputs =  ch_assemblies_to_purge.purge
         | combine(ch_long_reads_after_kmers)
         | multiMap { meta, hap1, hap2, meta_reads, reads ->
-            assemblies: [meta, hap1, hap2]
-            reads: [meta, reads]
+            assemblies: [ meta, hap1, hap2 ]
+            reads: [ meta, reads ]
         }
 
     PURGING(
