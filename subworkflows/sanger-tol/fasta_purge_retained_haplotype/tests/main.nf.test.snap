@@ -1,0 +1,382 @@
+{
+    "Undibacterium unclassified - hap1/hap2 - hifi": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
+                        "test.fa:md5,cd38bf45ddba78787705257b840f6568"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
+                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
+                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
+                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
+                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d",
+                    "versions.yml:md5,c9411452b63f327d2a5b66a82b8fd621",
+                    "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
+                    "versions.yml:md5,f7b0f31fa50eff25352b3aac997dfe71",
+                    "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ],
+                "purged_assemblies": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
+                        "test.fa:md5,cd38bf45ddba78787705257b840f6568"
+                    ]
+                ],
+                "purged_haplotigs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "purgedups_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                    ]
+                ],
+                "purgedups_calcuts_cutoffs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                    ]
+                ],
+                "purgedups_calcuts_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                    ]
+                ],
+                "purgedups_histplot": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                    ]
+                ],
+                "purgedups_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                    ]
+                ],
+                "purgedups_pbcstat_basecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                    ]
+                ],
+                "purgedups_pbcstat_hist": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
+                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
+                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
+                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
+                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d",
+                    "versions.yml:md5,c9411452b63f327d2a5b66a82b8fd621",
+                    "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
+                    "versions.yml:md5,f7b0f31fa50eff25352b3aac997dfe71",
+                    "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-31T13:07:19.058159"
+    },
+    "Undibacterium unclassified - hap1 only - hifi": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
+                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
+                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
+                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
+                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d",
+                    "versions.yml:md5,c9411452b63f327d2a5b66a82b8fd621",
+                    "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
+                    "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ],
+                "purged_assemblies": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "purged_haplotigs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                    ]
+                ],
+                "purgedups_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                    ]
+                ],
+                "purgedups_calcuts_cutoffs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                    ]
+                ],
+                "purgedups_calcuts_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                    ]
+                ],
+                "purgedups_histplot": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                    ]
+                ],
+                "purgedups_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                    ]
+                ],
+                "purgedups_pbcstat_basecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                    ]
+                ],
+                "purgedups_pbcstat_hist": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
+                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
+                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
+                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
+                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,ab1b6b619f2ad229f2b03e05fad2c409",
+                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d",
+                    "versions.yml:md5,c9411452b63f327d2a5b66a82b8fd621",
+                    "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
+                    "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-10-31T13:08:47.321709"
+    }
+}

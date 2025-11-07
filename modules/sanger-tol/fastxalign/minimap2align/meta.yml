@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "fastxalign_minimap2align"
+description: |
+  Aligns a subset of sequencing reads from a FASTx file to a reference genome using minimap2. Can either
+  output the alignment in PAF format, or alternatively will pipe the resulting alignments through
+  samtools view and samtools sort, outputting an alignment in BAM format.
+keywords:
+  - align
+  - fasta
+  - fastq
+  - chunk
+  - paf
+tools:
+  - pyfastx:
+      description: |
+        The pyfastx is a lightweight Python C extension that enables users to randomly access to sequences
+        from plain and gzipped FASTA/Q files. This module aims to provide simple APIs for users to extract
+        seqeunce from FASTA and reads from FASTQ by identifier and index number.
+      homepage: "https://github.com/lmdu/pyfastx"
+      licence: ["MIT"]
+      identifier: ""
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+  - minimap2:
+      description: |
+        A versatile pairwise aligner for genomic and spliced nucleotide sequences.
+      homepage: https://github.com/lh3/minimap2
+      documentation: https://github.com/lh3/minimap2#uguide
+      licence: ["MIT"]
+      identifier: "biotools:minimap2"
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - fastx:
+        type: file
+        description: FASTx file of reads to map a chunk of
+        pattern: "*.{fasta,fa,fasta.gz,fa.gz,fq,fq.gz}"
+        ontologies:
+          - edam: "http://edamontology.org/format_2546" # FASTA-like
+    - fxi:
+        type: file
+        description: FXI index file of the input created by pyfastx
+        pattern: "*.fxi"
+        ontologies: []
+    - chunkn:
+        type: integer
+        description: Integer index of FASTA chunk to map
+    - range:
+        type: list
+        description: Start and end indices defining FASTA slices to align, 0-indexed
+    - reference:
+        type: file
+        description: FASTA file or minimap2 index of the reference to be aligned to
+        ontologies: []
+  - bam_format:
+      type: boolean
+      description: Output PAF format or BAM format alignments
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.bam":
+          type: file
+          description: BAM file of mapped sequences
+          pattern: "*.bam"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572" # BAM
+  paf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.paf.gz":
+          type: file
+          description: bgzipped PAF file of mapped sequences
+          pattern: "*.paf.gz"
+          ontologies:
+            - edam: "http://edamontology.org/format_3475" # TSV
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"
