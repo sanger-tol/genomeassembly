@@ -117,7 +117,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: Add metadata to purged assemblies
     //
-    ch_assemblies_purged = PURGING.out.assemblies
+    ch_assemblies_purged = PURGING.out.purged_assemblies
         | map { meta, hap1, hap2 ->
             def meta_new = meta + [assembly_stage: "purged"]
             [meta_new, hap1, hap2]
