@@ -89,7 +89,7 @@ workflow SCAFFOLDING {
 
     ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1
         | join(ch_assemblies_scaffolded_split.hap2)
-i
+
     emit:
     assemblies        = ch_assemblies_scaffolded
     agp               = SCAFFOLDING_YAHS.out.scaffolds_agp
