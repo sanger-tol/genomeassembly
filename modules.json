@@ -268,7 +268,7 @@
                     },
                     "yahs": {
                         "branch": "master",
-                        "git_sha": "2710e8fa2b359cd82cf3ca4113a7a2df0a64490d",
+                        "git_sha": "5c3c4f4753d55bd3ba93ce29ed1100e964c52f74",
                         "installed_by": ["fasta_bam_scaffolding_yahs", "modules"]
                     },
                     "yak/count": {
