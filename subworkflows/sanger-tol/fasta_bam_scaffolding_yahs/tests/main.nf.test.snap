@@ -1,0 +1,63 @@
+{
+    "Meles meles - bam - paternal": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_scaffolds_final.fa:md5,7fa274cfb5ecd15ea517bbb84f7ac55f"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_scaffolds_final.agp:md5,c45367a1fbf9b80f4c3208e12e230758"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.bin:md5,00812a61ba6f5829bbf9ec32ec08c986"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_inital_break_01.agp:md5,c45367a1fbf9b80f4c3208e12e230758"
+                ]
+            ],
+            [
+                
+            ],
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool",
+            "test.hic",
+            [
+                "versions.yml:md5,0d790a1c59be8e3698928ec4f3eb21fa",
+                "versions.yml:md5,0e1b23cb39d32b96117beb63184ea8d5",
+                "versions.yml:md5,27bc05f45d224d5c50eba15e347459eb",
+                "versions.yml:md5,62162e4e46df562e7d10651c3985295f",
+                "versions.yml:md5,6566eb04be34f7b2f6326e48abeb718f",
+                "versions.yml:md5,7464a51b20190d6ecd8c5a4d86d65c14",
+                "versions.yml:md5,bee1e55c754b95ae3a1fbae5c6b3723b",
+                "versions.yml:md5,c59de5267965067d513129fa86628c51",
+                "versions.yml:md5,cb7b53f3fd5f506b4723aee628852935",
+                "versions.yml:md5,e2e758afbeac58d22b3f6bba68eed819",
+                "versions.yml:md5,f45a50a14c5554be6b880039ac44a410"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-11-05T16:51:36.324811"
+    }
+}

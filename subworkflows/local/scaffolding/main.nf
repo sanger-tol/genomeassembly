@@ -1,6 +1,6 @@
-include { CRAM_MAP_ILLUMINA_HIC as HIC_MAPPING } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { HIC_MAPPING_STATS                    } from '../../../subworkflows/local/hic_mapping_stats'
-include { SCAFFOLDING_YAHS                     } from '../../../subworkflows/local/scaffolding_yahs'
+include { CRAM_MAP_ILLUMINA_HIC as HIC_MAPPING           } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { BAM_STATS_SAMTOOLS as HIC_MAPPING_STATS        } from '../subworkflows/nf-core/bam_stats_samtools/main'
+include { FASTA_BAM_SCAFFOLDING_YAHS as SCAFFOLDING_YAHS } from '../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main'
 
 workflow SCAFFOLDING {
     take:
@@ -48,9 +48,17 @@ workflow SCAFFOLDING {
     //
     // Subworkflow: Calculate stats for Hi-C mapping
     //
+    ch_hic_mapping_stats_input = HIC_MAPPING.out.bam
+        | combine(HIC_MAPPING.out.bam.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
+        | combine(ch_hic_mapping_inputs.asm, by: 0)
+        | multiMap { meta, bam, bai, asm ->
+            bam: [ meta, bam, bai ]
+            asm: [ meta, asm ]
+        }
+
     HIC_MAPPING_STATS(
-        HIC_MAPPING.out.bam,
-        ch_hic_mapping_inputs.asm
+        ch_hic_mapping_stats_input.bam,
+        ch_hic_mapping_stats_input.asm
     )
     ch_versions = ch_versions.mix(HIC_MAPPING_STATS.out.versions)
 
@@ -60,6 +68,9 @@ workflow SCAFFOLDING {
     SCAFFOLDING_YAHS(
         ch_hic_mapping_inputs.asm,
         HIC_MAPPING.out.bam,
+        true,
+        true,
+        true,
         val_cool_bin
     )
     ch_versions   = ch_versions.mix(SCAFFOLDING_YAHS.out.versions)
@@ -67,7 +78,7 @@ workflow SCAFFOLDING {
     //
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
-    ch_assemblies_scaffolded_split = SCAFFOLDING_YAHS.out.assemblies
+    ch_assemblies_scaffolded_split = SCAFFOLDING_YAHS.out.scaffolds_fasta
         | branch { meta, assembly ->
             def meta_new = meta - meta.subMap("_hap")
             hap1: meta._hap == "hap1"
@@ -78,9 +89,18 @@ workflow SCAFFOLDING {
 
     ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1
         | join(ch_assemblies_scaffolded_split.hap2)
-
+i
     emit:
-    assemblies = ch_assemblies_scaffolded
-    bam        = HIC_MAPPING.out.bam
+    assemblies        = ch_assemblies_scaffolded
+    agp               = SCAFFOLDING_YAHS.out.scaffolds_agp
+    hic_bin           = SCAFFOLDING_YAHS.out.yahs_bin
+    bam               = HIC_MAPPING.out.bam
+    yahs_inital       = SCAFFOLDING_YAHS.out.yahs_inital
+    yahs_intermediate = SCAFFOLDING_YAHS.out.yahs_intermediate
+    yahs_log          = SCAFFOLDING_YAHS.out.yahs_log
+    pretext           = SCAFFOLDING_YAHS.out.pretext
+    pretext_png       = SCAFFOLDING_YAHS.out.pretext_png
+    cool              = SCAFFOLDING_YAHS.out.cool
+    hic               = SCAFFOLDING_YAHS.out.hic
     versions   = ch_versions
 }
