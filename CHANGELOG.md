@@ -57,6 +57,7 @@ Overhaul Hi-C mapping subworkflow (by @prototaxites):
 - Use new sanger-tol shared Hi-C mapping subworkflow
 - This can map with both bwa-mem2 or minimap + implements CRAM chunking
 - only runs if --enable_scaffolding set
+- use nf-core bam_stats_samtools subworkflow for mapping statistics
 
 Overhaul scaffolding subworkflow (by @prototaxites):
 
