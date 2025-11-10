@@ -5,22 +5,22 @@
 */
 
 // Modules
-include { CAT_CAT as CONCATENATE_ASSEMBLIES     } from '../modules/nf-core/cat/cat'
-include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS } from '../modules/nf-core/seqkit/grep/main'
+include { CAT_CAT as CONCATENATE_ASSEMBLIES         } from '../modules/nf-core/cat/cat'
+include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
-include { GENOME_STATISTICS                     } from '../subworkflows/sanger-tol/genome_statistics'
-include { KMERS                                 } from '../subworkflows/local/kmers'
-include { ORGANELLE_ASSEMBLY                    } from '../subworkflows/local/organelle_assembly'
-include { POLISHING_10X                         } from '../subworkflows/local/polishing_10X'
-include { PURGING                               } from '../subworkflows/local/purging'
-include { RAW_ASSEMBLY                          } from '../subworkflows/local/raw_assembly'
-include { SCAFFOLDING                           } from '../subworkflows/local/scaffolding'
+include { GENOME_STATISTICS                         } from '../subworkflows/sanger-tol/genome_statistics'
+include { KMERS                                     } from '../subworkflows/local/kmers'
+include { ORGANELLE_ASSEMBLY                        } from '../subworkflows/local/organelle_assembly'
+include { POLISHING_10X                             } from '../subworkflows/local/polishing_10X'
+include { FASTA_PURGE_RETAINED_HAPLOTYPE as PURGING } from '../subworkflows/sanger-tol/fasta_purge_retained_haplotype/main'
+include { RAW_ASSEMBLY                              } from '../subworkflows/local/raw_assembly'
+include { SCAFFOLDING                               } from '../subworkflows/local/scaffolding'
 
 // Functions
-include { paramsSummaryMap                      } from 'plugin/nf-schema'
-include { softwareVersionsToYAML                } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+include { paramsSummaryMap                          } from 'plugin/nf-schema'
+include { softwareVersionsToYAML                    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                    } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,6 +40,7 @@ workflow GENOMEASSEMBLY {
     val_busco_lineage_directory
     val_mito_hmm
     val_plastid_hmm
+    val_fastx_reads_per_chunk
 
     main:
     ch_versions = Channel.empty()
@@ -100,16 +101,24 @@ workflow GENOMEASSEMBLY {
             no_purge: true
         }
 
+    ch_purging_inputs =  ch_assemblies_to_purge.purge
+        | combine(ch_long_reads_after_kmers)
+        | multiMap { meta, hap1, hap2, meta_reads, reads ->
+            assemblies: [ meta, hap1, hap2 ]
+            reads: [ meta, reads ]
+        }
+
     PURGING(
-        ch_assemblies_to_purge.purge,
-        ch_long_reads_after_kmers
+        ch_purging_inputs.assemblies,
+        ch_purging_inputs.reads,
+        val_fastx_reads_per_chunk
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
 
     //
     // Logic: Add metadata to purged assemblies
     //
-    ch_assemblies_purged = PURGING.out.assemblies
+    ch_assemblies_purged = PURGING.out.purged_assemblies
         | map { meta, hap1, hap2 ->
             def meta_new = meta + [assembly_stage: "purged"]
             [meta_new, hap1, hap2]
