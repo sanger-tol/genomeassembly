@@ -1,6 +1,6 @@
 include { CRAM_MAP_ILLUMINA_HIC as HIC_MAPPING           } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { BAM_STATS_SAMTOOLS as HIC_MAPPING_STATS        } from '../subworkflows/nf-core/bam_stats_samtools/main'
-include { FASTA_BAM_SCAFFOLDING_YAHS as SCAFFOLDING_YAHS } from '../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main'
+include { BAM_STATS_SAMTOOLS as HIC_MAPPING_STATS        } from '../../../subworkflows/nf-core/bam_stats_samtools/main'
+include { FASTA_BAM_SCAFFOLDING_YAHS as SCAFFOLDING_YAHS } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main'
 
 workflow SCAFFOLDING {
     take:
