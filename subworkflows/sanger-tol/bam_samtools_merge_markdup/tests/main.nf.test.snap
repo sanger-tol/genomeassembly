@@ -15,15 +15,19 @@
                 }
             ],
             [
+                "test.bam.bai"
+            ],
+            [
                 "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
-                "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5"
+                "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5",
+                "versions.yml:md5,ee751dfa1a107d10d7f5f5a9a99d7cf6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-21T14:30:16.602926"
+        "timestamp": "2025-11-05T09:38:37.205974"
     },
     "Undibacterium unclassified - hap1 - markdup": {
         "content": [
@@ -41,15 +45,19 @@
                 }
             ],
             [
+                "test.markdup.bam.bai"
+            ],
+            [
                 "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
                 "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5",
-                "versions.yml:md5,9c798a363e3c7297bebbaa008aefe259"
+                "versions.yml:md5,9c798a363e3c7297bebbaa008aefe259",
+                "versions.yml:md5,ee751dfa1a107d10d7f5f5a9a99d7cf6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-21T14:33:09.850931"
+        "timestamp": "2025-11-05T09:38:56.796292"
     }
 }

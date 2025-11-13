@@ -47,6 +47,12 @@ output:
         Channel containing the BAM files describing Hi-C alignments to the input assemblies
         Structure: [ val(meta), path(bam) ]
       pattern: "*.bam"
+  - bam_index:
+      type: file
+      description: |
+        Channel containing the indexes for the output BAM
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bai,csi,crai}"
   - versions:
       type: file
       description: |

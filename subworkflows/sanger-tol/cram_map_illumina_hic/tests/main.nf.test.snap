@@ -26,6 +26,10 @@
                 }
             ],
             [
+                "test2.mkdup.bam.bai",
+                "test.mkdup.bam.bai"
+            ],
+            [
                 "versions.yml:md5,408ffba01af9831d7188035990fe0092",
                 "versions.yml:md5,408ffba01af9831d7188035990fe0092",
                 "versions.yml:md5,567f8f10654341281642de9826ceba8b",
@@ -39,14 +43,16 @@
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
                 "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
-                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54"
+                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
+                "versions.yml:md5,eb0b092cb272bdf3cf57a6388431cef6",
+                "versions.yml:md5,eb0b092cb272bdf3cf57a6388431cef6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-27T17:44:02.114806"
+        "timestamp": "2025-11-05T09:43:24.738728"
     },
     "meles meles - bwamem2": {
         "content": [
@@ -64,20 +70,24 @@
                 }
             ],
             [
+                "test.mkdup.bam.bai"
+            ],
+            [
                 "versions.yml:md5,408ffba01af9831d7188035990fe0092",
                 "versions.yml:md5,567f8f10654341281642de9826ceba8b",
                 "versions.yml:md5,6506bd5d600b4c2b5c9d51ab1e559772",
                 "versions.yml:md5,6a676d249165bcef19b33bdd3be83e78",
                 "versions.yml:md5,6a676d249165bcef19b33bdd3be83e78",
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
-                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54"
+                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
+                "versions.yml:md5,eb0b092cb272bdf3cf57a6388431cef6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-27T17:36:57.772628"
+        "timestamp": "2025-11-05T09:42:30.615641"
     },
     "meles meles - minimap2": {
         "content": [
@@ -95,20 +105,24 @@
                 }
             ],
             [
+                "test.mkdup.bam.bai"
+            ],
+            [
                 "versions.yml:md5,408ffba01af9831d7188035990fe0092",
                 "versions.yml:md5,567f8f10654341281642de9826ceba8b",
                 "versions.yml:md5,57921e27b2a928b57e3419eb0e2cdfae",
                 "versions.yml:md5,95e0f5692187ae002f2dc5c27f09b239",
                 "versions.yml:md5,95e0f5692187ae002f2dc5c27f09b239",
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
-                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54"
+                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
+                "versions.yml:md5,eb0b092cb272bdf3cf57a6388431cef6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-27T17:45:16.376257"
+        "timestamp": "2025-11-05T09:44:41.78078"
     },
     "meles meles - bwamem2 - multiple samples - meta mismatch": {
         "content": [
@@ -126,6 +140,9 @@
                 }
             ],
             [
+                "test.mkdup.bam.bai"
+            ],
+            [
                 "versions.yml:md5,408ffba01af9831d7188035990fe0092",
                 "versions.yml:md5,567f8f10654341281642de9826ceba8b",
                 "versions.yml:md5,6506bd5d600b4c2b5c9d51ab1e559772",
@@ -135,13 +152,14 @@
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
                 "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f",
                 "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
-                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54"
+                "versions.yml:md5,d36134f61f1cf5af8f9aef2454a94e54",
+                "versions.yml:md5,eb0b092cb272bdf3cf57a6388431cef6"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-10-27T17:44:45.066576"
+        "timestamp": "2025-11-05T09:44:09.231719"
     }
 }
