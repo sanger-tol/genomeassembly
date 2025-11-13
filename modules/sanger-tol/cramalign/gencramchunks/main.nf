@@ -4,12 +4,12 @@ process CRAMALIGN_GENCRAMCHUNKS {
 
     input:
     // Native processes can't take path values as inputs
-    tuple val(meta), val(crai)
+    tuple val(meta), val(cram), val(crai)
     val cram_bin_size
 
     output:
-    tuple val(meta), val(chunkn), val(slices), emit: cram_slices
-    path("versions.yml")                     , emit: versions
+    tuple val(meta), val(cram), val(crai), val(chunkn), val(slices), emit: cram_slices
+    path("versions.yml")                                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
