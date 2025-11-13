@@ -1,6 +1,6 @@
 process FASTXALIGN_PYFASTXINDEX {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_single'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,8 +11,8 @@ process FASTXALIGN_PYFASTXINDEX {
     tuple val(meta), path(fastx)
 
     output:
-    tuple val(meta), path("*.fxi"), stdout, emit: index
-    path "versions.yml"                   , emit: versions
+    tuple val(meta), path(fastx), path("*.fxi"), stdout, emit: index
+    path "versions.yml"                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -98,4 +98,54 @@ nextflow_workflow {
         }
     }
 
+    test("Undibacterium unclassified - Meles meles - fasta - bam - double files") {
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test2' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test2' ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/pacbio/m64094_200910_173211.ccs.bc1022_BAK8B_OA--bc1022_BAK8B_OA.subset.5000.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/pacbio/m64094_200911_174739.ccs.bc1022_BAK8B_OA--bc1022_BAK8B_OA.subset.fastq.gz', checkIfExists: true)
+                        ]
+                    ]
+                )
+                input[2] = 1000
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() }.sort(),
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
 }

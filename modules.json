@@ -323,7 +323,7 @@
                     },
                     "cramalign/gencramchunks": {
                         "branch": "main",
-                        "git_sha": "a32955f23de4a104624d980899ddaeadf41ec86b",
+                        "git_sha": "8dde1442313b4f0a0902621eccbdfae6a2fdaae0",
                         "installed_by": ["cram_map_illumina_hic"]
                     },
                     "cramalign/minimap2alignhic": {
@@ -333,12 +333,12 @@
                     },
                     "fastxalign/minimap2align": {
                         "branch": "main",
-                        "git_sha": "241222a54a12404eca54981ad933b303141dfa04",
+                        "git_sha": "8dde1442313b4f0a0902621eccbdfae6a2fdaae0",
                         "installed_by": ["fastx_map_long_reads"]
                     },
                     "fastxalign/pyfastxindex": {
                         "branch": "main",
-                        "git_sha": "241222a54a12404eca54981ad933b303141dfa04",
+                        "git_sha": "f919028603ca42cb01a59e45475c19106840372d",
                         "installed_by": ["fastx_map_long_reads"]
                     },
                     "longranger/align": {
@@ -367,7 +367,7 @@
                     },
                     "cram_map_illumina_hic": {
                         "branch": "main",
-                        "git_sha": "30d0d3d309d1204e76c2118f1e036eea8df527dd",
+                        "git_sha": "8dde1442313b4f0a0902621eccbdfae6a2fdaae0",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_bam_scaffolding_yahs": {
@@ -382,7 +382,7 @@
                     },
                     "fastx_map_long_reads": {
                         "branch": "main",
-                        "git_sha": "30d0d3d309d1204e76c2118f1e036eea8df527dd",
+                        "git_sha": "8dde1442313b4f0a0902621eccbdfae6a2fdaae0",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "genome_statistics": {

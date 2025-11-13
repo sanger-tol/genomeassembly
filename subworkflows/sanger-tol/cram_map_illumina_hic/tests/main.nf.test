@@ -87,7 +87,7 @@ nextflow_workflow {
         }
     }
 
-    test("meles meles - bwamem2 - multiple samples") {
+    test("meles meles - zymo - bwamem2 - multiple samples - double files") {
 
         when {
 
@@ -109,7 +109,7 @@ nextflow_workflow {
                     ],
                     [
                         [ id:'test2' ], // meta map
-                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                        file(params.modules_testdata_base_path + 'Zymo_D6311_Metagenome/assembly/xyTesTing1_metamdbg.contigs.fasta.gz', checkIfExists: true)
                     ]
                 )
                 input[1] = Channel.of(
@@ -119,11 +119,14 @@ nextflow_workflow {
                     ],
                     [
                         [ id:'test2' ],
-                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                        [
+                            file(params.modules_testdata_base_path + 'Zymo_D6311_Metagenome/genomic_data/hic_sim3c/hic1.cram', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Zymo_D6311_Metagenome/genomic_data/hic_sim3c/hic2.250000.cram', checkIfExists: true)
+                        ]
                     ]
                 )
                 input[2] = "bwamem2"
-                input[3] = 1
+                input[3] = 5
                 """
             }
         }
