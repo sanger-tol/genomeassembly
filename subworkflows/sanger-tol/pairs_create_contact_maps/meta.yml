@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+name: "pairs_create_contact_maps"
+description: Build contact maps from pairs files using PretextMap, Juicertools, and Cooler
+keywords:
+  - pairs
+  - contact map
+  - hic
+components:
+  - cooler/cload:
+      git_remote: https://github.com/nf-core/modules.git
+  - cooler/zoomify:
+      git_remote: https://github.com/nf-core/modules.git
+  - gawk:
+      git_remote: https://github.com/nf-core/modules.git
+  - juicertools/pre:
+      git_remote: https://github.com/nf-core/modules.git
+  - pretextmap:
+      git_remote: https://github.com/nf-core/modules.git
+  - pretextsnapshot:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_pairs:
+      type: file
+      description: |
+        Input Hi-C pairs in pairs format (https://github.com/4dn-dcic/pairix/blob/master/pairs_format_specification.md).
+
+        Structure: [ val(meta), path(pairs) ]
+      pattern: "*.pairs.gz"
+  - ch_chrom_sizes:
+      type: file
+      description: |
+        Input chromosome sizes file - a TSV with two columns, name and size.
+
+        Structure: [ val(meta), path(sizes) ]
+      pattern: "*.{sizes,tsv}"
+  - val_build_pretext:
+      type: boolean
+      description: Build a PretextMap contact map
+  - val_build_cooler:
+      type: boolean
+      description: Build a Cooler contact map
+  - val_build_juicer:
+      type: boolean
+      description: Build a Juicer contact map
+  - val_cool_bin:
+      type: integer
+      description: Bin size for cooler
+output:
+  - pretext:
+      type: file
+      description: |
+        Contact map in PretextMap format.
+        Structure: [ val(meta), path(pretext) ]
+      pattern: "*.pretext"
+  - pretext_png:
+      type: file
+      description: |
+        PNG visualisation of the Pretext contact map.
+        Structure: [ val(meta), path(png) ]
+      pattern: "*.png"
+  - cool:
+      type: file
+      description: |
+        Contact map in mCooler format
+        Structure: [ val(meta), path(mcool) ]
+      pattern: "*.mcool"
+  - hic:
+      type: file
+      description: |
+        Contact map in Juicer format
+        Structure: [ val(meta), path(hic) ]
+      pattern: "*.hic"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

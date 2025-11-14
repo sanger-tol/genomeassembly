@@ -1,4 +1,5 @@
 include { SAMTOOLS_FAIDX   } from '../../../modules/nf-core/samtools/faidx/main'
+include { SAMTOOLS_INDEX   } from '../../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_MERGE   } from '../../../modules/nf-core/samtools/merge/main'
 include { SAMTOOLS_MARKDUP } from '../../../modules/nf-core/samtools/markdup/main'
 
@@ -10,7 +11,7 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     val_mark_duplicates // boolean: mark duplicates on output bam
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Module: Index assembly fastas
@@ -74,7 +75,26 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     )
     ch_versions = ch_versions.mix(SAMTOOLS_MARKDUP.out.versions)
 
+    //
+    // Logic: Choose output bam file depending on options
+    //
+    ch_output_bam = val_mark_duplicates ? SAMTOOLS_MARKDUP.out.bam : SAMTOOLS_MERGE.out.bam
+
+    //
+    // Module: Index output bam
+    //
+    SAMTOOLS_INDEX(ch_output_bam)
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
+
+    ch_bam_index = channel.empty()
+        | mix(
+            SAMTOOLS_INDEX.out.bai,
+            SAMTOOLS_INDEX.out.csi,
+            SAMTOOLS_INDEX.out.crai
+        )
+
     emit:
-    bam      = val_mark_duplicates ? SAMTOOLS_MARKDUP.out.bam : SAMTOOLS_MERGE.out.bam // channel: [ val(meta), [ bam ] ]
-    versions = ch_versions                                                             // channel: [ versions.yml ]
+    bam       = ch_output_bam // channel: [ val(meta), path(bam) ]
+    bam_index = ch_bam_index  // channel: [ val(meta), path(index) ]
+    versions  = ch_versions   // channel: [ versions.yml ]
 }

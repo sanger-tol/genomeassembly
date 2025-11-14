@@ -1,0 +1,226 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PAIRS_CREATE_CONTACT_MAPS"
+    script "../main.nf"
+    workflow "PAIRS_CREATE_CONTACT_MAPS"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/pairs_create_contact_maps"
+    tag "modules/nf-core/gawk"
+    tag "yahs/makepairsfile"
+    tag "subworkflows/../../modules/nf-core/cooler/cload"
+    tag "subworkflows/../../modules/nf-core/pretextsnapshot"
+    tag "subworkflows/../../modules/nf-core/pretextmap"
+    tag "subworkflows/../../modules/nf-core/cooler/zoomify"
+    tag "subworkflows/../../modules/nf-core/gawk"
+    tag "subworkflows/../../modules/nf-core/juicertools/pre"
+
+    config "./nextflow.config"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                "cooler/cload",
+                "cooler/zoomify",
+                "gawk",
+                "juicertools/pre",
+                "pretextmap",
+                "pretextsnapshot"
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+
+        run("YAHS_MAKEPAIRSFILE") {
+            script "../../../../modules/sanger-tol/yahs/makepairsfile/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/scaffolding/baUndUnlc1_hic_phased_hap2_scaffolds_final.fa.fai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/scaffolding/baUndUnlc1_hic_phased_hap2_scaffolds_final.agp', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/scaffolding/baUndUnlc1.hic.hap2.p_ctg.fa.fai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/scaffolding/baUndUnlc1_hic_phased_hap2.bin', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        run("GAWK") {
+            script "../../../../modules/nf-core/gawk/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/scaffolding/baUndUnlc1_hic_phased_hap2_scaffolds_final.fa.fai', checkIfExists: true),
+                ]
+                input[1] = channel.of('BEGIN { FS = OFS = "\\t" } { print \$1, \$2 }').collectFile(name: "sizes.awk")
+                input[2] = false
+                """
+            }
+        }
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - all maps") {
+
+        when {
+
+            params {
+                cooler_cload_args = '-0 -c1 2 -p1 3 -c2 4 -p2 5'
+                pretextsnapshot_args = '--sequences \"=full\"'
+                juicertools_args = "-r 20000"
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = true
+                input[3] = true
+                input[4] = true
+                input[5] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.pretext.get(0).get(1)).getName(),
+                    file(workflow.out.pretext_png.get(0).get(1)).getName(),
+                    file(workflow.out.cool.get(0).get(1)).getName(),
+                    file(workflow.out.hic.get(0).get(1)).getName(),
+                    workflow.out.versions,
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - no pretext") {
+
+        when {
+
+            params {
+                cooler_cload_args = '-0 -c1 2 -p1 3 -c2 4 -p2 5'
+                pretextsnapshot_args = '--sequences \"=full\"'
+                juicertools_args = "-r 20000"
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = false
+                input[3] = true
+                input[4] = true
+                input[5] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.cool.get(0).get(1)).getName(),
+                    file(workflow.out.hic.get(0).get(1)).getName(),
+                    workflow.out.versions,
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - no cooler") {
+
+        when {
+
+            params {
+                cooler_cload_args = '-0 -c1 2 -p1 3 -c2 4 -p2 5'
+                pretextsnapshot_args = '--sequences \"=full\"'
+                juicertools_args = "-r 20000"
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = true
+                input[3] = false
+                input[4] = true
+                input[5] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.pretext.get(0).get(1)).getName(),
+                    file(workflow.out.pretext_png.get(0).get(1)).getName(),
+                    file(workflow.out.hic.get(0).get(1)).getName(),
+                    workflow.out.versions,
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - no juicer") {
+
+        when {
+
+            params {
+                cooler_cload_args = '-0 -c1 2 -p1 3 -c2 4 -p2 5'
+                pretextsnapshot_args = '--sequences \"=full\"'
+                juicertools_args = "-r 20000"
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = true
+                input[3] = true
+                input[4] = false
+                input[5] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.pretext.get(0).get(1)).getName(),
+                    file(workflow.out.pretext_png.get(0).get(1)).getName(),
+                    file(workflow.out.cool.get(0).get(1)).getName(),
+                    workflow.out.versions,
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+}

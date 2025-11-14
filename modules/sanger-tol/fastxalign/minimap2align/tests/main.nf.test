@@ -40,12 +40,11 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
                     0,
                     [0, 500],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
                 ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, reads, chunkn, range, reference, index, count ->
+                .map { meta, chunkn, range, reference, reads, index, count ->
                     [ meta, reads, index, chunkn, range, reference ]
                 }
                 input[1] = true
@@ -79,12 +78,11 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
                     0,
                     [0, 500],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
                 ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, reads, chunkn, range, reference, index, count ->
+                .map { meta, chunkn, range, reference, reads, index, count ->
                     [ meta, reads, index, chunkn, range, reference ]
                 }
                 input[1] = true
@@ -118,12 +116,11 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
                     0,
                     [0, 500],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
                 ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, reads, chunkn, range, reference, index, count ->
+                .map { meta, chunkn, range, reference, reads, index, count ->
                     [ meta, reads, index, chunkn, range, reference ]
                 }
                 input[1] = false
@@ -156,12 +153,11 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
                     0,
                     [0, 500],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
                 ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, reads, chunkn, range, reference, index, count ->
+                .map { meta, chunkn, range, reference, reads, index, count ->
                     [ meta, reads, index, chunkn, range, reference ]
                 }
                 input[1] = true

@@ -36,6 +36,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'sample1' ]`
+      - fastx:
+          type: file
+          description: FASTx file of reads to index
+          pattern: "*.{fasta,fa,fasta.gz,fa.gz,fq,fq.gz}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2546" # FASTA-like
       - "*.fxi":
           type: file
           description: pyfastx-format FASTA index file

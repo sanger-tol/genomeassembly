@@ -19,18 +19,21 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. `[ id:'sample1' ]`
-
-    - crai:
+    - cram:
         type: file
         description: Sorted BAM/CRAM/SAM file
+        pattern: "*.cram"
+        ontologies:
+          - edam: "http://edamontology.org/format_3462" # CRAM
+    - crai:
+        type: file
+        description: Cram index file
         pattern: "*.crai"
         ontologies:
           - edam: "http://edamontology.org/format_3475" # TSV
-
   - cram_bin_size:
       type: integer
       description: Number of CRAM slices in each CRAM chunk
-
 output:
   cram_slices:
     - - meta:
@@ -38,12 +41,21 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'sample1' ]`
+      - cram:
+          type: file
+          description: Input CRAM file
           pattern: "*.cram"
           ontologies:
             - edam: "http://edamontology.org/format_3462" # CRAM
+      - crai:
+          type: file
+          description: Input CRAM index
+          pattern: "*.crai"
+          ontologies:
+            - edam: "http://edamontology.org/format_3475" # TSV
       - chunkn:
-          type: integer
-          description: CRAM chunk index
+          type: list
+          description: List containing CRAM chunk indexes
       - slices:
           type: list
           description: List containing the start and end slices of the CRAM chunk

@@ -16,7 +16,20 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     val_cram_chunk_size  // integer: Number of CRAM slices per chunk for mapping
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
+
+    //
+    // Logic: rolling check of assembly meta objects to detect duplicates
+    //
+    def val_asm_meta_list = Collections.synchronizedSet(new HashSet())
+
+    ch_assemblies
+        | map { meta, _sample ->
+            if (!val_asm_meta_list.add(meta)) {
+                error("Error: Duplicate meta object found in `ch_assemblies` in CRAM_MAP_ILLUMINA_HIC: ${meta}")
+            }
+            meta
+        }
 
     //
     // Logic: check if CRAM files are accompanied by an index
@@ -48,11 +61,8 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     // Module: Process the cram index files to determine how many
     //         chunks to split into for mapping
     //
-    ch_cram_indexes = ch_hic_cram_indexed
-        | map { meta, cram, index -> [ meta, index ] }
-
     CRAMALIGN_GENCRAMCHUNKS(
-        ch_cram_indexes,
+        ch_hic_cram_indexed,
         val_cram_chunk_size
     )
     ch_versions = ch_versions.mix(CRAMALIGN_GENCRAMCHUNKS.out.versions)
@@ -61,16 +71,10 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     // Logic: Count the total number of cram chunks for downstream grouping
     //
     ch_n_cram_chunks = CRAMALIGN_GENCRAMCHUNKS.out.cram_slices
-        | map { meta, chunkn, _slices -> [ meta, chunkn ] }
+        | map { meta, _cram, _crai, chunkn, _slices -> [ meta, chunkn ] }
         | transpose()
         | groupTuple(by: 0)
         | map { meta, chunkns -> [ meta, chunkns.size() ] }
-
-    //
-    // Logic: Re-join the cram files and indexes to their chunk information
-    //
-    ch_cram_with_slices = ch_hic_cram_indexed
-        | combine(CRAMALIGN_GENCRAMCHUNKS.out.cram_slices, by: 0)
 
     //
     // Logic: Begin alignment - fork depending on specified aligner
@@ -85,7 +89,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         ch_assemblies_with_reference = ch_assemblies
             | combine(BWAMEM2_INDEX.out.index, by: 0)
 
-        ch_cram_chunks = ch_cram_with_slices
+        ch_cram_chunks = CRAMALIGN_GENCRAMCHUNKS.out.cram_slices
             | transpose()
             | combine(ch_assemblies_with_reference, by: 0)
 
@@ -100,7 +104,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         MINIMAP2_INDEX(ch_assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
 
-        ch_cram_chunks = ch_cram_with_slices
+        ch_cram_chunks = CRAMALIGN_GENCRAMCHUNKS.out.cram_slices
             | transpose()
             | combine(MINIMAP2_INDEX.out.index, by: 0)
 
@@ -109,7 +113,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
 
         ch_mapped_bams = CRAMALIGN_MINIMAP2ALIGNHIC.out.bam
     } else {
-        log.error("Unsupported aligner: ${val_aligner}")
+        error("Unsupported aligner: ${val_aligner}")
     }
 
     //
@@ -137,6 +141,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     ch_versions = ch_versions.mix(BAM_SAMTOOLS_MERGE_MARKDUP.out.versions)
 
     emit:
-    bam      = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam
-    versions = ch_versions
+    bam       = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam
+    bam_index = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam_index
+    versions  = ch_versions
 }

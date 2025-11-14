@@ -16,6 +16,19 @@ workflow FASTX_MAP_LONG_READS {
     ch_versions = channel.empty()
 
     //
+    // Logic: rolling check of assembly meta objects to detect duplicates
+    //
+    def val_asm_meta_list = Collections.synchronizedSet(new HashSet())
+
+    ch_assemblies
+        | map { meta, _sample ->
+            if (!val_asm_meta_list.add(meta)) {
+                error("Error: Duplicate meta object found in `ch_assemblies` in FASTX_MAP_LONG_READS: ${meta}")
+            }
+            meta
+        }
+
+    //
     // Module: Index FASTA files
     //
     FASTXALIGN_PYFASTXINDEX(ch_fasta.transpose())
@@ -25,7 +38,7 @@ workflow FASTX_MAP_LONG_READS {
     // Logic: Identify FASTA chunks
     //
     ch_fastx_chunks = FASTXALIGN_PYFASTXINDEX.out.index
-        | map { meta, index, count ->
+        | map { meta, fasta, index, count ->
             def intcount = count.toInteger()
             def size     = val_reads_per_fasta_chunk
             def n_bins   = Math.ceil(intcount / size).toInteger()
@@ -37,14 +50,14 @@ workflow FASTX_MAP_LONG_READS {
                 return [ lower, upper ]
             }
 
-            return [ meta, index, chunkn, slices ]
+            return [ meta, fasta, index, chunkn, slices ]
         }
 
     //
     // Logic: Count the total number of cram chunks for downstream grouping
     //
     ch_n_fasta_chunks = ch_fastx_chunks
-        | map { meta, index, chunkn, _slices -> [ meta, chunkn ] }
+        | map { meta, _fasta, _index, chunkn, _slices -> [ meta, chunkn ] }
         | transpose()
         | groupTuple(by: 0)
         | map { meta, chunkns -> [ meta, chunkns.size() ] }
@@ -58,8 +71,7 @@ workflow FASTX_MAP_LONG_READS {
     //
     // Module: Map slices of each FASTA file to the reference
     //
-    ch_fasta_with_slices = ch_fasta
-        | combine(ch_fastx_chunks, by: 0)
+    ch_fasta_with_slices = ch_fastx_chunks
         | combine(MINIMAP2_INDEX.out.index, by: 0)
         | transpose()
 
@@ -92,7 +104,7 @@ workflow FASTX_MAP_LONG_READS {
             def key = groupKey(meta, n_chunks)
             [key, bam]
         }
-        | groupTuple(by: 0)
+        | groupTuple()
         | map { key, bam -> [key.target, bam] } // Get meta back out of groupKey
 
     //
