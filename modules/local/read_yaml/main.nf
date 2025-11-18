@@ -4,7 +4,7 @@ def readYAML(yamlfile) {
 
 def get_all_hmm(hmmfile) {
     def extensions = [".h3f", ".h3i", ".h3m", ".h3p"]
-    def hmmfiles   = extensions.collect { hmmfile + "$it" }
+    def hmmfiles   = extensions.collect { ext -> hmmfile + "${ext}" }
     return [hmmfile] + hmmfiles
 }
 
@@ -24,14 +24,12 @@ def get_seq_data(map) {
     if(fastk) {
         def fastk_files = new File(fastk.directory)
             .listFiles()
-            .findAll {
-                it.name =~ fastk.basename
-            }
+            .findAll { file -> file.name =~ fastk.basename }
 
-        def fk_hist = file(fastk_files.find { it =~ /\.hist$/ })
-        def fk_ktab = fastk_files.findAll { it =~ /\.ktab(\.\d+)?$/ }.collect { file(it) }
+        def fk_hist = file(fastk_files.find { file -> file =~ /\.hist$/ })
+        def fk_ktab = fastk_files.findAll { file -> file =~ /\.ktab(\.\d+)?$/ }.collect { fk -> file(fk) }
 
-        if([fk_hist, fk_ktab].every { !it.isEmpty() } ){
+        if([fk_hist, fk_ktab].every { file -> !file.isEmpty() } ){
             output = output + [hist: fk_hist, ktab: fk_ktab, kmer_size: fastk.kmer_size]
         }
     }

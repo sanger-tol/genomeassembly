@@ -40,7 +40,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -68,7 +68,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  ${workflow.manifest.name} ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
         """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -99,11 +99,11 @@ workflow PIPELINE_INITIALISATION {
     //
     // Logic: Check that purging and polishing parameter strings only contains valid options
     //
-    Channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
+    channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
         | map { purging, polishing ->
             def valid_types     = ["primary", "hic_phased", "trio_binned"]
-            def check_purging   = purging.tokenize(",").collect   { it in valid_types }
-            def check_polishing = polishing.tokenize(",").collect { it in valid_types }
+            def check_purging   = purging.tokenize(",").collect   { type -> type in valid_types }
+            def check_polishing = polishing.tokenize(",").collect { type -> type in valid_types }
 
             if(!check_purging.every()) {
                 log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_purging].join(", ")}")
@@ -122,18 +122,18 @@ workflow PIPELINE_INITIALISATION {
     // LOGIC: Create channels for reads for raw assembly input
     //        [meta, reads, fk_hist, fk_ktab]
     //
-    ch_long_reads = READ_YAML.out.long_reads     | filter { !it[1].isEmpty() } | collect
-    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { !it[1].isEmpty() } | collect
-    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { !it[1].isEmpty() } | collect
-    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { !it[1].isEmpty() } | collect
-    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { !it[1].isEmpty() } | collect
+    ch_long_reads = READ_YAML.out.long_reads     | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
+    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
+    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
+    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
+    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
 
     //
     // LOGIC: Create channels for databases
     //
     ch_busco_lineage = READ_YAML.out.busco_lineage
-    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm    | filter { !it.isEmpty() } | collect
-    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | filter { !it.isEmpty() } | collect
+    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm    | filter { list -> !list.isEmpty() } | collect
+    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | filter { list -> !list.isEmpty() } | collect
 
     emit:
     long_reads    = ch_long_reads

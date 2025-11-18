@@ -15,9 +15,9 @@ workflow ORGANELLE_ASSEMBLY {
     val_plastid_hmm // list: [ hmm_files ]
 
     main:
-    ch_versions         = Channel.empty()
-    ch_mitohifi_reads   = Channel.empty()
-    ch_mitohifi_contigs = Channel.empty()
+    ch_versions                = channel.empty()
+    ch_mitohifi_reads_output   = channel.empty()
+    ch_mitohifi_contigs_output = channel.empty()
 
     //
     // Logic: Mitohifi does not support Conda
@@ -38,7 +38,7 @@ workflow ORGANELLE_ASSEMBLY {
         ch_mitohifi_reads_input = CONCATENATE_INPUT_READS.out.file_out
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
-            | multiMap { meta, reads, meta_fasta, fasta, meta_gb, gb ->
+            | multiMap { meta, reads, _meta_fasta, fasta, _meta_gb, gb ->
                 reads: [ meta, reads ]
                 fasta: [ meta, fasta ]
                 gb:    [ meta, gb ]
@@ -70,7 +70,7 @@ workflow ORGANELLE_ASSEMBLY {
         ch_mitohifi_contigs_input = CONCATENATE_ASSEMBLIES.out.file_out
             | combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
             | combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
-            | multiMap { meta, asm, meta_fasta, fasta, meta_gb, gb ->
+            | multiMap { meta, asm, _meta_fasta, fasta, _meta_gb, gb ->
                 asm:   [ meta, asm ]
                 fasta: [ meta, fasta ]
                 gb:    [ meta, gb ]
@@ -90,7 +90,7 @@ workflow ORGANELLE_ASSEMBLY {
         // Logic: Prepare all outputs from Mitohifi for emission
         //        Do it this way as we will move to a channel publishing structure in future
         //
-        ch_mitohifi_reads = Channel.empty()
+        ch_mitohifi_reads_output = channel.empty()
             | mix(
                 MITOHIFI_MITOHIFI_READS.out.fasta,
                 MITOHIFI_MITOHIFI_READS.out.stats,
@@ -110,7 +110,7 @@ workflow ORGANELLE_ASSEMBLY {
                 MITOHIFI_MITOHIFI_READS.out.shared_genes,
             )
 
-        ch_mitohifi_contigs = Channel.empty()
+        ch_mitohifi_contigs_output = channel.empty()
             | mix(
                 MITOHIFI_MITOHIFI_READS.out.fasta,
                 MITOHIFI_MITOHIFI_READS.out.stats,
@@ -141,7 +141,7 @@ workflow ORGANELLE_ASSEMBLY {
     )
     ch_versions = ch_versions.mix(OATK.out.versions)
 
-    ch_oatk_out = Channel.empty()
+    ch_oatk_output = channel.empty()
         | mix(
             OATK.out.mito_fasta,
             OATK.out.pltd_fasta,
@@ -159,8 +159,8 @@ workflow ORGANELLE_ASSEMBLY {
         )
 
     emit:
-    mito_mitohifi_reads   = ch_mitohifi_reads
-    mito_mitohifi_contigs = ch_mitohifi_contigs
-    organelles_oatk       = ch_oatk_out
+    mito_mitohifi_reads   = ch_mitohifi_reads_output
+    mito_mitohifi_contigs = ch_mitohifi_contigs_output
+    organelles_oatk       = ch_oatk_output
     versions              = ch_versions
 }

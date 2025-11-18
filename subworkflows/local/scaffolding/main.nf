@@ -11,7 +11,7 @@ workflow SCAFFOLDING {
     val_cool_bin                    // int > 1
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Logic: Separate hap1/hap2 into separate channel entries, but tag them
@@ -29,7 +29,7 @@ workflow SCAFFOLDING {
     ch_hic_mapping_inputs = ch_assemblies_split.hap1
         | mix(ch_assemblies_split.hap2)
         | combine(val_hic_reads)
-        | multiMap { meta, asm, meta_hic, hic ->
+        | multiMap { meta, asm, _meta_hic, hic ->
             asm: [ meta, asm ]
             hic: [ meta, hic ]
         }
