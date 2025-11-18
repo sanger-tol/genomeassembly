@@ -94,13 +94,13 @@ process HIFIASM {
     touch ${prefix}.ovlp.reverse.bin
     touch ${prefix}.hic.tlb.bin
     touch ${prefix}.hic.lk.bin
-    echo "" | bgzip ${prefix}.r_utg.gfa.gz
-    echo "" | bgzip ${prefix}.bp.p_ctg.gfa.gz
-    echo "" | bgzip ${prefix}.p_utg.gfa.gz
-    echo "" | bgzip ${prefix}.p_ctg.gfa.gz
-    echo "" | bgzip ${prefix}.a_ctg.gfa.gz
-    echo "" | bgzip ${prefix}.hap1.p_ctg.gfa.gz
-    echo "" | bgzip ${prefix}.hap2.p_ctg.gfa.gz
+    echo "" | bgzip > ${prefix}.r_utg.gfa.gz
+    echo "" | bgzip > ${prefix}.bp.p_ctg.gfa.gz
+    echo "" | bgzip > ${prefix}.p_utg.gfa.gz
+    echo "" | bgzip > ${prefix}.p_ctg.gfa.gz
+    echo "" | bgzip > ${prefix}.a_ctg.gfa.gz
+    echo "" | bgzip > ${prefix}.hap1.p_ctg.gfa.gz
+    echo "" | bgzip > ${prefix}.hap2.p_ctg.gfa.gz
     echo "" | bgzip > ${prefix}.ec.fa.gz
     echo "" | bgzip > ${prefix}.ovlp.paf.gz
     touch ${prefix}.log
