@@ -133,7 +133,7 @@ workflow PIPELINE_INITIALISATION {
     //
     ch_busco_lineage = READ_YAML.out.busco_lineage
     ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm    | filter { list -> !list.isEmpty() } | collect
-    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | filter { list -> !list.isEmpty() } | collect
+    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | collect
 
     emit:
     long_reads    = ch_long_reads
