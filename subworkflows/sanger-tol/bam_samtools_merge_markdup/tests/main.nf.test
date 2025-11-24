@@ -8,6 +8,7 @@ nextflow_workflow {
     tag "subworkflows_sangertol"
     tag "subworkflows/bam_samtools_merge_markdup"
     tag "samtools"
+    tag "samtools/mergedup"
     tag "subworkflows/../../modules/nf-core/samtools/faidx"
     tag "subworkflows/../../modules/nf-core/samtools/merge"
     tag "subworkflows/../../modules/nf-core/samtools/index"
@@ -23,7 +24,6 @@ nextflow_workflow {
                 "samtools/faidx",
                 "samtools/index",
                 "samtools/merge",
-                "samtools/markdup"
             ]
         )
         nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
@@ -32,6 +32,10 @@ nextflow_workflow {
     test("Undibacterium unclassified - hap1 - no markdup") {
 
         when {
+
+            params {
+                samtools_args = "--write-index"
+            }
 
             workflow {
                 """
@@ -73,6 +77,10 @@ nextflow_workflow {
 
         when {
 
+            params {
+                samtools_args = "-s --write-index"
+            }
+
             workflow {
                 """
                 input[0] = Channel.of([
@@ -97,6 +105,7 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
                     workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                    workflow.out.metrics,
                     workflow.out.versions
                 ).match() }
             )

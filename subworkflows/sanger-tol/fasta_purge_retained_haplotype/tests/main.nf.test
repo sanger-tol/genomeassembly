@@ -46,13 +46,20 @@ nextflow_workflow {
 
         when {
 
+            params {
+                minimap2_reads_args = "-x map-hifi"
+                minimap2_assembly_args = "-x asm5 -DP"
+                purgedups_calcuts_args = "-m 79.875 -u 319.5"
+                purgedups_purgedups_args = "-2"
+            }
+
             workflow {
                 """
                 input[0] = Channel.of(
                     [
                         [ id: 'test' ], // meta map
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap2.p_ctg.fa.gz', checkIfExists: true),
                     ]
                 )
                 input[1] = Channel.of(
@@ -85,12 +92,19 @@ nextflow_workflow {
 
         when {
 
+            params {
+                minimap2_reads_args = "-x map-hifi"
+                minimap2_assembly_args = "-x asm5 -DP"
+                purgedups_calcuts_args = "-m 79.875 -u 319.5"
+                purgedups_purgedups_args = "-2"
+            }
+
             workflow {
                 """
                 input[0] = Channel.of(
                     [
                         [ id: 'test' ], // meta map
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa.gz', checkIfExists: true),
                         [],
                     ]
                 )

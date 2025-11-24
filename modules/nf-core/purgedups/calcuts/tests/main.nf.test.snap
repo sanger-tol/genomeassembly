@@ -1,5 +1,5 @@
 {
-    "purgedups-pbcstat": {
+    "test_purgedups_calcuts": {
         "content": [
             {
                 "0": [
@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,51e126445de86be9812e4b291f869f9c"
+                        "test.cutoffs:md5,e13542222f6e6e4e0d87754956641008"
                     ]
                 ],
                 "1": [
@@ -15,30 +15,30 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe8c98de33f46406c239cc9a1e124a38"
+                        "test.calcuts.log:md5,04053f23b4dbb7947e8b2cb820ca6681"
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,aba13241f82fb9bd399e4135c3ad4a62"
+                    "versions.yml:md5,51bda5d1a043a097989a4c8de60cc06e"
                 ],
-                "basecov": [
+                "cutoff": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe8c98de33f46406c239cc9a1e124a38"
+                        "test.cutoffs:md5,e13542222f6e6e4e0d87754956641008"
                     ]
                 ],
-                "stat": [
+                "log": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,51e126445de86be9812e4b291f869f9c"
+                        "test.calcuts.log:md5,04053f23b4dbb7947e8b2cb820ca6681"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,aba13241f82fb9bd399e4135c3ad4a62"
+                    "versions.yml:md5,51bda5d1a043a097989a4c8de60cc06e"
                 ]
             }
         ],
@@ -46,9 +46,9 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-05-27T13:30:46.768467679"
+        "timestamp": "2025-05-27T20:05:32.850702786"
     },
-    "purgedups-pbcstat - stub": {
+    "test_purgedups_calcuts -- stub": {
         "content": [
             {
                 "0": [
@@ -56,7 +56,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.cutoffs:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
@@ -64,37 +64,42 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.calcuts.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,aba13241f82fb9bd399e4135c3ad4a62"
+                    "versions.yml:md5,51bda5d1a043a097989a4c8de60cc06e"
                 ],
-                "basecov": [
+                "cutoff": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.cutoffs:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "stat": [
+                "log": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.calcuts.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,aba13241f82fb9bd399e4135c3ad4a62"
+                    "versions.yml:md5,51bda5d1a043a097989a4c8de60cc06e"
                 ]
+            },
+            {
+                "PURGEDUPS_CALCUTS": {
+                    "purgedups": "1.2.6"
+                }
             }
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-05-27T13:30:56.646054881"
+        "timestamp": "2025-05-27T20:05:43.920280157"
     }
 }
