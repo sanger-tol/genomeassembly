@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+General:
+
+- Genericise file output prefixies to `asm` or `asm.{hap}` (by @prototaxites)
+
 Overhaul pipeline input YAML structure (by @prototaxites):
 
 - Validate the input YAML file with nf-schema

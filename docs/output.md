@@ -57,13 +57,13 @@ For full details describing hifiasm outputs, please refer to the hifiasm documen
 <details markdown="1">
   <summary>Output files</summary>
 
-- `{id}.p_ctg.(g)?fa`: primary assembly in GFA and FASTA format.
-- `{id}.a_ctg.(g)?fa`: haplotig assembly in GFA and FASTA format.
-- `{id}.hap1.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `{id}.hap2.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `{id}.hap2.p_utg.gfa`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
-- `{id}.hap2.r_utg.gfa`: haplotype-resolved raw unitig graph in GFA format.
-- `{id}.stderr.log`: hifiasm run log file.
+- `asm.p_ctg.(g)?fa`: primary assembly in GFA and FASTA format.
+- `asm.a_ctg.(g)?fa`: haplotig assembly in GFA and FASTA format.
+- `asm.hap1.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_utg.gfa`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
+- `asm.hap2.r_utg.gfa`: haplotype-resolved raw unitig graph in GFA format.
+- `asm.stderr.log`: hifiasm run log file.
 - `*.bin`: internal binary hifiasm files. Can be used to re-run hifiasm.
 
 </details>
@@ -76,14 +76,15 @@ the purged assemblies and other associated output will be available in the `purg
 <details markdown="1">
   <summary>Output files</summary>
 
-- `purging/purged.fa`: purged primary contigs in FASTA format
-- `purging/purged.htigs.all`: raw hifiasm haplotigs and haplotigs purged from the primary assembly in FASTA format
-- `purging/split_aln/{id}_{assembly_type}.self_aln.split.fasta.gz`: Gzipped fasta containing fragmented primary assembly for self-alignment
-- `purging/coverage/{id}_{assembly_type}.calcuts.log`: log file for purge_dups calcuts
-- `purging/coverage/{id}_{assembly_type}.cutoffs`: purge_dups cutoffs file
-- `purging/coverage/{id}_{assembly_type}.PB.base.cov`: purge_dups base-level read depth
-- `purging/coverage/{id}_{assembly_type}.PB.stat`: purge_dups read depth histogram
-- `purging/coverage/{id}_{assembly_type}.self_aln.paf`: PAF format self-alignment of the split primary assembly
+- `purging/asm.purged.fa`: purged primary contigs in FASTA format
+- `purging/asm.purged.htigs.fa`: haplotigs purged from the primary assembly in FASTA format
+- `purging/asm.purged.htigs.all.fa`: raw hifiasm haplotigs and haplotigs purged from the primary assembly in FASTA format
+- `purging/split_aln/asm.self_aln.split.fasta.gz`: Gzipped fasta containing fragmented primary assembly for self-alignment
+- `purging/coverage/asm.calcuts.log`: log file for purge_dups calcuts
+- `purging/coverage/asm.cutoffs`: purge_dups cutoffs file
+- `purging/coverage/asm.PB.base.cov`: purge_dups base-level read depth
+- `purging/coverage/asm.PB.stat`: purge_dups read depth histogram
+- `purging/coverage/asm.self_aln.paf`: PAF format self-alignment of the split primary assembly
 - `purging/purge_dups/baUndUnlc1.dups.bed`: BED file describing identified retained haplotype in the primary assembly
 - `purging/purge_dups/baUndUnlc1.purge_dups.log`: purge_dups log file
 
@@ -98,15 +99,15 @@ are used to polish the assemblies.
 <details markdown="1">
   <summary>Output files</summary>
 
-- `polishing/{id}.consensus.fa`: Consensus polished assembly (both haplotypes) in FASTA format
-- `polishing/{id}_{assembly_type}_hap1.fa`: Consensus polished assembly (primary/hap1) in FASTA format
-- `polishing/{id}_{assembly_type}_hap2.fa`: Consensus polished assembly (alt/hap2) in FASTA format
-- `polishing/{id}_{assembly_type}_merged.vcf.gz`: VCF of assembly from Freebayes
-- `polishing/{id}_{assembly_type}_merged.vcf.gz.tbi`: TBI index of VCF of assembly from Freebayes
+- `polishing/asm.consensus.fa`: Consensus polished assembly (both haplotypes) in FASTA format
+- `polishing/asm_hap1.fa`: Consensus polished assembly (primary/hap1) in FASTA format
+- `polishing/asm_hap2.fa`: Consensus polished assembly (alt/hap2) in FASTA format
+- `polishing/asm_merged.vcf.gz`: VCF of assembly from Freebayes
+- `polishing/asm_merged.vcf.gz.tbi`: TBI index of VCF of assembly from Freebayes
 - `polishing/chunks/*.bed`: BED files describing assembly regions polished independently
-- `polishing/{id}/outs/possorted_bam.bam`: BAM file of Illumina 10X reads mapped to the combined assembly by Longranger
-- `polishing/{id}/outs/possorted_bam.bam.bai`: BAM index
-- `polishing/{id}/outs/summary.csv`: Longranger summary information
+- `polishing/asm/outs/possorted_bam.bam`: BAM file of Illumina 10X reads mapped to the combined assembly by Longranger
+- `polishing/asm/outs/possorted_bam.bam.bai`: BAM index
+- `polishing/asm/outs/summary.csv`: Longranger summary information
 
 </details>
 
@@ -119,10 +120,10 @@ statistics are calculated for each mapped BAM using samtools flagstat, idxstats,
 <details markdown="1">
   <summary>Output files</summary>
 
-- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.bam`: Coordinate-sorted BAM file of Hi-C reads mapped to the assembly, with duplicates marked.
-- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.flagstat`: Samtools flagstats for the BAM file of Hi-C reads mapped to the assembly.
-- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.idxstats`: Samtools idxstats for the BAM file of Hi-C reads mapped to the assembly.
-- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.stats`: Samtools stats for the BAM file of Hi-C reads mapped to the assembly.
+- `scaffolding_{hap}/asm_{hap}.bam`: Coordinate-sorted BAM file of Hi-C reads mapped to the assembly, with duplicates marked.
+- `scaffolding_{hap}/asm_{hap}.flagstat`: Samtools flagstats for the BAM file of Hi-C reads mapped to the assembly.
+- `scaffolding_{hap}/asm_{hap}.idxstats`: Samtools idxstats for the BAM file of Hi-C reads mapped to the assembly.
+- `scaffolding_{hap}/asm_{hap}.stats`: Samtools stats for the BAM file of Hi-C reads mapped to the assembly.
 
 </details>
 
@@ -137,14 +138,14 @@ quick visualisation of the results.
 <details markdown="1">
   <summary>Output files</summary>
 
-- `scaffolding_{hap}/{id}_{assembly_type}_{hap}.bed`: Read name sorted BED file of Hi-C reads mapped to the assembly, generated by bedtools bamToBed.
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.fa`: final scaffolds in FASTA format
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.agp`: AGP file translating input contigs to scaffolds
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.bin`: YaHS bin file containing Hi-C contacts
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.pretext`: Hi-C contact map in Pretext format
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_finalFullMap.png`: PNG image of Pretext contact map
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.cool`: Hi-C contact map in Cooler format
-- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/{id}_{assembly_type}_{hap}_scaffolds_final.hic`: Hi-C contact map in Juicer format
+- `scaffolding_{hap}/asm_{hap}.bed`: Read name sorted BED file of Hi-C reads mapped to the assembly, generated by bedtools bamToBed.
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.fa`: final scaffolds in FASTA format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.agp`: AGP file translating input contigs to scaffolds
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.bin`: YaHS bin file containing Hi-C contacts
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.pretext`: Hi-C contact map in Pretext format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_finalFullMap.png`: PNG image of Pretext contact map
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.cool`: Hi-C contact map in Cooler format
+- `scaffolding_{hap}/yahs/out.{break/nobreak}.yahs/asm_{hap}_scaffolds_final.hic`: Hi-C contact map in Juicer format
 
 </details>
 
@@ -186,17 +187,17 @@ in directory `mito`.
 - `mito(.reads)?/contigs_stats.tsv`: Statistics of all mitochondrial contigs identified by MitoHiFi.
 - `mito(.reads)?/final_mitogenome.fasta`: Mitochondrial genome in FASTA format chosen by MitoHiFi.
 - `mito(.reads)?/final_mitogenome.gb`: Mitochondrial genome annotation in GB format chosen by MitoHiFi.
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.utg.final.gfa`: the GFA file for the final oatk genome assembly:
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.annot_mito.txt`: the MT gene annotation file for assembled sequences
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.annot_pltd.txt`: the PT gene annotation file for assembled sequences
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.gfa`: the subgraph for the MT genome
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.bed`: the gene annotation for the MT sequences
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.fasta`: the structure-solved MT contigs
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.bed`: the genome annotation for MT contigs
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.gfa`: the subgraph for the: PT genome
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.bed`: the gene annotation for the PT sequences
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.fasta`: the structure-solved PT contigs
-- `mito.oatk/{id}.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.bed`: the genome annotation for PT: contigs
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.utg.final.gfa`: the GFA file for the final oatk genome assembly:
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.annot_mito.txt`: the MT gene annotation file for assembled sequences
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.annot_pltd.txt`: the PT gene annotation file for assembled sequences
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.mito.gfa`: the subgraph for the MT genome
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.mito.bed`: the gene annotation for the MT sequences
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.fasta`: the structure-solved MT contigs
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.mito.ctg.bed`: the genome annotation for MT contigs
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.pltd.gfa`: the subgraph for the: PT genome
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.pltd.bed`: the gene annotation for the PT sequences
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.fasta`: the structure-solved PT contigs
+- `mito.oatk/asm.k{oatk_kmer_size}_c{oatk_coverage}.pltd.ctg.bed`: the genome annotation for PT: contigs
 
 </details>
 

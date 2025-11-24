@@ -42,8 +42,8 @@ workflow FASTX_MAP_LONG_READS {
             def intcount = count.toInteger()
             def size     = val_reads_per_fasta_chunk
             def n_bins   = Math.ceil(intcount / size).toInteger()
-            chunkn       = (0..<n_bins).collect()
-            slices       = chunkn.collect { chunk ->
+            def chunkn   = (0..<n_bins).collect()
+            def slices   = chunkn.collect { chunk ->
                 def lower = chunk * size
                 def upper = [lower + size, intcount].min()
 
@@ -91,7 +91,7 @@ workflow FASTX_MAP_LONG_READS {
             def key = groupKey(meta, n_chunks)
             [key, paf]
         }
-        | groupTuple(by: 0, sort: { it.getName() } )
+        | groupTuple(by: 0, sort: { paf -> paf.getName() } )
         | map { key, paf -> [key.target, paf] } // Get meta back out of groupKey
 
     //
@@ -104,7 +104,7 @@ workflow FASTX_MAP_LONG_READS {
             def key = groupKey(meta, n_chunks)
             [key, bam]
         }
-        | groupTuple()
+        | groupTuple(by: 0, sort: { bam -> bam.getName() } )
         | map { key, bam -> [key.target, bam] } // Get meta back out of groupKey
 
     //

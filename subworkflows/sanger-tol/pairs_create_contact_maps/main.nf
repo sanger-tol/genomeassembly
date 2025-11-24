@@ -15,7 +15,7 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
     val_cool_bin      // val: cooler cload parameter
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Module: Build PretextMap
@@ -61,7 +61,7 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
     // Module: process .pairs file to remove the chromsize lines as juicer_pre
     // does not like them
     //
-    ch_pairs_remove_chromsizes_awk = Channel.of('''\
+    ch_pairs_remove_chromsizes_awk = channel.of('''\
         BEGIN { FS = OFS = "\\t" }
         !/^#chromsize/ {
             print $0

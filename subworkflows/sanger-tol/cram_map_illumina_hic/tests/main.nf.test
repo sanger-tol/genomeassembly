@@ -40,12 +40,13 @@ nextflow_workflow {
         when {
 
             params {
-                samtools_cat_args = ""
-                samtools_fastq_args = "-F0xB00 -nt"
-                bwamem2_mem_args = "-5SPp"
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                bwamem2_mem_args      = "-5SPp"
                 samtools_fixmate_args = "-mpu"
-                samtools_view_args = "-q 0 -F 0x904"
-                samtools_sort_args = "--write-index -l1"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
             }
 
             workflow {
@@ -76,6 +77,7 @@ nextflow_workflow {
                     assert snapshot(
                         workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
                         workflow.out.versions
                     ).match()
                 }
@@ -92,12 +94,13 @@ nextflow_workflow {
         when {
 
             params {
-                samtools_cat_args = ""
-                samtools_fastq_args = "-F0xB00 -nt"
-                bwamem2_mem_args = "-5SPp"
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                bwamem2_mem_args      = "-5SPp"
                 samtools_fixmate_args = "-mpu"
-                samtools_view_args = "-q 0 -F 0x904"
-                samtools_sort_args = "--write-index -l1"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
             }
 
             workflow {
@@ -139,6 +142,7 @@ nextflow_workflow {
                     assert snapshot(
                         workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
                         workflow.out.versions
                     ).match()
                 }
@@ -155,12 +159,13 @@ nextflow_workflow {
         when {
 
             params {
-                samtools_cat_args = ""
-                samtools_fastq_args = "-F0xB00 -nt"
-                bwamem2_mem_args = "-5SPp"
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                bwamem2_mem_args      = "-5SPp"
                 samtools_fixmate_args = "-mpu"
-                samtools_view_args = "-q 0 -F 0x904"
-                samtools_sort_args = "--write-index -l1"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
             }
 
             workflow {
@@ -199,6 +204,7 @@ nextflow_workflow {
                     assert snapshot(
                         workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
                         workflow.out.versions
                     ).match()
                 }
@@ -220,6 +226,7 @@ nextflow_workflow {
                 samtools_fixmate_args = "-mpu"
                 samtools_view_args    = "-q 0 -F 0x904"
                 samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
             }
 
             workflow {
@@ -250,6 +257,7 @@ nextflow_workflow {
                     assert snapshot(
                         workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
                         workflow.out.versions
                     ).match()
                 }
