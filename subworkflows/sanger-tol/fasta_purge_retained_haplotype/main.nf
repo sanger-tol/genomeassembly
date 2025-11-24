@@ -89,7 +89,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //
     ch_purgedups_input = PURGEDUPS_PBCSTAT.out.basecov
         | combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
-        | combine(FASTX_MAP_LONG_READS.out.paf, by: 0)
+        | combine(MINIMAP2_ALIGN_ASSEMBLY.out.paf, by: 0)
 
     PURGEDUPS_PURGEDUPS(ch_purgedups_input)
     ch_versions = ch_versions.mix(PURGEDUPS_PURGEDUPS.out.versions)

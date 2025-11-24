@@ -7,8 +7,8 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
-                        "test.fa:md5,cd38bf45ddba78787705257b840f6568"
+                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                        "test.fa:md5,eafafcfcb5718481e1c24211b6113b8d"
                     ]
                 ],
                 "1": [
@@ -16,7 +16,7 @@
                         {
                             "id": "test"
                         },
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "2": [
@@ -24,7 +24,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
                 "3": [
@@ -32,7 +32,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
                     ]
                 ],
                 "4": [
@@ -40,7 +40,7 @@
                         {
                             "id": "test"
                         },
-                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
                     ]
                 ],
                 "5": [
@@ -48,7 +48,7 @@
                         {
                             "id": "test"
                         },
-                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
                     ]
                 ],
                 "6": [
@@ -56,7 +56,7 @@
                         {
                             "id": "test"
                         },
-                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
                     ]
                 ],
                 "7": [
@@ -64,7 +64,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "8": [
@@ -72,7 +72,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
                 "9": [
@@ -97,8 +97,8 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
-                        "test.fa:md5,cd38bf45ddba78787705257b840f6568"
+                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                        "test.fa:md5,eafafcfcb5718481e1c24211b6113b8d"
                     ]
                 ],
                 "purged_haplotigs": [
@@ -106,7 +106,7 @@
                         {
                             "id": "test"
                         },
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "purgedups_bed": [
@@ -114,7 +114,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "purgedups_calcuts_cutoffs": [
@@ -122,7 +122,7 @@
                         {
                             "id": "test"
                         },
-                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
                     ]
                 ],
                 "purgedups_calcuts_log": [
@@ -130,7 +130,7 @@
                         {
                             "id": "test"
                         },
-                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
                     ]
                 ],
                 "purgedups_histplot": [
@@ -138,7 +138,7 @@
                         {
                             "id": "test"
                         },
-                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
                     ]
                 ],
                 "purgedups_log": [
@@ -146,7 +146,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
                 "purgedups_pbcstat_basecov": [
@@ -154,7 +154,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
                     ]
                 ],
                 "purgedups_pbcstat_hist": [
@@ -162,7 +162,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
                 "versions": [
@@ -186,9 +186,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-31T13:07:19.058159"
+        "timestamp": "2025-11-24T11:57:28.717517"
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
@@ -198,8 +198,8 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "1": [
@@ -207,7 +207,7 @@
                         {
                             "id": "test"
                         },
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "2": [
@@ -215,7 +215,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
                 "3": [
@@ -223,7 +223,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
                     ]
                 ],
                 "4": [
@@ -231,7 +231,7 @@
                         {
                             "id": "test"
                         },
-                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
                     ]
                 ],
                 "5": [
@@ -239,7 +239,7 @@
                         {
                             "id": "test"
                         },
-                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
                     ]
                 ],
                 "6": [
@@ -247,7 +247,7 @@
                         {
                             "id": "test"
                         },
-                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
                     ]
                 ],
                 "7": [
@@ -255,7 +255,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "8": [
@@ -263,7 +263,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
                 "9": [
@@ -287,8 +287,8 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,f39e71df41f2d5eb58110e5222984dfa",
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "purged_haplotigs": [
@@ -296,7 +296,7 @@
                         {
                             "id": "test"
                         },
-                        "test.hap.fa:md5,b89d4488c2451413b065b04bb6e08b64"
+                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
                 "purgedups_bed": [
@@ -304,7 +304,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,dfb067e8acdfde5c6dbef54a2ce1e247"
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "purgedups_calcuts_cutoffs": [
@@ -312,7 +312,7 @@
                         {
                             "id": "test"
                         },
-                        "test.cutoffs:md5,7a0c3b9371c4d1505452f5436f173e1e"
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
                     ]
                 ],
                 "purgedups_calcuts_log": [
@@ -320,7 +320,7 @@
                         {
                             "id": "test"
                         },
-                        "test.calcuts.log:md5,bb16374f3a2bc6ec445b9ac0b584d05b"
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
                     ]
                 ],
                 "purgedups_histplot": [
@@ -328,7 +328,7 @@
                         {
                             "id": "test"
                         },
-                        "test.png:md5,5a8c5d7e247528882b65144fb4fd8afa"
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
                     ]
                 ],
                 "purgedups_log": [
@@ -336,7 +336,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,f53e9e39a59a0e7870dd6e7aa047cf22"
+                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
                 "purgedups_pbcstat_basecov": [
@@ -344,7 +344,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.base.cov:md5,fe7e7762231da2b809b11eebdfdf8ee3"
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
                     ]
                 ],
                 "purgedups_pbcstat_hist": [
@@ -352,7 +352,7 @@
                         {
                             "id": "test"
                         },
-                        "test.PB.stat:md5,18e18919c3875b0ef14d557d050543ae"
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
                 "versions": [
@@ -375,8 +375,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.2"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-31T13:08:47.321709"
+        "timestamp": "2025-11-24T11:59:03.552171"
     }
 }

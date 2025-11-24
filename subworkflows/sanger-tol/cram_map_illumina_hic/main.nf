@@ -141,7 +141,8 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     ch_versions = ch_versions.mix(BAM_SAMTOOLS_MERGE_MARKDUP.out.versions)
 
     emit:
-    bam       = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam
-    bam_index = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam_index
-    versions  = ch_versions
+    bam               = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam
+    bam_index         = BAM_SAMTOOLS_MERGE_MARKDUP.out.bam_index
+    bam_markdup_stats = BAM_SAMTOOLS_MERGE_MARKDUP.out.metrics
+    versions          = ch_versions
 }
