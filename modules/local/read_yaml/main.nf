@@ -84,6 +84,6 @@ process READ_YAML {
     // Databases
     busco_lineage = db?.busco?.lineage    ?: "auto_euk"
     oatk_mito     = db?.oatk?.mito_hmm    ? get_all_hmm(db.oatk.mito_hmm)    : []
-    oatk_plastid  = db?.oatk?.plastid_hmm ? get_all_hmm(db.oatk.plastid_hmm) : []
+    oatk_plastid  = db?.oatk?.plastid_hmm ? get_all_hmm(db.oatk.plastid_hmm) : [[],[],[],[],[]]
 
 }
