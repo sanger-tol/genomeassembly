@@ -109,11 +109,7 @@
         },
         {
             "@id": "main.nf",
-            "@type": [
-                "File",
-                "SoftwareSourceCode",
-                "ComputationalWorkflow"
-            ],
+            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
             "creator": [
                 {
                     "@id": "https://orcid.org/0000-0002-7175-0533"
@@ -125,29 +121,17 @@
             "dateCreated": "",
             "dateModified": "2025-09-24T13:44:57Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-            "keywords": [
-                "nf-core",
-                "nextflow"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "name": [
-                "sanger-tol/genomeassembly"
-            ],
+            "keywords": ["nf-core", "nextflow"],
+            "license": ["MIT"],
+            "name": ["sanger-tol/genomeassembly"],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": [
-                "https://github.com/sanger-tol/genomeassembly",
-                "https://nf-co.re/sanger-tol/genomeassembly/dev/"
-            ],
-            "version": [
-                "0.10.1dev"
-            ]
+            "url": ["https://github.com/sanger-tol/genomeassembly", "https://nf-co.re/sanger-tol/genomeassembly/dev/"],
+            "version": ["0.10.1dev"]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
