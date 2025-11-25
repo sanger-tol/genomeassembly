@@ -1,6 +1,6 @@
 include { GAWK as GAWK_GFA_TO_FASTA } from '../../../modules/nf-core/gawk/main'
-include { HIFIASM                   } from '../../../modules/nf-core/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN    } from '../../../modules/nf-core/hifiasm/main'
+include { HIFIASM                   } from '../../../modules/local/hifiasm/main'
+include { HIFIASM as HIFIASM_BIN    } from '../../../modules/local/hifiasm/main'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -9,7 +9,7 @@ workflow RAW_ASSEMBLY {
     trio_dbs   // channel: [ meta, pat_yak, mat_yak ]
 
     main:
-    ch_versions   = Channel.empty()
+    ch_versions   = channel.empty()
 
     //
     // Logic: Hifiasm input channel expects [meta, reads, ul_reads]
@@ -36,10 +36,10 @@ workflow RAW_ASSEMBLY {
     //
 
     ch_hic_in = hic_reads
-        | mix(Channel.of([[:], []]))
+        | mix(channel.of([[:], []]))
 
     ch_trio_in = trio_dbs
-        | mix(Channel.of([[:], [], []]))
+        | mix(channel.of([[:], [], []]))
 
     //
     // Logic: Get all combinations of input channels:
@@ -95,7 +95,7 @@ workflow RAW_ASSEMBLY {
     //        Then group them together and filter so that we retain
     //        the correct pair of assemblies in the correct order
     //
-    ch_assembly_gfa = Channel.empty()
+    ch_assembly_gfa = channel.empty()
         | mix(HIFIASM.out.primary_contigs)
         | mix(HIFIASM.out.alternate_contigs)
         | mix(HIFIASM.out.hap1_contigs)
@@ -121,15 +121,15 @@ workflow RAW_ASSEMBLY {
             def pri = /hap1.p_ctg.gfa$/
             def alt = /hap2.p_ctg.gfa$/
             if(meta.assembly_type == "primary") {
-                if(asms.findAll { it.name =~ /hap/ }.size() == 0) {
+                if(asms.findAll { asm -> asm.name =~ /hap/ }.size() == 0) {
                     pri = /^[^.]+\.p_ctg\.gfa$/
                     alt = /a_ctg.gfa$/
                 }
             }
 
-            return [meta, asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]
+            return [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
         }
-        | filter { it != null }
+        | filter { entry -> entry != null }
 
     ch_assemblies_fasta = GAWK_GFA_TO_FASTA.out.output
         | groupTuple(by: 0, size: 4, remainder: true)
@@ -138,15 +138,15 @@ workflow RAW_ASSEMBLY {
             def pri = /hap1.p_ctg.fa$/
             def alt = /hap2.p_ctg.fa$/
             if(meta.assembly_type == "primary") {
-                if(asms.findAll { it.name =~ /hap/ }.size() == 0) {
+                if(asms.findAll { asm -> asm.name =~ /hap/ }.size() == 0) {
                     pri = /^[^.]+\.p_ctg\.fa$/
                     alt = /a_ctg.fa$/
                 }
             }
 
-            return [meta, asms.find { it.name =~ pri }, asms.find {it.name =~ alt}]
+            return [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
         }
-        | filter { it != null }
+        | filter { entry -> entry != null }
 
     emit:
     assembly_gfa   = ch_assemblies_gfa

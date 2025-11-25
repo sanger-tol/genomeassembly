@@ -18,7 +18,7 @@ workflow POLISHING_10X {
     val_illumina_10x_reads    // [meta, reads]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     SAMTOOLS_FAIDX(
         ch_assemblies,

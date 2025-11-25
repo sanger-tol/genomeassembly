@@ -100,12 +100,6 @@
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
                         "installed_by": ["modules"]
                     },
-                    "hifiasm": {
-                        "branch": "master",
-                        "git_sha": "2b85b7449c4b0e7e96b23f3e050f5cbea278aa7b",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/hifiasm/hifiasm.diff"
-                    },
                     "juicertools/pre": {
                         "branch": "master",
                         "git_sha": "ea3e4d5e313c4e05720ba86c41d083c7e4517629",

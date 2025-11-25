@@ -11,7 +11,7 @@ workflow KMERS {
     paternal_reads // [meta, [reads], fk_hist, [fk_ktab]]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Module: Generate FastK databases for all read sets without one
@@ -44,7 +44,7 @@ workflow KMERS {
     //         Currently runs only for long reads
     //
     ch_fastk_histex_input = ch_fastk
-        | filter { it[0].read_type == "long" && it[0].coverage == -1 }
+        | filter { meta, _hist, _ktab -> meta.read_type == "long" && meta.coverage == -1 }
         | map { meta, hist, _ktab -> [meta, hist] }
 
     FASTK_HISTEX(ch_fastk_histex_input)
@@ -58,7 +58,7 @@ workflow KMERS {
 
     ch_coverage = GENOMESCOPE2.out.model
         | map { meta, model ->
-            def kcov_line = model.readLines().find { it =~ /^kmercov/ }
+            def kcov_line = model.readLines().find { line -> line =~ /^kmercov/ }
             def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : -1
             return [meta, kcov]
         }
@@ -91,8 +91,8 @@ workflow KMERS {
         }
         | collect
         | map { meta, yaks ->
-            def pat = yaks.find { it.name =~ /pat.yak$/ }
-            def mat = yaks.find { it.name =~ /mat.yak$/ }
+            def pat = yaks.find { yak -> yak.name =~ /pat.yak$/ }
+            def mat = yaks.find { yak -> yak.name =~ /mat.yak$/ }
             [meta, pat, mat]
         }
 
@@ -101,16 +101,16 @@ workflow KMERS {
     //         for QC with Merquryfk
     //
 
-    ch_mat_fk   = ch_fastk | filter { it[0].read_type == "mat"  }
-    ch_pat_fk   = ch_fastk | filter { it[0].read_type == "pat"  }
-    ch_child_fk = ch_fastk | filter { it[0].read_type == "long" }
+    ch_mat_fk   = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "mat"  } | map { meta, _hist, ktab -> [ meta, ktab ] }
+    ch_pat_fk   = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "pat"  } | map { meta, _hist, ktab -> [ meta, ktab ] }
+    ch_child_fk = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "long" } | map { meta, _hist, ktab -> [ meta, ktab ] }
 
     MERQURYFK_HAPMAKER(ch_mat_fk, ch_pat_fk, ch_child_fk)
     ch_versions = ch_versions.mix(MERQURYFK_HAPMAKER.out.versions)
 
     emit:
     long_reads     = ch_long_reads_out
-    fastk          = ch_fastk.filter { it[0].read_type == "long" }
+    fastk          = ch_fastk.filter { meta, _hist, _ktab -> meta.read_type == "long" }
     trio_yakdb     = ch_trio_yak_dbs
     maternal_hapdb = MERQURYFK_HAPMAKER.out.mat_hap_ktab
     paternal_hapdb = MERQURYFK_HAPMAKER.out.pat_hap_ktab
