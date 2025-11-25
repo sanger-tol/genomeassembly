@@ -17,7 +17,7 @@ workflow SCAFFOLDING {
     // Logic: Separate hap1/hap2 into separate channel entries, but tag them
     //
     ch_assemblies_split = ch_assemblies
-        | multiMap { meta, hap1, hap2 ->
+        .multiMap { meta, hap1, hap2 ->
             hap1: [meta + [_hap: "hap1"], hap1]
             hap2: [meta + [_hap: "hap2"], hap2]
         }
@@ -27,9 +27,9 @@ workflow SCAFFOLDING {
     //        with matching metas
     //
     ch_hic_mapping_inputs = ch_assemblies_split.hap1
-        | mix(ch_assemblies_split.hap2)
-        | combine(val_hic_reads)
-        | multiMap { meta, asm, _meta_hic, hic ->
+        .mix(ch_assemblies_split.hap2)
+        .combine(val_hic_reads)
+        .multiMap { meta, asm, _meta_hic, hic ->
             asm: [ meta, asm ]
             hic: [ meta, hic ]
         }
@@ -49,9 +49,9 @@ workflow SCAFFOLDING {
     // Subworkflow: Calculate stats for Hi-C mapping
     //
     ch_hic_mapping_stats_input = HIC_MAPPING.out.bam
-        | combine(HIC_MAPPING.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
-        | combine(ch_hic_mapping_inputs.asm, by: 0)
-        | multiMap { meta, bam, bai, asm ->
+        .combine(HIC_MAPPING.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
+        .combine(ch_hic_mapping_inputs.asm, by: 0)
+        .multiMap { meta, bam, bai, asm ->
             bam: [ meta, bam, bai ]
             asm: [ meta, asm ]
         }
@@ -79,7 +79,7 @@ workflow SCAFFOLDING {
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
     ch_assemblies_scaffolded_split = SCAFFOLDING_YAHS.out.scaffolds_fasta
-        | branch { meta, assembly ->
+        .branch { meta, assembly ->
             def meta_new = meta - meta.subMap("_hap")
             hap1: meta._hap == "hap1"
                 return [ meta_new, assembly ]
@@ -88,7 +88,7 @@ workflow SCAFFOLDING {
         }
 
     ch_assemblies_scaffolded = ch_assemblies_scaffolded_split.hap1
-        | join(ch_assemblies_scaffolded_split.hap2)
+        .join(ch_assemblies_scaffolded_split.hap2)
 
     emit:
     assemblies        = ch_assemblies_scaffolded

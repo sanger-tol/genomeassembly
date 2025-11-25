@@ -15,7 +15,7 @@ workflow RAW_ASSEMBLY {
     // Logic: Hifiasm input channel expects [meta, reads, ul_reads]
     //
     ch_long_reads_input = long_reads
-        | map { meta, reads -> [meta, reads, []] }
+        .map { meta, reads -> [meta, reads, []] }
 
     //
     // Module: Run Hifiasm but only generate the .bin files
@@ -36,10 +36,10 @@ workflow RAW_ASSEMBLY {
     //
 
     ch_hic_in = hic_reads
-        | mix(channel.of([[:], []]))
+        .mix(channel.of([[:], []]))
 
     ch_trio_in = trio_dbs
-        | mix(channel.of([[:], [], []]))
+        .mix(channel.of([[:], [], []]))
 
     //
     // Logic: Get all combinations of input channels:
@@ -50,10 +50,10 @@ workflow RAW_ASSEMBLY {
     //        Then multimap so that we have the files in the correct channels
     //
     ch_hifiasm_input = long_reads
-        | combine(ch_hic_in)
-        | combine(ch_trio_in)
-        | combine(HIFIASM_BIN.out.bin_files)
-        | filter { _lr_meta, _lr, _hic_meta, hic, _trio_meta, pat, mat, _bin_meta, _bin ->
+        .combine(ch_hic_in)
+        .combine(ch_trio_in)
+        .combine(HIFIASM_BIN.out.bin_files)
+        .filter { _lr_meta, _lr, _hic_meta, hic, _trio_meta, pat, mat, _bin_meta, _bin ->
             def is_trio = !(mat.isEmpty() || pat.isEmpty())
             def is_hic  = !hic.isEmpty()
             // Filter disallowed assemblies
@@ -62,7 +62,7 @@ workflow RAW_ASSEMBLY {
             else if(is_trio && !params.enable_trio_binning) { return false }
             else                                            { return true  }
         }
-        | multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
+        .multiMap { lr_meta, lr, hic_meta, hic, trio_meta, mat, pat, bin_meta, bin ->
             def is_trio = !(mat.isEmpty() || pat.isEmpty())
             def is_hic  = !hic.isEmpty()
             // Add assembly type into the long read meta object
@@ -96,10 +96,10 @@ workflow RAW_ASSEMBLY {
     //        the correct pair of assemblies in the correct order
     //
     ch_assembly_gfa = channel.empty()
-        | mix(HIFIASM.out.primary_contigs)
-        | mix(HIFIASM.out.alternate_contigs)
-        | mix(HIFIASM.out.hap1_contigs)
-        | mix(HIFIASM.out.hap2_contigs)
+        .mix(HIFIASM.out.primary_contigs)
+        .mix(HIFIASM.out.alternate_contigs)
+        .mix(HIFIASM.out.hap1_contigs)
+        .mix(HIFIASM.out.hap2_contigs)
 
     //
     // Module: Convert GFA to FASTA
@@ -115,8 +115,8 @@ workflow RAW_ASSEMBLY {
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
     ch_assemblies_gfa = ch_assembly_gfa
-        | groupTuple(by: 0, size: 4, remainder: true)
-        | map { meta, asms ->
+        .groupTuple(by: 0, size: 4, remainder: true)
+        .map { meta, asms ->
             if(asms.size() == 1) { return null }
             def pri = /hap1.p_ctg.gfa$/
             def alt = /hap2.p_ctg.gfa$/
@@ -129,11 +129,11 @@ workflow RAW_ASSEMBLY {
 
             return [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
         }
-        | filter { entry -> entry != null }
+        .filter { entry -> entry != null }
 
     ch_assemblies_fasta = GAWK_GFA_TO_FASTA.out.output
-        | groupTuple(by: 0, size: 4, remainder: true)
-        | map { meta, asms ->
+        .groupTuple(by: 0, size: 4, remainder: true)
+        .map { meta, asms ->
             if(asms.size() == 1) { return null }
             def pri = /hap1.p_ctg.fa$/
             def alt = /hap2.p_ctg.fa$/

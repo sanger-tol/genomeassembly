@@ -54,18 +54,17 @@ workflow GENOMEASSEMBLY {
 
     // Get the long reads out with additional metadata from
     // the kmer-based analyses
-    ch_long_reads_after_kmers = KMERS.out.long_reads
-        | collect
+    ch_long_reads_after_kmers = KMERS.out.long_reads.collect()
 
     // Drop FastK databases for all downstream uses of Hi-C
     // CRAM files
     ch_hic_reads  = ch_hic_reads
-        | map { meta, cram, _hist, _ktab -> [meta, cram] }
-        | collect
+        .map { meta, cram, _hist, _ktab -> [meta, cram] }
+        .collect()
 
     ch_i10x_reads = ch_illumina_10x
-        | map { meta, reads, _hist, _ktab -> [meta, reads] }
-        | collect
+        .map { meta, reads, _hist, _ktab -> [meta, reads] }
+        .collect()
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
@@ -81,7 +80,7 @@ workflow GENOMEASSEMBLY {
     // Logic: Identify what steps to run on each assembly, using the params
     //
     ch_assemblies_raw = RAW_ASSEMBLY.out.assembly_fasta
-        | map { meta, hap1, hap2 ->
+        .map { meta, hap1, hap2 ->
             def purge_types  = params.purging_assemblytypes.tokenize(",")
             def polish_types = params.polishing_assemblytypes.tokenize(",")
 
@@ -96,14 +95,14 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: Purge dups on specified assemblies
     //
     ch_assemblies_to_purge = ch_assemblies_raw
-        | branch { meta, _hap1, _hap2 ->
+        .branch { meta, _hap1, _hap2 ->
             purge: meta.purge == true
             no_purge: true
         }
 
     ch_purging_inputs =  ch_assemblies_to_purge.purge
-        | combine(ch_long_reads_after_kmers)
-        | multiMap { meta, hap1, hap2, meta_reads, reads ->
+        .combine(ch_long_reads_after_kmers)
+        .multiMap { meta, hap1, hap2, meta_reads, reads ->
             assemblies: [ meta, hap1, hap2 ]
             reads: [ meta, reads ]
         }
@@ -119,7 +118,7 @@ workflow GENOMEASSEMBLY {
     // Logic: Add metadata to purged assemblies
     //
     ch_assemblies_purged = PURGING.out.purged_assemblies
-        | map { meta, hap1, hap2 ->
+        .map { meta, hap1, hap2 ->
             def meta_new = meta + [assembly_stage: "purged"]
             [meta_new, hap1, hap2]
         }
@@ -133,7 +132,7 @@ workflow GENOMEASSEMBLY {
     //        Reshape so that we can concatenate hap1/hap2 together.
     //
     ch_assemblies_to_polish = ch_all_assemblies_after_purging
-        | branch { meta, hap1, hap2 ->
+        .branch { meta, hap1, hap2 ->
             // If we have purged this type of assembly, remove raw stages
             def purging_filter  = (meta.purge == true) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
             def polish_filter   = (meta.polish == true)
@@ -164,8 +163,8 @@ workflow GENOMEASSEMBLY {
     //
     ch_haps = Channel.of("hap1", "hap2")
     ch_assemblies_to_separate = POLISHING_10X.out.assemblies
-        | combine(ch_haps)
-        | map { meta, asm, hap ->
+        .combine(ch_haps)
+        .map { meta, asm, hap ->
             [meta + [_hap: hap], asm]
         }
 
@@ -180,7 +179,7 @@ workflow GENOMEASSEMBLY {
     //        and add metadata
     //
     ch_polished_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
-        | branch { meta, asm ->
+        .branch { meta, asm ->
             def meta_new = meta - meta.subMap("_hap") + [assembly_stage: "polished"]
             hap1: meta._hap == "hap1"
                 return [meta_new, asm]
@@ -189,16 +188,16 @@ workflow GENOMEASSEMBLY {
         }
 
     ch_assemblies_polished = ch_polished_assemblies_split.hap1
-        | combine(ch_polished_assemblies_split.hap2, by: 0)
+        .combine(ch_polished_assemblies_split.hap2, by: 0)
 
     ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
-        | mix(ch_assemblies_polished)
+        .mix(ch_assemblies_polished)
 
     //
     // Logic: set up for scaffolding
     //
     ch_assemblies_for_scaffolding_split = ch_all_assemblies_after_polishing
-        | branch { meta, _hap1, _hap2 ->
+        .branch { meta, _hap1, _hap2 ->
                 def scaffold = false
                 if(meta.assembly_stage == "polished") { scaffold = true }
                 else if(meta.assembly_stage == "purged" && !meta.polish) { scaffold = true }
@@ -224,7 +223,7 @@ workflow GENOMEASSEMBLY {
     // Logic: Mark scaffolded assemblies as scaffolded
     //
     ch_assemblies_scaffolded = SCAFFOLDING.out.assemblies
-        | map { meta, asm1, asm2 ->
+        .map { meta, asm1, asm2 ->
             def meta_new = meta + [assembly_stage: "scaffolded"]
             [meta_new, asm1, asm2]
         }
@@ -233,7 +232,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: collect all assemblies and calculate assembly QC metrics
     //
     ch_assemblies_for_statistics = Channel.empty()
-        | mix(
+        .mix(
             ch_assemblies_raw,
             ch_assemblies_purged,
             ch_assemblies_polished,
@@ -252,9 +251,9 @@ workflow GENOMEASSEMBLY {
 
     if(params.enable_organelle_assembly) {
         ch_species = ch_long_reads_after_kmers
-            | map { meta, reads -> [meta, meta.species] }
-            | unique
-            | collect
+            .map { meta, reads -> [meta, meta.species] }
+            .unique()
+            .collect()
 
         ORGANELLE_ASSEMBLY(
             ch_assemblies_raw,

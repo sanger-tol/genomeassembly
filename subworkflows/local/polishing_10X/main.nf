@@ -27,7 +27,7 @@ workflow POLISHING_10X {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
     ch_assemblies_with_index = ch_assemblies
-        | join(SAMTOOLS_FAIDX.out.fai)
+        .join(SAMTOOLS_FAIDX.out.fai)
 
     //
     // Module: Generate references
@@ -49,7 +49,7 @@ workflow POLISHING_10X {
     //        join to assembly
     //
     ch_longranger_coverage = LONGRANGER_ALIGN.out.csv
-        | map { meta, summary ->
+        .map { meta, summary ->
             def rows = summary.splitCsv(header: true, sep: ",")
             [meta, rows[0].mean_depth.toFloat().round().toInteger()]
         }
@@ -68,12 +68,12 @@ workflow POLISHING_10X {
     // Logic: Generate inputs for freebayes
     //
     ch_freebayes_input = ch_assemblies_with_index
-        | combine(LONGRANGER_ALIGN.out.bam  , by: 0)
-        | combine(LONGRANGER_ALIGN.out.bai  , by: 0)
-        | combine(GAWK_BED_CHUNKS.out.output, by: 0)
-        | combine(ch_longranger_coverage    , by: 0)
-        | transpose(by: 5) // one entry per bed file
-        | multiMap { meta, fasta, fai, bam, bai, bed, cov ->
+        .combine(LONGRANGER_ALIGN.out.bam  , by: 0)
+        .combine(LONGRANGER_ALIGN.out.bai  , by: 0)
+        .combine(GAWK_BED_CHUNKS.out.output, by: 0)
+        .combine(ch_longranger_coverage    , by: 0)
+        .transpose(by: 5) // one entry per bed file
+        .multiMap { meta, fasta, fai, bam, bai, bed, cov ->
             def chunk    = bed.name =~ /\.(\d+)\.bed$/
             def meta_new = meta + [longranger_cov: cov, chunk_id: chunk[0][1]]
             bam        : [meta_new, bam, bai, [], [], bed]
@@ -107,7 +107,7 @@ workflow POLISHING_10X {
     // Logic: Refactor and combine VCF channels for further processing
     //
     ch_bcftools_view_input = FREEBAYES.out.vcf
-        | combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
+        .combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
 
     //
     // MODULE: FILTER FREEBAYES RESULTS
@@ -125,11 +125,11 @@ workflow POLISHING_10X {
     // Module: Merge Freebayes results on chunks
     //
     ch_merge_freebayes_input = BCFTOOLS_SORT.out.vcf
-        | map { meta, vcf ->
+        .map { meta, vcf ->
             def meta_new = meta - meta.subMap(["longranger_cov", "chunk_id"])
             [meta_new, vcf]
         }
-        | groupTuple(by: 0)
+        .groupTuple(by: 0)
 
     GATK4_MERGE_FREEBAYES(
         ch_merge_freebayes_input,
@@ -141,9 +141,9 @@ workflow POLISHING_10X {
     // Module: Left-align and normalize indels
     //
     ch_bcftools_norm_input = ch_assemblies_with_index
-        | combine(GATK4_MERGE_FREEBAYES.out.vcf, by: 0)
-        | combine(GATK4_MERGE_FREEBAYES.out.tbi, by: 0)
-        | multiMap{ meta, fasta, _fai, vcf, tbi ->
+        .combine(GATK4_MERGE_FREEBAYES.out.vcf, by: 0)
+        .combine(GATK4_MERGE_FREEBAYES.out.tbi, by: 0)
+        .multiMap{ meta, fasta, _fai, vcf, tbi ->
             vcf  : [meta, vcf, tbi]
             fasta: [meta, fasta   ]
         }
@@ -164,9 +164,9 @@ workflow POLISHING_10X {
     // Module: Generate consensus FASTA file
     //
     ch_bcftools_consensus_input = ch_assemblies_with_index
-        | combine(BCFTOOLS_NORM.out.vcf      , by: 0)
-        | combine(BCFTOOLS_INDEX_NORM.out.tbi, by: 0)
-        | map { meta, fasta, _fai, vcf, tbi ->
+        .combine(BCFTOOLS_NORM.out.vcf      , by: 0)
+        .combine(BCFTOOLS_INDEX_NORM.out.tbi, by: 0)
+        .map { meta, fasta, _fai, vcf, tbi ->
             [meta, vcf, tbi, fasta, []]
         }
 
