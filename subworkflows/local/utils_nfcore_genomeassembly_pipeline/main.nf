@@ -100,7 +100,7 @@ workflow PIPELINE_INITIALISATION {
     // Logic: Check that purging and polishing parameter strings only contains valid options
     //
     channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
-        | map { purging, polishing ->
+        .map { purging, polishing ->
             def valid_types     = ["primary", "hic_phased", "trio_binned"]
             def check_purging   = purging.tokenize(",").collect   { type -> type in valid_types }
             def check_polishing = polishing.tokenize(",").collect { type -> type in valid_types }
@@ -122,18 +122,18 @@ workflow PIPELINE_INITIALISATION {
     // LOGIC: Create channels for reads for raw assembly input
     //        [meta, reads, fk_hist, fk_ktab]
     //
-    ch_long_reads = READ_YAML.out.long_reads     | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
-    ch_hic_reads  = READ_YAML.out.hic_reads      | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
-    ch_i10x_reads = READ_YAML.out.i10x_reads     | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
-    ch_mat_reads  = READ_YAML.out.maternal_reads | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
-    ch_pat_reads  = READ_YAML.out.paternal_reads | filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() } | collect
+    ch_long_reads = READ_YAML.out.long_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_hic_reads  = READ_YAML.out.hic_reads.filter      { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_i10x_reads = READ_YAML.out.i10x_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_mat_reads  = READ_YAML.out.maternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_pat_reads  = READ_YAML.out.paternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
 
     //
     // LOGIC: Create channels for databases
     //
     ch_busco_lineage = READ_YAML.out.busco_lineage
-    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm    | filter { list -> !list.isEmpty() } | collect
-    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm | collect
+    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm.filter { list -> !list.isEmpty() }.collect()
+    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm.collect()
 
     emit:
     long_reads    = ch_long_reads

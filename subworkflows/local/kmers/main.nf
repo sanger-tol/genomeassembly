@@ -17,35 +17,35 @@ workflow KMERS {
     // Module: Generate FastK databases for all read sets without one
     //
     ch_fastk_status = long_reads.mix(maternal_reads, paternal_reads)
-        | branch { _meta, _reads, hist, _ktab ->
+        .branch { _meta, _reads, hist, _ktab ->
             has_fastk: !hist.isEmpty()
             no_fastk: true
         }
 
     ch_fastk_input = ch_fastk_status.no_fastk
-        | map { meta, reads, _hist, _ktab -> [meta, reads] }
+        .map { meta, reads, _hist, _ktab -> [meta, reads] }
 
     ch_fastk_skip = ch_fastk_status.has_fastk
-        | map { meta, _reads, hist, ktab -> [meta, hist, ktab] }
+        .map { meta, _reads, hist, ktab -> [meta, hist, ktab] }
 
     FASTK_FASTK(ch_fastk_input)
     ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
     ch_fastk = FASTK_FASTK.out.hist
-        | combine(FASTK_FASTK.out.ktab, by: 0)
-        | map { meta, hist, ktab ->
+        .combine(FASTK_FASTK.out.ktab, by: 0)
+        .map { meta, hist, ktab ->
             def meta_new = meta + [kmer_size: params.kmer_size]
             [meta_new, hist, ktab]
         }
-        | mix(ch_fastk_skip)
+        .mix(ch_fastk_skip)
 
     //
     // Module: FastK histogram to ASCII for Genomescope.
     //         Currently runs only for long reads
     //
     ch_fastk_histex_input = ch_fastk
-        | filter { meta, _hist, _ktab -> meta.read_type == "long" && meta.coverage == -1 }
-        | map { meta, hist, _ktab -> [meta, hist] }
+        .filter { meta, _hist, _ktab -> meta.read_type == "long" && meta.coverage == -1 }
+        .map { meta, hist, _ktab -> [meta, hist] }
 
     FASTK_HISTEX(ch_fastk_histex_input)
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
@@ -57,15 +57,15 @@ workflow KMERS {
     ch_versions = ch_versions.mix(GENOMESCOPE2.out.versions)
 
     ch_coverage = GENOMESCOPE2.out.model
-        | map { meta, model ->
+        .map { meta, model ->
             def kcov_line = model.readLines().find { line -> line =~ /^kmercov/ }
             def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : -1
             return [meta, kcov]
         }
 
     ch_long_reads_out = long_reads
-        | combine(ch_coverage.ifEmpty([[:], -1]))
-        | map { lr_meta, reads, _hist, _ktab, _cov_meta, cov ->
+        .combine(ch_coverage.ifEmpty([[:], -1]))
+        .map { lr_meta, reads, _hist, _ktab, _cov_meta, cov ->
             def outcov = lr_meta.coverage != -1 ? lr_meta.coverage : cov
             if(outcov == -1) {
                 log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope2 failed!")
@@ -79,18 +79,18 @@ workflow KMERS {
     //         for trio assembly with hifiasm
     //
     ch_yak_input = paternal_reads.mix(maternal_reads)
-        | map { meta, reads, _hist, _ktab -> [meta, reads] }
+        .map { meta, reads, _hist, _ktab -> [meta, reads] }
 
     YAK_COUNT(ch_yak_input)
     ch_versions = ch_versions.mix(YAK_COUNT.out.versions)
 
     ch_trio_yak_dbs = YAK_COUNT.out.yak
-        | map { meta, yak ->
+        .map { meta, yak ->
             def meta_new = meta - meta.subMap("read_type")
             [meta_new, yak]
         }
-        | collect
-        | map { meta, yaks ->
+        .collect()
+        .map { meta, yaks ->
             def pat = yaks.find { yak -> yak.name =~ /pat.yak$/ }
             def mat = yaks.find { yak -> yak.name =~ /mat.yak$/ }
             [meta, pat, mat]
@@ -100,10 +100,9 @@ workflow KMERS {
     // Module: Generate trio fastk databases for maternal and paternal read sets
     //         for QC with Merquryfk
     //
-
-    ch_mat_fk   = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "mat"  } | map { meta, _hist, ktab -> [ meta, ktab ] }
-    ch_pat_fk   = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "pat"  } | map { meta, _hist, ktab -> [ meta, ktab ] }
-    ch_child_fk = ch_fastk | filter { meta, _hist, _ktab -> meta.read_type == "long" } | map { meta, _hist, ktab -> [ meta, ktab ] }
+    ch_mat_fk   = ch_fastk.filter { meta, _hist, _ktab -> meta.read_type == "mat"  }.map { meta, _hist, ktab -> [ meta, ktab ] }
+    ch_pat_fk   = ch_fastk.filter { meta, _hist, _ktab -> meta.read_type == "pat"  }.map { meta, _hist, ktab -> [ meta, ktab ] }
+    ch_child_fk = ch_fastk.filter { meta, _hist, _ktab -> meta.read_type == "long" }.map { meta, _hist, ktab -> [ meta, ktab ] }
 
     MERQURYFK_HAPMAKER(ch_mat_fk, ch_pat_fk, ch_child_fk)
     ch_versions = ch_versions.mix(MERQURYFK_HAPMAKER.out.versions)
