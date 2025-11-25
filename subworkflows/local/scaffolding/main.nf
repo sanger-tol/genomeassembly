@@ -49,7 +49,7 @@ workflow SCAFFOLDING {
     // Subworkflow: Calculate stats for Hi-C mapping
     //
     ch_hic_mapping_stats_input = HIC_MAPPING.out.bam
-        | combine(HIC_MAPPING.out.bam.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
+        | combine(HIC_MAPPING.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
         | combine(ch_hic_mapping_inputs.asm, by: 0)
         | multiMap { meta, bam, bai, asm ->
             bam: [ meta, bam, bai ]
