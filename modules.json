@@ -82,7 +82,7 @@
                     },
                     "gawk": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "5ee4d69ed992c3ce81cfbbdd0bef932fcb81c75a",
                         "installed_by": ["modules", "pairs_create_contact_maps"]
                     },
                     "genomescope2": {
@@ -347,7 +347,7 @@
                     },
                     "pairs_create_contact_maps": {
                         "branch": "main",
-                        "git_sha": "ab1432043769f7dd1b36cd2a505c0c29ed6771d6",
+                        "git_sha": "da167663a06f424105d89f4f43ffa626681432b2",
                         "installed_by": ["fasta_bam_scaffolding_yahs"]
                     }
                 }

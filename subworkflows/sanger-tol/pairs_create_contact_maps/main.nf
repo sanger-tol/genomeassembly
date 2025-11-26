@@ -36,9 +36,9 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
     // Module: Generate a multi-resolution cooler file by coarsening
     //
     ch_cooler_input = ch_pairs
-        | filter { val_build_cooler }
-        | combine(ch_chrom_sizes, by: 0)
-        | multiMap { meta, pairs, sizes ->
+        .filter { val_build_cooler }
+        .combine(ch_chrom_sizes, by: 0)
+        .multiMap { meta, pairs, sizes ->
             pairs: [ meta, pairs, [] ]
             sizes: [ meta, sizes ]
         }
@@ -66,7 +66,8 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         !/^#chromsize/ {
             print $0
         }'''.stripIndent())
-        | collectFile(name: "pairs_remove_chromsizes.awk", cache: true)
+        .collectFile(name: "pairs_remove_chromsizes.awk", cache: true)
+        .collect()
 
     GAWK_PROCESS_PAIRS_FILE(
         ch_pairs.filter { val_build_juicer },
@@ -79,8 +80,8 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
     // Module: Generate juicer .hic map
     //
     ch_juicertools_pre_input = GAWK_PROCESS_PAIRS_FILE.out.output
-        | combine(ch_chrom_sizes, by: 0)
-        | multiMap { meta, pairs, sizes ->
+        .combine(ch_chrom_sizes, by: 0)
+        .multiMap { meta, pairs, sizes ->
             pairs: [ meta, pairs ]
             sizes: [ meta, [], sizes ]
         }
