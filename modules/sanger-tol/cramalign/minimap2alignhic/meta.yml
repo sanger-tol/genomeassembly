@@ -42,6 +42,10 @@ input:
           Groovy Map containing sample information
           e.g. `[ id:'sample1' ]`
 
+    - rglines:
+        type: list
+        description: A list of strings, each a valid SAM-format @RG header line, to pass to the aligner
+
     - cram:
         type: file
         description: CRAM file containing Hi-C sequences to align

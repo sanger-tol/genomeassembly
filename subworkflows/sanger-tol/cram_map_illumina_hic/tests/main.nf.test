@@ -17,7 +17,9 @@ nextflow_workflow {
     tag "subworkflows/../../modules/nf-core/samtools/merge"
     tag "subworkflows/../../modules/nf-core/samtools/index"
     tag "subworkflows/../../modules/nf-core/samtools/faidx"
+    tag "subworkflows/../../modules/nf-core/samtools/splitheader"
     tag "subworkflows/../../modules/nf-core/bwamem2/index"
+
 
     setup {
         nfcoreInitialise("${launchDir}/library/")
@@ -29,11 +31,13 @@ nextflow_workflow {
                 "samtools/index",
                 "samtools/merge",
                 "samtools/markdup",
-                "samtools/faidx"
+                "samtools/faidx",
+                "samtools/splitheader"
             ]
         )
         nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
     }
+
 
     test("meles meles - bwamem2") {
 
@@ -178,6 +182,10 @@ nextflow_workflow {
                     [
                         [ id:'test2' ], // meta map
                         file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test3' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
                     ]
                 )
                 input[1] = Channel.of(
@@ -186,7 +194,11 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
                     ],
                     [
-                        [ id:'test3' ],
+                        [ id:'test2' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2_1_subset.noSM.cram', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test4' ],
                         file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
                     ]
                 )
@@ -199,11 +211,16 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.bam.size() == 1 },
+                { assert workflow.out.bam.size() == 2 },
                 {
                     assert snapshot(
                         workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                         workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam.collect {
+                            def rg = bam(it.get(1)).getHeader().toString().split(", ").findAll { it.startsWith('@RG') }
+                            def sm = rg ? rg[0].split('\t').findAll { it.contains('SM') }[0] : 'no RG'
+                            return "${it[0].id}: ${sm}"
+                        }.sort(),
                         workflow.out.bam_markdup_stats,
                         workflow.out.versions
                     ).match()
@@ -234,16 +251,125 @@ nextflow_workflow {
                 input[0] = Channel.of(
                     [
                         [ id:'test' ], // meta map
-                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                        file( params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
                     ]
                 )
                 input[1] = Channel.of(
                     [
                         [ id:'test' ],
-                        file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
+                        file( params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2%231_subset.cram', checkIfExists: true)
                     ]
                 )
                 input[2] = "minimap2"
+                input[3] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 1 },
+                {
+                    assert snapshot(
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
+                        workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+
+    test("meles meles - multiple read groups - minimap2") {
+
+        when {
+            params {
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                minimap2_args         = "-ax sr"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
+
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file( params.modules_testdata_base_path + 'Biemna_sp_UH_2024/assembly/release/GCA_965654295.1/insdc/GCA_965654295.1.fa.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file( params.modules_testdata_base_path + 'Biemna_sp_UH_2024/genomic_data/odBieUhxx1/hic-arima2/49103_5-6_5.subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "minimap2"
+                input[3] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.bam.size() == 1 },
+                {
+                    assert snapshot(
+                        workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
+                        workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                        workflow.out.bam_markdup_stats,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("meles meles - multiple read groups - bwamem2") {
+
+        when {
+            params {
+                samtools_cat_args     = ""
+                samtools_fastq_args   = "-F0xB00 -nt"
+                bwamem2_mem_args      = "-5SPp"
+                samtools_fixmate_args = "-mpu"
+                samtools_view_args    = "-q 0 -F 0x904"
+                samtools_sort_args    = "--write-index -l1"
+                samtools_markdup_args = "--write-index"
+
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file( params.modules_testdata_base_path + 'Biemna_sp_UH_2024/assembly/release/GCA_965654295.1/insdc/GCA_965654295.1.fa.gz', checkIfExists: true)
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file( params.modules_testdata_base_path + 'Biemna_sp_UH_2024/genomic_data/odBieUhxx1/hic-arima2/49103_5-6_5.subset.cram', checkIfExists: true)
+                    ]
+                )
+                input[2] = "bwamem2"
                 input[3] = 1
                 """
             }
