@@ -6,7 +6,7 @@ sequencing_data:
   long_reads:
     platform: "pacbio"
     reads:
-      - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/pacbio/fasta/m64016_201031_131127.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.trim.fasta.gz
+      - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/pacbio/fasta/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.trim.fasta.gz
   hic:
     reads:
       - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/hic-arima2/35528_4#7.cram
