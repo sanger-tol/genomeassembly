@@ -6,6 +6,7 @@
 
 // Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES         } from '../modules/nf-core/cat/cat'
+include { SAMTOOLS_BGZIP                            } from '../modules/nf-core/samtools/bgzip/main'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
@@ -229,9 +230,9 @@ workflow GENOMEASSEMBLY {
         }
 
     //
-    // Subworkflow: collect all assemblies and calculate assembly QC metrics
+    // Logic: collect all assemblies together
     //
-    ch_assemblies_for_statistics = Channel.empty()
+    ch_all_assemblies = Channel.empty()
         .mix(
             ch_assemblies_raw,
             ch_assemblies_purged,
@@ -239,8 +240,11 @@ workflow GENOMEASSEMBLY {
             ch_assemblies_scaffolded
         )
 
+    //
+    // Subworkflow: collect all assemblies and calculate assembly QC metrics
+    //
     GENOME_STATISTICS(
-        ch_assemblies_for_statistics,
+        ch_all_assemblies,
         KMERS.out.fastk.collect(),
         KMERS.out.maternal_hapdb.collect(),
         KMERS.out.paternal_hapdb.collect(),
@@ -249,6 +253,23 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
+    //
+    // Module: bgzip all output assemblies
+    //
+    ch_assemblies_to_bgzip = ch_assemblies_all
+        .flatMap { meta, asm1, asm2 ->
+            def meta_asm1 = meta + [_hap: "hap1"]
+            def meta_asm2 = meta + [_hap: "hap2"]
+            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
+        }
+        .filter { meta, asm -> asm }
+
+    SAMTOOLS_BGZIP(ch_assemblies_to_bgzip)
+    ch_versions = ch_versions.mix(SAMTOOLS_BGZIP.out.versions)
+
+    //
+    // Subworkflow: assemble organellar genomes
+    //
     if(params.enable_organelle_assembly) {
         ch_species = ch_long_reads_after_kmers
             .map { meta, reads -> [meta, meta.species] }

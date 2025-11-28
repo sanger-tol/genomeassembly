@@ -95,18 +95,34 @@ workflow RAW_ASSEMBLY {
     //        Then group them together and filter so that we retain
     //        the correct pair of assemblies in the correct order
     //
-    ch_assembly_gfa = channel.empty()
+    ch_assembly_gfa_all = channel.empty()
         .mix(HIFIASM.out.primary_contigs)
         .mix(HIFIASM.out.alternate_contigs)
         .mix(HIFIASM.out.hap1_contigs)
         .mix(HIFIASM.out.hap2_contigs)
 
-    //
+    ch_assembly_gfa_filtered = ch_assembly_gfa_all
+        .filter { meta, gfa ->
+            gfa.getName() =~ /^[^.]+\.p_ctg\.gfa$/ ||
+            gfa.getName() =~ /a_ctg\.gfa$/ ||
+            gfa.getName() =~ /hap1\.p_ctg\.gfa$/ ||
+            gfa.getName() =~ /hap2\.p_ctg\.gfa$/
+        }
+
+    ch_gfa_to_fa_awk = channel.of('''\
+        BEGIN { OFS = "\\t" }
+        /^S/ {
+            print ">" $2
+            print $3
+        }'''.stripIndent())
+        .collectFile(name: "gfa_to_fasta.awk", cache: true)
+        .collect()
+
     // Module: Convert GFA to FASTA
     //
     GAWK_GFA_TO_FASTA(
-        ch_assembly_gfa,
-        file("${projectDir}/bin/gfa_to_fasta.awk"),
+        ch_assembly_gfa_filtered,
+        ch_gfa_to_fa_awk,
         false
     )
     ch_versions = ch_versions.mix(GAWK_GFA_TO_FASTA.out.versions)
@@ -114,27 +130,10 @@ workflow RAW_ASSEMBLY {
     //
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
-    ch_assemblies_gfa = ch_assembly_gfa
-        .groupTuple(by: 0, size: 4, remainder: true)
-        .map { meta, asms ->
-            if(asms.size() == 1) { return null }
-            def pri = /hap1.p_ctg.gfa$/
-            def alt = /hap2.p_ctg.gfa$/
-            if(meta.assembly_type == "primary") {
-                if(asms.findAll { asm -> asm.name =~ /hap/ }.size() == 0) {
-                    pri = /^[^.]+\.p_ctg\.gfa$/
-                    alt = /a_ctg.gfa$/
-                }
-            }
-
-            return [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
-        }
-        .filter { entry -> entry != null }
-
     ch_assemblies_fasta = GAWK_GFA_TO_FASTA.out.output
         .groupTuple(by: 0, size: 4, remainder: true)
-        .map { meta, asms ->
-            if(asms.size() == 1) { return null }
+        .flatMap { meta, asms ->
+            if(asms.size() == 1) { return [] }
             def pri = /hap1.p_ctg.fa$/
             def alt = /hap2.p_ctg.fa$/
             if(meta.assembly_type == "primary") {
@@ -144,12 +143,11 @@ workflow RAW_ASSEMBLY {
                 }
             }
 
-            return [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
+            return [[meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]]
         }
-        | filter { entry -> entry != null }
 
     emit:
-    assembly_gfa   = ch_assemblies_gfa
+    assembly_gfa   = ch_assembly_gfa_all
     assembly_fasta = ch_assemblies_fasta
     versions       = ch_versions
 }
