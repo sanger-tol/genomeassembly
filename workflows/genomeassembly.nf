@@ -256,7 +256,7 @@ workflow GENOMEASSEMBLY {
     //
     // Module: bgzip all output assemblies
     //
-    ch_assemblies_to_bgzip = ch_assemblies_all
+    ch_assemblies_to_bgzip = ch_all_assemblies
         .flatMap { meta, asm1, asm2 ->
             def meta_asm1 = meta + [_hap: "hap1"]
             def meta_asm2 = meta + [_hap: "hap2"]
