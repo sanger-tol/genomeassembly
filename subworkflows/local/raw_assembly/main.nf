@@ -113,7 +113,7 @@ workflow RAW_ASSEMBLY {
         }
 
     emit:
-    hifiasm_gfa   = HIFIASM.out.assembly_gfa
+    hifiasm_gfa   = HIFIASM.out.assembly_graphs
     hifiasm_fasta = ch_assemblies_fasta
     hifiasm_log   = HIFIASM.out.log
     versions      = ch_versions
