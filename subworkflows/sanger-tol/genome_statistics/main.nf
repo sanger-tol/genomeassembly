@@ -14,15 +14,15 @@ workflow GENOME_STATISTICS {
     val_busco_lineage_directory // path: path to local busco lineages directory - optional
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     ch_assemblies_split = ch_assemblies
-        | flatMap { meta, asm1, asm2 ->
+        .flatMap { meta, asm1, asm2 ->
             def meta_asm1 = meta + [_hap: "hap1"]
             def meta_asm2 = meta + [_hap: "hap2"]
             return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
         }
-        | filter { meta, asm -> asm }
+        .filter { _meta, asm -> asm }
 
     //
     // Module: Calculate assembly stats with asmstats
@@ -62,8 +62,8 @@ workflow GENOME_STATISTICS {
     // Module: assess kmer completeness/QV using MerquryFK
     //
     ch_merquryfk_asm_input = ch_assemblies
-        | combine(ch_reads_fastk)
-        | map { meta_asm, hap1, hap2, meta_fk, fk_hist, fk_ktabs ->
+        .combine(ch_reads_fastk)
+        .map { meta_asm, hap1, hap2, _meta_fk, fk_hist, fk_ktabs ->
             [meta_asm, fk_hist, fk_ktabs, hap1, hap2]
         }
 
@@ -74,8 +74,8 @@ workflow GENOME_STATISTICS {
     )
     ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions)
 
-    ch_merquryfk_images = Channel.empty()
-        | mix(
+    ch_merquryfk_images = channel.empty()
+        .mix(
             MERQURYFK_MERQURYFK.out.spectra_cn_fl,
             MERQURYFK_MERQURYFK.out.spectra_cn_ln,
             MERQURYFK_MERQURYFK.out.spectra_cn_st,
@@ -87,7 +87,7 @@ workflow GENOME_STATISTICS {
             MERQURYFK_MERQURYFK.out.block_blob,
             MERQURYFK_MERQURYFK.out.hapmers_blob,
         )
-        | transpose()
+        .transpose()
 
     emit:
     asmstats             = ASMSTATS.out.stats

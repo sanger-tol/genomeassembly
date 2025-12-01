@@ -28,7 +28,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     // Logic: split assemblies into primary and alternate
     //
     ch_assemblies_split = ch_assemblies
-        | multiMap { meta, hap1, hap2 ->
+        .multiMap { meta, hap1, hap2 ->
             primary:  [meta, hap1]
             alternate:[meta, hap2]
         }
@@ -60,7 +60,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     // Module: Plot purge_dups histogram with cutoffs
     //
     ch_purgedups_histplot_input = PURGEDUPS_PBCSTAT.out.stat
-        | combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
+        .combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
 
     PURGEDUPS_HISTPLOT(ch_purgedups_histplot_input)
     ch_versions = ch_versions.mix(PURGEDUPS_HISTPLOT.out.versions)
@@ -88,8 +88,8 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     // Module: Purge haplotigs from primary assembly
     //
     ch_purgedups_input = PURGEDUPS_PBCSTAT.out.basecov
-        | combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
-        | combine(MINIMAP2_ALIGN_ASSEMBLY.out.paf, by: 0)
+        .combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
+        .combine(MINIMAP2_ALIGN_ASSEMBLY.out.paf, by: 0)
 
     PURGEDUPS_PURGEDUPS(ch_purgedups_input)
     ch_versions = ch_versions.mix(PURGEDUPS_PURGEDUPS.out.versions)
@@ -98,7 +98,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     // Module: Generate the primary and alternative contigs
     //
     ch_getseqs_input = ch_assemblies_split.primary
-        | combine(PURGEDUPS_PURGEDUPS.out.bed, by: 0)
+        .combine(PURGEDUPS_PURGEDUPS.out.bed, by: 0)
 
     PURGEDUPS_GETSEQS(ch_getseqs_input)
     ch_versions = ch_versions.mix(PURGEDUPS_GETSEQS.out.versions)
@@ -108,8 +108,8 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //         and prepare those that have both for concatenation
     //
     ch_alt_split = ch_assemblies_split.alternate
-        | combine(PURGEDUPS_GETSEQS.out.haplotigs, by: 0)
-        | branch { meta, haps, alt ->
+        .combine(PURGEDUPS_GETSEQS.out.haplotigs, by: 0)
+        .branch { meta, haps, alt ->
             def alt_exists  = !!alt
             def haps_exists = haps.size() > 0
 

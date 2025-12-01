@@ -39,7 +39,6 @@ process ASMSTATS {
     """
 
     stub:
-    def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def VERSION = "1.0.0"
     """
@@ -47,7 +46,7 @@ process ASMSTATS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        asmstats: \$(asmstats --version)
+        asmstats: ${VERSION}
         seqtk: \$(seqtk |& sed '/Version/!d; s/.* //')
     END_VERSIONS
     """

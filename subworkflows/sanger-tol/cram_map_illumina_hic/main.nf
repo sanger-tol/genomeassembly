@@ -25,7 +25,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     def val_asm_meta_list = Collections.synchronizedSet(new HashSet())
 
     ch_assemblies
-        | map { meta, _sample ->
+        .map { meta, _sample ->
             if (!val_asm_meta_list.add(meta)) {
                 error("Error: Duplicate meta object found in `ch_assemblies` in CRAM_MAP_ILLUMINA_HIC: ${meta}")
             }
@@ -37,11 +37,11 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     //        Get indexes, and index those that aren't
     //
     ch_hic_cram_meta_mod = ch_hic_cram
-        | transpose()
-        | map { meta, cram -> [ meta + [ cramfile: cram ], cram ]}
+        .transpose()
+        .map { meta, cram -> [ meta + [ cramfile: cram ], cram ]}
 
     ch_hic_cram_raw = ch_hic_cram_meta_mod
-        | branch { meta, cram ->
+        .branch { meta, cram ->
             def cram_file = file(cram, checkIfExists: true)
             def index = cram + ".crai"
             have_index: file(index).exists()
@@ -57,7 +57,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions)
 
     ch_hic_cram_indexed = ch_hic_cram_raw.have_index
-        | mix(
+        .mix(
             ch_hic_cram_raw.no_index.join(SAMTOOLS_INDEX.out.crai)
         )
 
@@ -75,13 +75,13 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     // Logic: Count the total number of cram chunks for downstream grouping
     //
     ch_n_cram_chunks = CRAMALIGN_GENCRAMCHUNKS.out.cram_slices
-        | map { meta, _cram, _crai, chunkn, _slices ->
+        .map { meta, _cram, _crai, chunkn, _slices ->
             def clean_meta = meta - meta.subMap("cramfile")
             [ clean_meta, chunkn ]
         }
-        | transpose()
-        | groupTuple(by: 0)
-        | map { meta, chunkns -> [ meta, chunkns.size() ] }
+        .transpose()
+        .groupTuple(by: 0)
+        .map { meta, chunkns -> [ meta, chunkns.size() ] }
 
     //
     // Module: Extract read groups from CRAM headers
@@ -90,7 +90,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     ch_versions = ch_versions.mix(SAMTOOLS_SPLITHEADER.out.versions)
 
     ch_readgroups = SAMTOOLS_SPLITHEADER.out.readgroup
-        | map { meta, rg_file ->
+        .map { meta, rg_file ->
             [ meta, rg_file.readLines().collect { line -> line.replaceAll("\t", "\\\\t") } ]
         }
 
@@ -98,8 +98,8 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     // Logic: Join reagroups with the CRAM chunks and clean meta
     //
     ch_cram_rg = ch_readgroups
-        | combine(CRAMALIGN_GENCRAMCHUNKS.out.cram_slices.transpose(), by: 0)
-        | map { meta, rg, cram, crai, chunkn, slices ->
+        .combine(CRAMALIGN_GENCRAMCHUNKS.out.cram_slices.transpose(), by: 0)
+        .map { meta, rg, cram, crai, chunkn, slices ->
             def clean_meta = meta - meta.subMap("cramfile")
             [ clean_meta, rg, cram, crai, chunkn, slices ]
         }
@@ -115,10 +115,10 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
 
         ch_assemblies_with_reference = ch_assemblies
-            | combine(BWAMEM2_INDEX.out.index, by: 0)
+            .combine(BWAMEM2_INDEX.out.index, by: 0)
 
         ch_cram_chunks = ch_cram_rg
-            | combine(ch_assemblies_with_reference, by: 0)
+            .combine(ch_assemblies_with_reference, by: 0)
 
         CRAMALIGN_BWAMEM2ALIGNHIC(ch_cram_chunks)
         ch_versions = ch_versions.mix(CRAMALIGN_BWAMEM2ALIGNHIC.out.versions)
@@ -132,7 +132,7 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
 
         ch_cram_chunks = ch_cram_rg
-            | combine(MINIMAP2_INDEX.out.index, by: 0)
+            .combine(MINIMAP2_INDEX.out.index, by: 0)
 
         CRAMALIGN_MINIMAP2ALIGNHIC(ch_cram_chunks)
         ch_versions = ch_versions.mix(CRAMALIGN_MINIMAP2ALIGNHIC.out.versions)
@@ -148,13 +148,13 @@ workflow CRAM_MAP_ILLUMINA_HIC {
     //        we emit groups downstream ASAP once all bams have been made
     //
     ch_merge_input = ch_mapped_bams
-        | combine(ch_n_cram_chunks, by: 0)
-        | map { meta, bam, n_chunks ->
+        .combine(ch_n_cram_chunks, by: 0)
+        .map { meta, bam, n_chunks ->
             def key = groupKey(meta, n_chunks)
             [key, bam]
         }
-        | groupTuple(by: 0)
-        | map { key, bam -> [key.target, bam] } // Get meta back out of groupKey
+        .groupTuple(by: 0)
+        .map { key, bam -> [key.target, bam] } // Get meta back out of groupKey
 
 
     //
