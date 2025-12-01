@@ -4,7 +4,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  # renovate: datasource=conda depName=bioconda/htslib
+  - bioconda::hifiasm=0.25.0
   - bioconda::htslib=1.22.1
-  # renovate: datasource=conda depName=bioconda/samtools
   - bioconda::samtools=1.22.1
+  - conda-forge::gawk=5.3.1

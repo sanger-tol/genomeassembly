@@ -1,0 +1,389 @@
+{
+    "Undibacterium_unclassified - trio": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.dip.hap1.p_ctg.gfa.gz:md5,7e1b9daac8dae9f5d1f555e5499453fb",
+                        "test.dip.hap1.p_ctg.noseq.gfa.gz:md5,988606a5ded5fa18f8a78b47114c7128",
+                        "test.dip.hap2.p_ctg.gfa.gz:md5,e398837ac648e618d4a7b5cd8d3eb769",
+                        "test.dip.hap2.p_ctg.noseq.gfa.gz:md5,74c9c4eb54127c04138d0bb1a1437b88",
+                        "test.dip.p_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.dip.p_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff",
+                        "test.dip.r_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.dip.r_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.dip.hap1.p_ctg.fa:md5,4ef792a4dbaaaae9ad92f37faf5c13c2",
+                        "test.dip.hap1.p_ctg.noseq.fa:md5,522d7c7b50920ad1b9dbbc15a3e44590",
+                        "test.dip.hap2.p_ctg.fa:md5,c17f9c13f8106ea7b5999285d7cc33a2",
+                        "test.dip.hap2.p_ctg.noseq.fa:md5,0eb63032ae4ee0e1ff0f879cfac801fc",
+                        "test.dip.p_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.dip.p_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde",
+                        "test.dip.r_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.dip.r_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde"
+                    ]
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-12-01T10:14:42.856626"
+    },
+    "Undibacterium_unclassified - pacbio hifi - bin files": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.bp.hap1.p_ctg.gfa.gz:md5,7e1b9daac8dae9f5d1f555e5499453fb",
+                        "test.bp.hap1.p_ctg.noseq.gfa.gz:md5,988606a5ded5fa18f8a78b47114c7128",
+                        "test.bp.hap2.p_ctg.gfa.gz:md5,e398837ac648e618d4a7b5cd8d3eb769",
+                        "test.bp.hap2.p_ctg.noseq.gfa.gz:md5,74c9c4eb54127c04138d0bb1a1437b88",
+                        "test.bp.p_ctg.gfa.gz:md5,b2ea4758707e5e3bf89be3e110c86bb8",
+                        "test.bp.p_ctg.noseq.gfa.gz:md5,23bee70c9ad48bcee141b1adc1adcef5",
+                        "test.bp.p_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.bp.p_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff",
+                        "test.bp.r_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.bp.r_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.bp.hap1.p_ctg.fa:md5,4ef792a4dbaaaae9ad92f37faf5c13c2",
+                        "test.bp.hap1.p_ctg.noseq.fa:md5,522d7c7b50920ad1b9dbbc15a3e44590",
+                        "test.bp.hap2.p_ctg.fa:md5,c17f9c13f8106ea7b5999285d7cc33a2",
+                        "test.bp.hap2.p_ctg.noseq.fa:md5,0eb63032ae4ee0e1ff0f879cfac801fc",
+                        "test.bp.p_ctg.fa:md5,5dcd2b3e3e654e0f786a86dca148e47a",
+                        "test.bp.p_ctg.noseq.fa:md5,74a17c2a0af87efba6786b1079964af2",
+                        "test.bp.p_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.bp.p_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde",
+                        "test.bp.r_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.bp.r_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde"
+                    ]
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-12-01T09:50:40.247549"
+    },
+    "Undibacterium_unclassified - long reads only": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.bp.hap1.p_ctg.gfa.gz:md5,7e1b9daac8dae9f5d1f555e5499453fb",
+                        "test.bp.hap1.p_ctg.noseq.gfa.gz:md5,988606a5ded5fa18f8a78b47114c7128",
+                        "test.bp.hap2.p_ctg.gfa.gz:md5,e398837ac648e618d4a7b5cd8d3eb769",
+                        "test.bp.hap2.p_ctg.noseq.gfa.gz:md5,74c9c4eb54127c04138d0bb1a1437b88",
+                        "test.bp.p_ctg.gfa.gz:md5,b2ea4758707e5e3bf89be3e110c86bb8",
+                        "test.bp.p_ctg.noseq.gfa.gz:md5,23bee70c9ad48bcee141b1adc1adcef5",
+                        "test.bp.p_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.bp.p_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff",
+                        "test.bp.r_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.bp.r_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.bp.hap1.p_ctg.fa:md5,4ef792a4dbaaaae9ad92f37faf5c13c2",
+                        "test.bp.hap1.p_ctg.noseq.fa:md5,522d7c7b50920ad1b9dbbc15a3e44590",
+                        "test.bp.hap2.p_ctg.fa:md5,c17f9c13f8106ea7b5999285d7cc33a2",
+                        "test.bp.hap2.p_ctg.noseq.fa:md5,0eb63032ae4ee0e1ff0f879cfac801fc",
+                        "test.bp.p_ctg.fa:md5,5dcd2b3e3e654e0f786a86dca148e47a",
+                        "test.bp.p_ctg.noseq.fa:md5,74a17c2a0af87efba6786b1079964af2",
+                        "test.bp.p_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.bp.p_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde",
+                        "test.bp.r_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.bp.r_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.ec.fa.gz:md5,39a34786b2a26d6cba126df3324d916b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.ovlp.paf.gz:md5,de1ccbaf7dfef003eee2a55961d2fcc3"
+                ]
+            ],
+            [
+                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-12-01T09:50:28.006989"
+    },
+    "Undibacterium_unclassified - hi-c cram": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.hic.hap1.p_ctg.gfa.gz:md5,87e4cb9946ffeaf3ff1f0ffe99544583",
+                        "test.hic.hap1.p_ctg.noseq.gfa.gz:md5,afe6d9805fa364e4dec404585ce006bb",
+                        "test.hic.hap2.p_ctg.gfa.gz:md5,7f6a8d1fbe2d9af2b74dee39ad6fd9d5",
+                        "test.hic.hap2.p_ctg.noseq.gfa.gz:md5,502ee5d8e57989867abe68ca0cddb042",
+                        "test.hic.p_ctg.gfa.gz:md5,b2ea4758707e5e3bf89be3e110c86bb8",
+                        "test.hic.p_ctg.noseq.gfa.gz:md5,23bee70c9ad48bcee141b1adc1adcef5",
+                        "test.hic.p_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.hic.p_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff",
+                        "test.hic.r_utg.gfa.gz:md5,0a500a6c4d6316b6a2fc934b4ce4c19f",
+                        "test.hic.r_utg.noseq.gfa.gz:md5,ba350f34b441b74a6c0dec1e7c2558ff"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.hic.hap1.p_ctg.fa:md5,e5c01369a8bb02740acc39734d6abfcd",
+                        "test.hic.hap1.p_ctg.noseq.fa:md5,72ac5c1be7e35bdb2e004c57fd53e75e",
+                        "test.hic.hap2.p_ctg.fa:md5,647c8b2db8bc418312a9c6bc958e2445",
+                        "test.hic.hap2.p_ctg.noseq.fa:md5,1ec69f4f7d0767c44a1fc830ef0f03d5",
+                        "test.hic.p_ctg.fa:md5,5dcd2b3e3e654e0f786a86dca148e47a",
+                        "test.hic.p_ctg.noseq.fa:md5,74a17c2a0af87efba6786b1079964af2",
+                        "test.hic.p_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.hic.p_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde",
+                        "test.hic.r_utg.fa:md5,09f596853ebb99967a018e3c98befe61",
+                        "test.hic.r_utg.noseq.fa:md5,764d0cc95e27b1f21aa9c24fa05afcde"
+                    ]
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-12-01T10:05:05.82888"
+    },
+    "Undibacterium_unclassified - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.ec.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hic.lk.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hic.tlb.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.ovlp.reverse.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.ovlp.source.bin:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.a_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.bp.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.hap1.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.hap2.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.p_utg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.r_utg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.a_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.bp.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hap1.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hap2.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.p_utg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.r_utg.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ec.fa.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ovlp.paf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+                ],
+                "assembly_fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.a_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.bp.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hap1.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hap2.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.p_ctg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.p_utg.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.r_utg.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "assembly_graphs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.a_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.bp.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.hap1.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.hap2.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.p_ctg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.p_utg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.r_utg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "bin_files": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.ec.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hic.lk.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.hic.tlb.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.ovlp.reverse.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.ovlp.source.bin:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "corrected_reads": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ec.fa.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "read_overlaps": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ovlp.paf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-12-01T10:29:28.447199"
+    }
+}

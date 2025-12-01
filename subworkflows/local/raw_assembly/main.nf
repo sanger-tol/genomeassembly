@@ -1,6 +1,6 @@
 include { GAWK as GAWK_GFA_TO_FASTA } from '../../../modules/nf-core/gawk/main'
-include { HIFIASM                   } from '../../../modules/local/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN    } from '../../../modules/local/hifiasm/main'
+include { HIFIASM                   } from '../../../modules/sanger-tol/hifiasm/main'
+include { HIFIASM as HIFIASM_BIN    } from '../../../modules/sanger-tol/hifiasm/main'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -22,8 +22,8 @@ workflow RAW_ASSEMBLY {
     //
     HIFIASM_BIN(
         ch_long_reads_input,
-        [[:], [], []],
         [[:], []],
+        [[:], [], []],
         [[:], []]
     )
     ch_versions = ch_versions.mix(HIFIASM_BIN.out.versions)
@@ -34,7 +34,6 @@ workflow RAW_ASSEMBLY {
     //         assemblies IF these are enabled and the data is
     //         available.
     //
-
     ch_hic_in = hic_reads
         .mix(channel.of([[:], []]))
 
@@ -82,56 +81,23 @@ workflow RAW_ASSEMBLY {
     //
     HIFIASM(
         ch_hifiasm_input.long_reads,
-        ch_hifiasm_input.trio,
         ch_hifiasm_input.hic,
+        ch_hifiasm_input.trio,
         ch_hifiasm_input.bin
     )
     ch_versions = ch_versions.mix(HIFIASM.out.versions)
 
     //
-    // Logic: Mix all the possible Hifiasm GFA assembly channels that
-    //        we could be interested in together
-    //
-    //        Then group them together and filter so that we retain
-    //        the correct pair of assemblies in the correct order
-    //
-    ch_assembly_gfa_all = channel.empty()
-        .mix(HIFIASM.out.primary_contigs)
-        .mix(HIFIASM.out.alternate_contigs)
-        .mix(HIFIASM.out.hap1_contigs)
-        .mix(HIFIASM.out.hap2_contigs)
-
-    ch_assembly_gfa_filtered = ch_assembly_gfa_all
-        .filter { meta, gfa ->
-            gfa.getName() =~ /^[^.]+\.p_ctg\.gfa$/ ||
-            gfa.getName() =~ /a_ctg\.gfa$/ ||
-            gfa.getName() =~ /hap1\.p_ctg\.gfa$/ ||
-            gfa.getName() =~ /hap2\.p_ctg\.gfa$/
-        }
-
-    ch_gfa_to_fa_awk = channel.of('''\
-        BEGIN { OFS = "\\t" }
-        /^S/ {
-            print ">" $2
-            print $3
-        }'''.stripIndent())
-        .collectFile(name: "gfa_to_fasta.awk", cache: true)
-        .collect()
-
-    // Module: Convert GFA to FASTA
-    //
-    GAWK_GFA_TO_FASTA(
-        ch_assembly_gfa_filtered,
-        ch_gfa_to_fa_awk,
-        false
-    )
-    ch_versions = ch_versions.mix(GAWK_GFA_TO_FASTA.out.versions)
-
-    //
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
-    ch_assemblies_fasta = GAWK_GFA_TO_FASTA.out.output
-        .groupTuple(by: 0, size: 4, remainder: true)
+    ch_assemblies_fasta = HIFIASM.out.assembly_fasta
+        .filter { meta, asm ->
+            asm.getName() =~ /^[^.]+\.p_ctg\.fa$/ ||
+            asm.getName() =~ /a_ctg\.fa$/ ||
+            asm.getName() =~ /hap1\.p_ctg\.fa$/ ||
+            asm.getName() =~ /hap2\.p_ctg\.fa$/
+        }
+        .groupTuple(by: 0, size: 2, remainder: true)
         .flatMap { meta, asms ->
             if(asms.size() == 1) { return [] }
             def pri = /hap1.p_ctg.fa$/
@@ -147,7 +113,8 @@ workflow RAW_ASSEMBLY {
         }
 
     emit:
-    assembly_gfa   = ch_assembly_gfa_all
-    assembly_fasta = ch_assemblies_fasta
-    versions       = ch_versions
+    hifiasm_gfa   = HIFIASM.out.assembly_gfa
+    hifiasm_fasta = ch_assemblies_fasta
+    hifiasm_log   = HIFIASM.out.log
+    versions      = ch_versions
 }

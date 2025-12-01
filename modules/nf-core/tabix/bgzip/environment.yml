@@ -5,4 +5,4 @@ channels:
   - bioconda
 
 dependencies:
-  - bioconda::hifiasm=0.24.0
+  - bioconda::htslib=1.21

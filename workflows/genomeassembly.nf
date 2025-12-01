@@ -6,7 +6,7 @@
 
 // Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES         } from '../modules/nf-core/cat/cat'
-include { SAMTOOLS_BGZIP                            } from '../modules/nf-core/samtools/bgzip/main'
+include { TABIX_BGZIP as BGZIP_ASSEMBLIES           } from '../modules/nf-core/tabix/bgzip/main'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
@@ -80,7 +80,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: Identify what steps to run on each assembly, using the params
     //
-    ch_assemblies_raw = RAW_ASSEMBLY.out.assembly_fasta
+    ch_assemblies_raw = RAW_ASSEMBLY.out.hifiasm_fasta
         .map { meta, hap1, hap2 ->
             def purge_types  = params.purging_assemblytypes.tokenize(",")
             def polish_types = params.polishing_assemblytypes.tokenize(",")
@@ -232,7 +232,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: collect all assemblies together
     //
-    ch_all_assemblies = Channel.empty()
+    ch_all_assemblies = channel.empty()
         .mix(
             ch_assemblies_raw,
             ch_assemblies_purged,
@@ -241,10 +241,36 @@ workflow GENOMEASSEMBLY {
         )
 
     //
+    // Module: bgzip all output assemblies
+    //
+    ch_all_assembles_to_bgzip = ch_all_assemblies
+        .flatMap { meta, asm1, asm2 ->
+            def meta_asm1 = meta + [_hap: "hap1"]
+            def meta_asm2 = meta + [_hap: "hap2"]
+            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
+        }
+        .filter { meta, asm -> asm }
+
+    BGZIP_ASSEMBLIES(ch_assemblies_to_bgzip)
+    ch_versions = ch_versions.mix(BGZIP_ASSEMBLIES.out.versions)
+
+    //
     // Subworkflow: collect all assemblies and calculate assembly QC metrics
     //
+    ch_hap1_for_statistics = BGZIP_ASSEMBLIES.out.output
+        .flatMap { meta, asm ->
+            meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), hap ]] : []
+        }
+
+    ch_hap2_for_statisics = BGZIP_ASSEMBLIES.out.output
+        .flatMap { meta, asm ->
+            meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), hap ]] : []
+        }
+
+    ch_assemblies_for_statistics = ch_hap1_for_statistics.join(ch_hap2_for_statisics, by: 0, remainder: true)
+
     GENOME_STATISTICS(
-        ch_all_assemblies,
+        ch_assemblies_for_statistics,
         KMERS.out.fastk.collect(),
         KMERS.out.maternal_hapdb.collect(),
         KMERS.out.paternal_hapdb.collect(),
@@ -253,19 +279,6 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
-    //
-    // Module: bgzip all output assemblies
-    //
-    ch_assemblies_to_bgzip = ch_all_assemblies
-        .flatMap { meta, asm1, asm2 ->
-            def meta_asm1 = meta + [_hap: "hap1"]
-            def meta_asm2 = meta + [_hap: "hap2"]
-            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
-        }
-        .filter { meta, asm -> asm }
-
-    SAMTOOLS_BGZIP(ch_assemblies_to_bgzip)
-    ch_versions = ch_versions.mix(SAMTOOLS_BGZIP.out.versions)
 
     //
     // Subworkflow: assemble organellar genomes

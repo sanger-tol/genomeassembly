@@ -1,0 +1,170 @@
+name: hifiasm
+description: |
+  Whole-genome assembly using PacBio HiFi reads. This module is a modified version
+  of the original nf-core version: https://github.com/nf-core/modules/blob/master/modules/nf-core/hifiasm/main.nf
+keywords:
+  - genome assembly
+  - haplotype resolution
+  - phasing
+  - PacBio
+  - HiFi
+  - long reads
+tools:
+  - hifiasm:
+      description: Haplotype-resolved assembler for accurate HiFi reads
+      homepage: https://github.com/chhylp123/hifiasm
+      documentation: https://github.com/chhylp123/hifiasm
+      tool_dev_url: https://github.com/chhylp123/hifiasm
+      doi: "10.1038/s41592-020-01056-5"
+      licence: ["MIT"]
+      identifier: biotools:hifiasm
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - long_reads:
+        type: file
+        description: Long reads PacBio HiFi reads or ONT reads (requires ext.arg
+          '--ont').
+        ontologies:
+          - edam: "http://edamontology.org/format_2546" # FASTA-like
+    - ul_reads:
+        type: file
+        description: ONT long reads to use with --ul.
+        ontologies:
+          - edam: "http://edamontology.org/format_2546" # FASTA-like
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing information about Hi-C reads
+    - hic_cram:
+        type: file
+        description: Illumina short reads containing Hi-C data in unaligned CRAM
+          format.
+        ontologies:
+          - edam: "http://edamontology.org/format_3462" # CRAM
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing information about parental kmers.
+    - paternal_kmer_dump:
+        type: file
+        description: Yak kmer dump file for paternal reads (can be used for
+          haplotype resolution). It can have an arbitrary extension.
+        ontologies: []
+    - maternal_kmer_dump:
+        type: file
+        description: Yak kmer dump file for maternal reads (can be used for
+          haplotype resolution). It can have an arbitrary extension.
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing information about the input bin files
+    - bin_files:
+        type: file
+        description: bin files produced during a previous Hifiasm run
+        ontologies: []
+output:
+  bin_files:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bin":
+          type: file
+          description: |
+            Binary files containing processed data for hifiasm, including
+            error-corrected reads, read overlaps, and Hi-C alignments. Can
+            be re-used as an input for subsequent re-runs of hifiasm with new
+            inputs or modified parameters in order to save recomputation of
+            initial results, which are the most computationally-expensive
+            steps.
+          pattern: "*.bin"
+          ontologies: []
+  assembly_graphs:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gfa.gz":
+          type: file
+          description: Assembly graphs in GFA format
+          pattern: "*.gfa.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3975 # GFA
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  assembly_fasta:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fa":
+          type: file
+          description: Linearised assembly graphs in FASTA format
+          pattern: "*.fa"
+          ontologies:
+            - edam: "http://edamontology.org/format_2546" # FASTA-like
+  corrected_reads:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.ec.fa.gz":
+          type: file
+          description: |
+            If option --write-ec specified, a gzipped fasta file containing the error corrected
+            reads produced by the hifiasm error correction module
+          pattern: "*.ec.fa.gz"
+          ontologies:
+            - edam: "http://edamontology.org/format_2546" # FASTA-like
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  read_overlaps:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.ovlp.paf.gz":
+          type: file
+          description: |
+            If option --write-paf specified, a gzipped paf file describing the overlaps
+            among all error-corrected reads
+          pattern: "*.ovlp.paf.gz"
+          ontologies:
+            - edam: http://edamontology.org/data_2526 # TSV
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  log:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: Log file describing Hifiasm run.
+          pattern: "*.log"
+          ontologies:
+            - edam: http://edamontology.org/data_2526 # Text
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@sidorov-si"
+  - "@scorreard"
+  - "@mbeavitt"
+  - "@schmytzi"
+  - "@prototaxites"
+maintainers:
+  - "@sidorov-si"
+  - "@scorreard"
