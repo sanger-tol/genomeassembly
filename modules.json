@@ -303,7 +303,7 @@
                     },
                     "hifiasm": {
                         "branch": "main",
-                        "git_sha": "464e2d2877cf630e086eb7323c895cd058e24e96",
+                        "git_sha": "b76ccb3c7ec8e95cc32b21ff44b535b37fbf22ed",
                         "installed_by": ["modules"]
                     },
                     "longranger/align": {
