@@ -73,15 +73,9 @@ process HIFIASM {
         bgzip -@${task.cpus} ${prefix}.ovlp.paf
     fi
 
-    for graph in *.gfa; do
-        bn=\$(basename \${graph} .gfa)
-        gawk '
-            BEGIN { OFS = "\\t" }
-            /^S/ {
-                print ">" \$2
-                print \$3
-            }
-        ' \$graph > \${bn}.fa
+    find . -maxdepth 1 -name "*.gfa" | while read graph; do
+        bn=\$(basename "\$graph" .gfa)
+        gawk 'BEGIN { OFS = "\\t" } /^S/ { print ">" \$2; print \$3 }' "\$graph" > "\${bn}.fa"
     done
 
     ## gzip all GFA output files

@@ -243,7 +243,7 @@ workflow GENOMEASSEMBLY {
     //
     // Module: bgzip all output assemblies
     //
-    ch_all_assembles_to_bgzip = ch_all_assemblies
+    ch_all_assemblies_to_bgzip = ch_all_assemblies
         .flatMap { meta, asm1, asm2 ->
             def meta_asm1 = meta + [_hap: "hap1"]
             def meta_asm2 = meta + [_hap: "hap2"]
@@ -251,7 +251,7 @@ workflow GENOMEASSEMBLY {
         }
         .filter { meta, asm -> asm }
 
-    BGZIP_ASSEMBLIES(ch_assemblies_to_bgzip)
+    BGZIP_ASSEMBLIES(ch_all_assemblies_to_bgzip)
     ch_versions = ch_versions.mix(BGZIP_ASSEMBLIES.out.versions)
 
     //
@@ -259,12 +259,12 @@ workflow GENOMEASSEMBLY {
     //
     ch_hap1_for_statistics = BGZIP_ASSEMBLIES.out.output
         .flatMap { meta, asm ->
-            meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), hap ]] : []
+            meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), asm ]] : []
         }
 
     ch_hap2_for_statisics = BGZIP_ASSEMBLIES.out.output
         .flatMap { meta, asm ->
-            meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), hap ]] : []
+            meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), asm ]] : []
         }
 
     ch_assemblies_for_statistics = ch_hap1_for_statistics.join(ch_hap2_for_statisics, by: 0, remainder: true)

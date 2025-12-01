@@ -91,6 +91,7 @@ workflow RAW_ASSEMBLY {
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
     ch_assemblies_fasta = HIFIASM.out.assembly_fasta
+        .transpose()
         .filter { meta, asm ->
             asm.getName() =~ /^[^.]+\.p_ctg\.fa$/ ||
             asm.getName() =~ /a_ctg\.fa$/ ||
