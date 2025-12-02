@@ -19,6 +19,7 @@ process HIFIASM {
     tuple val(meta), path("*.fa")         , emit: assembly_fasta   , optional: true
     tuple val(meta), path("*.ec.fa.gz")   , emit: corrected_reads  , optional: true
     tuple val(meta), path("*.ovlp.paf.gz"), emit: read_overlaps    , optional: true
+    tuple val(meta), path("*.bed.gz")     , emit: bed              , optional: true
     tuple val(meta), path("*.log")        , emit: log
     path  "versions.yml"                  , emit: versions
 
@@ -78,8 +79,9 @@ process HIFIASM {
         gawk 'BEGIN { OFS = "\\t" } /^S/ { print ">" \$2; print \$3 }' "\$graph" > "\${bn}.fa"
     done
 
-    ## gzip all GFA output files
+    ## gzip all GFA and BED output files
     find . -name "*.gfa" -exec bgzip -@${task.cpus} {} \\;
+    find . -name "*.bed" -exec bgzip -@${task.cpus} {} \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

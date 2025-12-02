@@ -60,6 +60,7 @@ nextflow_process {
                     process.out.assembly_fasta,
                     process.out.corrected_reads,
                     process.out.read_overlaps,
+                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
                     process.out.versions
                 ).match() }
             )
@@ -135,6 +136,7 @@ nextflow_process {
                     process.out.assembly_fasta,
                     process.out.corrected_reads,
                     process.out.read_overlaps,
+                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
                     process.out.versions
                 ).match() }
             )
@@ -220,6 +222,7 @@ nextflow_process {
                     process.out.assembly_fasta,
                     process.out.corrected_reads,
                     process.out.read_overlaps,
+                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
                     process.out.versions
                 ).match() }
             )
@@ -279,6 +282,7 @@ nextflow_process {
                     process.out.assembly_fasta,
                     process.out.corrected_reads,
                     process.out.read_overlaps,
+                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
                     process.out.versions
                 ).match() }
             )

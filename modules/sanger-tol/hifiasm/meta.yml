@@ -140,6 +140,20 @@ output:
           ontologies:
             - edam: http://edamontology.org/data_2526 # TSV
             - edam: http://edamontology.org/format_3989 # GZIP format
+  bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bed.gz":
+          type: file
+          description: |
+            BED files containing the co-ordinates of low-quality regions.
+          pattern: "*.bed.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3003 # BED
+            - edam: http://edamontology.org/format_3989 # GZIP format
   log:
     - - meta:
           type: map

@@ -42,6 +42,12 @@
                 
             ],
             [
+                "test.dip.hap1.p_ctg.lowQ.bed.gz",
+                "test.dip.hap2.p_ctg.lowQ.bed.gz",
+                "test.dip.p_utg.lowQ.bed.gz",
+                "test.dip.r_utg.lowQ.bed.gz"
+            ],
+            [
                 "versions.yml:md5,c5d43e7955e682b03e76387513047453"
             ]
         ],
@@ -49,7 +55,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T10:14:42.856626"
+        "timestamp": "2025-12-01T16:15:35.350355"
     },
     "Undibacterium_unclassified - pacbio hifi - bin files": {
         "content": [
@@ -98,6 +104,13 @@
                 
             ],
             [
+                "test.bp.hap1.p_ctg.lowQ.bed.gz",
+                "test.bp.hap2.p_ctg.lowQ.bed.gz",
+                "test.bp.p_ctg.lowQ.bed.gz",
+                "test.bp.p_utg.lowQ.bed.gz",
+                "test.bp.r_utg.lowQ.bed.gz"
+            ],
+            [
                 "versions.yml:md5,c5d43e7955e682b03e76387513047453"
             ]
         ],
@@ -105,7 +118,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T09:50:40.247549"
+        "timestamp": "2025-12-01T16:15:17.223656"
     },
     "Undibacterium_unclassified - long reads only": {
         "content": [
@@ -164,6 +177,13 @@
                 ]
             ],
             [
+                "test.bp.hap1.p_ctg.lowQ.bed.gz",
+                "test.bp.hap2.p_ctg.lowQ.bed.gz",
+                "test.bp.p_ctg.lowQ.bed.gz",
+                "test.bp.p_utg.lowQ.bed.gz",
+                "test.bp.r_utg.lowQ.bed.gz"
+            ],
+            [
                 "versions.yml:md5,c5d43e7955e682b03e76387513047453"
             ]
         ],
@@ -171,7 +191,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T09:50:28.006989"
+        "timestamp": "2025-12-01T16:15:05.16683"
     },
     "Undibacterium_unclassified - hi-c cram": {
         "content": [
@@ -220,6 +240,13 @@
                 
             ],
             [
+                "test.hic.hap1.p_ctg.lowQ.bed.gz",
+                "test.hic.hap2.p_ctg.lowQ.bed.gz",
+                "test.hic.p_ctg.lowQ.bed.gz",
+                "test.hic.p_utg.lowQ.bed.gz",
+                "test.hic.r_utg.lowQ.bed.gz"
+            ],
+            [
                 "versions.yml:md5,c5d43e7955e682b03e76387513047453"
             ]
         ],
@@ -227,7 +254,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T10:05:05.82888"
+        "timestamp": "2025-12-01T16:15:58.920908"
     },
     "Undibacterium_unclassified - stub": {
         "content": [
@@ -295,6 +322,9 @@
                     ]
                 ],
                 "5": [
+                    
+                ],
+                "6": [
                     [
                         {
                             "id": "test"
@@ -302,7 +332,7 @@
                         "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "6": [
+                "7": [
                     "versions.yml:md5,c5d43e7955e682b03e76387513047453"
                 ],
                 "assembly_fasta": [
@@ -336,6 +366,9 @@
                             "test.r_utg.gfa.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
                     ]
+                ],
+                "bed": [
+                    
                 ],
                 "bin_files": [
                     [
@@ -384,6 +417,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T10:29:28.447199"
+        "timestamp": "2025-12-01T15:59:05.3987"
     }
 }
