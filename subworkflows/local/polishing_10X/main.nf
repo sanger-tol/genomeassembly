@@ -57,9 +57,18 @@ workflow POLISHING_10X {
     //
     // Module: split assembly into chunks
     //
+    ch_bed_chunks_awk = channel.of('''\
+        BEGIN { OFS = "\\t" }
+        {
+            chunk_id = NR % chunk_size
+            print \$1, 0, \$2 > prefix "." chunk_id ".bed"
+        }'''.stripIndent())
+        .collectFile(name: "bed_chunks.awk", cache: true)
+        .collect()
+
     GAWK_BED_CHUNKS(
         SAMTOOLS_FAIDX.out.fai,
-        file("${projectDir}/bin/bed_chunks.awk"),
+        ch_bed_chunks_awk,
         true
     )
     ch_versions = ch_versions.mix(GAWK_BED_CHUNKS.out.versions)
