@@ -7,6 +7,7 @@
 // Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES         } from '../modules/nf-core/cat/cat'
 include { TABIX_BGZIP as BGZIP_ASSEMBLIES           } from '../modules/nf-core/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_HAPLOTIGS            } from '../modules/nf-core/tabix/bgzip/main'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
@@ -114,6 +115,9 @@ workflow GENOMEASSEMBLY {
         val_fastx_reads_per_chunk
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
+
+    BGZIP_HAPLOTIGS(PURGING.out.purged_haplotigs)
+    ch_versions = ch_versions.mix(BGZIP_HAPLOTIGS.out.versions)
 
     //
     // Logic: Add metadata to purged assemblies
