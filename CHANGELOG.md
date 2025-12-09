@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.50.0 - TBD - [2025-12-10]
 
-This is an interrim development release, tagging all the major changes to the pipeline since the last release, and 
+This is an interrim development release, tagging all the major changes to the pipeline since the last release, and
 is likely the final release before the release of version 1.0.
 
 In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer
@@ -104,62 +104,62 @@ Overhaul organelle assembly subworkflow (by @prototaxites)
 
 ### `Dependencies`
 
-| Module                     | tool         | Old version                              | New version    |
+| Module                     | Tool         | Old version                              | New version    |
 | -------------------------- | ------------ | ---------------------------------------- | -------------- |
-│ bcftools/concat            │ bcftools     │ 1.16                                     │ 1.21           │
-│ bcftools/consensus         │ bcftools     │ 1.16                                     │ 1.21           │
-│ bcftools/index             │ bcftools     │ 1.16                                     │ 1.21           │
-│ bcftools/norm              │ bcftools     │ 1.16                                     │ 1.21           │
-│ bcftools/sort              │ bcftools     │ 1.16                                     │ 1.21           │
-│ bcftools/view              │ bcftools     │ 1.16                                     │ 1.21           │
-│ busco/busco                │ busco        │ 5.4.3                                    │ 6.0.0          │
-│ bwamem2/index              │ bwa-mem2     │ 2.2.1                                    │ 2.3            │
-│ cooler/cload               │ cooler       │ 0.8.11                                   │ 0.10.4         │
-│ cooler/zoomify             │ cooler       │ 0.8.11                                   │ 0.10.4         │
-│ fastk/fastk                │ fastk        │ f18a4e6d2207539f7b84461daebc54530a9559b0 │ 1.1.0          │
-│ fastk/histex               │ fastk        │ f18a4e6d2207539f7b84461daebc54530a9559b0 │ 1.1.0          │
-│ gatk4/mergevcfs            │ gatk4        │ 4.4.0.0                                  │ 4.6.1.0        │
-│ gatk4/mergevcfs            │ gcnvkernel   │ <unspecified>                            │ 0.9            │
-│ gawk                       │ gawk         │ -                                        │ 5.3.0          │
-│ genescopefk                │ genescopefk  │ 380815c420f50171f9234a0fd1ff426b39829b91 │ -              │
-│ genomescope2               │ genomescope2 │ -                                        │ 2.0            │
-│ gfastats                   │ gfastats     │ 1.3.5                                    │ 1.3.10         │
-│ juicertools/pre            │ juicertools  │ 1.9.9                                    │ 2.20.00        │
-│ merquryfk/hapmaker         │ merquryfk    │ -                                        │ 1.1.1          │
-│ merquryfk/merquryfk        │ merquryfk    │ 8ae344092df5dcaf83cfb7f90f662597a9b1fc61 │ 1.1.1          │
-│ minimap2/align             │ minimap2     │ 2.24                                     │ 2.30           │
-│ minimap2/align             │ samtools     │ 1.14                                     │ 1.21           │
-│ minimap2/index             │ minimap2     │ 2.24                                     │ 2.30           │
-│ mitohifi/findmitoreference │ mitohifi     │ 3.2.0                                    │ 3.2.3          │
-│ mitohifi/mitohifi          │ mitohifi     │ 3.2.0                                    │ 3.2.3          │
-│ pretextmap                 │ pretextmap   │ 0.1.8                                    │ 0.1.9          │
-│ pretextmap                 │ samtools     │ 1.14                                     │ 1.17           │
-│ purgedups/histplot         │ purgedups    │ -                                        │ 1.2.6          │
-│ samtools/faidx             │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/flagstat          │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/idxstats          │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/index             │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/merge             │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/splitheader       │ samtools     │ 1.17                                     │ 1.22.1         │
-│ samtools/stats             │ samtools     │ 1.17                                     │ 1.22.1         │
-│ seqkit/grep                │ seqkit       │ -                                        │ 2.9.0          │
-│ tabix/bgzip                │ tabix        │ -                                        │ 1.21           │
-│ yahs                       │ yahs         │ 1.2a.2                                   │ 1.2.2          │
-│ yak/count                  │ yak          │ -                                        │ 0.1            │
-│ asmstats                   │ asmstats     │ -                                        │ 1.0            │
-│ bedtools/bamtobedsort      │ bedtools     │ -                                        │ 2.31.1         │
-│ cramalign/bwamem2alignhic  │ bwa-mem2     │ -                                        │ 2.2.1          │
-│ cramalign/bwamem2alignhic  │ samtools     │ -                                        │ 1.22.1         │
-│ cramalign/minimap2alignhic │ minimap2     │ -                                        │ 2.30           │
-│ cramalign/minimap2alignhic │ samtools     │ -                                        │ 1.22.1         │
-│ fastxalign/minimap2align   │ pyfastx      │ -                                        │ 2.2.0          │
-│ fastxalign/minimap2align   │ minimap2     │ -                                        │ 2.30           │
-│ fastxalign/pyfastxindex    │ pyfastx      │ -                                        │ 2.2.0          │
-│ hifiasm                    │ hifiasm      │ 0.18.5                                   │ 0.25.0         │
-│ longranger/align           │ longranger   │ 2.2.2                                    │ <user defined> │
-│ longranger/mkref           │ longranger   │ 2.2.2                                    │ <user defined> │
-│ samtools/mergedup          │ samtools     │ -                                        │ 1.22.1         │
-│ yahs/makepairsfile         │ yahs         │ -                                        │ 1.2.2          │
+| bcftools/concat            | bcftools     | 1.16                                     | 1.21           |
+| bcftools/consensus         | bcftools     | 1.16                                     | 1.21           |
+| bcftools/index             | bcftools     | 1.16                                     | 1.21           |
+| bcftools/norm              | bcftools     | 1.16                                     | 1.21           |
+| bcftools/sort              | bcftools     | 1.16                                     | 1.21           |
+| bcftools/view              | bcftools     | 1.16                                     | 1.21           |
+| busco/busco                | busco        | 5.4.3                                    | 6.0.0          |
+| bwamem2/index              | bwa-mem2     | 2.2.1                                    | 2.3            |
+| cooler/cload               | cooler       | 0.8.11                                   | 0.10.4         |
+| cooler/zoomify             | cooler       | 0.8.11                                   | 0.10.4         |
+| fastk/fastk                | fastk        | f18a4e6d2207539f7b84461daebc54530a9559b0 | 1.1.0          |
+| fastk/histex               | fastk        | f18a4e6d2207539f7b84461daebc54530a9559b0 | 1.1.0          |
+| gatk4/mergevcfs            | gatk4        | 4.4.0.0                                  | 4.6.1.0        |
+| gatk4/mergevcfs            | gcnvkernel   | <unspecified>                            | 0.9            |
+| gawk                       | gawk         | -                                        | 5.3.0          |
+| genescopefk                | genescopefk  | 380815c420f50171f9234a0fd1ff426b39829b91 | -              |
+| genomescope2               | genomescope2 | -                                        | 2.0            |
+| gfastats                   | gfastats     | 1.3.5                                    | 1.3.10         |
+| juicertools/pre            | juicertools  | 1.9.9                                    | 2.20.00        |
+| merquryfk/hapmaker         | merquryfk    | -                                        | 1.1.1          |
+| merquryfk/merquryfk        | merquryfk    | 8ae344092df5dcaf83cfb7f90f662597a9b1fc61 | 1.1.1          |
+| minimap2/align             | minimap2     | 2.24                                     | 2.30           |
+| minimap2/align             | samtools     | 1.14                                     | 1.21           |
+| minimap2/index             | minimap2     | 2.24                                     | 2.30           |
+| mitohifi/findmitoreference | mitohifi     | 3.2.0                                    | 3.2.3          |
+| mitohifi/mitohifi          | mitohifi     | 3.2.0                                    | 3.2.3          |
+| pretextmap                 | pretextmap   | 0.1.8                                    | 0.1.9          |
+| pretextmap                 | samtools     | 1.14                                     | 1.17           |
+| purgedups/histplot         | purgedups    | -                                        | 1.2.6          |
+| samtools/faidx             | samtools     | 1.17                                     | 1.22.1         |
+| samtools/flagstat          | samtools     | 1.17                                     | 1.22.1         |
+| samtools/idxstats          | samtools     | 1.17                                     | 1.22.1         |
+| samtools/index             | samtools     | 1.17                                     | 1.22.1         |
+| samtools/merge             | samtools     | 1.17                                     | 1.22.1         |
+| samtools/splitheader       | samtools     | 1.17                                     | 1.22.1         |
+| samtools/stats             | samtools     | 1.17                                     | 1.22.1         |
+| seqkit/grep                | seqkit       | -                                        | 2.9.0          |
+| tabix/bgzip                | tabix        | -                                        | 1.21           |
+| yahs                       | yahs         | 1.2a.2                                   | 1.2.2          |
+| yak/count                  | yak          | -                                        | 0.1            |
+| asmstats                   | asmstats     | -                                        | 1.0            |
+| bedtools/bamtobedsort      | bedtools     | -                                        | 2.31.1         |
+| cramalign/bwamem2alignhic  | bwa-mem2     | -                                        | 2.2.1          |
+| cramalign/bwamem2alignhic  | samtools     | -                                        | 1.22.1         |
+| cramalign/minimap2alignhic | minimap2     | -                                        | 2.30           |
+| cramalign/minimap2alignhic | samtools     | -                                        | 1.22.1         |
+| fastxalign/minimap2align   | pyfastx      | -                                        | 2.2.0          |
+| fastxalign/minimap2align   | minimap2     | -                                        | 2.30           |
+| fastxalign/pyfastxindex    | pyfastx      | -                                        | 2.2.0          |
+| hifiasm                    | hifiasm      | 0.18.5                                   | 0.25.0         |
+| longranger/align           | longranger   | 2.2.2                                    | <user defined> |
+| longranger/mkref           | longranger   | 2.2.2                                    | <user defined> |
+| samtools/mergedup          | samtools     | -                                        | 1.22.1         |
+| yahs/makepairsfile         | yahs         | -                                        | 1.2.2          |
 
 ### `Deprecated`
 
