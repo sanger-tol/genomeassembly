@@ -114,13 +114,20 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         BWAMEM2_INDEX(ch_assemblies)
         ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
 
-        ch_assemblies_with_reference = ch_assemblies
+        ch_mapping_inputs = ch_cram_rg
+            .combine(ch_assemblies, by: 0)
             .combine(BWAMEM2_INDEX.out.index, by: 0)
+            .multiMap { meta, rg, cram, crai, chunkn, slices, assembly, index ->
+                cram:      [ meta, cram, crai, rg ]
+                reference: [ meta, index, assembly ]
+                slices:    [ chunkn, slices ]
+            }
 
-        ch_cram_chunks = ch_cram_rg
-            .combine(ch_assemblies_with_reference, by: 0)
-
-        CRAMALIGN_BWAMEM2ALIGNHIC(ch_cram_chunks)
+        CRAMALIGN_BWAMEM2ALIGNHIC(
+            ch_mapping_inputs.cram,
+            ch_mapping_inputs.reference,
+            ch_mapping_inputs.slices
+        )
         ch_versions = ch_versions.mix(CRAMALIGN_BWAMEM2ALIGNHIC.out.versions)
 
         ch_mapped_bams = CRAMALIGN_BWAMEM2ALIGNHIC.out.bam
@@ -131,10 +138,20 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         MINIMAP2_INDEX(ch_assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
 
-        ch_cram_chunks = ch_cram_rg
+        ch_mapping_inputs = ch_cram_rg
+            .combine(ch_assemblies, by: 0)
             .combine(MINIMAP2_INDEX.out.index, by: 0)
+            .multiMap { meta, rg, cram, crai, chunkn, slices, assembly, index ->
+                cram:      [ meta, cram, crai, rg ]
+                reference: [ meta, index, assembly ]
+                slices:    [ chunkn, slices ]
+            }
 
-        CRAMALIGN_MINIMAP2ALIGNHIC(ch_cram_chunks)
+        CRAMALIGN_MINIMAP2ALIGNHIC(
+            ch_mapping_inputs.cram,
+            ch_mapping_inputs.reference,
+            ch_mapping_inputs.slices
+        )
         ch_versions = ch_versions.mix(CRAMALIGN_MINIMAP2ALIGNHIC.out.versions)
 
         ch_mapped_bams = CRAMALIGN_MINIMAP2ALIGNHIC.out.bam

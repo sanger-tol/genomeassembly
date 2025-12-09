@@ -8,7 +8,9 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
         'community.wave.seqera.io/library/htslib_minimap2_samtools_gawk_perl:6729620c63652154' }"
 
     input:
-    tuple val(meta), val(rglines), path(cram), path(crai), val(chunkn), val(range), path(reference)
+    tuple val(meta),  path(cram),  path(crai), val(rglines)
+    tuple val(meta2), path(index), path(reference)
+    tuple val(chunkn), val(range)
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
@@ -42,7 +44,7 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
     """
     samtools cat ${args1} -r "#:${range[0]}-${range[1]}" ${cram} |\\
         samtools fastq ${args2} - |\\
-        minimap2 -t${task.cpus} ${args3} ${reference} ${rg_arg} - |\\
+        minimap2 -t${task.cpus} ${args3} ${index} ${rg_arg} - |\\
         gawk -F'\t' '
             BEGIN { OFS="\\t" }
             \$1 ~ /^\\@/ { print \$0 }

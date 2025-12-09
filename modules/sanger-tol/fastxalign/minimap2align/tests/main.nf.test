@@ -38,16 +38,17 @@ nextflow_process {
 
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
+                input[1] = Channel.of([
                     [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    []
+                ])
+                input[2] = channel.of([
                     0,
                     [0, 500],
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
-                ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, chunkn, range, reference, reads, index, count ->
-                    [ meta, reads, index, chunkn, range, reference ]
-                }
-                input[1] = true
+                ])
+                input[3] = true
                 """
             }
         }
@@ -76,16 +77,17 @@ nextflow_process {
 
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
+                input[1] = Channel.of([
                     [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    []
+                ])
+                input[2] = channel.of([
                     0,
                     [0, 500],
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
-                ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, chunkn, range, reference, reads, index, count ->
-                    [ meta, reads, index, chunkn, range, reference ]
-                }
-                input[1] = true
+                ])
+                input[3] = true
                 """
             }
         }
@@ -114,16 +116,17 @@ nextflow_process {
 
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
+                input[1] = Channel.of([
                     [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    []
+                ])
+                input[2] = channel.of([
                     0,
                     [0, 500],
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
-                ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, chunkn, range, reference, reads, index, count ->
-                    [ meta, reads, index, chunkn, range, reference ]
-                }
-                input[1] = false
+                ])
+                input[3] = false
                 """
             }
         }
@@ -151,16 +154,17 @@ nextflow_process {
 
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
+                input[1] = Channel.of([
                     [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    []
+                ])
+                input[2] = channel.of([
                     0,
                     [0, 500],
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
-                ]).combine(FASTXALIGN_PYFASTXINDEX.out.index, by: 0)
-                .map { meta, chunkn, range, reference, reads, index, count ->
-                    [ meta, reads, index, chunkn, range, reference ]
-                }
-                input[1] = true
+                ])
+                input[3] = true
                 """
             }
         }

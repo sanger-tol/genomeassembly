@@ -19,55 +19,7 @@
                         "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
-                "2": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
-                    ]
-                ],
-                "8": [
+                "10": [
                     [
                         {
                             "id": "test"
@@ -75,7 +27,21 @@
                         "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
-                "9": [
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
+                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
+                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
+                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                        ]
+                    ]
+                ],
+                "12": [
                     "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
                     "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
                     "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
@@ -91,6 +57,84 @@
                     "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
                     "versions.yml:md5,f7b0f31fa50eff25352b3aac997dfe71",
                     "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
+                    ]
+                ],
+                "primary_reads_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
+                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
+                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
+                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                        ]
+                    ]
                 ],
                 "purged_assemblies": [
                     [
@@ -165,6 +209,22 @@
                         "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
+                "purgedups_splitfa": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
+                    ]
+                ],
+                "purgedups_splitfa_self_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
+                    ]
+                ],
                 "versions": [
                     "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
                     "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
@@ -188,7 +248,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-24T11:57:28.717517"
+        "timestamp": "2025-12-03T13:54:03.689239"
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
@@ -210,55 +270,7 @@
                         "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
                     ]
                 ],
-                "2": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
-                    ]
-                ],
-                "8": [
+                "10": [
                     [
                         {
                             "id": "test"
@@ -266,7 +278,21 @@
                         "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
                     ]
                 ],
-                "9": [
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
+                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
+                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
+                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                        ]
+                    ]
+                ],
+                "12": [
                     "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
                     "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
                     "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
@@ -281,6 +307,84 @@
                     "versions.yml:md5,c9411452b63f327d2a5b66a82b8fd621",
                     "versions.yml:md5,d9e6066e723f9a40b1e22c33e37f2edf",
                     "versions.yml:md5,f8a504bd74283e317e5e474345c3badc"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
+                    ]
+                ],
+                "primary_reads_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
+                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
+                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
+                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                        ]
+                    ]
                 ],
                 "purged_assemblies": [
                     [
@@ -355,6 +459,22 @@
                         "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
                     ]
                 ],
+                "purgedups_splitfa": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
+                    ]
+                ],
+                "purgedups_splitfa_self_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
+                    ]
+                ],
                 "versions": [
                     "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
                     "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
@@ -377,6 +497,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-24T11:59:03.552171"
+        "timestamp": "2025-12-03T13:55:39.9489"
     }
 }

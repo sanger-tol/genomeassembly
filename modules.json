@@ -278,7 +278,7 @@
                     },
                     "cramalign/bwamem2alignhic": {
                         "branch": "main",
-                        "git_sha": "04c2eb9baf8b1a29aa345cceb47134163ded9616",
+                        "git_sha": "81ae063393c8646485529deb8d760eb576a3870f",
                         "installed_by": ["cram_map_illumina_hic"]
                     },
                     "cramalign/gencramchunks": {
@@ -288,12 +288,12 @@
                     },
                     "cramalign/minimap2alignhic": {
                         "branch": "main",
-                        "git_sha": "04c2eb9baf8b1a29aa345cceb47134163ded9616",
+                        "git_sha": "81ae063393c8646485529deb8d760eb576a3870f",
                         "installed_by": ["cram_map_illumina_hic"]
                     },
                     "fastxalign/minimap2align": {
                         "branch": "main",
-                        "git_sha": "8dde1442313b4f0a0902621eccbdfae6a2fdaae0",
+                        "git_sha": "81ae063393c8646485529deb8d760eb576a3870f",
                         "installed_by": ["fastx_map_long_reads"]
                     },
                     "fastxalign/pyfastxindex": {
@@ -337,7 +337,7 @@
                     },
                     "cram_map_illumina_hic": {
                         "branch": "main",
-                        "git_sha": "05516631b7ef8fa3b9d7645c4f17746e5883f1d2",
+                        "git_sha": "81ae063393c8646485529deb8d760eb576a3870f",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_bam_scaffolding_yahs": {
@@ -347,12 +347,12 @@
                     },
                     "fasta_purge_retained_haplotype": {
                         "branch": "main",
-                        "git_sha": "05516631b7ef8fa3b9d7645c4f17746e5883f1d2",
+                        "git_sha": "4beac10492437c23c55ddf6136de2d0df1f86d8e",
                         "installed_by": ["subworkflows"]
                     },
                     "fastx_map_long_reads": {
                         "branch": "main",
-                        "git_sha": "05516631b7ef8fa3b9d7645c4f17746e5883f1d2",
+                        "git_sha": "81ae063393c8646485529deb8d760eb576a3870f",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "genome_statistics": {

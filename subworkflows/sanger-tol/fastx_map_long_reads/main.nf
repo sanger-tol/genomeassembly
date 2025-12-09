@@ -72,11 +72,19 @@ workflow FASTX_MAP_LONG_READS {
     // Module: Map slices of each FASTA file to the reference
     //
     ch_fasta_with_slices = ch_fastx_chunks
+        .combine(ch_assemblies, by: 0)
         .combine(MINIMAP2_INDEX.out.index, by: 0)
         .transpose()
+        .multiMap { meta, fasta, fxi, chunkn, slices, asm, index ->
+            fastx:     [ meta, fasta, fxi ]
+            reference: [ meta, index, asm ]
+            slices:    [ chunkn, slices ]
+        }
 
     FASTXALIGN_MINIMAP2ALIGN(
-        ch_fasta_with_slices,
+        ch_fasta_with_slices.fastx,
+        ch_fasta_with_slices.reference,
+        ch_fasta_with_slices.slices,
         val_output_bam
     )
     ch_versions = ch_versions.mix(FASTXALIGN_MINIMAP2ALIGN.out.versions)

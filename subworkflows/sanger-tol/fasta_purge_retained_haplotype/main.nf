@@ -132,14 +132,17 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     ch_alts = ch_alt_split.asis.mix(CONCATENATE_HAPLOTYPES.out.file_out)
 
     emit:
-    purged_assemblies         = PURGEDUPS_GETSEQS.out.purged.combine(ch_alts, by: 0)
-    purged_haplotigs          = PURGEDUPS_GETSEQS.out.haplotigs
-    purgedups_pbcstat_hist    = PURGEDUPS_PBCSTAT.out.stat
-    purgedups_pbcstat_basecov = PURGEDUPS_PBCSTAT.out.basecov
-    purgedups_calcuts_cutoffs = PURGEDUPS_CALCUTS.out.cutoff
-    purgedups_calcuts_log     = PURGEDUPS_CALCUTS.out.log
-    purgedups_histplot        = PURGEDUPS_HISTPLOT.out.png
-    purgedups_bed             = PURGEDUPS_PURGEDUPS.out.bed
-    purgedups_log             = PURGEDUPS_PURGEDUPS.out.log
-    versions                  = ch_versions
+    purged_assemblies          = PURGEDUPS_GETSEQS.out.purged.combine(ch_alts, by: 0)
+    purged_haplotigs           = PURGEDUPS_GETSEQS.out.haplotigs
+    purgedups_splitfa          = PURGEDUPS_SPLITFA.out.split_fasta
+    purgedups_splitfa_self_paf = MINIMAP2_ALIGN_ASSEMBLY.out.paf
+    purgedups_pbcstat_hist     = PURGEDUPS_PBCSTAT.out.stat
+    purgedups_pbcstat_basecov  = PURGEDUPS_PBCSTAT.out.basecov
+    purgedups_calcuts_cutoffs  = PURGEDUPS_CALCUTS.out.cutoff
+    purgedups_calcuts_log      = PURGEDUPS_CALCUTS.out.log
+    purgedups_histplot         = PURGEDUPS_HISTPLOT.out.png
+    purgedups_bed              = PURGEDUPS_PURGEDUPS.out.bed
+    purgedups_log              = PURGEDUPS_PURGEDUPS.out.log
+    primary_reads_paf          = FASTX_MAP_LONG_READS.out.paf
+    versions                   = ch_versions
 }
