@@ -6,6 +6,8 @@
 
 // Modules
 include { CAT_CAT as CONCATENATE_ASSEMBLIES         } from '../modules/nf-core/cat/cat'
+include { TABIX_BGZIP as BGZIP_ASSEMBLIES           } from '../modules/nf-core/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_HAPLOTIGS            } from '../modules/nf-core/tabix/bgzip/main'
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
@@ -79,7 +81,7 @@ workflow GENOMEASSEMBLY {
     //
     // Logic: Identify what steps to run on each assembly, using the params
     //
-    ch_assemblies_raw = RAW_ASSEMBLY.out.assembly_fasta
+    ch_assemblies_raw = RAW_ASSEMBLY.out.hifiasm_fasta
         .map { meta, hap1, hap2 ->
             def purge_types  = params.purging_assemblytypes.tokenize(",")
             def polish_types = params.polishing_assemblytypes.tokenize(",")
@@ -113,6 +115,9 @@ workflow GENOMEASSEMBLY {
         val_fastx_reads_per_chunk
     )
     ch_versions = ch_versions.mix(PURGING.out.versions)
+
+    BGZIP_HAPLOTIGS(PURGING.out.purged_haplotigs)
+    ch_versions = ch_versions.mix(BGZIP_HAPLOTIGS.out.versions)
 
     //
     // Logic: Add metadata to purged assemblies
@@ -229,15 +234,44 @@ workflow GENOMEASSEMBLY {
         }
 
     //
-    // Subworkflow: collect all assemblies and calculate assembly QC metrics
+    // Logic: collect all assemblies together
     //
-    ch_assemblies_for_statistics = Channel.empty()
+    ch_all_assemblies = channel.empty()
         .mix(
             ch_assemblies_raw,
             ch_assemblies_purged,
             ch_assemblies_polished,
             ch_assemblies_scaffolded
         )
+
+    //
+    // Module: bgzip all output assemblies
+    //
+    ch_all_assemblies_to_bgzip = ch_all_assemblies
+        .flatMap { meta, asm1, asm2 ->
+            def meta_asm1 = meta + [_hap: "hap1"]
+            def meta_asm2 = meta + [_hap: "hap2"]
+            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
+        }
+        .filter { meta, asm -> asm }
+
+    BGZIP_ASSEMBLIES(ch_all_assemblies_to_bgzip)
+    ch_versions = ch_versions.mix(BGZIP_ASSEMBLIES.out.versions)
+
+    //
+    // Subworkflow: collect all assemblies and calculate assembly QC metrics
+    //
+    ch_hap1_for_statistics = BGZIP_ASSEMBLIES.out.output
+        .flatMap { meta, asm ->
+            meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), asm ]] : []
+        }
+
+    ch_hap2_for_statisics = BGZIP_ASSEMBLIES.out.output
+        .flatMap { meta, asm ->
+            meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), asm ]] : []
+        }
+
+    ch_assemblies_for_statistics = ch_hap1_for_statistics.join(ch_hap2_for_statisics, by: 0, remainder: true)
 
     GENOME_STATISTICS(
         ch_assemblies_for_statistics,
@@ -249,6 +283,10 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
+
+    //
+    // Subworkflow: assemble organellar genomes
+    //
     if(params.enable_organelle_assembly) {
         ch_species = ch_long_reads_after_kmers
             .map { meta, reads -> [meta, meta.species] }

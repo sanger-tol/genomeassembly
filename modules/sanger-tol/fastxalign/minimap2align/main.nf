@@ -8,7 +8,9 @@ process FASTXALIGN_MINIMAP2ALIGN {
         'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_click:bfd8f60cc27aa6d6' }"
 
     input:
-    tuple val(meta), path(fastx), path(fxi), val(chunkn), val(range), path(reference)
+    tuple val(meta),  path(fastx), path(fxi)
+    tuple val(meta2), path(index), path(reference)
+    tuple val(chunkn), val(range)
     val bam_format
 
     output:
@@ -34,7 +36,7 @@ process FASTXALIGN_MINIMAP2ALIGN {
     def bam_output  = bam_format      ? "-a | ${post_filter} ${sort_bam}" : "| bgzip -@ ${task.cpus} > ${prefix}.paf.gz"
     """
     slice_fasta.py slice ${fastx} ${range[0]} ${range[1]} | \\
-        minimap2 -t${task.cpus} ${args1} ${reference} - \\
+        minimap2 -t${task.cpus} ${args1} ${index} - \\
         ${bam_output}
 
     cat <<-END_VERSIONS > versions.yml

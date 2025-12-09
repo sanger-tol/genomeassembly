@@ -1,30 +1,27 @@
 process HIFIASM {
-    tag "$meta.id"
-    label 'process_high'
+    tag "${meta.id}"
+    label 'process_high_memory'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/70/709c9b732af5bc95b8f02346f374b8d9ef815087e30a969410d5e385625bf7a9/data' :
-        'community.wave.seqera.io/library/hifiasm_samtools:7f8aef13225935f4' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/37/373e515588f1ee1cc0eb4c68fe83db690ccd372d134036464bcb24a2ef060b27/data' :
+        'community.wave.seqera.io/library/hifiasm_htslib_samtools_gawk:6a66c53cc0723e53' }"
 
     input:
     tuple val(meta) , path(long_reads)        , path(ul_reads)
-    tuple val(meta1), path(paternal_kmer_dump), path(maternal_kmer_dump)
-    tuple val(meta2), path(hic_reads)
-    tuple val(meta3), path(bin_files)
+    tuple val(meta2), path(hic_cram)
+    tuple val(meta3), path(paternal_kmer_dump), path(maternal_kmer_dump)
+    tuple val(meta4), path(bin_files)
 
     output:
-    tuple val(meta), path("*.r_utg.gfa.gz")                             , emit: raw_unitigs      , optional: true
-    tuple val(meta), path("*.bin")                                      , emit: bin_files        , optional: true
-    tuple val(meta), path("*.p_utg.gfa.gz")                             , emit: processed_unitigs, optional: true
-    tuple val(meta), path("${prefix}.{p_ctg,bp.p_ctg,hic.p_ctg}.gfa.gz"), emit: primary_contigs  , optional: true
-    tuple val(meta), path("${prefix}.{a_ctg,hic.a_ctg}.gfa.gz")         , emit: alternate_contigs, optional: true
-    tuple val(meta), path("${prefix}.*.hap1.p_ctg.gfa.gz")              , emit: hap1_contigs     , optional: true
-    tuple val(meta), path("${prefix}.*.hap2.p_ctg.gfa.gz")              , emit: hap2_contigs     , optional: true
-    tuple val(meta), path("*.ec.fa.gz")                                 , emit: corrected_reads  , optional: true
-    tuple val(meta), path("*.ovlp.paf.gz")                              , emit: read_overlaps    , optional: true
-    tuple val(meta), path("${prefix}.log")                              , emit: log
-    path  "versions.yml"                                                , emit: versions
+    tuple val(meta), path("*.bin")        , emit: bin_files        , optional: true
+    tuple val(meta), path("*.gfa.gz")     , emit: assembly_graphs  , optional: true
+    tuple val(meta), path("*.fa")         , emit: assembly_fasta   , optional: true
+    tuple val(meta), path("*.ec.fa.gz")   , emit: corrected_reads  , optional: true
+    tuple val(meta), path("*.ovlp.paf.gz"), emit: read_overlaps    , optional: true
+    tuple val(meta), path("*.bed.gz")     , emit: bed              , optional: true
+    tuple val(meta), path("*.log")        , emit: log
+    path  "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,10 +31,11 @@ process HIFIASM {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     def long_reads_sorted = long_reads instanceof List ? long_reads.sort{ file -> file.name } : long_reads
+    def hic_cram_sorted = hic_cram instanceof List ? hic_cram.sort{ file -> file.name } : hic_cram
     def ul_reads_sorted = ul_reads instanceof List ? ul_reads.sort{ file -> file.name } : ul_reads
     def ultralong = ul_reads ? "--ul ${ul_reads_sorted}" : ""
 
-    if([paternal_kmer_dump, maternal_kmer_dump].any() && hic_reads) {
+    if([paternal_kmer_dump, maternal_kmer_dump].any() && hic_cram) {
         log.error("ERROR: hifiasm trio binning mode and Hi-C phasing can not be used at the same time.")
     }
 
@@ -52,9 +50,9 @@ process HIFIASM {
 
     def input_hic1 = ""
     def input_hic2 = ""
-    if(hic_reads) {
-        input_hic1 = "--h1 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
-        input_hic2 = "--h2 <(for f in ${hic_reads}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
+    if(hic_cram) {
+        input_hic1 = "--h1 <(for f in ${hic_cram_sorted}; do samtools cat \$f | samtools fastq -n -f0x40 -F0xB00; done)"
+        input_hic2 = "--h2 <(for f in ${hic_cram_sorted}; do samtools cat \$f | samtools fastq -n -f0x80 -F0xB00; done)"
     }
     """
     hifiasm \\
@@ -76,8 +74,14 @@ process HIFIASM {
         bgzip -@${task.cpus} ${prefix}.ovlp.paf
     fi
 
-    ## gzip all GFA output files
+    find . -maxdepth 1 -name "*.gfa" | while read graph; do
+        bn=\$(basename "\$graph" .gfa)
+        gawk 'BEGIN { OFS = "\\t" } /^S/ { print ">" \$2; print \$3 }' "\$graph" > "\${bn}.fa"
+    done
+
+    ## gzip all GFA and BED output files
     find . -name "*.gfa" -exec bgzip -@${task.cpus} {} \\;
+    find . -name "*.bed" -exec bgzip -@${task.cpus} {} \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -95,12 +99,19 @@ process HIFIASM {
     touch ${prefix}.hic.tlb.bin
     touch ${prefix}.hic.lk.bin
     echo "" | bgzip > ${prefix}.r_utg.gfa.gz
+    touch ${prefix}.r_utg.fa
     echo "" | bgzip > ${prefix}.bp.p_ctg.gfa.gz
+    touch ${prefix}.bp.p_ctg.fa
     echo "" | bgzip > ${prefix}.p_utg.gfa.gz
+    touch ${prefix}.p_utg.fa
     echo "" | bgzip > ${prefix}.p_ctg.gfa.gz
+    touch ${prefix}.p_ctg.fa
     echo "" | bgzip > ${prefix}.a_ctg.gfa.gz
+    touch ${prefix}.a_ctg.fa
     echo "" | bgzip > ${prefix}.hap1.p_ctg.gfa.gz
+    touch ${prefix}.hap1.p_ctg.fa
     echo "" | bgzip > ${prefix}.hap2.p_ctg.gfa.gz
+    touch ${prefix}.hap2.p_ctg.fa
     echo "" | bgzip > ${prefix}.ec.fa.gz
     echo "" | bgzip > ${prefix}.ovlp.paf.gz
     touch ${prefix}.log

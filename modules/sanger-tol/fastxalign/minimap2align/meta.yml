@@ -53,16 +53,25 @@ input:
         description: FXI index file of the input created by pyfastx
         pattern: "*.fxi"
         ontologies: []
-    - chunkn:
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - index:
+        type: file
+        description: minimap2 index of the reference to be aligned to
+    - reference:
+        type: file
+        description: FASTA file or minimap2 index of the reference to be aligned to
+        ontologies: []
+  - - chunkn:
         type: integer
         description: Integer index of FASTA chunk to map
     - range:
         type: list
         description: Start and end indices defining FASTA slices to align, 0-indexed
-    - reference:
-        type: file
-        description: FASTA file or minimap2 index of the reference to be aligned to
-        ontologies: []
+
   - bam_format:
       type: boolean
       description: Output PAF format or BAM format alignments

@@ -28,8 +28,8 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     //        remainder join
     //
     ch_fai_gzi = SAMTOOLS_FAIDX.out.fai
-        | join(SAMTOOLS_FAIDX.out.gzi, by: 0, remainder: true)
-        | map { meta, fai, gzi -> [ meta, fai, gzi ?: [] ] }
+        .join(SAMTOOLS_FAIDX.out.gzi, by: 0, remainder: true)
+        .map { meta, fai, gzi -> [ meta, fai, gzi ?: [] ] }
 
     //
     // Logic: Prepare input for merging bams.
@@ -37,9 +37,9 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     //        we emit groups downstream ASAP once all bams have been made
     //
     ch_samtools_merge_input = ch_bam
-        | combine(ch_assemblies, by: 0)
-        | combine(ch_fai_gzi, by: 0)
-        | multiMap { meta, bams, assembly, fai, gzi ->
+        .combine(ch_assemblies, by: 0)
+        .combine(ch_fai_gzi, by: 0)
+        .multiMap { meta, bams, assembly, fai, gzi ->
             bam:   [ meta, bams ]
             fasta: [ meta, assembly ]
             fai:   [ meta, fai ]
@@ -59,10 +59,10 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
         ch_versions    = ch_versions.mix(SAMTOOLS_MERGEDUP.out.versions)
 
         ch_output_bam  = SAMTOOLS_MERGEDUP.out.bam
-            | mix(SAMTOOLS_MERGEDUP.out.cram)
+            .mix(SAMTOOLS_MERGEDUP.out.cram)
 
         ch_output_index = SAMTOOLS_MERGEDUP.out.csi
-            | mix(SAMTOOLS_MERGEDUP.out.crai)
+            .mix(SAMTOOLS_MERGEDUP.out.crai)
 
         ch_output_metrics = SAMTOOLS_MERGEDUP.out.metrics
     } else {
@@ -75,10 +75,10 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
         ch_versions    = ch_versions.mix(SAMTOOLS_MERGE.out.versions)
 
         ch_output_bam  = SAMTOOLS_MERGE.out.bam
-            | mix(SAMTOOLS_MERGE.out.cram)
+            .mix(SAMTOOLS_MERGE.out.cram)
 
         ch_output_index = SAMTOOLS_MERGE.out.csi
-            | mix(SAMTOOLS_MERGE.out.crai)
+            .mix(SAMTOOLS_MERGE.out.crai)
 
         ch_output_metrics = channel.empty()
     }

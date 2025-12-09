@@ -3,6 +3,8 @@
 channels:
   - conda-forge
   - bioconda
-
 dependencies:
-  - bioconda::hifiasm=0.24.0
+  - bioconda::hifiasm=0.25.0
+  - bioconda::htslib=1.22.1
+  - bioconda::samtools=1.22.1
+  - conda-forge::gawk=5.3.1

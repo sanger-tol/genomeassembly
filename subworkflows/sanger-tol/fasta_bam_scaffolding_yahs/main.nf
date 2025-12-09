@@ -39,9 +39,9 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
     // Module: scaffold contigs with YaHS
     //
     ch_yahs_input = ch_fasta
-        | combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
-        | combine(BEDTOOLS_BAMTOBEDSORT.out.sorted_bed, by: 0)
-        | map { meta, fasta, fai, bed ->
+        .combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
+        .combine(BEDTOOLS_BAMTOBEDSORT.out.sorted_bed, by: 0)
+        .map { meta, fasta, fai, bed ->
             // add empty AGP input
             [ meta, fasta, fai, bed, [] ]
         }
@@ -63,9 +63,9 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
     // Module: Make pairs file to build contact maps with
     //
     ch_pairs_input = SAMTOOLS_FAIDX_SCAFFOLDS.out.fai
-        | combine(YAHS.out.scaffolds_agp, by: 0)
-        | combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
-        | combine(YAHS.out.binary, by: 0)
+        .combine(YAHS.out.scaffolds_agp, by: 0)
+        .combine(SAMTOOLS_FAIDX_CONTIGS.out.fai, by: 0)
+        .combine(YAHS.out.binary, by: 0)
 
     YAHS_MAKEPAIRSFILE(ch_pairs_input)
     ch_versions = ch_versions.mix(YAHS_MAKEPAIRSFILE.out.versions)
@@ -74,8 +74,8 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
     // Subworkflow: Create Hi-C contact maps for visualisation of scaffolding outputs
     //
     ch_contact_map_inputs = YAHS_MAKEPAIRSFILE.out.pairs
-        | combine(SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes, by: 0)
-        | multiMap { meta, pairs, sizes ->
+        .combine(SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes, by: 0)
+        .multiMap { meta, pairs, sizes ->
             pairs: [ meta, pairs ]
             sizes: [ meta, sizes ]
         }

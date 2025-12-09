@@ -29,47 +29,47 @@ tools:
       arxiv: arXiv:1303.3997
       licence: ["MIT"]
       identifier: "biotools:bwa-mem2"
-
 input:
   - - meta:
         type: map
         description: |
           Groovy Map containing sample information
           e.g. `[ id:'sample1' ]`
-
     - cram:
         type: file
         description: CRAM file containing Hi-C sequences to align
         pattern: "*.cram"
         ontologies:
           - edam: "http://edamontology.org/format_3462" # CRAM
-
     - crai:
         type: file
         description: CRAM index file
         pattern: "*.crai"
         ontologies:
           - edam: "http://edamontology.org/format_3475" # TSV
-
-    - chunkn:
-        type: integer
-        description: Integer index of CRAM chunk to map
-
-    - range:
+    - rglines:
         type: list
-        description: Start and end indices defining CRAM slices to align
-
+        description: A list of strings, each a valid SAM-format @RG header line, to pass to the aligner
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
     - index:
         type: file
         description: bwa-mem2 index of the reference to be aligned to
-
     - reference:
         type: file
         description: FASTA file containing reference for alignment
         pattern: "*.fasta(.gz)?"
         ontologies:
           - edam: http://edamontology.org/format_1929 # FASTA
-
+  - - chunkn:
+        type: integer
+        description: Integer index of CRAM chunk to map
+    - range:
+        type: list
+        description: Start and end indices defining CRAM slices to align
 output:
   bam:
     - - meta:
@@ -83,13 +83,11 @@ output:
           pattern: "*.bam"
           ontologies:
             - edam: "http://edamontology.org/format_2572" # BAM
-
   versions:
     - "versions.yml":
         type: file
         description: File containing software versions
         pattern: "versions.yml"
-
 authors:
   - "@yumisims"
   - "@prototaxites"
