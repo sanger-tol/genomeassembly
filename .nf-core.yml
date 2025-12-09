@@ -43,8 +43,7 @@ repository_type: pipeline
 template:
   org: sanger-tol
   name: genomeassembly
-  description: A bioinformatics best-practice analysis pipeline for genome assembly
-    from PacBio CCS and HiC reads
+  description: A bioinformatics best-practice analysis pipeline for genome assembly from PacBio CCS and HiC reads
   author: "Ksenia Krashennikova"
   force: true
   outdir: .
@@ -53,4 +52,4 @@ template:
     - multiqc
     - fastqc
   is_nfcore: false
-  version: 0.10.1dev
+  version: 0.50.0
