@@ -6,11 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.50.0 - TBD - [2025-12-10]
 
 This is an interrim development release, tagging all the major changes to the pipeline since the last release, and 
-is likely the final release before the release of version 1.0. 
+is likely the final release before the release of version 1.0.
 
 In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer
 Nextflow standards, while trying to maintain general compatibility with the interface of the previous version, where possible.
-However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written. 
+However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written.
 
 The full 1.0 release will encompass further changes, particularly another overhaul of the input schema such that the data
 input schema is separated from the assembly input schema, allowing multiple assemblies to be parameterised simultaneously
