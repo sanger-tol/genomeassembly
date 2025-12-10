@@ -16,6 +16,7 @@ lint:
     - assets/email_template.txt
     - docs/README.md
     - LICENSE
+    - .gitattributes
   multiqc_config: false
   nextflow_config:
     - manifest.name
