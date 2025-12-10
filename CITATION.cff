@@ -36,7 +36,7 @@ authors:
     orcid: https://orcid.org/0000-0002-7167-0875
     website: https://github.com/priyanka-surana
 cff-version: 1.2.0
-date-released: "2025-12-10"
+date-released: "2025-12-11"
 license: MIT
 message: If you use this software, please cite it using the metadata from this file
   and all references from CITATIONS.md .
