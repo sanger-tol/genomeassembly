@@ -20,24 +20,24 @@ the coverage of the genome prior to assembly.
 <summary>Output files</summary>
 
 - `kmer/k{kmer_size}/long/`
-  - `{id}.long.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
-  - `{id}.long.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
-  - `{id}.long..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
-  - `.{id}.long.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer.
-  - `.{id}.long.{kmer_size}_model.txt`: GenomeScope2.0 model fit file containing the model parameters.
-  - `.{id}.long.{kmer_size}_summary.txt`: Summary file for the GenomeScope2.0 model.
-  - `.{id}.long.{kmer_size}_*.png`: GenomeScope2.0 graphical plots showing the model fit against the kmer spectrum.
-- `kmer/{kmer_size}/{mat/pat}/`
-  - `{id}.{mat/pat}.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
-  - `{id}.{mat/pat}.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
-  - `{id}.{mat/pat}.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
-  - `.{id}.{mat/pat}.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
-  - `{id}_{mat/pat}.yak`: Yak Kmer database for the maternal or paternal reads.
+  - `{id}.long.k{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
+  - `{id}.long.k{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
+  - `{id}.long.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
+  - `.{id}.long.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer.
+  - `.{id}.long.k{kmer_size}_model.txt`: GenomeScope2.0 model fit file containing the model parameters.
+  - `.{id}.long.k{kmer_size}_summary.txt`: Summary file for the GenomeScope2.0 model.
+  - `.{id}.long.k{kmer_size}_*.png`: GenomeScope2.0 graphical plots showing the model fit against the kmer spectrum.
+- `kmer/k{kmer_size}/{mat/pat}/`
+  - `{id}.{mat/pat}.k{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
+  - `{id}.{mat/pat}.k{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
+  - `{id}.{mat/pat}.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
+  - `.{id}.{mat/pat}.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
+  - `{id}.{mat/pat}.yak`: Yak kmer database for the maternal or paternal reads.
 - `kmer/{kmer_size}/trio`
-  - `{id}.mat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and maternal genome.
-  - `.{id}.mat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and maternal genome.
-  - `{id}.pat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and paternal genome.
-  - `.{id}.pat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and paternal genome.
+  - `{id}.mat.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `.{id}.mat.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `{id}.pat.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and paternal genome.
+  - `.{id}.pat.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and paternal genome.
 
 </details>
 
