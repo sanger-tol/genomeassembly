@@ -37,6 +37,7 @@ authors:
     website: https://github.com/priyanka-surana
 cff-version: 1.2.0
 date-released: "2025-12-11"
+doi: 10.5281/zenodo.10391851
 license: MIT
 message: If you use this software, please cite it using the metadata from this file
   and all references from CITATIONS.md .
