@@ -19,7 +19,7 @@ the coverage of the genome prior to assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `kmer/{kmer_size}/long/`
+- `kmer/k{kmer_size}/long/`
   - `{id}.long.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
   - `{id}.long.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
   - `{id}.long..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
@@ -57,12 +57,12 @@ For full details describing hifiasm outputs, please refer to the hifiasm documen
 <details markdown="1">
   <summary>Output files</summary>
 
-- `asm.p_ctg.(g)?fa`: primary assembly in GFA and FASTA format.
-- `asm.a_ctg.(g)?fa`: haplotig assembly in GFA and FASTA format.
-- `asm.hap1.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `asm.hap2.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `asm.hap2.p_utg.gfa`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
-- `asm.hap2.r_utg.gfa`: haplotype-resolved raw unitig graph in GFA format.
+- `asm.p_ctg.(g)?fa.gz`: primary assembly in GFA and FASTA format.
+- `asm.a_ctg.(g)?fa.gz`: haplotig assembly in GFA and FASTA format.
+- `asm.hap1.p_ctg.(g)fa.gz`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_ctg.(g)fa.gz`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_utg.gfa.gz`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
+- `asm.hap2.r_utg.gfa.gz`: haplotype-resolved raw unitig graph in GFA format.
 - `asm.stderr.log`: hifiasm run log file.
 - `*.bin`: internal binary hifiasm files. Can be used to re-run hifiasm.
 
@@ -161,7 +161,6 @@ with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
   <summary>Output files</summary>
 
 - `{assembly fasta}.assembly_summary`: GFAStats output for the individual assembly
-- `{assembly fasta}.stats`: asmstats output for the individual assembly
 - `{assembly fasta}.stats`: asmstats output for the individual assembly
 - `{assembly fasta}.{busco_lineage}.busco/*`: BUSCO output directory for the individual assembly
 - `{assembly fasta}.ccs.merquryk/*`: MerquryFK output directory for the pair (pri/alt, hap1/hap2) of assemblies
