@@ -42,7 +42,7 @@ license: MIT
 message: If you use this software, please cite it using the metadata from this file
   and all references from CITATIONS.md .
 repository-code: https://github.com/sanger-tol/genomeassembly
-title: sanger-tol/genomeassembly v0.50.0 - Threadtail
+title: sanger-tol/genomeassembly v1.0.0dev - TBD
 type: software
 url: https://pipelines.tol.sanger.ac.uk/genomeassembly
-version: 0.50.0
+version: 1.0.0dev
