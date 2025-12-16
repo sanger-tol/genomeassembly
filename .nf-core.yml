@@ -53,4 +53,4 @@ template:
     - multiqc
     - fastqc
   is_nfcore: false
-  version: 0.50.0
+  version: 1.0.0dev
