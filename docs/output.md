@@ -19,25 +19,25 @@ the coverage of the genome prior to assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `kmer/{kmer_size}/long/`
-  - `{id}.long.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
-  - `{id}.long.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
-  - `{id}.long..{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
-  - `.{id}.long.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer.
-  - `.{id}.long.{kmer_size}_model.txt`: GenomeScope2.0 model fit file containing the model parameters.
-  - `.{id}.long.{kmer_size}_summary.txt`: Summary file for the GenomeScope2.0 model.
-  - `.{id}.long.{kmer_size}_*.png`: GenomeScope2.0 graphical plots showing the model fit against the kmer spectrum.
-- `kmer/{kmer_size}/{mat/pat}/`
-  - `{id}.{mat/pat}.{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
-  - `{id}.{mat/pat}.{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
-  - `{id}.{mat/pat}.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
-  - `.{id}.{mat/pat}.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
-  - `{id}_{mat/pat}.yak`: Yak Kmer database for the maternal or paternal reads.
+- `kmer/k{kmer_size}/long/`
+  - `{id}.long.k{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value.
+  - `{id}.long.k{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000).
+  - `{id}.long.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer.
+  - `.{id}.long.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer.
+  - `.{id}.long.k{kmer_size}_model.txt`: GenomeScope2.0 model fit file containing the model parameters.
+  - `.{id}.long.k{kmer_size}_summary.txt`: Summary file for the GenomeScope2.0 model.
+  - `.{id}.long.k{kmer_size}_*.png`: GenomeScope2.0 graphical plots showing the model fit against the kmer spectrum.
+- `kmer/k{kmer_size}/{mat/pat}/`
+  - `{id}.{mat/pat}.k{kmer_size}_fk.hist`: FastK Histogram file containing a histogram of kmer counts at each coverage value for the maternal or paternal reads.
+  - `{id}.{mat/pat}.k{kmer_size}.hist`: ASCII TSV of the FastK TSV, binned from (1..1000) for the maternal or paternal reads.
+  - `{id}.{mat/pat}.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer for the maternal or paternal reads.
+  - `.{id}.{mat/pat}.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer for the maternal or paternal reads.
+  - `{id}.{mat/pat}.yak`: Yak kmer database for the maternal or paternal reads.
 - `kmer/{kmer_size}/trio`
-  - `{id}.mat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and maternal genome.
-  - `.{id}.mat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and maternal genome.
-  - `{id}.pat.{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and paternal genome.
-  - `.{id}.pat.{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and paternal genome.
+  - `{id}.mat.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `.{id}.mat.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and maternal genome.
+  - `{id}.pat.k{kmer_size}_fk.ktab`: FastK master ktab file describing the counts of each kmer in the child present in both the child and paternal genome.
+  - `.{id}.pat.k{kmer_size}_fk.ktab.{n}`: Hidden FastK ktab files (1..n) describing the counts of each kmer in the child present in both the child and paternal genome.
 
 </details>
 
@@ -57,12 +57,12 @@ For full details describing hifiasm outputs, please refer to the hifiasm documen
 <details markdown="1">
   <summary>Output files</summary>
 
-- `asm.p_ctg.(g)?fa`: primary assembly in GFA and FASTA format.
-- `asm.a_ctg.(g)?fa`: haplotig assembly in GFA and FASTA format.
-- `asm.hap1.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `asm.hap2.p_ctg.(g)fa`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
-- `asm.hap2.p_utg.gfa`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
-- `asm.hap2.r_utg.gfa`: haplotype-resolved raw unitig graph in GFA format.
+- `asm.p_ctg.(g)?fa.gz`: primary assembly in GFA and FASTA format.
+- `asm.a_ctg.(g)?fa.gz`: haplotig assembly in GFA and FASTA format.
+- `asm.hap1.p_ctg.(g)fa.gz`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_ctg.(g)fa.gz`: fully phased hap1 assembly if hifiasm is run in Hi-C phasing mode; partially phased hap1 assembly otherwise, in GFA or FASTA format.
+- `asm.hap2.p_utg.gfa.gz`: haplotype-resolved processed unitig graph without small bubbles in GFA format.
+- `asm.hap2.r_utg.gfa.gz`: haplotype-resolved raw unitig graph in GFA format.
 - `asm.stderr.log`: hifiasm run log file.
 - `*.bin`: internal binary hifiasm files. Can be used to re-run hifiasm.
 
@@ -161,7 +161,6 @@ with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
   <summary>Output files</summary>
 
 - `{assembly fasta}.assembly_summary`: GFAStats output for the individual assembly
-- `{assembly fasta}.stats`: asmstats output for the individual assembly
 - `{assembly fasta}.stats`: asmstats output for the individual assembly
 - `{assembly fasta}.{busco_lineage}.busco/*`: BUSCO output directory for the individual assembly
 - `{assembly fasta}.ccs.merquryk/*`: MerquryFK output directory for the pair (pri/alt, hap1/hap2) of assemblies
