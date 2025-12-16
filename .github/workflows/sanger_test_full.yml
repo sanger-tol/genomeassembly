@@ -34,8 +34,7 @@ jobs:
               "outdir": "${{ secrets.TOWER_WORKDIR_PARENT }}/results/${{ github.repository }}/results-${{ env.REVISION }}",
             }
           profiles: test_full,sanger,singularity,cleanup
-
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Tower debug log file
           path: |

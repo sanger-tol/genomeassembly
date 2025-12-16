@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+name: "fastx_map_long_reads"
+description: |
+  Map reads from a FASTx file to a reference in chunks, outputting the alignments in BAM or PAF format.
+  If BAM alignment is chosen, the output BAM files are merged.
+keywords:
+  - fasta
+  - mapping
+  - chunk
+  - bam
+  - paf
+components:
+  - fastxalign/pyfastxindex
+  - fastxalign/minimap2align
+  - bam_samtools_merge_markdup
+  - minimap2/index:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_assemblies:
+      description: |
+        Assemblies to map reads to, in FASTA format. Can be gzipped.
+        Structure: [ val(meta), path(fasta) ]
+  - ch_fasta:
+      description: |
+        Reads to map to assemblies, in FASTA or FASTQ format. Can be gzipped.
+        Structure: [ val(meta), path(fasta) ] or  [ val(meta), [ path(fasta1), path(fasta2) ... ] ]
+  - val_reads_per_fasta_chunk:
+      description: |
+        Number of reads to map per chunk of FASTA file. A sensible value for long reads might be
+        1,000,000.
+  - val_output_bam:
+      description: |
+        Boolean. If true, output alignments in BAM format. Otherwise, alignments are output in
+        unmerged unsorted PAF format.
+output:
+  - bam:
+      type: file
+      description: |
+        Channel containing BAM files
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.bam"
+  - bam_index:
+      type: file
+      description: |
+        Channel containing index files for output BAM
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.{bai,csi,crai}"
+  - paf:
+      type: file
+      description: |
+        Channel containing PAF files
+        Structure: [ val(meta), path(paf) ]
+      pattern: "*.paf"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

@@ -1,22 +1,56 @@
-repository_type: pipeline
 lint:
+  files_unchanged:
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
+    - .prettierignore
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
+    - .prettierignore
+    - CODE_OF_CONDUCT.md
+    - assets/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_dark.png
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/CONTRIBUTING.md
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - assets/email_template.txt
+    - docs/README.md
+    - LICENSE
+    - .gitattributes
+  multiqc_config: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - validation.help.beforeText
+    - validation.help.afterText
+    - validation.summary.beforeText
+    - validation.summary.afterText
   files_exist:
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
+    - assets/multiqc_config.yml
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
+    - assets/multiqc_config.yml
+    - CODE_OF_CONDUCT.md
     - assets/nf-core-genomeassembly_logo_light.png
     - docs/images/nf-core-genomeassembly_logo_light.png
     - docs/images/nf-core-genomeassembly_logo_dark.png
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-  files_unchanged:
-    - .github/workflows/linting.yml
-    - .github/CONTRIBUTING.md
-    - LICENSE
-    - .github/ISSUE_TEMPLATE/bug_report.yml
-    - assets/sendmail_template.txt
-    - lib/NfcoreTemplate.groovy
-    - .prettierignore
-  nextflow_config:
-    - manifest.name
-    - manifest.homePage
-  multiqc_config:
-    - report_comment
+nf_core_version: 3.5.1
+repository_type: pipeline
+template:
+  org: sanger-tol
+  name: genomeassembly
+  description: A bioinformatics best-practice analysis pipeline for genome assembly from PacBio CCS and HiC reads
+  author: "Ksenia Krashennikova"
+  force: true
+  outdir: .
+  skip_features:
+    - igenomes
+    - multiqc
+    - fastqc
+  is_nfcore: false
+  version: 0.50.0

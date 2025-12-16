@@ -4,46 +4,109 @@
     sanger-tol/genomeassembly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/sanger-tol/genomeassembly
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------------------------------------------
 */
-
-nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE & PRINT PARAMETER SUMMARY
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-WorkflowMain.initialise(workflow, params, log)
-
+include { GENOMEASSEMBLY          } from './workflows/genomeassembly'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOW FOR PIPELINE
+    NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-include { GENOMEASSEMBLY } from './workflows/genomeassembly'
 
 //
-// WORKFLOW: Run main sanger-tol/genomeassembly analysis pipeline
+// WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow SANGERTOL_GENOMEASSEMBLY {
-    GENOMEASSEMBLY ()
-}
 
+    take:
+    long_reads
+    hic_reads
+    illumina_10x
+    mat_reads
+    pat_reads
+    busco_lineage
+    busco_lineage_directory
+    oatk_mito
+    oatk_plastid
+    val_fastx_reads_per_chunk
+
+    main:
+
+    //
+    // WORKFLOW: Run pipeline
+    //
+    GENOMEASSEMBLY (
+        long_reads,
+        hic_reads,
+        illumina_10x,
+        mat_reads,
+        pat_reads,
+        busco_lineage,
+        busco_lineage_directory,
+        oatk_mito,
+        oatk_plastid,
+        val_fastx_reads_per_chunk
+    )
+}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
+    RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// WORKFLOW: Execute a single named workflow for the pipeline
-// See: https://github.com/nf-core/rnaseq/issues/619
-//
 workflow {
-    SANGERTOL_GENOMEASSEMBLY ()
+
+    main:
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir,
+        params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden
+    )
+
+    //
+    // WORKFLOW: Run main workflow
+    //
+    SANGERTOL_GENOMEASSEMBLY (
+        PIPELINE_INITIALISATION.out.long_reads,
+        PIPELINE_INITIALISATION.out.hic_reads,
+        PIPELINE_INITIALISATION.out.illumina_10x,
+        PIPELINE_INITIALISATION.out.mat_reads,
+        PIPELINE_INITIALISATION.out.pat_reads,
+        PIPELINE_INITIALISATION.out.busco_lineage,
+        params.busco_lineage_directory,
+        PIPELINE_INITIALISATION.out.oatk_mito,
+        PIPELINE_INITIALISATION.out.oatk_plastid,
+        params.purging_reads_chunk_size
+    )
+    //
+    // SUBWORKFLOW: Run completion tasks
+    //
+    PIPELINE_COMPLETION (
+        params.email,
+        params.email_on_fail,
+        params.plaintext_email,
+        params.outdir,
+        params.monochrome_logs,
+        params.hook_url,
+    )
 }
 
 /*

@@ -2,8 +2,8 @@
     "attachments": [
         {
             "fallback": "Plain-text summary of the attachment.",
-            "color": "<% if ( success ) { %>good<% } else { %>danger<%} %>",
-            "author_name": "sanger-tol/genomeassembly v${version} - ${runName}",
+            "color": "<% if (success) { %>good<% } else { %>danger<%} %>",
+            "author_name": "sanger-tol/genomeassembly ${version} - ${runName}",
             "author_icon": "https://www.nextflow.io/docs/latest/_static/favicon.ico",
             "text": "<% if (success) { %>Pipeline completed successfully!<% } else { %>Pipeline completed with errors<% } %>",
             "fields": [

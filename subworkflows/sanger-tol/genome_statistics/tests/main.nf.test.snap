@@ -1,0 +1,311 @@
+{
+    "meles meles - no trio - no fastk": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap1"
+                    },
+                    "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap2"
+                    },
+                    "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap1"
+                    },
+                    "test.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap2"
+                    },
+                    "test.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
+                "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
+                "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36",
+                "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-09-02T14:02:18.380027698"
+    },
+    "meles meles - no trio - fastk": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap1"
+                    },
+                    "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap2"
+                    },
+                    "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap1"
+                    },
+                    "test.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "_hap": "hap2"
+                    },
+                    "test.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.qv:md5,5754802f3d1e6e84365dcf8bbf549343"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.completeness.stats:md5,51b412fa6dcaccdd0c7f5b46e6db0d0b"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.fl.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.ln.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.st.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.fl.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.ln.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.st.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.spectra-asm.fl.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.spectra-asm.ln.png"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.spectra-asm.st.png"
+                ]
+            ],
+            [
+                "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
+                "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
+                "versions.yml:md5,6ca1cfcfe9de105329f67f268cfdeeeb",
+                "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36",
+                "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-09-02T14:04:52.534157712"
+    },
+    "meles meles - no trio - no busco - no fastk": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "test.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "test.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                    "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36",
+                    "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36"
+                ],
+                "asmstats": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "busco_summary_json": [
+                    
+                ],
+                "busco_summary_txt": [
+                    
+                ],
+                "gfastats": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "test.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "test.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "merqury_completeness": [
+                    
+                ],
+                "merqury_images": [
+                    
+                ],
+                "merqury_phased_stats": [
+                    
+                ],
+                "merqury_qv": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
+                    "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36",
+                    "versions.yml:md5,e162b266a7bfe9ab0ae9716e929feb36"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-09-02T13:57:25.355266248"
+    }
+}

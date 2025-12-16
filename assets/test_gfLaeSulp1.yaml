@@ -1,16 +1,22 @@
-dataset:
+metadata:
   id: gfLaeSulp1
-  pacbio:
-    reads:
-      - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.filtered.fasta.gz
-    HiC:
-      reads:
-        - reads: /lustre/scratch124/tol/projects/darwin/data/fungi/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
-hic_motif: GATC,GANTC,CTNAG,TTAA
-busco:
-  lineages_path: /lustre/scratch123/tol/resources/busco/v5/
-  lineage: fungi_odb10
-mito:
   species: Laetiporus sulphureus
-  min_length: 15000
-  code: 4
+  mitochondrial_code: 4
+sequencing_data:
+  long_reads:
+    platform: "pacbio"
+    reads:
+      - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.trim.fasta.gz
+  hic:
+    reads:
+      - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+databases:
+  busco:
+    lineage: fungi_odb12
+  oatk:
+    mito_hmm: https://github.com/c-zhou/OatkDB/raw/refs/heads/main/v20230921/dikarya_mito.fam

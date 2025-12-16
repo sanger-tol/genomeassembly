@@ -1,0 +1,119 @@
+nextflow_workflow {
+
+    name "Test Subworkflow BAM_SAMTOOLS_MERGE_MARKDUP"
+    script "../main.nf"
+    workflow "BAM_SAMTOOLS_MERGE_MARKDUP"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/bam_samtools_merge_markdup"
+    tag "samtools"
+    tag "samtools/mergedup"
+    tag "subworkflows/../../modules/nf-core/samtools/faidx"
+    tag "subworkflows/../../modules/nf-core/samtools/merge"
+    tag "subworkflows/../../modules/nf-core/samtools/index"
+    tag "subworkflows/../../modules/nf-core/samtools/markdup"
+
+    config "./nextflow.config"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                "samtools/faidx",
+                "samtools/index",
+                "samtools/merge",
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+    }
+
+    test("Undibacterium unclassified - hap1 - no markdup") {
+
+        when {
+
+            params {
+                samtools_args = "--write-index"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/hic_mapping/41741_2.7.sub.cram.baUndUnlc1_hic_phased_hap1.2.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/hic_mapping/41741_2.7.sub.cram.baUndUnlc1_hic_phased_hap1.3.bam', checkIfExists: true),
+                    ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                ])
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium unclassified - hap1 - markdup") {
+
+        when {
+
+            params {
+                samtools_args = "-s --write-index"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/hic_mapping/41741_2.7.sub.cram.baUndUnlc1_hic_phased_hap1.2.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/analysis/hic_mapping/41741_2.7.sub.cram.baUndUnlc1_hic_phased_hap1.3.bam', checkIfExists: true),
+                    ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                ])
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                    workflow.out.metrics,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+}

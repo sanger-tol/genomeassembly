@@ -1,0 +1,151 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTX_MAP_LONG_READS"
+    script "../main.nf"
+    workflow "FASTX_MAP_LONG_READS"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/fastx_map_long_reads"
+    tag "fastxalign"
+    tag "fastxalign/pyfastxindex"
+    tag "fastxalign/minimap2align"
+    tag "subworkflows/../../modules/nf-core/minimap2/index"
+    tag "subworkflows/bam_samtools_merge_markdup"
+
+
+    config "./nextflow.config"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                "minimap2/index",
+                "samtools/index",
+                "samtools/merge",
+                "samtools/markdup",
+                "samtools/faidx"
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+    }
+
+    test("Undibacterium unclassified - fasta - paf") {
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                ])
+                input[2] = 200
+                input[3] = false
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.paf,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("Undibacterium unclassified - fasta - bam") {
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                ])
+                input[2] = 200
+                input[3] = true
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+    test("Undibacterium unclassified - Meles meles - fasta - bam - double files") {
+
+        when {
+
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test2' ],
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test2' ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/pacbio/m64094_200910_173211.ccs.bc1022_BAK8B_OA--bc1022_BAK8B_OA.subset.5000.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Meles_meles/genomic_data/mMelMel3/pacbio/m64094_200911_174739.ccs.bc1022_BAK8B_OA--bc1022_BAK8B_OA.subset.fastq.gz', checkIfExists: true)
+                        ]
+                    ]
+                )
+                input[2] = 1000
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() }.sort(),
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+    }
+
+}

@@ -1,20 +1,28 @@
-dataset:
+metadata:
   id: baUndUnlc1
-  illumina_10X:
-    reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/
-  pacbio:
+  species: "Caradrina clavipalpis"
+  mitochondrial_code: 5
+sequencing_data:
+  long_reads:
+    platform: "pacbio"
     reads:
-      - reads: /lustre/scratch124/tol/projects/darwin/users/kk16/development/test/test/HiFi.reads.BIG.fasta
-  HiC:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  hic:
     reads:
-      - reads: /lustre/scratch123/tol/resources/nextflow/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2#7.sub.cram
-hic_motif: GATC,GANTC,CTNAG,TTAA
-busco:
-  lineage: bacteria_odb10
-mito:
-  species: Caradrina clavipalpis
-  min_length: 15000
-  code: 5
-  fam: /lustre/scratch124/tol/projects/darwin/users/cz3/organelle_asm/hmm_db/insecta_mito.fam
-plastid:
-  fam: /lustre/scratch124/tol/projects/darwin/users/cz3/organelle_asm/hmm_db/acrogymnospermae_pltd.fam
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+  illumina_10x:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz
+databases:
+  busco:
+    lineage: bacteria_odb10
+  oatk:
+    mito_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
+    plastid_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam

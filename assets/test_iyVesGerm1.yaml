@@ -1,18 +1,23 @@
-dataset:
+metadata:
   id: iyVesGerm1
-  illumina_10X:
-    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/10x
-  pacbio:
+  species: "Vespula germanica"
+  mitochondrial_code: 4
+sequencing_data:
+  long_reads:
+    platform: pacbio
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/pacbio/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.filtered.fasta.gz
-  HiC:
+      - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/pacbio/fasta/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.trim.fasta.gz
+  hic:
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/iyVesGerm1/hic-arima2/34957_3#2.cram
-hic_motif: GATC,GANTC,CTNAG,TTAA
-busco:
-  lineage_path: /lustre/scratch123/tol/resources/busco/v5/
-  lineage: insecta_odb10
-mito:
-  species: Vespula germanica
-  min_length: 15000
-  code: 5
+      - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+databases:
+  busco:
+    lineage: insecta_odb12
+  oatk:
+    mito_hmm: https://github.com/c-zhou/OatkDB/raw/refs/heads/main/v20230921/insecta_mito.fam
+    pltd_hmm: ""

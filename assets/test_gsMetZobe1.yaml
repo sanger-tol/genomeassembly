@@ -1,18 +1,22 @@
-dataset:
+metadata:
   id: gsMetZobe1
-  illumina_10X:
-    reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/10x/
-  pacbio:
+  species: "Metschnikowia zobellii"
+  mitochondrial_code: 4
+sequencing_data:
+  long_reads:
+    platform: "pacbio"
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/pacbio/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.filtered.fasta.gz
-  HiC:
+      - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/pacbio/fasta/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.trim.fasta.gz
+  hic:
     reads:
-      - reads: /lustre/scratch123/tol/resources/genomeassembly/testdata/gsMetZobe1/hic-arima2/35528_4#7.cram
-hic_motif: GATC,GANTC,CTNAG,TTAA
-busco:
-  lineage_path: /lustre/scratch123/tol/resources/busco/v5/
-  lineage: fungi_odb10
-mito:
-  species: Metschnikowia zobellii
-  min_length: 15000
-  code: 4
+      - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/hic-arima2/35528_4#7.cram
+    hic_motif:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+databases:
+  busco:
+    lineage: fungi_odb12
+  oatk:
+    mito_hmm: https://github.com/c-zhou/OatkDB/raw/refs/heads/main/v20230921/dikarya_mito.fam

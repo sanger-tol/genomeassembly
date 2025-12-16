@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+name: "bam_samtools_merge_markdup"
+description: |
+  Merge sorted fixmated BAM files with reference to an assembly, then optionally mark duplicates
+keywords:
+  - bam
+  - merge
+  - duplicate marking
+components:
+  - samtools/mergedup
+  - samtools/faidx:
+      git_remote: https://github.com/nf-core/modules.git
+  - samtools/merge:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_bam:
+      type: file
+      description: |
+        The input channel containing the BAM/CRAM/SAM files
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bam,cram,sam}"
+  - ch_assemblies:
+      type: file
+      description: |
+        Assemblies for merging and marking duplicates.
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fasta,fasta.gz}"
+  - val_mark_duplicates:
+      type: boolean
+      description: |
+        Flag to trigger marking duplicates on the merged BAM files
+output:
+  - bam:
+      type: file
+      description: |
+        Channel containing merged and possibly duplicate-marked BAM files
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.bam"
+  - bam_index:
+      type: file
+      description: |
+        Channel containing the index file(s) for the merged BAM
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.{bai,csi,crai}"
+  - metrics:
+      type: file
+      description: |
+        Channel containing markdup metrics, if duplicates marked
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.{bai,csi,crai}"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

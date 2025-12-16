@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "asmstats"
+description: |
+  A tool to produce contig- and scaffold-level assembly statistics, including
+  composition, length, N50 and L50 metrics.
+keywords:
+  - assembly
+  - qc
+  - statistics
+tools:
+  - "asmstats":
+      description: |
+        A tool to produce contig- and scaffold-level assembly statistics, including
+        composition, length, N50 and L50 metrics.
+      homepage: "https://github.com/marcelauliano/Teaching/blob/main/asmstats"
+      documentation: "https://github.com/marcelauliano/Teaching/blob/main/asmstats"
+      tool_dev_url: "https://github.com/marcelauliano/Teaching/blob/main/asmstats"
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - assembly:
+        type: file
+        description: Assembly fasta/gzipped fasta file
+        pattern: "*.{fa,fa.gz}"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929" # FASTA
+output:
+  stats:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.stats":
+          type: file
+          description: Plain text file containing assembly statistics
+          pattern: "*.{stats}"
+          ontologies:
+            - edam: "http://edamontology.org/data_3671" # TEXT
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

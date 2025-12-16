@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+name: "fasta_bam_scaffolding_yahs"
+description: |
+  Scaffold an assembly FASTA file using Hi-C contacts with YaHS, and build
+  contact maps for output visualisation.
+keywords:
+  - scaffolding
+  - hic
+  - contact map
+  - assembly
+components:
+  - bedtools/bamtobedsort
+  - yahs/makepairsfile
+  - pairs_create_contact_maps
+  - samtools/faidx:
+      git_remote: https://github.com/nf-core/modules.git
+  - yahs:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_fasta:
+      type: file
+      description: |
+        Channel containing assemblies for scaffolding.
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{bam/cram/sam}"
+  - ch_hic_bam:
+      type: file
+      description: |
+        Channel containing BAM files of Hi-C reads mapped to each assembly.
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bam/cram/sam}"
+  - val_build_pretext:
+      type: boolean
+      description: Build a PretextMap contact map
+  - val_build_cooler:
+      type: boolean
+      description: Build a Cooler contact map
+  - val_build_juicer:
+      type: boolean
+      description: Build a Juicer contact map
+  - val_cool_bin:
+      type: integer
+      description: Bin size for cooler
+output:
+  - scaffolds_fasta:
+      type: file
+      description: |
+        Final scaffolds from YaHS in FASTA format
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.fasta"
+  - scaffolds_agp:
+      type: file
+      description: |
+        AGP describing how contigs are transformed into final scaffolds
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - yahs_bin:
+      type: file
+      description: |
+        YaHS binary file describing Hi-C contacts
+        Structure: [ val(meta), path(bin) ]
+      pattern: "*.bin"
+  - yahs_initial:
+      type: file
+      description: |
+        AGP files describing inital breaks by YaHS
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - yahs_intermediate:
+      type: file
+      description: |
+        AGP files describing each scaffolding round by YaHS
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - yahs_log:
+      type: file
+      description: |
+        YaHS log file
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - pretext:
+      type: file
+      description: |
+        Contact map in PretextMap format.
+        Structure: [ val(meta), path(pretext) ]
+      pattern: "*.pretext"
+  - pretext_png:
+      type: file
+      description: |
+        PNG visualisation of the Pretext contact map.
+        Structure: [ val(meta), path(png) ]
+      pattern: "*.png"
+  - cool:
+      type: file
+      description: |
+        Contact map in mCooler format
+        Structure: [ val(meta), path(mcool) ]
+      pattern: "*.mcool"
+  - hic:
+      type: file
+      description: |
+        Contact map in Juicer format
+        Structure: [ val(meta), path(hic) ]
+      pattern: "*.hic"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"
