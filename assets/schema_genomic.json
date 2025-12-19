@@ -1,0 +1,255 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/test/test/master/assets/schema_input.json",
+    "title": "Test schema for samplesheets",
+    "description": "Schema for the file provided with params.data_input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Unique identifier for a dataset.",
+                "errorMessage": "Unique identifier for a dataset must be provided and contain no spaces.",
+                "pattern": "^\\S+$",
+                "meta": "id"
+            },
+            "pacbio_hifi": {
+                "type": "object",
+                "properties": {
+                    "reads": {
+                        "type": "array",
+                        "description": "List of FASTA files containing PacBio HiFi reads. Must be gzipped.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                            "exists": true
+                        },
+                        "uniqueItems": true
+                    },
+                    "fastk": {
+                        "type": "object",
+                        "properties": {
+                            "hist": {
+                                "type": "string",
+                                "format": "file-path",
+                                "description": "FastK histogram .hist file"
+                            },
+                            "ktab": {
+                                "type": "array",
+                                "description": "List of FastK ktab files, including hidden files.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.fn?a(sta)?\\.gz?$",
+                                    "exists": true
+                                }
+                            },
+                            "kmer_size": {
+                                "type": "integer",
+                                "description": "Length of kmer used to generate the FastK database."
+                            }
+                        },
+                        "required": ["hist", "ktab", "kmer_size"]
+                    }
+                },
+                "required": ["reads"],
+                "meta": "pacbio_hifi"
+            },
+            "oxford_nanopore": {
+                "type": "object",
+                "properties": {
+                    "reads": {
+                        "type": "array",
+                        "description": "List of FASTQ files containing Oxford Nanopore reads. Must be gzipped.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.fq?(astq)?\\.gz?$",
+                            "exists": true
+                        },
+                        "uniqueItems": true
+                    },
+                    "fastk": {
+                        "type": "object",
+                        "properties": {
+                            "hist": {
+                                "type": "string",
+                                "format": "file-path",
+                                "description": "FastK histogram .hist file"
+                            },
+                            "ktab": {
+                                "type": "array",
+                                "description": "List of FastK ktab files, including hidden files.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                                    "exists": true
+                                }
+                            },
+                            "kmer_size": {
+                                "type": "integer",
+                                "description": "Length of kmer used to generate the FastK database."
+                            }
+                        },
+                        "required": ["hist", "ktab", "kmer_size"]
+                    }
+                },
+                "required": ["reads"],
+                "meta": "oxford_nanopore"
+            },
+            "illumina_hic": {
+                "type": "object",
+                "properties": {
+                    "reads": {
+                        "type": "array",
+                        "description": "List of CRAM files containing Illumina Hi-C reads.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.cram$",
+                            "exists": true
+                        },
+                        "uniqueItems": true
+                    },
+                    "cut_sites": {
+                        "type": "array",
+                        "description": "List of restriction enzyme cut sites used during Hi-C library preparation.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "enzymes": {
+                        "type": "array",
+                        "description": "List of restriction enzyme names used during Hi-C library preparation.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "fastk": {
+                        "type": "object",
+                        "properties": {
+                            "hist": {
+                                "type": "string",
+                                "format": "file-path",
+                                "description": "FastK histogram .hist file"
+                            },
+                            "ktab": {
+                                "type": "array",
+                                "description": "List of FastK ktab files, including hidden files.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                                    "exists": true
+                                }
+                            },
+                            "kmer_size": {
+                                "type": "integer",
+                                "description": "Length of kmer used to generate the FastK database."
+                            }
+                        },
+                        "required": ["hist", "ktab", "kmer_size"]
+                    }
+                },
+                "required": ["reads"],
+                "meta": "illumina_hic"
+            },
+            "illumina_10x": {
+                "type": "object",
+                "properties": {
+                    "reads": {
+                        "type": "array",
+                        "description": "List of FASTQ files containing Illumina 10X reads.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.fq?(astq)?\\.gz?$",
+                            "exists": true
+                        },
+                        "uniqueItems": true
+                    },
+                    "fastk": {
+                        "type": "object",
+                        "properties": {
+                            "hist": {
+                                "type": "string",
+                                "format": "file-path",
+                                "description": "FastK histogram .hist file"
+                            },
+                            "ktab": {
+                                "type": "array",
+                                "description": "List of FastK ktab files, including hidden files.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                                    "exists": true
+                                }
+                            },
+                            "kmer_size": {
+                                "type": "integer",
+                                "description": "Length of kmer used to generate the FastK database."
+                            }
+                        },
+                        "required": ["hist", "ktab", "kmer_size"]
+                    }
+                },
+                "required": ["reads"],
+                "meta": "illumina_10x"
+            },
+            "illumina": {
+                "type": "object",
+                "properties": {
+                    "reads": {
+                        "type": "array",
+                        "description": "List of CRAM files containing standard Illumina reads.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.cram?$",
+                            "exists": true
+                        },
+                        "uniqueItems": true
+                    },
+                    "fastk": {
+                        "type": "object",
+                        "properties": {
+                            "hist": {
+                                "type": "string",
+                                "format": "file-path",
+                                "description": "FastK histogram .hist file"
+                            },
+                            "ktab": {
+                                "type": "array",
+                                "description": "List of FastK ktab files, including hidden files.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "file-path",
+                                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                                    "exists": true
+                                }
+                            },
+                            "kmer_size": {
+                                "type": "integer",
+                                "description": "Length of kmer used to generate the FastK database."
+                            }
+                        },
+                        "required": ["hist", "ktab", "kmer_size"]
+                    }
+                },
+                "required": ["reads"],
+                "meta": "illumina"
+            }
+        },
+        "anyOf": [
+            { "required": ["id", "pacbio_hifi"] },
+            { "required": ["id", "oxford_nanopore"] },
+            { "required": ["id", "illumina_hic"] },
+            { "required": ["id", "illumina_10x"] },
+            { "required": ["id", "illumina"] }
+        ]
+    }
+}

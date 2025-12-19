@@ -1,0 +1,196 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/test/test/master/assets/schema_input.json",
+    "title": "Test schema for samplesheets",
+    "description": "Schema for the file provided with params.data_input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Unique identifier for an assembly.",
+                "errorMessage": "Unique identifier for an assembly must be provided and contain no spaces.",
+                "pattern": "^\\S+$",
+                "meta": "id"
+            },
+            "long_read_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying long reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "long_read_dataset"
+            },
+            "long_read_platform": {
+                "type": "string",
+                "enum": ["pacbio_hifi", "oxford_nanopore"],
+                "description": "Use reads from this sequencing platform as the long reads.",
+                "pattern": "^\\S+$",
+                "meta": "long_read_platform"
+            },
+            "long_read_1n_coverage": {
+                "type": "integer",
+                "description": "Haploid/1n coverage of the target genome in the long read dataset.",
+                "minumum": "1",
+                "meta": "long_read_1n_coverage"
+            },
+            "illumina_hic_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying Illumina Hi-C reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "illumina_hic_dataset"
+            },
+            "illumina_10x_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying Illumina 10X reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "illumina_10x_dataset"
+            },
+            "maternal_illumina_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying Illumina reads from the maternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "maternal_illumina_dataset"
+            },
+            "paternal_illumina_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying Illumina reads from the paternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "paternal_illumina_dataset"
+            },
+            "phased_assembly": {
+                "type": "boolean",
+                "description": "Produce a phased Hifiasm assembly with Hi-C data.",
+                "default": false,
+                "meta": "phased_assembly"
+            },
+            "trio_assembly": {
+                "type": "boolean",
+                "description": "Produce a trio-binned Hifiasm assembly with Hi-C data.",
+                "default": false,
+                "meta": "trio_assembly"
+            },
+            "purge": {
+                "type": "boolean",
+                "description": "Purge retained haplotype from this assembly using purge_dups.",
+                "default": false,
+                "meta": "purge"
+            },
+            "polish": {
+                "type": "boolean",
+                "description": "Polish the assembly using Illumina 10X data.",
+                "default": false,
+                "meta": "polish"
+            },
+            "scaffold": {
+                "type": "boolean",
+                "description": "Map Illumina Hi-C reads to the assembly and scaffold.",
+                "default": true,
+                "meta": "scaffold"
+            },
+            "assemble_mito": {
+                "type": "boolean",
+                "description": "Enable mitochondrial genome assembly/search.",
+                "default": true,
+                "meta": "assemble_mito"
+            },
+            "assemble_plastid": {
+                "type": "boolean",
+                "description": "Enable plastid genome assembly.",
+                "default": false,
+                "meta": "assemble_plastid"
+            },
+            "hifiasm_error_correction_arguments": {
+                "type": "string",
+                "description": "Command-line arguments to pass to Hifiasm controlling read error correction only: https://hifiasm.readthedocs.io/en/latest/parameter-reference.html#error-correction-options",
+                "meta": "hifiasm_error_correction_arguments",
+                "default": ""
+            },
+            "hifiasm_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to Hifiasm, excluding those that control error correction.",
+                "meta": "hifiasm_arguments",
+                "default": ""
+            },
+            "purging_cutoffs": {
+                "type": "string",
+                "description": "Cutoffs for purging haplotypic duplications. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
+                "pattern": "\\d+,\\d+,\\d+",
+                "meta": "purging_cutoffs"
+            },
+            "purge_middle": {
+                "type": "boolean",
+                "description": "If purging is enabled, purge retained haplotypic duplications from within contigs.",
+                "default": false,
+                "meta": "purge_middle"
+            },
+            "yahs_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to YaHS",
+                "meta": "yahs_arguments",
+                "default": ""
+            },
+            "mitohifi_reference_species": {
+                "type": "string",
+                "description": "Binomial name of a taxon to use to find a reference mitochondrial genome.",
+                "meta": "mitohifi_reference_species"
+            },
+            "mitohifi_genetic_code": {
+                "type": "integer",
+                "description": "Mitochondrial genetic code to use during gene prediction.",
+                "meta": "mitohifi_genetic_code"
+            },
+            "mitohifi_reads_arguments": {
+                "type": "string",
+                "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
+                "meta": "mitohifi_reads_arguments",
+                "default": ""
+            },
+            "mitohifi_contigs_arguments": {
+                "type": "string",
+                "description": "Extra command-line arguments to supply to MitoHiFi in contigs mode.",
+                "meta": "mitohifi_contigs_arguments",
+                "default": ""
+            },
+            "oatk_kmer_size": {
+                "type": "integer",
+                "description": "Kmer size for oatk.",
+                "default": 1000,
+                "meta": "oatk_kmer_size"
+            },
+            "oatk_coverage_cutoff": {
+                "type": "integer",
+                "description": "Coverage cutoff for oatk.",
+                "meta": "oatk_coverage_cutoff"
+            },
+            "oatk_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments for oatk, excluding -k and -c.",
+                "meta": "oatk_arguments",
+                "default": ""
+            },
+            "oatk_mito_hmm": {
+                "type": "string",
+                "description": "Path to base oatk mitochondrial HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files from hmmpress.",
+                "format": "file-path",
+                "pattern": "^\\S+\\.fam$",
+                "exists": true,
+                "meta": "oatk_mito_hmm"
+            },
+            "oatk_plastid_hmm": {
+                "type": "string",
+                "description": "Path to base oatk plastid HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files from hmmpress.",
+                "format": "file-path",
+                "pattern": "^\\S+\\.fam$",
+                "exists": true,
+                "meta": "oatk_plastid_hmm"
+            }
+        },
+        "required": ["id", "long_read_dataset", "long_read_platform"],
+        "dependentRequired": {
+            "phased_assembly": ["illumina_hic_dataset"],
+            "trio_assembly": ["maternal_illumina_dataset", "paternal_illumina_dataset"],
+            "scaffold": ["illumina_hic_dataset"],
+            "polish": ["illumina_10x_dataset"]
+        }
+    }
+}
