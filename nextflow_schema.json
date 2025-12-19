@@ -10,16 +10,19 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir", "genomic_data", "assembly_specs"],
             "properties": {
-                "input": {
+                "genomic_data": {
                     "type": "string",
+                    "description": "Input YAML specifying the location of all genomic data for assembly. See the documentation for a full specification.",
                     "format": "file-path",
-                    "mimetype": "text/yaml",
-                    "pattern": "^\\S+\\.yaml$",
-                    "description": "Path to YAML file containing information about the dataset",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-yaml"
+                    "schema": "assets/schema_genomic.json"
+                },
+                "assembly_specs": {
+                    "type": "string",
+                    "description": "YAML file specifying the parameters for a set of assemblies, including datasets and arguments. See the documentation for a full specification.",
+                    "format": "file-path",
+                    "schema": "assets/schema_assembly.json"
                 },
                 "outdir": {
                     "type": "string",
@@ -417,5 +420,10 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "busco_lineage": {
+            "type": "string"
+        }
+    }
 }

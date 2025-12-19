@@ -28,16 +28,15 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_geno
 workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
-    long_reads
-    hic_reads
-    illumina_10x
-    mat_reads
-    pat_reads
-    busco_lineage
-    busco_lineage_directory
-    oatk_mito
-    oatk_plastid
+    ch_specs
+    ch_long_reads
+    ch_illumina_hic
+    ch_illumina_10x
+    ch_illumina_trio
     val_fastx_reads_per_chunk
+    val_hic_slices_per_chunk
+    val_busco_lineage
+    val_busco_lineage_directory
 
     main:
 
@@ -45,16 +44,15 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     // WORKFLOW: Run pipeline
     //
     GENOMEASSEMBLY (
-        long_reads,
-        hic_reads,
-        illumina_10x,
-        mat_reads,
-        pat_reads,
-        busco_lineage,
-        busco_lineage_directory,
-        oatk_mito,
-        oatk_plastid,
-        val_fastx_reads_per_chunk
+        ch_specs,
+        ch_long_reads,
+        ch_illumina_hic,
+        ch_illumina_10x,
+        ch_illumina_trio,
+        val_fastx_reads_per_chunk,
+        val_hic_slices_per_chunk,
+        val_busco_lineage,
+        val_busco_lineage_directory
     )
 }
 /*
@@ -75,27 +73,28 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
+        params.genomic_data,
+        params.assembly_specs
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     SANGERTOL_GENOMEASSEMBLY (
+        PIPELINE_INITIALISATION.out.specs,
         PIPELINE_INITIALISATION.out.long_reads,
-        PIPELINE_INITIALISATION.out.hic_reads,
+        PIPELINE_INITIALISATION.out.illumina_hic,
         PIPELINE_INITIALISATION.out.illumina_10x,
-        PIPELINE_INITIALISATION.out.mat_reads,
-        PIPELINE_INITIALISATION.out.pat_reads,
-        PIPELINE_INITIALISATION.out.busco_lineage,
+        PIPELINE_INITIALISATION.out.illumina_trio,
+        params.purging_reads_chunk_size,
+        params.hic_mapping_cram_chunk_size,
+        params.busco_lineage,
         params.busco_lineage_directory,
-        PIPELINE_INITIALISATION.out.oatk_mito,
-        PIPELINE_INITIALISATION.out.oatk_plastid,
-        params.purging_reads_chunk_size
     )
+    
     //
     // SUBWORKFLOW: Run completion tasks
     //

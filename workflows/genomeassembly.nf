@@ -11,11 +11,11 @@ include { TABIX_BGZIP as BGZIP_HAPLOTIGS            } from '../modules/nf-core/t
 include { SEQKIT_GREP as SEQKIT_GREP_SPLIT_HAPS     } from '../modules/nf-core/seqkit/grep/main'
 
 // Subworkflows
+include { FASTA_PURGE_RETAINED_HAPLOTYPE as PURGING } from '../subworkflows/sanger-tol/fasta_purge_retained_haplotype/main'
 include { GENOME_STATISTICS                         } from '../subworkflows/sanger-tol/genome_statistics'
-include { KMERS                                     } from '../subworkflows/local/kmers'
 include { ORGANELLE_ASSEMBLY                        } from '../subworkflows/local/organelle_assembly'
 include { POLISHING_10X                             } from '../subworkflows/local/polishing_10X'
-include { FASTA_PURGE_RETAINED_HAPLOTYPE as PURGING } from '../subworkflows/sanger-tol/fasta_purge_retained_haplotype/main'
+include { PREPARE_DATA                              } from '../subworkflows/local/prepare_data'
 include { RAW_ASSEMBLY                              } from '../subworkflows/local/raw_assembly'
 include { SCAFFOLDING                               } from '../subworkflows/local/scaffolding'
 
@@ -33,275 +33,262 @@ include { methodsDescriptionText                    } from '../subworkflows/loca
 workflow GENOMEASSEMBLY {
 
     take:
+    ch_specs
     ch_long_reads
-    ch_hic_reads
+    ch_illumina_hic
     ch_illumina_10x
-    ch_mat_reads
-    ch_pat_reads
+    ch_trio
     val_busco_lineage
     val_busco_lineage_directory
-    val_mito_hmm
-    val_plastid_hmm
     val_fastx_reads_per_chunk
 
     main:
     ch_versions = channel.empty()
 
     //
-    // Subworkflow: generate Kmer databases and estimate
-    //     coverage if not provided
+    // Subworkflow: build kmer databases for input data if required
     //
-    KMERS(ch_long_reads, ch_mat_reads, ch_pat_reads)
-    ch_versions = ch_versions.mix(KMERS.out.versions)
-
-    // Get the long reads out with additional metadata from
-    // the kmer-based analyses
-    ch_long_reads_after_kmers = KMERS.out.long_reads.collect()
-
-    // Drop FastK databases for all downstream uses of Hi-C
-    // CRAM files
-    ch_hic_reads  = ch_hic_reads
-        .map { meta, cram, _hist, _ktab -> [meta, cram] }
-        .collect()
-
-    ch_i10x_reads = ch_illumina_10x
-        .map { meta, reads, _hist, _ktab -> [meta, reads] }
-        .collect()
-
-    //
-    // Subworkflow: raw assembly of long reads using hifiasm
-    //
-    RAW_ASSEMBLY(
-        ch_long_reads_after_kmers,
-        ch_hic_reads,
-        KMERS.out.trio_yakdb
+    PREPARE_DATA(
+        ch_specs, 
+        ch_long_reads, 
+        ch_trio
     )
-    ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
+    ch_versions = ch_versions.mix(PREPARE_DATA.out.versions)
 
-    //
-    // Logic: Identify what steps to run on each assembly, using the params
-    //
-    ch_assemblies_raw = RAW_ASSEMBLY.out.hifiasm_fasta
-        .map { meta, hap1, hap2 ->
-            def purge_types  = params.purging_assemblytypes.tokenize(",")
-            def polish_types = params.polishing_assemblytypes.tokenize(",")
+    // //
+    // // Subworkflow: raw assembly of long reads using hifiasm
+    // //
+    // RAW_ASSEMBLY(
+    //     ch_long_reads_after_kmers,
+    //     ch_hic_reads,
+    //     KMERS.out.trio_yakdb
+    // )
+    // ch_versions = ch_versions.mix(RAW_ASSEMBLY.out.versions)
 
-            def purge        = meta.assembly_type in purge_types
-            def polish       = (meta.assembly_type in polish_types && params.enable_polishing && params.polishing_longranger_container_path)
-            def meta_new     = meta + [purge: purge, polish: polish]
+    // //
+    // // Logic: Identify what steps to run on each assembly, using the params
+    // //
+    // ch_assemblies_raw = RAW_ASSEMBLY.out.hifiasm_fasta
+    //     .map { meta, hap1, hap2 ->
+    //         def purge_types  = params.purging_assemblytypes.tokenize(",")
+    //         def polish_types = params.polishing_assemblytypes.tokenize(",")
 
-            [meta_new, hap1, hap2]
-        }
+    //         def purge        = meta.assembly_type in purge_types
+    //         def polish       = (meta.assembly_type in polish_types && params.enable_polishing && params.polishing_longranger_container_path)
+    //         def meta_new     = meta + [purge: purge, polish: polish]
 
-    //
-    // Subworkflow: Purge dups on specified assemblies
-    //
-    ch_assemblies_to_purge = ch_assemblies_raw
-        .branch { meta, _hap1, _hap2 ->
-            purge: meta.purge == true
-            no_purge: true
-        }
+    //         [meta_new, hap1, hap2]
+    //     }
 
-    ch_purging_inputs =  ch_assemblies_to_purge.purge
-        .combine(ch_long_reads_after_kmers)
-        .multiMap { meta, hap1, hap2, meta_reads, reads ->
-            assemblies: [ meta, hap1, hap2 ]
-            reads: [ meta, reads ]
-        }
+    // //
+    // // Subworkflow: Purge dups on specified assemblies
+    // //
+    // ch_assemblies_to_purge = ch_assemblies_raw
+    //     .branch { meta, _hap1, _hap2 ->
+    //         purge: meta.purge == true
+    //         no_purge: true
+    //     }
 
-    PURGING(
-        ch_purging_inputs.assemblies,
-        ch_purging_inputs.reads,
-        val_fastx_reads_per_chunk
-    )
-    ch_versions = ch_versions.mix(PURGING.out.versions)
+    // ch_purging_inputs =  ch_assemblies_to_purge.purge
+    //     .combine(ch_long_reads_after_kmers)
+    //     .multiMap { meta, hap1, hap2, meta_reads, reads ->
+    //         assemblies: [ meta, hap1, hap2 ]
+    //         reads: [ meta, reads ]
+    //     }
 
-    BGZIP_HAPLOTIGS(PURGING.out.purged_haplotigs)
-    ch_versions = ch_versions.mix(BGZIP_HAPLOTIGS.out.versions)
+    // PURGING(
+    //     ch_purging_inputs.assemblies,
+    //     ch_purging_inputs.reads,
+    //     val_fastx_reads_per_chunk
+    // )
+    // ch_versions = ch_versions.mix(PURGING.out.versions)
 
-    //
-    // Logic: Add metadata to purged assemblies
-    //
-    ch_assemblies_purged = PURGING.out.purged_assemblies
-        .map { meta, hap1, hap2 ->
-            def meta_new = meta + [assembly_stage: "purged"]
-            [meta_new, hap1, hap2]
-        }
+    // BGZIP_HAPLOTIGS(PURGING.out.purged_haplotigs)
+    // ch_versions = ch_versions.mix(BGZIP_HAPLOTIGS.out.versions)
 
-    ch_all_assemblies_after_purging = ch_assemblies_to_purge.no_purge.mix(ch_assemblies_purged)
+    // //
+    // // Logic: Add metadata to purged assemblies
+    // //
+    // ch_assemblies_purged = PURGING.out.purged_assemblies
+    //     .map { meta, hap1, hap2 ->
+    //         def meta_new = meta + [assembly_stage: "purged"]
+    //         [meta_new, hap1, hap2]
+    //     }
 
-    //
-    // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
-    //        only purged assemblies are polished.
-    //
-    //        Reshape so that we can concatenate hap1/hap2 together.
-    //
-    ch_assemblies_to_polish = ch_all_assemblies_after_purging
-        .branch { meta, hap1, hap2 ->
-            // If we have purged this type of assembly, remove raw stages
-            def purging_filter  = (meta.purge == true) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
-            def polish_filter   = (meta.polish == true)
-            def polishing_enabled = (params.enable_polishing && params.polishing_longranger_container_path)
+    // ch_all_assemblies_after_purging = ch_assemblies_to_purge.no_purge.mix(ch_assemblies_purged)
 
-            polish: (polishing_enabled && polish_filter && purging_filter)
-                return [meta, [hap1, hap2]]
-            no_polish: true
-        }
+    // //
+    // // Logic: Filter the input assemblies so that if purging is enabled for an assembly type,
+    // //        only purged assemblies are polished.
+    // //
+    // //        Reshape so that we can concatenate hap1/hap2 together.
+    // //
+    // ch_assemblies_to_polish = ch_all_assemblies_after_purging
+    //     .branch { meta, hap1, hap2 ->
+    //         // If we have purged this type of assembly, remove raw stages
+    //         def purging_filter  = (meta.purge == true) ? (meta.assembly_stage != "raw") : meta.assembly_stage == "raw"
+    //         def polish_filter   = (meta.polish == true)
+    //         def polishing_enabled = (params.enable_polishing && params.polishing_longranger_container_path)
 
-    //
-    // Module: Concatenate hap1/hap2 together for polishing
-    //
-    CONCATENATE_ASSEMBLIES(ch_assemblies_to_polish.polish)
-    ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
+    //         polish: (polishing_enabled && polish_filter && purging_filter)
+    //             return [meta, [hap1, hap2]]
+    //         no_polish: true
+    //     }
 
-    //
-    // Subworkflow: run polishing
-    //
-    POLISHING_10X(
-        CONCATENATE_ASSEMBLIES.out.file_out,
-        ch_i10x_reads
-    )
-    ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
+    // //
+    // // Module: Concatenate hap1/hap2 together for polishing
+    // //
+    // CONCATENATE_ASSEMBLIES(ch_assemblies_to_polish.polish)
+    // ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
 
-    //
-    // Module: Separate back out primary/alt/hap1/hap2 contigs
-    //
-    ch_haps = Channel.of("hap1", "hap2")
-    ch_assemblies_to_separate = POLISHING_10X.out.assemblies
-        .combine(ch_haps)
-        .map { meta, asm, hap ->
-            [meta + [_hap: hap], asm]
-        }
+    // //
+    // // Subworkflow: run polishing
+    // //
+    // POLISHING_10X(
+    //     CONCATENATE_ASSEMBLIES.out.file_out,
+    //     ch_i10x_reads
+    // )
+    // ch_versions = ch_versions.mix(POLISHING_10X.out.versions)
 
-    SEQKIT_GREP_SPLIT_HAPS(
-        ch_assemblies_to_separate,
-        []
-    )
-    ch_versions = ch_versions.mix(SEQKIT_GREP_SPLIT_HAPS.out.versions)
+    // //
+    // // Module: Separate back out primary/alt/hap1/hap2 contigs
+    // //
+    // ch_haps = Channel.of("hap1", "hap2")
+    // ch_assemblies_to_separate = POLISHING_10X.out.assemblies
+    //     .combine(ch_haps)
+    //     .map { meta, asm, hap ->
+    //         [meta + [_hap: hap], asm]
+    //     }
 
-    //
-    // Logic: Take the split assemblies and re-orgnaise into a [meta, hap1, hap2] format
-    //        and add metadata
-    //
-    ch_polished_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
-        .branch { meta, asm ->
-            def meta_new = meta - meta.subMap("_hap") + [assembly_stage: "polished"]
-            hap1: meta._hap == "hap1"
-                return [meta_new, asm]
-            hap2: meta._hap == "hap2"
-                return [meta_new, asm]
-        }
+    // SEQKIT_GREP_SPLIT_HAPS(
+    //     ch_assemblies_to_separate,
+    //     []
+    // )
+    // ch_versions = ch_versions.mix(SEQKIT_GREP_SPLIT_HAPS.out.versions)
 
-    ch_assemblies_polished = ch_polished_assemblies_split.hap1
-        .combine(ch_polished_assemblies_split.hap2, by: 0)
+    // //
+    // // Logic: Take the split assemblies and re-orgnaise into a [meta, hap1, hap2] format
+    // //        and add metadata
+    // //
+    // ch_polished_assemblies_split = SEQKIT_GREP_SPLIT_HAPS.out.filter
+    //     .branch { meta, asm ->
+    //         def meta_new = meta - meta.subMap("_hap") + [assembly_stage: "polished"]
+    //         hap1: meta._hap == "hap1"
+    //             return [meta_new, asm]
+    //         hap2: meta._hap == "hap2"
+    //             return [meta_new, asm]
+    //     }
 
-    ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
-        .mix(ch_assemblies_polished)
+    // ch_assemblies_polished = ch_polished_assemblies_split.hap1
+    //     .combine(ch_polished_assemblies_split.hap2, by: 0)
 
-    //
-    // Logic: set up for scaffolding
-    //
-    ch_assemblies_for_scaffolding_split = ch_all_assemblies_after_polishing
-        .branch { meta, _hap1, _hap2 ->
-                def scaffold = false
-                if(meta.assembly_stage == "polished") { scaffold = true }
-                else if(meta.assembly_stage == "purged" && !meta.polish) { scaffold = true }
-                else if(meta.assembly_stage == "raw" && !meta.purge && !meta.polish) { scaffold = true }
+    // ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
+    //     .mix(ch_assemblies_polished)
 
-                scaffold: params.enable_scaffolding && scaffold
-                no_scaffold: true
-        }
+    // //
+    // // Logic: set up for scaffolding
+    // //
+    // ch_assemblies_for_scaffolding_split = ch_all_assemblies_after_polishing
+    //     .branch { meta, _hap1, _hap2 ->
+    //             def scaffold = false
+    //             if(meta.assembly_stage == "polished") { scaffold = true }
+    //             else if(meta.assembly_stage == "purged" && !meta.polish) { scaffold = true }
+    //             else if(meta.assembly_stage == "raw" && !meta.purge && !meta.polish) { scaffold = true }
 
-    //
-    // Subworkflow: run hic-mapping and scaffolding
-    //
-    SCAFFOLDING(
-        ch_assemblies_for_scaffolding_split.scaffold,
-        ch_hic_reads,
-        params.hic_aligner,
-        params.hic_mapping_cram_chunk_size,
-        params.cool_bin
-    )
-    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
+    //             scaffold: params.enable_scaffolding && scaffold
+    //             no_scaffold: true
+    //     }
 
-    //
-    // Logic: Mark scaffolded assemblies as scaffolded
-    //
-    ch_assemblies_scaffolded = SCAFFOLDING.out.assemblies
-        .map { meta, asm1, asm2 ->
-            def meta_new = meta + [assembly_stage: "scaffolded"]
-            [meta_new, asm1, asm2]
-        }
+    // //
+    // // Subworkflow: run hic-mapping and scaffolding
+    // //
+    // SCAFFOLDING(
+    //     ch_assemblies_for_scaffolding_split.scaffold,
+    //     ch_hic_reads,
+    //     params.hic_aligner,
+    //     params.hic_mapping_cram_chunk_size,
+    //     params.cool_bin
+    // )
+    // ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
 
-    //
-    // Logic: collect all assemblies together
-    //
-    ch_all_assemblies = channel.empty()
-        .mix(
-            ch_assemblies_raw,
-            ch_assemblies_purged,
-            ch_assemblies_polished,
-            ch_assemblies_scaffolded
-        )
+    // //
+    // // Logic: Mark scaffolded assemblies as scaffolded
+    // //
+    // ch_assemblies_scaffolded = SCAFFOLDING.out.assemblies
+    //     .map { meta, asm1, asm2 ->
+    //         def meta_new = meta + [assembly_stage: "scaffolded"]
+    //         [meta_new, asm1, asm2]
+    //     }
 
-    //
-    // Module: bgzip all output assemblies
-    //
-    ch_all_assemblies_to_bgzip = ch_all_assemblies
-        .flatMap { meta, asm1, asm2 ->
-            def meta_asm1 = meta + [_hap: "hap1"]
-            def meta_asm2 = meta + [_hap: "hap2"]
-            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
-        }
-        .filter { meta, asm -> asm }
+    // //
+    // // Logic: collect all assemblies together
+    // //
+    // ch_all_assemblies = channel.empty()
+    //     .mix(
+    //         ch_assemblies_raw,
+    //         ch_assemblies_purged,
+    //         ch_assemblies_polished,
+    //         ch_assemblies_scaffolded
+    //     )
 
-    BGZIP_ASSEMBLIES(ch_all_assemblies_to_bgzip)
-    ch_versions = ch_versions.mix(BGZIP_ASSEMBLIES.out.versions)
+    // //
+    // // Module: bgzip all output assemblies
+    // //
+    // ch_all_assemblies_to_bgzip = ch_all_assemblies
+    //     .flatMap { meta, asm1, asm2 ->
+    //         def meta_asm1 = meta + [_hap: "hap1"]
+    //         def meta_asm2 = meta + [_hap: "hap2"]
+    //         return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
+    //     }
+    //     .filter { meta, asm -> asm }
 
-    //
-    // Subworkflow: collect all assemblies and calculate assembly QC metrics
-    //
-    ch_hap1_for_statistics = BGZIP_ASSEMBLIES.out.output
-        .flatMap { meta, asm ->
-            meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), asm ]] : []
-        }
+    // BGZIP_ASSEMBLIES(ch_all_assemblies_to_bgzip)
+    // ch_versions = ch_versions.mix(BGZIP_ASSEMBLIES.out.versions)
 
-    ch_hap2_for_statisics = BGZIP_ASSEMBLIES.out.output
-        .flatMap { meta, asm ->
-            meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), asm ]] : []
-        }
+    // //
+    // // Subworkflow: collect all assemblies and calculate assembly QC metrics
+    // //
+    // ch_hap1_for_statistics = BGZIP_ASSEMBLIES.out.output
+    //     .flatMap { meta, asm ->
+    //         meta._hap == "hap1" ? [[ meta - meta.subMap("_hap"), asm ]] : []
+    //     }
 
-    ch_assemblies_for_statistics = ch_hap1_for_statistics.join(ch_hap2_for_statisics, by: 0, remainder: true)
+    // ch_hap2_for_statisics = BGZIP_ASSEMBLIES.out.output
+    //     .flatMap { meta, asm ->
+    //         meta._hap == "hap2" ? [[ meta - meta.subMap("_hap"), asm ]] : []
+    //     }
 
-    GENOME_STATISTICS(
-        ch_assemblies_for_statistics,
-        KMERS.out.fastk.collect(),
-        KMERS.out.maternal_hapdb.collect(),
-        KMERS.out.paternal_hapdb.collect(),
-        val_busco_lineage,
-        val_busco_lineage_directory
-    )
-    ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
+    // ch_assemblies_for_statistics = ch_hap1_for_statistics.join(ch_hap2_for_statisics, by: 0, remainder: true)
+
+    // GENOME_STATISTICS(
+    //     ch_assemblies_for_statistics,
+    //     KMERS.out.fastk.collect(),
+    //     KMERS.out.maternal_hapdb.collect(),
+    //     KMERS.out.paternal_hapdb.collect(),
+    //     val_busco_lineage,
+    //     val_busco_lineage_directory
+    // )
+    // ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
 
-    //
-    // Subworkflow: assemble organellar genomes
-    //
-    if(params.enable_organelle_assembly) {
-        ch_species = ch_long_reads_after_kmers
-            .map { meta, reads -> [meta, meta.species] }
-            .unique()
-            .collect()
+    // //
+    // // Subworkflow: assemble organellar genomes
+    // //
+    // if(params.enable_organelle_assembly) {
+    //     ch_species = ch_long_reads_after_kmers
+    //         .map { meta, reads -> [meta, meta.species] }
+    //         .unique()
+    //         .collect()
 
-        ORGANELLE_ASSEMBLY(
-            ch_assemblies_raw,
-            ch_long_reads_after_kmers,
-            ch_species,
-            val_mito_hmm,
-            val_plastid_hmm
-        )
-        ch_versions = ch_versions.mix(ORGANELLE_ASSEMBLY.out.versions)
-    }
+    //     ORGANELLE_ASSEMBLY(
+    //         ch_assemblies_raw,
+    //         ch_long_reads_after_kmers,
+    //         ch_species,
+    //         val_mito_hmm,
+    //         val_plastid_hmm
+    //     )
+    //     ch_versions = ch_versions.mix(ORGANELLE_ASSEMBLY.out.versions)
+    // }
 
     //
     // Collate and save software versions

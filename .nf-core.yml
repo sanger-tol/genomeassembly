@@ -25,6 +25,7 @@ lint:
     - validation.help.afterText
     - validation.summary.beforeText
     - validation.summary.afterText
+    - params.input
   files_exist:
     - conf/igenomes.config
     - conf/igenomes_ignored.config

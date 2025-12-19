@@ -1,0 +1,17 @@
+- id: baUndUnlc1
+  pacbio_hifi:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta
+  illumina_hic:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram
+    cut_sites:
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+  illumina_10x:
+    reads:
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz
+      - https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz
