@@ -37,7 +37,7 @@ workflow GENOMEASSEMBLY {
     ch_long_reads
     ch_illumina_hic
     ch_illumina_10x
-    ch_trio
+    ch_illumina
     val_busco_lineage
     val_busco_lineage_directory
     val_fastx_reads_per_chunk
@@ -49,15 +49,15 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: build kmer databases for input data if required
     //
     PREPARE_DATA(
-        ch_specs, 
-        ch_long_reads, 
-        ch_trio
+        ch_specs,
+        ch_long_reads,
+        ch_illumina
     )
     ch_versions = ch_versions.mix(PREPARE_DATA.out.versions)
 
-    // //
-    // // Subworkflow: raw assembly of long reads using hifiasm
-    // //
+    //
+    // Subworkflow: raw assembly of long reads using hifiasm
+    //
     // RAW_ASSEMBLY(
     //     ch_long_reads_after_kmers,
     //     ch_hic_reads,

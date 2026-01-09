@@ -17,7 +17,6 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { READ_YAML                 } from '../../../modules/local/read_yaml'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,214 +94,116 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Logic: read assembly specifications from the assembly specification sheet
-    //        and validate various entries
+    // Logic: read raw genomic data from the input sheet and validate the dataset inputs.
+    //
+    ch_raw_genomic_data = channel.fromList(
+            samplesheetToList(genomic_data, "${projectDir}/assets/schema_genomic.json")
+        )
+        .map { meta, reads, fastk ->
+            // Check that all files have the same extension
+            def extensions = reads.collect { file ->
+                if(file.getExtension() == "gz") {
+                    return file.getName().tokenize(".").takeLast(2).join('.')
+                } else {
+                    return file.getExtension()
+                }
+            }.unique()
+
+            if(extensions.size() > 1) {
+                error("Dataset validation error [${meta.id}:${meta.platform}]: Not all files are of the same type!")
+            }
+
+            // Validate that the correct extension is present for each platform
+            if(meta.platform == "pacbio_hifi") {
+                validateFileExtension(meta, extensions[0], /^fn?(asta)?(\.gz)?$/)
+            } else if (meta.platform == "oxford_nanopore" || meta.platform == "illumina_10x") {
+                validateFileExtension(meta, extensions[0], /^f(ast)?q(\.gz)?$/)
+            } else {
+                validateFileExtension(meta, extensions[0], /^cram$/)
+            }
+
+            // Construct a hybrid dataset name using the sample id and platform
+            def datasetName = "${meta.id}.${meta.platform}"
+
+            return [ meta + [id: datasetName], reads, fastk ]
+        }
+
+    //
+    // Logic: read assembly specifications from the assembly specification sheet, and
+    // validate that the requested data entries exist and that the optional tuning arguments
+    // are valid.
+    //
     ch_assembly_specs = channel.fromList(
             samplesheetToList(asm_specs, "${projectDir}/assets/schema_assembly.json")
         )
-        .map { list ->
-            // Because a list with a single element is not destructured, extract spec explicitly
-            def spec = list[0]
+        // We need to wrap these up inside a list to have a single entry after combining
+        .combine(ch_raw_genomic_data.collect().map { list -> [list] } )
+        .map { spec, data ->
+            // Add data type suffix to each dataset, e.g. "test" -> "test.illumina_hic"
+            // This allows joining with the data downstream based on a single key
+            spec = addDatasetSuffices(spec)
 
-            // For validation, a list of all Hifiasm error correction arguments
-            def hifiasm_error_correction_flags = [
-                "-k", "-w", "-f", "-D", "-N", "-r", "-z", "--max-kocc", "--hg-size", "--min-hist-cnt"
-            ]
-            def mitohifi_disallowed_args = ["-c", "-r", "-f", "-g", "-t", "-o"]
+            // Check that each requested dataset exists in the input data schema
+            checkDataExists(spec, data)
 
-            def invalid_hifiasm_ec_flags = validateArgString(spec.hifiasm_error_correction_arguments, hifiasm_error_correction_flags, false)
-            def invalid_hifiasm_flags = validateArgString(spec.hifiasm_arguments, hifiasm_error_correction_flags, true)
-            def invalid_oatk_args = validateArgString(spec.oatk_arguments, ["-k", "-c"], true)
-            def invalid_mitohifi_contigs_args = validateArgString(spec.mitohifi_contigs_arguments, mitohifi_disallowed_args, true)
-            def invalid_mitohifi_reads_args = validateArgString(spec.mitohifi_reads_arguments, mitohifi_disallowed_args, true)
+            // Validate any provided hifiasm args
+            validateHifiasmArgs(spec.id, spec.hifiasm_error_correction_arguments, spec.hifiasm_arguments)
 
-            if(invalid_hifiasm_ec_flags) {
-                error("Assembly specification error [${spec.id}]: hifiasm_error_correction_arguments contains invalid flag: ${invalid_hifiasm_ec_flags}")
-            }
-
-            if(invalid_hifiasm_flags) {
-                error("Assembly specification error [${spec.id}]: hifiasm_arguments contains invalid flag: ${invalid_hifiasm_flags}")
-            }
-
-            if(invalid_oatk_args) {
-                error("Assembly specification error [${spec.id}]: oatk_arguments contains invalid flag: ${invalid_oatk_args}")
-            }
-
-            if(invalid_mitohifi_contigs_args) {
-                error("Assembly specification error [${spec.id}]: oatk_arguments contains invalid flag: ${invalid_mitohifi_contigs_args}")
-            }
-
-            if(invalid_mitohifi_reads_args) {
-                error("Assembly specification error [${spec.id}]: oatk_arguments contains invalid flag: ${invalid_mitohifi_reads_args}")
-            }
-
+            // Validate trio assembly inputs
             if(spec.trio_assembly && (spec.maternal_illumina_dataset == spec.paternal_illumina_dataset)) {
                 error("Assembly specification error [${spec.id}]: maternal and paternal Illumina datasets are the same")
             }
 
+            // Validate phased assembly inputs
             if(spec.phased_assembly && (spec.long_read_dataset != spec.illumina_hic_dataset)) {
                 log.warn("Assembly specification warning [${spec.id}]: Phased assembly is enabled, but the long read and Hi-C datasets are not the same. This might lead to incorrect results.")
             }
 
-            return [spec]
+            return spec
         }
 
     //
-    // Logic: read raw genomic data from the input sheet
+    // Logic: After validation, create a channel containing the names of all the used
+    // datasets to filter the whole dataset channel.
     //
-    ch_genomic_data = channel.fromList(
-            samplesheetToList(genomic_data, "${projectDir}/assets/schema_genomic.json")
-        )
-        .collect().map { list -> [list] } 
-        .combine(ch_assembly_specs)
-        .multiMap { datasets, spec ->      
-            // Validate and extract long read data
-            def long_read_data = findDataset(spec.long_read_dataset, datasets)
-            if (!long_read_data) {
-                error("Assembly specification error [${spec.id}]: long read dataset '${spec.long_read_dataset}' not found")
-            }
-            
-            def platform_key = spec.long_read_platform
-            if (!hasData(long_read_data, platform_key)) {
-                error("Assembly specification error [${spec.id}]: ${platform_key} data missing for dataset '${spec.long_read_dataset}'")
-            }
-            
-            // Validate and extract Hi-C data (if scaffolding or phasing is enabled)
-            def illumina_hic_data = null
-            if ((spec.scaffold || spec.phased_assembly) && spec.illumina_hic_dataset) {
-                illumina_hic_data = findDataset(spec.illumina_hic_dataset, datasets)
-                if (!illumina_hic_data) {
-                    error("Assembly specification error [${spec.id}]: Hi-C dataset '${spec.illumina_hic_dataset}' not found")
-                }
-                if (!hasData(illumina_hic_data, "illumina_hic")) {
-                    error("Assembly specification error [${spec.id}]: illumina_hic data missing for dataset '${spec.illumina_hic_dataset}'")
-                }
-            }
-            
-            // Validate and extract 10X data (if specified)
-            def illumina_10x_data = null
-            if (spec.polishing && spec.illumina_10x_dataset) {
-                illumina_10x_data = findDataset(spec.illumina_10x_dataset, datasets)
-                if (!illumina_10x_data) {
-                    error("Assembly specification error [${spec.id}]: 10X dataset '${spec.illumina_10x_dataset}' not found")
-                }
-                if (!hasData(illumina_10x_data, "illumina_10x")) {
-                    error("Assembly specification error [${spec.id}]: illumina_10x data missing for dataset '${spec.illumina_10x_dataset}'")
-                }
-            }
-            
-            // Validate and extract trio data (if trio assembly is enabled)
-            def maternal_illumina_data = null
-            def paternal_illumina_data = null
-            if (spec.trio_assembly) {
-                if (!spec.maternal_illumina_dataset || !spec.paternal_illumina_dataset) {
-                    error("Assembly specification error [${spec.id}]: trio_assembly enabled but maternal/paternal datasets not specified")
-                }
-                
-                if (spec.maternal_illumina_dataset == spec.paternal_illumina_dataset) {
-                    error("Assembly specification error [${spec.id}]: maternal and paternal Illumina datasets must be different")
-                }
-                
-                maternal_illumina_data = findDataset(spec.maternal_illumina_dataset, datasets)
-                paternal_illumina_data = findDataset(spec.paternal_illumina_dataset, datasets)
-                
-                if (!maternal_illumina_data) {
-                    error("Assembly specification error [${spec.id}]: maternal dataset '${spec.maternal_illumina_dataset}' not found")
-                }
-                if (!paternal_illumina_data) {
-                    error("Assembly specification error [${spec.id}]: paternal dataset '${spec.paternal_illumina_dataset}' not found")
-                }
-                
-                if (!hasData(maternal_illumina_data, "illumina")) {
-                    error("Assembly specification error [${spec.id}]: illumina data missing for maternal dataset '${spec.maternal_illumina_dataset}'")
-                }
-                if (!hasData(paternal_illumina_data, "illumina")) {
-                    error("Assembly specification error [${spec.id}]: illumina data missing for paternal dataset '${spec.paternal_illumina_dataset}'")
-                }
-                
-                // Check FastK kmer sizes match for trio
-                def maternal_kmer = maternal_illumina_data.illumina?.fastk ? maternal_illumina_data.illumina.fastk[2] : null
-                def paternal_kmer = paternal_illumina_data.illumina?.fastk ? paternal_illumina_data.illumina.fastk[2] : null
-                def child_kmer = long_read_data[platform_key]?.fastk ? long_read_data[platform_key].fastk[2] : null
-                
-                if (maternal_kmer && paternal_kmer && child_kmer && 
-                    [maternal_kmer, paternal_kmer, child_kmer].unique().size() > 1) {
-                    error("Assembly specification error [${spec.id}]: FastK kmer sizes must match for trio (mat:${maternal_kmer}, pat:${paternal_kmer}, child:${child_kmer})")
-                }
-            }
-            
-            // Emit channels: [meta, reads, hist, ktab]
-            long_reads: [
-                [
-                    id: spec.id,
-                    kmer_size: long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[2] : null,
-                    read_type: "long",
-                    read_platform: spec.long_read_platform
-                ],
-                long_read_data[platform_key].reads ?: [],
-                long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[0] : [],
-                long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[1] : []
-            ]
-            
-            illumina_hic: illumina_hic_data ? [
-                [
-                    id: spec.id,
-                    read_type: "hic",
-                ],
-                illumina_hic_data.illumina_hic.reads ?: [],
-                illumina_hic_data.illumina_hic.fastk ? illumina_hic_data.illumina_hic.fastk[0] : [],
-                illumina_hic_data.illumina_hic.fastk ? illumina_hic_data.illumina_hic.fastk[1] : []
-            ] : []
-            
-            illumina_10x: illumina_10x_data ? [
-                [id: spec.id, read_type: "10x"],
-                illumina_10x_data.illumina_10x.reads ?: [],
-                illumina_10x_data.illumina_10x.fastk ? illumina_10x_data.illumina_10x.fastk[0] : [],
-                illumina_10x_data.illumina_10x.fastk ? illumina_10x_data.illumina_10x.fastk[1] : []
-            ] : []
-            
-            trio: (maternal_illumina_data && paternal_illumina_data) ? [
-                [
-                    [
-                        id: spec.id,
-                        kmer_size: maternal_illumina_data.illumina?.fastk ? maternal_illumina_data.illumina.fastk[2] : null,
-                        trio: "mat"
-                    ],
-                    maternal_illumina_data.illumina.reads ?: [],
-                    maternal_illumina_data.illumina?.fastk ? maternal_illumina_data.illumina.fastk[0] : [],
-                    maternal_illumina_data.illumina?.fastk ? maternal_illumina_data.illumina.fastk[1] : []
-                ],
-                [
-                    [
-                        id: spec.id,
-                        kmer_size: paternal_illumina_data.illumina?.fastk ? paternal_illumina_data.illumina.fastk[2] : null,
-                        trio: "pat"
-                    ],
-                    paternal_illumina_data.illumina.reads ?: [],
-                    paternal_illumina_data.illumina?.fastk ? paternal_illumina_data.illumina.fastk[0] : [],
-                    paternal_illumina_data.illumina?.fastk ? paternal_illumina_data.illumina.fastk[1] : []
-                ],
-                [
-                    [
-                        id: spec.id,
-                        kmer_size: long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[2] : null,
-                        trio: "child"
-                    ],
-                    long_read_data[platform_key].reads ?: [],
-                    long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[0] : [],
-                    long_read_data[platform_key].fastk ? long_read_data[platform_key].fastk[1] : []
-                ]
-            ] : []
-        }
+    ch_used_datasets = ch_assembly_specs
+        .map { spec ->
+            return [
+                spec.long_read_dataset,
+                spec.illumina_hic_dataset,
+                spec.illumina_10x_dataset,
+                spec.maternal_illumina_dataset,
+                spec.paternal_illumina_dataset
+            ].findAll()
+        }.transpose().unique().collect()
 
-    ch_genomic_data.illumina_10x.view()
+    //
+    // Logic: Filter the input genomic datasets to only include those used in an assembly
+    // specification
+    //
+    ch_genomic_data = ch_raw_genomic_data
+        .combine(ch_used_datasets)
+        .filter { meta, reads, fastk, data_list ->
+            meta.id in data_list
+        }
+        .map { meta, reads, fastk, data_list -> [ meta, reads, fastk ] }
+        .branch { meta, reads, fastk ->
+            long_reads: meta.platform in ["pacbio_hifi", "oxford_nanopore"]
+                return [ meta, reads, fastk ]
+            illumina_hic: meta.platform == "illumina_hic"
+                return [ meta, reads ]
+            illumina_10x: meta.platform == "illumina_10x"
+                return [ meta, reads ]
+            illumina: meta.platform == "illumina"
+                return [ meta, reads, fastk ]
+        }
 
     emit:
     specs         = ch_assembly_specs
-    long_reads    = ch_genomic_data.long_reads.filter { _meta, reads, _hist, _ktab -> reads }.unique()
-    hic_reads     = ch_genomic_data.illumina_hic.filter { _meta, reads -> reads }.unique()
-    illumina_10x  = ch_genomic_data.illumina_10x.filter { _meta, reads -> reads }.unique()
-    trio          = ch_genomic_data.trio.filter { _meta, mat, pat, child -> mat && pat && child }.unique()
+    long_reads    = ch_out_genomic_data.long_reads
+    hic_reads     = ch_out_genomic_data.illumina_hic
+    illumina_10x  = ch_out_genomic_data.illumina_10x
+    illumina      = ch_out_genomic_data.illumina
 }
 
 /*
@@ -433,37 +334,82 @@ def methodsDescriptionText(mqc_methods_yaml) {
 //
 // sanger-tol/genomeassembly specific functions
 //
-def validateArgString(argString, flagList, rejectFlags) {
-    def args = argString
-        .tokenize()
-        .collect { arg -> 
-            if (arg =~ /^-[a-zA-Z]/) {
-                // Single dash: extract just the flag letter
-                arg.replaceAll(/^(-[a-zA-Z]).*/, '$1')
-            } else if (arg =~ /^--[a-zA-Z]+/) {
-                arg.replaceAll(/^(--[a-zA-Z]+).*/, '$1')
-            } else {
-                null
-            }
-        }
-        .findAll { arg -> arg != null }
-    
-    // If rejectFlags, return the first arg found that is in the flag list
-    // Otherwise, return the first arg found that is /not/ in the flag list
-    if(rejectFlags) {
-        return args.find { arg -> (arg in flagList) }
-    } else {
-        return args.find { arg -> !(arg in flagList) }
+
+// Validate a file extension against a regular expression and error if they do not match.
+def validateFileExtension(meta, extension, regex) {
+    if(!(extension =~ regex)) {
+        error("Dataset validation error [${meta.id}:${meta.platform}]: File extension ${extension} does not match the expected input ${regex}.")
     }
 }
 
-// Check if dataset has data for the specified key
-def hasData(dataMap, key) {
-    return dataMap && dataMap[key] && dataMap[key].reads
+// Validate a string of command line arguments against a list of flags.
+//
+// if rejectFlags is true, check if any flags in the string is in the flag list and return the first one.
+// Otherwise, check if any flags in the string is /not/ in the flag list.
+def validateArgString(argString, flagList, rejectFlags) {
+    def args = argString
+        .tokenize()
+        .collect { arg ->
+            def match = arg =~ /^(-{1,2}[a-zA-Z]+)(?=[^a-zA-Z]|$)/
+            match ? match[0][0] : null
+        }
+        .findAll { it }
+
+    return args.find { arg -> rejectFlags ? (arg in flagList) : !(arg in flagList) }
 }
 
-// Find the dataset by ID
-def findDataset(id, datasets) {
-    if (!id) return null
-    return datasets.find { data -> data.id == id }
+// Validate provided Hifiasm arguments to ensure that EC arguments are only specified in the
+// hifiasm_error_correction_arguments assembly param
+def validateHifiasmArgs(id, hifiasm_ec_args, hifiasm_args) {
+    def valid_hifiasm_ec_flags: ["-k", "-w", "-f", "-D", "-N", "-r", "-z", "--max-kocc", "--hg-size", "--min-hist-cnt"]
+
+    // Validate the hifiasm error-correction and normal arguments against the valid EC flag list
+    [
+        [hifiasm_ec_args, "hifiasm_error_correction_arguments", false],
+        [hifiasm_args, "hifiasm_arguments", true]
+    ].each { argString, argName, rejectFlags ->
+        def invalid = validateArgString(argString, valid_hifiasm_ec_flags, rejectFlags)
+        if(invalid) {
+            error("Assembly specification error [${id}]: ${argName} contains invalid flag: ${invalid}")
+        }
+    }
+}
+
+// Add the dataset platform to the end of the dataset name to allow easy matching on a single key
+//
+// e.g. [illumina_hic_dataset: test1] -> [illumina_hic_dataset: test1.illumina_hic]
+def addDatasetSuffices(spec) {
+    // Map dataset names to platforms
+    def datasetPlatforms = [
+        long_read_dataset: spec.long_read_platform,
+        illumina_hic_dataset: 'illumina_hic',
+        illumina_10x_dataset: 'illumina_10x',
+        maternal_illumina_dataset: 'illumina',
+        paternal_illumina_dataset: 'illumina'
+    ]
+
+    // Rename datasets with platform suffixes
+    return spec + datasetPlatforms.collectEntries { key, platform ->
+        def value = spec[key]
+        [(key): value ? "${value}.${platform}" : null]
+    }
+}
+
+// For each dataset in an assembly specification, check that it exists in the data
+// specification.
+def checkDataExists(spec, data) {
+    def datasetNames = [
+        'long_read_dataset',
+        'illumina_hic_dataset',
+        'illumina_10x_dataset',
+        'maternal_illumina_dataset',
+        'paternal_illumina_dataset'
+    ]
+
+    datasetNames.each { datasetName ->
+        def datasetID = spec[datasetName]
+        if(datasetId && !data.find { it.id == datasetId }) {
+            error("Assembly specification error [${spec.id}]: ${datasetName} '${datasetId}' does not exist!")
+        }
+    }
 }

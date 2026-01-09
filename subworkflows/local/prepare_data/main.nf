@@ -4,28 +4,28 @@ include { GENOMESCOPE2         } from "../../../modules/nf-core/genomescope2/mai
 include { BUILD_KMER_DATABASES } from '../../../subworkflows/local/build_kmer_databases'
 
 workflow PREPARE_DATA {
-    take: 
+    take:
     ch_specs
     ch_long_reads
-    ch_trio
+    ch_illumina
     val_kmer_size
 
     main:
     ch_versions = channel.empty()
 
     BUILD_KMER_DATABASES(
+        ch_specs,
         ch_long_reads,
-        ch_trio,
+        ch_illumina,
         val_kmer_size
     )
     ch_versions = ch_versions.mix(BUILD_KMER_DATABASES.out.versions)
 
     //
     // Module: FastK histogram to ASCII for Genomescope.
-    //         Currently runs only for long reads
     //
-    ch_fastk_histex_input = BUILD_KMER_DATABASES.out.ch_long_reads
-        .map { meta, _reads, hist, _ktab -> [meta, hist] }
+    ch_fastk_histex_input = BUILD_KMER_DATABASES.out.long_reads
+        .map { meta, _reads, fastk -> [meta, fastk[0]] }
 
     FASTK_HISTEX(ch_fastk_histex_input)
     ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
@@ -39,24 +39,30 @@ workflow PREPARE_DATA {
     ch_coverage = GENOMESCOPE2.out.model
         .map { meta, model ->
             def kcov_line = model.readLines().find { line -> line =~ /^kmercov/ }
-            def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : -1
+            def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : null
             return [meta, kcov]
         }
 
-    ch_spec_out = ch_spec
+    ch_spec_out = ch_specs
         .combine(ch_coverage)
-        // .filter { spec, cov_meta, _cov -> spec.long_read_dataset == cov_meta.id && spec.long_read_platform == cov_meta. }
-        .map { lr_meta, reads, _hist, _ktab, _cov_meta, cov ->
-            def outcov = lr_meta.coverage != -1 ? lr_meta.coverage : cov
-            if(outcov == -1) {
-                log.error("Error: Unable to get the coverage (either it was not provided in the samplesheet or Genomescope2 failed!")
+        .filter { spec, cov_meta, _cov ->
+            cov_meta.id == spec.long_read_dataset
+        }
+        .map { spec, _cov_meta, cov ->
+            if(!(spec.long_read_1n_coverage || cov)){
+                error(
+                    "Error: For assembly ${spec.id}, no long_read_1n_coverage was provided and Genomescope2 failed to " +
+                    "estimate the coverage. Please either provide a coverage value, or modify the Genomescope2 parameters " +
+                    "and retry."
+                )
             }
-            def meta_new = lr_meta + [coverage: outcov]
-            [meta_new, reads]
+            return spec + [coverage: spec.long_read_1n_coverage ? spec.long_read_1n_coverage : cov]
         }
 
     emit:
-    ch_specs
-    ch_long_reads
-    ch_trio
+    specs = ch_spec_out
+    long_reads = BUILD_KMER_DATABASES.out.long_reads
+    illumina_yakdb = BUILD_KMER_DATABASES.out.illumina_yakdb
+    merqury_trio_haptabs = BUILD_KMER_DATABASES.out.merqury_trio_haptabs
+    versions = ch_versions
 }
