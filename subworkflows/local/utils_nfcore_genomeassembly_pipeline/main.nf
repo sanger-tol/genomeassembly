@@ -100,32 +100,11 @@ workflow PIPELINE_INITIALISATION {
             samplesheetToList(genomic_data, "${projectDir}/assets/schema_genomic.json")
         )
         .map { meta, reads, fastk ->
-            // Check that all files have the same extension
-            def extensions = reads.collect { file ->
-                if(file.getExtension() == "gz") {
-                    return file.getName().tokenize(".").takeLast(2).join('.')
-                } else {
-                    return file.getExtension()
-                }
-            }.unique()
+            // Validate that all read files have the same extension and have the correct
+            // file format for the platform
+            validateReadFiles(meta, reads)
 
-            if(extensions.size() > 1) {
-                error("Dataset validation error [${meta.id}:${meta.platform}]: Not all files are of the same type!")
-            }
-
-            // Validate that the correct extension is present for each platform
-            if(meta.platform == "pacbio_hifi") {
-                validateFileExtension(meta, extensions[0], /^fn?(asta)?(\.gz)?$/)
-            } else if (meta.platform == "oxford_nanopore" || meta.platform == "illumina_10x") {
-                validateFileExtension(meta, extensions[0], /^f(ast)?q(\.gz)?$/)
-            } else {
-                validateFileExtension(meta, extensions[0], /^cram$/)
-            }
-
-            // Construct a hybrid dataset name using the sample id and platform
-            def datasetName = "${meta.id}.${meta.platform}"
-
-            return [ meta + [id: datasetName], reads, fastk ]
+            return [ meta, reads, fastk ]
         }
 
     //
@@ -139,15 +118,10 @@ workflow PIPELINE_INITIALISATION {
         // We need to wrap these up inside a list to have a single entry after combining
         .combine(ch_raw_genomic_data.collect().map { list -> [list] } )
         .map { spec, data ->
-            // Add data type suffix to each dataset, e.g. "test" -> "test.illumina_hic"
-            // This allows joining with the data downstream based on a single key
-            spec = addDatasetSuffices(spec)
-
-            // Check that each requested dataset exists in the input data schema
-            checkDataExists(spec, data)
-
-            // Validate any provided hifiasm args
-            validateHifiasmArgs(spec.id, spec.hifiasm_error_correction_arguments, spec.hifiasm_arguments)
+            // Validate check assembly is not both trio and phased
+            if(spec.trio_assembly && spec.phased_assembly) {
+                error("Assembly specification error [${spec.id}]: cannot have both phased_assembly and trio_assembly!")
+            }
 
             // Validate trio assembly inputs
             if(spec.trio_assembly && (spec.maternal_illumina_dataset == spec.paternal_illumina_dataset)) {
@@ -157,6 +131,11 @@ workflow PIPELINE_INITIALISATION {
             // Validate phased assembly inputs
             if(spec.phased_assembly && (spec.long_read_dataset != spec.illumina_hic_dataset)) {
                 log.warn("Assembly specification warning [${spec.id}]: Phased assembly is enabled, but the long read and Hi-C datasets are not the same. This might lead to incorrect results.")
+            }
+
+            // Organelle assemblers currently only support pacbio hifi
+            if(spec.assembler in ["oatk", "mitohifi"] && spec.long_read_platform == "oxford_nanopore") {
+                error("Assembly specification error [${spec.id}]: oatk and mitohifi currently only support pacbio_hifi inputs!")
             }
 
             return spec
@@ -169,13 +148,13 @@ workflow PIPELINE_INITIALISATION {
     ch_used_datasets = ch_assembly_specs
         .map { spec ->
             return [
-                spec.long_read_dataset,
-                spec.illumina_hic_dataset,
-                spec.illumina_10x_dataset,
-                spec.maternal_illumina_dataset,
-                spec.paternal_illumina_dataset
-            ].findAll()
-        }.transpose().unique().collect()
+                [id: spec.long_read_dataset, platform: spec.long_read_platform],
+                [id: spec.illumina_hic_dataset, platform: "illumina_hic"],
+                [id: spec.illumina_10x_dataset, platform: "illumina_10x"],
+                [id: spec.maternal_illumina_dataset, platform: "illumina"],
+                [id: spec.paternal_illumina_dataset, platform: "illumina"]
+            ].findAll { map -> map.id }
+        }.transpose().unique().collect().map { list -> [list] }
 
     //
     // Logic: Filter the input genomic datasets to only include those used in an assembly
@@ -184,26 +163,15 @@ workflow PIPELINE_INITIALISATION {
     ch_genomic_data = ch_raw_genomic_data
         .combine(ch_used_datasets)
         .filter { meta, reads, fastk, data_list ->
-            meta.id in data_list
+            meta.subMap(["id", "platform"]) in data_list
         }
-        .map { meta, reads, fastk, data_list -> [ meta, reads, fastk ] }
-        .branch { meta, reads, fastk ->
-            long_reads: meta.platform in ["pacbio_hifi", "oxford_nanopore"]
-                return [ meta, reads, fastk ]
-            illumina_hic: meta.platform == "illumina_hic"
-                return [ meta, reads ]
-            illumina_10x: meta.platform == "illumina_10x"
-                return [ meta, reads ]
-            illumina: meta.platform == "illumina"
-                return [ meta, reads, fastk ]
+        .map { meta, reads, fastk, data_list ->
+            [ meta, reads, fastk ]
         }
 
     emit:
-    specs         = ch_assembly_specs
-    long_reads    = ch_out_genomic_data.long_reads
-    hic_reads     = ch_out_genomic_data.illumina_hic
-    illumina_10x  = ch_out_genomic_data.illumina_10x
-    illumina      = ch_out_genomic_data.illumina
+    specs          = ch_assembly_specs
+    data           = ch_genomic_data
 }
 
 /*
@@ -335,81 +303,50 @@ def methodsDescriptionText(mqc_methods_yaml) {
 // sanger-tol/genomeassembly specific functions
 //
 
-// Validate a file extension against a regular expression and error if they do not match.
-def validateFileExtension(meta, extension, regex) {
-    if(!(extension =~ regex)) {
+// Validate that all the reads in a dataset have the same file extension, and that
+// the file extensions are correct for the sequencing platform.
+def validateReadFiles(meta, reads) {
+    // Check that all files have the same extension
+    def extensions = reads.collect { file ->
+        if(file.getExtension() == "gz") {
+            return file.getName().tokenize(".").takeRight(2).join('.')
+        } else {
+            return file.getExtension()
+        }
+    }.unique()
+
+    if(extensions.size() > 1) {
+        error("Dataset validation error [${meta.id}:${meta.platform}]: Not all files are of the same type!")
+    }
+
+    def platform_ext_map = [
+        ["pacbio_hifi", /^fn?(asta)?(\.gz)?$/],
+        ["oxford_nanopore", /^f(ast)?q(\.gz)?$/],
+        ["illumina_hic", /^cram$/],
+        ["illumina_10x", /^f(ast)?q(\.gz)?$/],
+        ["illumina", /^cram$/],
+    ].find { platform, regex -> platform == meta.platform }
+
+    // Validate that the correct extension is present for each platform
+    if(!(extensions[0] =~ platform_ext_map[1])) {
         error("Dataset validation error [${meta.id}:${meta.platform}]: File extension ${extension} does not match the expected input ${regex}.")
-    }
-}
-
-// Validate a string of command line arguments against a list of flags.
-//
-// if rejectFlags is true, check if any flags in the string is in the flag list and return the first one.
-// Otherwise, check if any flags in the string is /not/ in the flag list.
-def validateArgString(argString, flagList, rejectFlags) {
-    def args = argString
-        .tokenize()
-        .collect { arg ->
-            def match = arg =~ /^(-{1,2}[a-zA-Z]+)(?=[^a-zA-Z]|$)/
-            match ? match[0][0] : null
-        }
-        .findAll { it }
-
-    return args.find { arg -> rejectFlags ? (arg in flagList) : !(arg in flagList) }
-}
-
-// Validate provided Hifiasm arguments to ensure that EC arguments are only specified in the
-// hifiasm_error_correction_arguments assembly param
-def validateHifiasmArgs(id, hifiasm_ec_args, hifiasm_args) {
-    def valid_hifiasm_ec_flags: ["-k", "-w", "-f", "-D", "-N", "-r", "-z", "--max-kocc", "--hg-size", "--min-hist-cnt"]
-
-    // Validate the hifiasm error-correction and normal arguments against the valid EC flag list
-    [
-        [hifiasm_ec_args, "hifiasm_error_correction_arguments", false],
-        [hifiasm_args, "hifiasm_arguments", true]
-    ].each { argString, argName, rejectFlags ->
-        def invalid = validateArgString(argString, valid_hifiasm_ec_flags, rejectFlags)
-        if(invalid) {
-            error("Assembly specification error [${id}]: ${argName} contains invalid flag: ${invalid}")
-        }
-    }
-}
-
-// Add the dataset platform to the end of the dataset name to allow easy matching on a single key
-//
-// e.g. [illumina_hic_dataset: test1] -> [illumina_hic_dataset: test1.illumina_hic]
-def addDatasetSuffices(spec) {
-    // Map dataset names to platforms
-    def datasetPlatforms = [
-        long_read_dataset: spec.long_read_platform,
-        illumina_hic_dataset: 'illumina_hic',
-        illumina_10x_dataset: 'illumina_10x',
-        maternal_illumina_dataset: 'illumina',
-        paternal_illumina_dataset: 'illumina'
-    ]
-
-    // Rename datasets with platform suffixes
-    return spec + datasetPlatforms.collectEntries { key, platform ->
-        def value = spec[key]
-        [(key): value ? "${value}.${platform}" : null]
     }
 }
 
 // For each dataset in an assembly specification, check that it exists in the data
 // specification.
-def checkDataExists(spec, data) {
-    def datasetNames = [
-        'long_read_dataset',
-        'illumina_hic_dataset',
-        'illumina_10x_dataset',
-        'maternal_illumina_dataset',
-        'paternal_illumina_dataset'
+def checkDataExists(spec, datasets) {
+    def platform_key = [
+        [name: 'long_read_dataset', platform: spec.long_read_platform],
+        [name: 'illumina_hic_dataset', platform: "illumina_hic"],
+        [name: 'illumina_10x_dataset', platform: "illumina_10x"],
+        [name: 'maternal_illumina_dataset', platform: "illumina"],
+        [name: 'paternal_illumina_dataset', platform: "illumina"]
     ]
 
-    datasetNames.each { datasetName ->
-        def datasetID = spec[datasetName]
-        if(datasetId && !data.find { it.id == datasetId }) {
-            error("Assembly specification error [${spec.id}]: ${datasetName} '${datasetId}' does not exist!")
+    platform_key.each { platform ->
+        if(spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform } ) {
+            error("Assembly specification error [${spec.id}]: ${datasetName} '${datasetID}' does not exist!")
         }
     }
 }

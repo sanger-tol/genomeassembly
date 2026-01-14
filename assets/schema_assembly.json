@@ -14,6 +14,12 @@
                 "pattern": "^\\S+$",
                 "meta": "id"
             },
+            "assembler": {
+                "type": "string",
+                "description": "Which assembler to use - one of hifiasm, mitohifi or oatk",
+                "enum": ["hifiasm", "mitohifi", "oatk"],
+                "meta": "assembler"
+            },
             "long_read_dataset": {
                 "type": "string",
                 "description": "A dataset name from the input dataset sheet supplying long reads for assembly.",
@@ -87,23 +93,17 @@
                 "default": true,
                 "meta": "scaffold"
             },
-            "assemble_mito": {
+            "find_mito": {
                 "type": "boolean",
                 "description": "Enable mitochondrial genome assembly/search.",
                 "default": true,
                 "meta": "assemble_mito"
             },
-            "assemble_plastid": {
+            "find_plastid": {
                 "type": "boolean",
                 "description": "Enable plastid genome assembly.",
                 "default": false,
                 "meta": "assemble_plastid"
-            },
-            "hifiasm_error_correction_arguments": {
-                "type": "string",
-                "description": "Command-line arguments to pass to Hifiasm controlling read error correction only: https://hifiasm.readthedocs.io/en/latest/parameter-reference.html#error-correction-options",
-                "meta": "hifiasm_error_correction_arguments",
-                "default": ""
             },
             "hifiasm_arguments": {
                 "type": "string",
@@ -139,16 +139,10 @@
                 "description": "Mitochondrial genetic code to use during gene prediction.",
                 "meta": "mitohifi_genetic_code"
             },
-            "mitohifi_reads_arguments": {
+            "mitohifi_arguments": {
                 "type": "string",
                 "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
                 "meta": "mitohifi_reads_arguments",
-                "default": ""
-            },
-            "mitohifi_contigs_arguments": {
-                "type": "string",
-                "description": "Extra command-line arguments to supply to MitoHiFi in contigs mode.",
-                "meta": "mitohifi_contigs_arguments",
                 "default": ""
             },
             "oatk_kmer_size": {
@@ -185,12 +179,47 @@
                 "meta": "oatk_plastid_hmm"
             }
         },
-        "required": ["id", "long_read_dataset", "long_read_platform"],
-        "dependentRequired": {
-            "phased_assembly": ["illumina_hic_dataset"],
-            "trio_assembly": ["maternal_illumina_dataset", "paternal_illumina_dataset"],
-            "scaffold": ["illumina_hic_dataset"],
-            "polish": ["illumina_10x_dataset"]
+        "required": ["id", "assembler", "long_read_dataset", "long_read_platform"],
+        "dependentSchemas": {
+            "hifiasm": {
+                "if": {
+                    "properties": { "assembler": { "const": "hifiasm" } }
+                },
+                "then": {
+                    "dependentSchemas": {
+                        "find_mito": {
+                            "if": {
+                                "properties": { "find_mito": { "const": true } }
+                            },
+                            "then": {
+                                "required": ["mitohifi_reference_species", "mitohifi_genetic_code"]
+                            }
+                        },
+                        "find_plastid": {
+                            "if": {
+                                "properties": { "find_plastid": { "const": true } }
+                            },
+                            "then": {
+                                "required": ["mitohifi_reference_species"]
+                            }
+                        }
+                    },
+                    "dependentRequired": {
+                        "phased_assembly": ["illumina_hic_dataset"],
+                        "trio_assembly": ["maternal_illumina_dataset", "paternal_illumina_dataset"],
+                        "scaffold": ["illumina_hic_dataset"],
+                        "polish": ["illumina_10x_dataset"]
+                    }
+                }
+            },
+            "mitohifi": {
+                "if": {
+                    "properties": { "assembler": { "const": "mitohifi" } }
+                },
+                "then": {
+                    "required": ["mitohifi_reference_species", "mitohifi_genetic_code"]
+                }
+            }
         }
     }
 }

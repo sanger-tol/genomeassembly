@@ -29,10 +29,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
 
     take:
     ch_specs
-    ch_long_reads
-    ch_illumina_hic
-    ch_illumina_10x
-    ch_illumina
+    ch_data
+    val_kmer_size
     val_fastx_reads_per_chunk
     val_hic_slices_per_chunk
     val_busco_lineage
@@ -45,10 +43,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     //
     GENOMEASSEMBLY (
         ch_specs,
-        ch_long_reads,
-        ch_illumina_hic,
-        ch_illumina_10x,
-        ch_illumina,
+        ch_data,
+        val_kmer_size,
         val_fastx_reads_per_chunk,
         val_hic_slices_per_chunk,
         val_busco_lineage,
@@ -85,10 +81,8 @@ workflow {
     //
     SANGERTOL_GENOMEASSEMBLY (
         PIPELINE_INITIALISATION.out.specs,
-        PIPELINE_INITIALISATION.out.long_reads,
-        PIPELINE_INITIALISATION.out.illumina_hic,
-        PIPELINE_INITIALISATION.out.illumina_10x,
-        PIPELINE_INITIALISATION.out.illumina,
+        PIPELINE_INITIALISATION.out.data,
+        params.kmer_size,
         params.purging_reads_chunk_size,
         params.hic_mapping_cram_chunk_size,
         params.busco_lineage,

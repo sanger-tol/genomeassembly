@@ -183,6 +183,12 @@ workflow POLISHING_10X {
     ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
     emit:
-    assemblies = BCFTOOLS_CONSENSUS.out.fasta
+    polished_assemblies = BCFTOOLS_CONSENSUS.out.fasta
+    bed_chunks = GAWK_BED_CHUNKS.out.output
+    longranger_bam = LONGRANGER_ALIGN.out.bam
+    longranger_bai = LONGRANGER_ALIGN.out.bai
+    longranger_summary = LONGRANGER_ALIGN.out.csv
+    merged_vcf = GATK4_MERGE_FREEBAYES.out.vcf
+    merged_vcf_tbi = GATK4_MERGE_FREEBAYES.out.tbi
     versions   = ch_versions
 }

@@ -67,6 +67,17 @@ input:
         type: file
         description: bin files produced during a previous Hifiasm run
         ontologies: []
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing information about the input bin files
+    - previous_log:
+        type: file
+        description: |
+          log file to append to from a previous hifiasm run, e.g. if resuming
+          from a bin files only run
+        ontologies:
+          - edam: http://edamontology.org/data_2526 # Text
 output:
   bin_files:
     - - meta:
@@ -166,13 +177,46 @@ output:
           pattern: "*.log"
           ontologies:
             - edam: http://edamontology.org/data_2526 # Text
+  versions_hifiasm:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - hifiasm:
+          type: string
+          description: Name of the tool
+      - hifiasm --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools --version | head -1 | sed -e "s/samtools //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - hifiasm:
+          type: string
+          description: The tool name
+      - hifiasm --version:
+          type: string
+          description: The command used to generate the version of the tool
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools --version | head -1 | sed -e "s/samtools //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@sidorov-si"
   - "@scorreard"

@@ -1,12 +1,11 @@
 include { FASTK_FASTK        } from "../../../modules/nf-core/fastk/fastk/main"
-include { YAK_COUNT          } from "../../../modules/nf-core/yak/count/main"
 include { MERQURYFK_HAPMAKER } from "../../../modules/nf-core/merquryfk/hapmaker"
+include { YAK_COUNT          } from "../../../modules/sanger-tol/yak/count/main"
 
 workflow BUILD_KMER_DATABASES {
     take:
     ch_specs        // spec
-    ch_long_reads   // [meta, [reads], [fk_hist, [fk_ktabs]] ]
-    ch_illumina     // [meta, [reads], [fk_hist, [fk_ktabs]] ]
+    ch_data         // [meta, [reads], [fk_hist, [fk_ktabs]] ]
     val_kmer_size   // integer: kmer size
 
     main:
@@ -15,7 +14,7 @@ workflow BUILD_KMER_DATABASES {
     //
     // Logic: separate input with FastK databases from input without
     //
-    ch_fastk_status = ch_long_reads.mix(ch_illumina)
+    ch_fastk_status = ch_data
         .branch { meta, reads, fastk ->
             has_fastk: fastk
             no_fastk: true
@@ -28,7 +27,7 @@ workflow BUILD_KMER_DATABASES {
     FASTK_FASTK(ch_fastk_status.no_fastk)
     ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
-    ch_fastk = ch_fastk_status.no_fastk
+    ch_data_with_fastk = ch_fastk_status.no_fastk
         .combine(FASTK_FASTK.out.hist, by: 0)
         .combine(FASTK_FASTK.out.ktab, by: 0)
         .map { meta, reads, hist, ktab ->
@@ -37,10 +36,9 @@ workflow BUILD_KMER_DATABASES {
         }
         .mix(ch_fastk_status.has_fastk)
 
-    ch_fastk_split = ch_fastk
-        .branch { meta, reads, fastk ->
-            long_reads: meta.platform in ["pacbio_hifi", "oxford_nanopore"
-            illumina: meta.platform == "illumina"
+    ch_illumina = ch_data_with_fastk
+        .filter { meta, reads, fastk ->
+            meta.platform == "illumina"
         }
 
     //
@@ -48,7 +46,12 @@ workflow BUILD_KMER_DATABASES {
     //         for trio assembly with hifiasm
     //
     YAK_COUNT(ch_illumina)
-    ch_versions = ch_versions.mix(YAK_COUNT.out.versions)
+
+    ch_yakdbs = YAK_COUNT.out.yak
+        map { meta, yak ->
+        def meta_new = meta + [kmer_size: val_kmer_size]
+        [ meta_new, reads, [hist, ktab] ]
+    }
 
     //
     // Module: Generate trio fastk databases for maternal and paternal read sets
@@ -57,13 +60,13 @@ workflow BUILD_KMER_DATABASES {
     ch_hapmaker_inputs = ch_specs
         .filter { spec -> spec.trio_assembly }
         // This combines all the datasets into a list of datasets that we can map through
-        .combine(ch_fastk.map { data -> [data] }.collect())
+        .combine(ch_data_with_fastk.map { data -> [data] }.collect())
         .map { spec, datasets ->
             def out_meta = spec.subMap(["long_read_dataset", "maternal_illumina_dataset", "paternal_illumina_dataset"])
 
-            def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_illumina_dataset }.get(2).get(1)
-            def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_illumina_dataset }.get(2).get(1)
-            def child = datasets.find { meta, _reads, _fastk -> meta.id == spec.long_read_dataset }.get(2).get(1)
+            def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_illumina_dataset && meta.platform == "illumina" }.get(2).get(1)
+            def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_illumina_dataset && meta.platform == "illumina"  }.get(2).get(1)
+            def child = datasets.find { meta, _reads, _fastk -> meta.id == spec.long_read_dataset && meta.platform == spec.long_read_platform }.get(2).get(1)
 
             [ out_meta, mat, pat, child ]
         }
@@ -83,9 +86,25 @@ workflow BUILD_KMER_DATABASES {
 
     ch_merqury_haptabs = MERQURYFK_HAPMAKER.out.mat_hap_ktab.combine(MERQURYFK_HAPMAKER.out.pat_hap_ktab, by: 0)
 
+    //
+    // Logic: now that all data is pre-processed, move everything into the meta map so that each
+    // data channel entry is a single map object
+    //
+    ch_out_data = ch_data_with_fastk
+        .join(ch_yakdbs, remainder: true)
+        .map { meta, reads_list, fastk, yakdb ->
+            def out_meta = meta + [
+                reads: reads_list,
+                fk_hist: fastk[0],
+                fk_ktab: fastk[1],
+                yak: yakdb
+            ]
+
+            return out_meta
+        }
+
     emit:
-    long_reads = ch_fastk_split.long_reads
-    illumina_yakdb = YAK_COUNT.out.yak
+    data = ch_out_data
     merqury_trio_haptabs = ch_merqury_haptabs
     versions = ch_versions
 }

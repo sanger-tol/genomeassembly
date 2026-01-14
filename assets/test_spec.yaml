@@ -1,23 +1,34 @@
 - id: baUndUnlc1.pri
+  assembler: "hifiasm"
   long_read_dataset: baUndUnlc1
   long_read_platform: "pacbio_hifi"
   illumina_hic_dataset: baUndUnlc1
   purge: true
-  assemble_mito: true
-  assemble_plastid: true
-  hifiasm_error_correction_arguments: '-f0'
-  hifiasm_arguments: "--primary"
-  oatk_mito_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
-  oatk_plastid_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam
+  find_mito: true
+  find_plastid: true
+  hifiasm_arguments: "--primary -f0"
+  mitohifi_reference_species: "Caradrina clavipalpis"
+  mitohifi_genetic_code: 5
 - id: baUndUnlc1.phased
+  assembler: "hifiasm"
   long_read_dataset: baUndUnlc1
   long_read_platform: "pacbio_hifi"
   illumina_hic_dataset: baUndUnlc1
   phased_assembly: true
-  purge: true
-  assemble_mito: true
-  assemble_plastid: true
-  hifiasm_error_correction_arguments: "-f0"
-  hifiasm_arguments: "--primary"
+  find_mito: false
+  find_plastid: false
+  hifiasm_arguments: "--primary -f0"
+- id: baUndUnlc1.oatk
+  assembler: "oatk"
+  long_read_dataset: baUndUnlc1
+  long_read_platform: "pacbio_hifi"
+  oatk_kmer_size: 1001
+  oatk_coverage_cutoff: 5
   oatk_mito_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
   oatk_plastid_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/acrogymnospermae_pltd.fam
+- id: baUndUnlc1.mitohifi
+  assembler: "mitohifi"
+  long_read_dataset: baUndUnlc1
+  long_read_platform: "pacbio_hifi"
+  mitohifi_reference_species: "Caradrina clavipalpis"
+  mitohifi_genetic_code: 5

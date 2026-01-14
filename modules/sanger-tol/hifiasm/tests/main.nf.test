@@ -38,6 +38,10 @@ nextflow_process {
                     [:],
                     []
                 ]
+                input[4] = [
+                    [:],
+                    []
+                ]
                 """
             }
         }
@@ -61,7 +65,7 @@ nextflow_process {
                     process.out.corrected_reads,
                     process.out.read_overlaps,
                     process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -94,6 +98,10 @@ nextflow_process {
                         [:],
                         []
                     ]
+                    input[4] = [
+                        [:],
+                        []
+                    ]
                     """
                 }
             }
@@ -122,6 +130,7 @@ nextflow_process {
                     []
                 ]
                 input[3] = HIFIASM_INITIAL.out.bin_files
+                input[4] = HIFIASM_INITIAL.out.log
                 """
             }
         }
@@ -137,7 +146,7 @@ nextflow_process {
                     process.out.corrected_reads,
                     process.out.read_overlaps,
                     process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -198,6 +207,10 @@ nextflow_process {
                     [:],
                     []
                 ]
+                input[4] = [
+                    [:],
+                    []
+                ]
                 """
             }
         }
@@ -223,7 +236,7 @@ nextflow_process {
                     process.out.corrected_reads,
                     process.out.read_overlaps,
                     process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -260,6 +273,10 @@ nextflow_process {
                     [:],
                     []
                 ]
+                input[4] = [
+                    [:],
+                    []
+                ]
                 """
             }
         }
@@ -283,7 +300,7 @@ nextflow_process {
                     process.out.corrected_reads,
                     process.out.read_overlaps,
                     process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -316,6 +333,10 @@ nextflow_process {
                 ]
                 input[3] = [
                     [],
+                    []
+                ]
+                input[4] = [
+                    [:],
                     []
                 ]
                 """

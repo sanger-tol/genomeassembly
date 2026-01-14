@@ -230,11 +230,6 @@
                         "branch": "master",
                         "git_sha": "5c3c4f4753d55bd3ba93ce29ed1100e964c52f74",
                         "installed_by": ["fasta_bam_scaffolding_yahs"]
-                    },
-                    "yak/count": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
                     }
                 }
             },
@@ -303,7 +298,7 @@
                     },
                     "hifiasm": {
                         "branch": "main",
-                        "git_sha": "848baeb79d622f51c6cf5ec2ecfbef6dcb73f583",
+                        "git_sha": "d44a0926bfc87999fbbb530b9c0d00a4391586f4",
                         "installed_by": ["modules"]
                     },
                     "longranger/align": {
@@ -325,6 +320,11 @@
                         "branch": "main",
                         "git_sha": "12a5521bd8ff0a62a7fa1954f76062fe4fb695aa",
                         "installed_by": ["fasta_bam_scaffolding_yahs"]
+                    },
+                    "yak/count": {
+                        "branch": "main",
+                        "git_sha": "228710479be3c806db8964d6981daab994126c3d",
+                        "installed_by": ["modules"]
                     }
                 }
             },
