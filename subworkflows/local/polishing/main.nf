@@ -30,7 +30,7 @@ workflow POLISHING {
             }
 
             assemblies: [ spec, asm1, asm2 ]
-            illumina_10x_reads: [ spec, long_reads.reads ]
+            illumina_10x_reads: [ spec, i10x_reads.reads ]
         }
 
     //
@@ -124,18 +124,3 @@ workflow POLISHING {
     polishing_output = ch_polishing_output
     versions = ch_versions
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ch_all_assemblies_after_polishing = ch_assemblies_to_polish.no_polish
-//     .mix(ch_assemblies_polished)

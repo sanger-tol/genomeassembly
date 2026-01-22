@@ -41,13 +41,46 @@ output:
           pattern: "*.{stats}"
           ontologies:
             - edam: "http://edamontology.org/data_3671" # TEXT
+  versions_asmstats:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - asmstats:
+          type: string
+          description: Name of the tool
+      - echo 1.0.0:
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_seqtk:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - seqtk:
+          type: string
+          description: Name of the tool
+      - seqtk |& sed "/Version/!d; s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: "http://edamontology.org/format_3750" # YAML
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - asmstats:
+          type: string
+          description: Name of the tool
+      - echo 1.0.0:
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - seqtk:
+          type: string
+          description: Name of the tool
+      - seqtk |& sed "/Version/!d; s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

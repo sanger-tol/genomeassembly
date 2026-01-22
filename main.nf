@@ -32,8 +32,9 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     ch_data
     val_kmer_size
     val_fastx_reads_per_chunk
-    val_hic_slices_per_chunk
-    val_busco_lineage
+    val_hic_aligner
+    val_hic_mapping_cram_chunk_size
+    val_scaffolding_cool_bin_size
     val_busco_lineage_directory
 
     main:
@@ -46,8 +47,9 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         ch_data,
         val_kmer_size,
         val_fastx_reads_per_chunk,
-        val_hic_slices_per_chunk,
-        val_busco_lineage,
+        val_hic_aligner,
+        val_hic_mapping_cram_chunk_size,
+        val_scaffolding_cool_bin_size,
         val_busco_lineage_directory
     )
 }
@@ -73,7 +75,8 @@ workflow {
         params.help_full,
         params.show_hidden,
         params.genomic_data,
-        params.assembly_specs
+        params.assembly_specs,
+        params.polishing_longranger_container_path
     )
 
     //
@@ -84,8 +87,9 @@ workflow {
         PIPELINE_INITIALISATION.out.data,
         params.kmer_size,
         params.purging_reads_chunk_size,
+        params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
-        params.busco_lineage,
+        params.scaffolding_cool_bin_size,
         params.busco_lineage_directory,
     )
 

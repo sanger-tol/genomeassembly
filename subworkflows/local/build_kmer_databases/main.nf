@@ -25,7 +25,6 @@ workflow BUILD_KMER_DATABASES {
     // Module: Generate FastK databases for all read sets without one
     //
     FASTK_FASTK(ch_fastk_status.no_fastk)
-    ch_versions = ch_versions.mix(FASTK_FASTK.out.versions)
 
     ch_data_with_fastk = ch_fastk_status.no_fastk
         .combine(FASTK_FASTK.out.hist, by: 0)
@@ -82,7 +81,6 @@ workflow BUILD_KMER_DATABASES {
         ch_hapmaker_inputs.pat,
         ch_hapmaker_inputs.child
     )
-    ch_versions = ch_versions.mix(MERQURYFK_HAPMAKER.out.versions)
 
     ch_merqury_haptabs = MERQURYFK_HAPMAKER.out.mat_hap_ktab.combine(MERQURYFK_HAPMAKER.out.pat_hap_ktab, by: 0)
 

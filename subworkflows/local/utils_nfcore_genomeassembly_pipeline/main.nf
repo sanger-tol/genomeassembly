@@ -37,6 +37,7 @@ workflow PIPELINE_INITIALISATION {
     show_hidden       // boolean: Show hidden parameters in the help message
     genomic_data      //  string: Path to genome data samplesheet
     asm_specs         //  string: Path to assembly specification samplesheet
+    val_polishing_container_supplied // boolean: whether or not the polishing container was specified
 
     main:
     //
@@ -136,6 +137,12 @@ workflow PIPELINE_INITIALISATION {
             // Organelle assemblers currently only support pacbio hifi
             if(spec.assembler in ["oatk", "mitohifi"] && spec.long_read_platform == "oxford_nanopore") {
                 error("Assembly specification error [${spec.id}]: oatk and mitohifi currently only support pacbio_hifi inputs!")
+            }
+
+            // Disable polishing and print a warning if it was enabled without supplying a longranger container
+            if(spec.polish && !val_polishing_container_supplied) {
+                log.warn("Assembly specification warning [${spec.id}]: Polishing was enabled but --polishing_longranger_container_path was not set. Polishing will be disabled for this assembly.")
+                spec = spec + [polish: false]
             }
 
             return spec

@@ -27,7 +27,6 @@ workflow PREPARE_INPUTS {
         .map { data -> [data.subMap(["id", "platform", "kmer_size"]), data.fk_hist] }
 
     FASTK_HISTEX(ch_fastk_histex_input)
-    ch_versions = ch_versions.mix(FASTK_HISTEX.out.versions)
 
     //
     // Module: Estimate nuclear coverage with Genomescope
@@ -108,30 +107,48 @@ workflow PREPARE_INPUTS {
 // assembly: final raw hifiasm assembly, with optional Hi-C phasing or trio binning
 // purging: purging pipeline with purge_dups
 // polishing: polishing pipeline with longranger + freebayes
-// scaffolding: scaffolding with
+// scaffolding: scaffolding with YaHS
+//
+// mito: find the mitogenome using mitohifi
+// plastid: find the chloroplast genome using mitohifi
+//
+// Each stage is defined in the STAGE_SPEC and ORGANELLE_SPEC variables for ease of adding
+// new specs later.
 //
 def stageHifiasmSpec(spec) {
+    // Define the datasets types required. We do this additively as once
+    // we add a data type, it causes a fork in the specification.
+    // bin_data: data required for the production of the overlap graph
     def bin_data = ["long_read_dataset", "long_read_platform"]
+    // asm_data: data required for the production of an optionally phased or trio-binned assembly, as well as purging
     def asm_data = bin_data + ["illumina_hic_dataset", "maternal_illumina_dataset", "paternal_illumina_dataset"]
+    // polish_scaff_data: data required from scaffolding and beyond
     def polish_scaff_data = asm_data + ["illumina_10x_dataset"]
 
+    // For each stage, define the required datasets, specification parameters, and determine whether a stage
+    // should be enabled.
     def STAGE_CONFIG = [
-        bin_assembly: [keys: bin_data + ["hifiasm_arguments", "coverage"], enabled: true],
-        assembly: [keys: asm_data + ["phased_assembly", "trio_assembly", "hifiasm_arguments", "coverage"], enabled: true],
-        purging: [keys: asm_data + ["purging_cutoffs", "purge_middle", "coverage"], enabled: spec.purge],
-        polishing: [keys: polish_scaff_data + [], enabled: spec.polish],
-        scaffolding: [keys: polish_scaff_data + ["yahs_arguments"], enabled: spec.scaffold]
+        bin_assembly: [keys: bin_data + ["hifiasm_arguments", "coverage", "busco_lineage"], enabled: true],
+        assembly: [keys: asm_data + ["phased_assembly", "trio_assembly", "hifiasm_arguments", "coverage", "busco_lineage"], enabled: true],
+        purging: [keys: asm_data + ["purging_cutoffs", "purge_middle", "coverage", "busco_lineage"], enabled: spec.purge],
+        polishing: [keys: polish_scaff_data + ["busco_lineage"], enabled: spec.polish],
+        scaffolding: [keys: polish_scaff_data + ["yahs_arguments", "busco_lineage"], enabled: spec.scaffold]
     ]
 
-    def mito_stage = [
-        mito: [keys: bin_data + ["find_mito", "find_plastid", "mitohifi_reference_species", "mitohifi_genetic_code", "mitohifi_arguments"], enabled: spec.find_mito || spec.find_plastid]
+    // Define organelles stages separately as they always depend on the output of the assembly stage
+    def ORGANELLE_SPEC = [
+        mito: [keys: bin_data + ["assembler", "mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"], enabled: spec.find_mito],
+        plastid: [keys: bin_data + ["assembler", "mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"], enabled: spec.find_plastid]
     ]
 
+    // Holder variables
     def out_spec = spec.subMap(["id", "assembler"])
     def stageHashes = [:]
     def lastHash = null
 
-    // Process main pipeline
+    // Process each assembly stage. If the stage is not enabled, we return nothing
+    // Otherwise the unique stage hash is calculated using the data, parameters, and if
+    // applicable the previous stage's hash.
     STAGE_CONFIG.each { stageName, config ->
         if(!config.enabled) return
 
@@ -151,16 +168,20 @@ def stageHifiasmSpec(spec) {
         out_spec = out_spec + [(stageName): stageSpec]
     }
 
-    // Process mito separately (always depends on bin_assembly, independent of pipeline)
-    mito_stage.each { stageName, config ->
+    // Process each organelle stage. If the stage is not enabled, we return nothing
+    // Otherwise the hash is calculated using the parameters as well as the stage name,
+    // to differentiate organelles and plastids.
+    ORGANELLE_SPEC.each { stageName, config ->
         if(!config.enabled) return
+        def mode = "contigs"
 
+        // We add the stageName (mito or plastid) to the hash to ensure uniqueness
         def stageSpec = spec.subMap(config.keys)
-        def hashContent = stageSpec.values().join("")
+        def hashContent = stageSpec.values().join("") + stageName + mode
         def prevHash = stageHashes["assembly"]
 
         def hash = (prevHash + hashContent).sha256()
-        stageSpec = stageSpec + [hash: hash, prevHash: prevHash]
+        stageSpec = stageSpec + [hash: hash, prevHash: prevHash, organelle: stageName, mode: mode]
 
         out_spec = out_spec + [(stageName): stageSpec]
     }
@@ -172,26 +193,58 @@ def stageHifiasmSpec(spec) {
 // Process a flat assembly specification for oatk
 //
 def stageOatkSpec(spec) {
-    def oatk_data = ["long_read_dataset", "long_read_platform"]
-    def oatk_params = ["coverage", "oatk_kmer_size", "oatk_coverage_cutoff", "oatk_arguments", "oatk_mito_hmm", "oatk_plastid_hmm"]
+    // Data required for oatk run
+    def oatk_data = [
+        "long_read_dataset",
+        "long_read_platform"
+    ]
+
+    // Params required for oatk run
+    def oatk_params = [
+        "coverage",
+        "oatk_kmer_size",
+        "oatk_coverage_cutoff",
+        "oatk_arguments",
+        "oatk_mito_hmm",
+        "oatk_plastid_hmm"
+    ]
 
     def oatkSpec = spec.subMap(oatk_data + oatk_params)
-    def oatkHash = oatkSpec.values().join("").sha256()
-    oatkSpec = oatkSpec + [hash: oatkHash]
+
+    // Generate hash from configuration to detect changes
+    def hash_input = oatkSpec.values().join("")
+    oatkSpec.hash = hash_input.sha256()
 
     return spec.subMap(["id", "assembler"]) + [oatk: oatkSpec]
 }
 
 //
-// Process a flat assembly specification for oatk
+// Process a flat assembly specification for mitohifi
 //
 def stageMitohifiSpec(spec) {
-    def mitohifi_data = ["long_read_dataset", "long_read_platform"]
-    def mitohifi_params = ["mitohifi_reference_species", "mitohifi_genetic_code", "mitohifi_arguments"]
+    def organelle = "mito"
+    def mode = "reads"
+
+    // Data required for mitohifi run
+    def mitohifi_data = [
+        "long_read_dataset",
+        "long_read_platform"
+    ]
+
+    // Params required for mitohifi run
+    def mitohifi_params = [
+        "mitohifi_reference_species",
+        "mitohifi_mito_genetic_code",
+        "mitohifi_arguments"
+    ]
 
     def mitohifiSpec = spec.subMap(mitohifi_data + mitohifi_params)
-    def mitohifiHash = mitohifiSpec.values().join("").sha256()
-    mitohifiSpec = mitohifiSpec + [hash: mitohifiHash]
+
+    // Generate hash from configuration to detect changes
+    def hash_input = mitohifiSpec.values().join("") + organelle + mode
+    mitohifiSpec.hash = hash_input.sha256()
+    mitohifiSpec.organelle = organelle
+    mitohifiSpec.mode = mode
 
     return spec.subMap(["id", "assembler"]) + [mitohifi: mitohifiSpec]
 }

@@ -62,12 +62,12 @@
                     },
                     "fastk/fastk": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "9678889112458c22cf237769be1465774467e798",
                         "installed_by": ["modules"]
                     },
                     "fastk/histex": {
                         "branch": "master",
-                        "git_sha": "26ae0455fc69b3fbf542ec506c71bce44ddddc4e",
+                        "git_sha": "9678889112458c22cf237769be1465774467e798",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
@@ -107,12 +107,12 @@
                     },
                     "merquryfk/hapmaker": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "cd9c9fac7545c8acb997cf334b1603c495388c12",
                         "installed_by": ["modules"]
                     },
                     "merquryfk/merquryfk": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "6fabc0ae58cf4755c3fc3e7c16f2fbb26a0a92a6",
                         "installed_by": ["genome_statistics"]
                     },
                     "minimap2/align": {
@@ -127,12 +127,12 @@
                     },
                     "mitohifi/findmitoreference": {
                         "branch": "master",
-                        "git_sha": "e667697bd391dba163bf10eda86fc26634304667",
+                        "git_sha": "04ebef67e44788d024e0636fb79308016559d1e7",
                         "installed_by": ["modules"]
                     },
                     "mitohifi/mitohifi": {
                         "branch": "master",
-                        "git_sha": "e667697bd391dba163bf10eda86fc26634304667",
+                        "git_sha": "04ebef67e44788d024e0636fb79308016559d1e7",
                         "installed_by": ["modules"]
                     },
                     "oatk": {
@@ -263,7 +263,7 @@
                 "sanger-tol": {
                     "asmstats": {
                         "branch": "main",
-                        "git_sha": "ab1432043769f7dd1b36cd2a505c0c29ed6771d6",
+                        "git_sha": "eae94e12d0d73d799d4370662416bfb57455191e",
                         "installed_by": ["genome_statistics"]
                     },
                     "bedtools/bamtobedsort": {
@@ -357,7 +357,7 @@
                     },
                     "genome_statistics": {
                         "branch": "main",
-                        "git_sha": "05516631b7ef8fa3b9d7645c4f17746e5883f1d2",
+                        "git_sha": "eae94e12d0d73d799d4370662416bfb57455191e",
                         "installed_by": ["subworkflows"]
                     },
                     "pairs_create_contact_maps": {

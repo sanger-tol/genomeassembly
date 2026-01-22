@@ -25,8 +25,9 @@ workflow GENOMEASSEMBLY {
     ch_data
     val_kmer_size
     val_fastx_reads_per_chunk
-    val_hic_slices_per_chunk
-    val_busco_lineage
+    val_hic_aligner
+    val_hic_mapping_cram_chunk_size
+    val_scaffolding_cool_bin_size
     val_busco_lineage_directory
 
     main:
@@ -50,9 +51,11 @@ workflow GENOMEASSEMBLY {
         PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler == "hifiasm" },
         PREPARE_INPUTS.out.data,
         PREPARE_INPUTS.out.merqury_trio_haptabs,
-        val_busco_lineage,
-        val_busco_lineage_directory,
-        val_fastx_reads_per_chunk
+        val_fastx_reads_per_chunk,
+        val_hic_aligner,
+        val_hic_mapping_cram_chunk_size,
+        val_scaffolding_cool_bin_size,
+        val_busco_lineage_directory
     )
     ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
 
