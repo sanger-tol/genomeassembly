@@ -32,6 +32,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     ch_data
     val_kmer_size
     val_fastx_reads_per_chunk
+    val_polishing_container_provided
     val_hic_aligner
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
@@ -47,6 +48,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         ch_data,
         val_kmer_size,
         val_fastx_reads_per_chunk,
+        val_polishing_container_provided,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,
@@ -87,6 +89,7 @@ workflow {
         PIPELINE_INITIALISATION.out.data,
         params.kmer_size,
         params.purging_reads_chunk_size,
+        params.polishing_longranger_container_path,
         params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
         params.scaffolding_cool_bin_size,

@@ -97,13 +97,13 @@
                 "type": "boolean",
                 "description": "Enable mitochondrial genome assembly/search.",
                 "default": true,
-                "meta": "assemble_mito"
+                "meta": "find_mito"
             },
             "find_plastid": {
                 "type": "boolean",
                 "description": "Enable plastid genome assembly.",
                 "default": false,
-                "meta": "assemble_plastid"
+                "meta": "find_plastid"
             },
             "hifiasm_arguments": {
                 "type": "string",

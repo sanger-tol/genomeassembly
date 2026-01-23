@@ -29,7 +29,7 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     help              // boolean: Display help message and exit
@@ -116,9 +116,9 @@ workflow PIPELINE_INITIALISATION {
     ch_assembly_specs = channel.fromList(
             samplesheetToList(asm_specs, "${projectDir}/assets/schema_assembly.json")
         )
-        // We need to wrap these up inside a list to have a single entry after combining
-        .combine(ch_raw_genomic_data.collect().map { list -> [list] } )
-        .map { spec, data ->
+        .map { spec ->
+            spec = spec.get(0)
+
             // Validate check assembly is not both trio and phased
             if(spec.trio_assembly && spec.phased_assembly) {
                 error("Assembly specification error [${spec.id}]: cannot have both phased_assembly and trio_assembly!")
@@ -169,10 +169,10 @@ workflow PIPELINE_INITIALISATION {
     //
     ch_genomic_data = ch_raw_genomic_data
         .combine(ch_used_datasets)
-        .filter { meta, reads, fastk, data_list ->
+        .filter { meta, _reads, _fastk, data_list ->
             meta.subMap(["id", "platform"]) in data_list
         }
-        .map { meta, reads, fastk, data_list ->
+        .map { meta, reads, fastk, _data_list ->
             [ meta, reads, fastk ]
         }
 
@@ -332,11 +332,11 @@ def validateReadFiles(meta, reads) {
         ["illumina_hic", /^cram$/],
         ["illumina_10x", /^f(ast)?q(\.gz)?$/],
         ["illumina", /^cram$/],
-    ].find { platform, regex -> platform == meta.platform }
+    ].find { platform, _regex -> platform == meta.platform }
 
     // Validate that the correct extension is present for each platform
     if(!(extensions[0] =~ platform_ext_map[1])) {
-        error("Dataset validation error [${meta.id}:${meta.platform}]: File extension ${extension} does not match the expected input ${regex}.")
+        error("Dataset validation error [${meta.id}:${meta.platform}]: File extension ${extensions[0]} does not match the expected input ${platform_ext_map[1]}.")
     }
 }
 
@@ -353,7 +353,7 @@ def checkDataExists(spec, datasets) {
 
     platform_key.each { platform ->
         if(spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform } ) {
-            error("Assembly specification error [${spec.id}]: ${datasetName} '${datasetID}' does not exist!")
+            error("Assembly specification error [${spec.id}]: There is no ${platform.platform} dataset called '${spec[platform.name]}' does not exist!")
         }
     }
 }

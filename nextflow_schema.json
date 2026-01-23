@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["outdir", "genomic_data", "assembly_specs"],
+            "required": ["genomic_data", "assembly_specs", "outdir"],
             "properties": {
                 "genomic_data": {
                     "type": "string",
@@ -39,8 +39,8 @@
                 }
             }
         },
-        "kmer_profiling_options": {
-            "title": "Kmer profiling options",
+        "input_preparation_options": {
+            "title": "Input preparation options",
             "type": "object",
             "description": "Options for the kmer profiling subworkflow.",
             "default": "",
@@ -49,36 +49,13 @@
                     "type": "integer",
                     "default": 31,
                     "description": "Kmer size to use for all kmer-based subroutines in the Kmer profiling subworkflow. This parameter is overridden by the provided kmer size for a given input read set if a FastK database is provided."
+                },
+                "genomescope_args": {
+                    "type": "string",
+                    "description": "Optional command-line arguments to pass to genomescope2."
                 }
             },
             "fa_icon": "fas fa-signal"
-        },
-        "raw_assembly_options": {
-            "title": "Raw assembly options",
-            "type": "object",
-            "description": "Options for tuning the outputs of raw assembies.",
-            "default": "",
-            "properties": {
-                "enable_hic_phasing": {
-                    "type": "boolean",
-                    "description": "If Hi-C data is provided, enabling this will produce a Hi-C phased assembly with hifiasm."
-                },
-                "enable_trio_binning": {
-                    "type": "boolean",
-                    "description": "If parental read data is provided, enabling this will produce a trio binned assembly with hifiasm."
-                },
-                "hifiasm_error_correction_options": {
-                    "type": "string",
-                    "description": "Options controlling Hifiasm error correction.",
-                    "help_text": "See the \"Error correction options\" section of https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options."
-                },
-                "hifiasm_assembly_options": {
-                    "type": "string",
-                    "help_text": "See https://hifiasm.readthedocs.io/en/latest/parameter-reference.html for options.",
-                    "description": "Options controlling Hifiasm assembly output, including those affecting assemblty, purging, phasing and trio binning."
-                }
-            },
-            "fa_icon": "fas fa-cubes"
         },
         "purging_options": {
             "title": "Purging options",
@@ -90,21 +67,6 @@
                     "type": "integer",
                     "default": 500000,
                     "description": "How many reads to map in a single chunk when mapping reads to the primary assembly during purging."
-                },
-                "purging_assemblytypes": {
-                    "type": "string",
-                    "default": "primary",
-                    "description": "A comma-separated list defining which types of assemblies to purge. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\".",
-                    "enum": ["none", "primary", "hic_phased", "trio_binned"]
-                },
-                "purging_purge_middle": {
-                    "type": "boolean",
-                    "description": "During haplotype purging, look in the middle of contigs for potential haplotigs. This removes the \"-e\" option from the purgedups/getseqs command."
-                },
-                "purging_cutoffs": {
-                    "type": "string",
-                    "description": "Manually override the cutoffs set by purge_dups/calcuts. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
-                    "pattern": "\\d+,\\d+,\\d+"
                 }
             },
             "required": ["purging_reads_chunk_size"]
@@ -115,16 +77,6 @@
             "description": "Options for polishing genomes with 10X Illumina reads.",
             "default": "",
             "properties": {
-                "enable_polishing": {
-                    "type": "boolean",
-                    "description": "Switch on to do polish purged assembly before scaffolding"
-                },
-                "polishing_assemblytypes": {
-                    "type": "string",
-                    "default": "primary",
-                    "description": "A comma-separated list defining which types of assemblies to polish. Must draw from the options \"primary\", \"hic_phased\", or \"trio_binned\".",
-                    "enum": ["none", "primary", "hic_phased", "trio_binned"]
-                },
                 "polishing_longranger_container_path": {
                     "type": "string",
                     "description": "Path to a container with longranger to use for the longranger processes. Required for polishing to run."
@@ -136,8 +88,8 @@
                 }
             }
         },
-        "hi_c_mapping_options": {
-            "title": "Hi-C mapping options",
+        "hi_c_mapping_and_scaffolding_options": {
+            "title": "Hi-C mapping and scaffolding options",
             "type": "object",
             "description": "",
             "default": "",
@@ -157,83 +109,11 @@
                     "type": "integer",
                     "default": 10,
                     "description": "Minimum MapQ score for a Hi-C read to be retained for scaffolding."
-                }
-            }
-        },
-        "scaffolding_options": {
-            "title": "Scaffolding options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "enable_scaffolding": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable scaffolding of assembled contigs with Hi-C."
                 },
-                "yahs_break_contigs": {
-                    "type": "boolean",
-                    "description": "Allow YaHS to break contigs at putative misassemblies using Hi-C data prior to scaffolding.",
-                    "default": true
-                },
-                "yahs_resolutions": {
-                    "type": "string",
-                    "pattern": "^\\d+(,\\d+)*$",
-                    "description": "A comma-separated list of resolutions for YaHS to examine when scaffolding.",
-                    "help_text": "For highly fragmented assemblies, including higher resolutions by adding lower values to the string may improve results."
-                },
-                "yahs_min_contig_length": {
-                    "type": "integer",
-                    "description": "The minimum contig length to be considered by YaHS for scaffolding.",
-                    "help_text": "YaHS can only handle up to 45,000 contigs. If you have more, you can adjust the number of contigs going into YaHS by setting a length threshold."
-                }
-            }
-        },
-        "contact_map_options": {
-            "title": "Contact map options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "cool_bin": {
+                "scaffolding_cool_bin_size": {
                     "type": "integer",
                     "default": 1000,
-                    "description": "Number of bins for cooler cload"
-                }
-            }
-        },
-        "organelle_assembly_options": {
-            "title": "Organelle assembly options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "enable_organelle_assembly": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable the organellar assembly subworkflow."
-                },
-                "mitohifi_min_ref_len": {
-                    "type": "integer",
-                    "default": 15000,
-                    "description": "Minumum length of the reference mitochondrial genome to download for reference-based assembly with Mitohifi."
-                },
-                "mitohifi_reads_args": {
-                    "type": "string",
-                    "description": "Optional additional arguments to supply to Mitohifi when doing reference-based assembly with reads mapping to the downloaded reference."
-                },
-                "mitohifi_contigs_args": {
-                    "type": "string",
-                    "description": "Optional additional arguments to supply to Mitohifi when identifying mitochondrial genomes from contigs aligning to the downloaded reference."
-                },
-                "oatk_kmer_size": {
-                    "type": "integer",
-                    "default": 1001,
-                    "description": "Kmer size size for assembly of organellar genomes with Oatk."
-                },
-                "oatk_coverage": {
-                    "type": "integer",
-                    "description": "Coverage cutoff for syncmers to be assembled by Oatk. Defaults to 5x nuclear coverage."
+                    "description": "Bin size to use when building cooler contact maps."
                 }
             }
         },
@@ -388,10 +268,7 @@
             "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/$defs/kmer_profiling_options"
-        },
-        {
-            "$ref": "#/$defs/raw_assembly_options"
+            "$ref": "#/$defs/input_preparation_options"
         },
         {
             "$ref": "#/$defs/purging_options"
@@ -400,16 +277,7 @@
             "$ref": "#/$defs/polishing_options"
         },
         {
-            "$ref": "#/$defs/hi_c_mapping_options"
-        },
-        {
-            "$ref": "#/$defs/scaffolding_options"
-        },
-        {
-            "$ref": "#/$defs/contact_map_options"
-        },
-        {
-            "$ref": "#/$defs/organelle_assembly_options"
+            "$ref": "#/$defs/hi_c_mapping_and_scaffolding_options"
         },
         {
             "$ref": "#/$defs/assembly_qc_options"
@@ -420,10 +288,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "busco_lineage": {
-            "type": "string"
-        }
-    }
+    ]
 }

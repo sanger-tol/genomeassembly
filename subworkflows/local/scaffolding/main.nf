@@ -1,8 +1,8 @@
-include { CRAM_MAP_ILLUMINA_HIC } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { BAM_STATS_SAMTOOLS } from '../../../subworkflows/nf-core/bam_stats_samtools/main'
+include { CRAM_MAP_ILLUMINA_HIC      } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { BAM_STATS_SAMTOOLS         } from '../../../subworkflows/nf-core/bam_stats_samtools/main'
 include { FASTA_BAM_SCAFFOLDING_YAHS } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main'
 
-include { TABIX_BGZIP as BGZIP_SCAFFOLDED                } from '../../../modules/nf-core/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/tabix/bgzip/main'
 
 workflow SCAFFOLDING {
     take:
@@ -33,7 +33,7 @@ workflow SCAFFOLDING {
             }
 
             hap1: [ spec + [_hap: "hap1"], asm1 ]
-            hap2: [ spec + [_hap: "hap2"], asm1 ]
+            hap2: [ spec + [_hap: "hap2"], asm2 ]
             illumina_hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], illumina_hic_reads.reads ]
         }
 
@@ -42,7 +42,7 @@ workflow SCAFFOLDING {
     //
     CRAM_MAP_ILLUMINA_HIC(
         ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2),
-        ch_hic_mapping_inputs.illumina_hic_reads.transpose(),
+        ch_hic_mapping_inputs.illumina_hic_reads.transpose(by: 0),
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
     )
@@ -87,14 +87,16 @@ workflow SCAFFOLDING {
     //
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
-    ch_assemblies_scaffolded = FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta._hap == "hap1" }
-        .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta._hap == "hap2" })
+    ch_assemblies_scaffolded = FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta
+        .filter { meta, scaffolds -> meta._hap == "hap1" }
+        .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta, scaffolds -> meta._hap == "hap2" })
         .map { meta, asm -> [meta - meta.subMap("_hap"), asm] }
         .groupTuple(size: 2)
 
     //
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
     //
+    CRAM_MAP_ILLUMINA_HIC.out.bam_index
     ch_scaffolding_output = BGZIP_SCAFFOLDED.out.output
         .join(CRAM_MAP_ILLUMINA_HIC.out.bam, by: 0)
         .join(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
@@ -103,8 +105,8 @@ workflow SCAFFOLDING {
         .join(BAM_STATS_SAMTOOLS.out.idxstats, by: 0)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_agp, by: 0)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_bin, by: 0)
-        .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_inital, by: 0)
-        .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_intermediate, by: 0)
+        .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_inital, by: 0, remainder: true)
+        .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_intermediate, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_log, by: 0)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.pretext, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.pretext_png, by: 0, remainder: true)

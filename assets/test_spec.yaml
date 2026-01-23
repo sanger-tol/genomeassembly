@@ -9,6 +9,7 @@
   hifiasm_arguments: "--primary -f0"
   mitohifi_reference_species: "Caradrina clavipalpis"
   mitohifi_mito_genetic_code: 5
+  busco_lineage: bacteria_odb12
 - id: baUndUnlc1.phased
   assembler: "hifiasm"
   long_read_dataset: baUndUnlc1
@@ -18,6 +19,7 @@
   find_mito: false
   find_plastid: false
   hifiasm_arguments: "--primary -f0"
+  busco_lineage: bacteria_odb12
 - id: baUndUnlc1.oatk
   assembler: "oatk"
   long_read_dataset: baUndUnlc1

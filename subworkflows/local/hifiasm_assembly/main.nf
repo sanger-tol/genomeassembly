@@ -123,8 +123,10 @@ workflow HIFIASM_ASSEMBLY {
             def alt = /hap2.p_ctg.fa$/
 
             // If hifiasm is run with `--primary` or `-l0`, we do not get
-            // hap1/hap2 files - instead we get only p_ctg and a_ctg files.
-            if(meta.hifiasm_arguments =~ /(--primary)|(-l\s*0)/) {
+            // hap1/hap2 files - instead we get only p_ctg and a_ctg files, if
+            // we don't run in phased or trio mode.
+            def primary_flags = meta.hifiasm_arguments =~ /(--primary)|(-l\s*0)/
+            if(primary_flags && !(meta.phased_assembly || meta.trio_assembly) ) {
                 pri = /^[^.]+\.p_ctg\.fa$/
                 alt = /a_ctg.fa$/
             }

@@ -43,7 +43,7 @@ workflow MITOHIFI {
             .combine(ch_assemblies)
             .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
             .filter { spec, asm_meta, _asm1, _asm2, ref_meta, _ref_fa, _ref_gb ->
-                def hash_match = spec.hash == asm_meta.hash
+                def hash_match = spec.prevHash == asm_meta.hash
                 def species_match = spec.mitohifi_reference_species == ref_meta.mitohifi_reference_species
                 def organelle_match = spec.organelle == ref_meta.organelle
 
@@ -95,23 +95,23 @@ workflow MITOHIFI {
         // Logic: Prepare all outputs from Mitohifi for emission
         //        Do it this way as we will move to a channel publishing structure in future
         //
-        ch_mitohifi_output = MITOHIFI_MITOHIFI_READS.out.fasta
-                .join(MITOHIFI_MITOHIFI_READS.out.stats, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.gb, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI_READS.out.gff, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI_READS.out.all_potential_contigs, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.contigs_annotations, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.contigs_circularization, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.contigs_filtering, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.coverage_mapping, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI_READS.out.coverage_plot, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI_READS.out.final_mitogenome_annotation, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.final_mitogenome_choice, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.final_mitogenome_coverage, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.potential_contigs, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.reads_mapping_and_assembly, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI_READS.out.shared_genes, by: 0)
-                .join(MITOHIFI_MITOHIFI_READS.out.log, by: 0)
+        ch_mitohifi_output = MITOHIFI_MITOHIFI.out.fasta
+                .join(MITOHIFI_MITOHIFI.out.stats, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.gb, by: 0, remainder: true)
+                .join(MITOHIFI_MITOHIFI.out.gff, by: 0, remainder: true)
+                .join(MITOHIFI_MITOHIFI.out.all_potential_contigs, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.contigs_annotations, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.contigs_circularization, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.contigs_filtering, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.coverage_mapping, by: 0, remainder: true)
+                .join(MITOHIFI_MITOHIFI.out.coverage_plot, by: 0, remainder: true)
+                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_annotation, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_choice, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_coverage, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.potential_contigs, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.reads_mapping_and_assembly, by: 0, remainder: true)
+                .join(MITOHIFI_MITOHIFI.out.shared_genes, by: 0)
+                .join(MITOHIFI_MITOHIFI.out.log, by: 0)
             .map { spec, fasta, gb, gff, apc, annot, circ, filt, map, cov_plot, final_annot,
                 final_choice, final_coverage, pot_contigs, rma, shared, log ->
                 return [

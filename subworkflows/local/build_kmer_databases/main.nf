@@ -36,7 +36,7 @@ workflow BUILD_KMER_DATABASES {
         .mix(ch_fastk_status.has_fastk)
 
     ch_illumina = ch_data_with_fastk
-        .filter { meta, reads, fastk ->
+        .filter { meta, _reads, _fastk ->
             meta.platform == "illumina"
         }
 
@@ -47,10 +47,11 @@ workflow BUILD_KMER_DATABASES {
     YAK_COUNT(ch_illumina)
 
     ch_yakdbs = YAK_COUNT.out.yak
-        map { meta, yak ->
-        def meta_new = meta + [kmer_size: val_kmer_size]
-        [ meta_new, reads, [hist, ktab] ]
-    }
+        .map { meta, yak ->
+            def meta_new = meta + [kmer_size: val_kmer_size]
+
+            return[ meta_new, yak ]
+        }
 
     //
     // Module: Generate trio fastk databases for maternal and paternal read sets
@@ -61,7 +62,7 @@ workflow BUILD_KMER_DATABASES {
         // This combines all the datasets into a list of datasets that we can map through
         .combine(ch_data_with_fastk.map { data -> [data] }.collect())
         .map { spec, datasets ->
-            def out_meta = spec.subMap(["long_read_dataset", "maternal_illumina_dataset", "paternal_illumina_dataset"])
+            def out_meta = spec.subMap(["long_read_dataset", "long_read_platform", "maternal_illumina_dataset", "paternal_illumina_dataset"])
 
             def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_illumina_dataset && meta.platform == "illumina" }.get(2).get(1)
             def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_illumina_dataset && meta.platform == "illumina"  }.get(2).get(1)
@@ -82,7 +83,13 @@ workflow BUILD_KMER_DATABASES {
         ch_hapmaker_inputs.child
     )
 
-    ch_merqury_haptabs = MERQURYFK_HAPMAKER.out.mat_hap_ktab.combine(MERQURYFK_HAPMAKER.out.pat_hap_ktab, by: 0)
+    ch_merqury_haptabs = MERQURYFK_HAPMAKER.out.mat_hap_ktab
+        .combine(MERQURYFK_HAPMAKER.out.pat_hap_ktab, by: 0)
+        .map { meta, mat, pat ->
+            return meta + [mat_haptab: mat, pat_haptab: pat]
+        }
+        .collect()
+        .map { map -> [map] }
 
     //
     // Logic: now that all data is pre-processed, move everything into the meta map so that each
