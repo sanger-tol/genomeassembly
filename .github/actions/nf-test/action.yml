@@ -27,7 +27,7 @@ runs:
     - name: Add NCBI API key
       shell: bash
       run: |
-        nextflow secrets set NCBI_API_KEY ${{ secrets.NCBI_API_KEY }}
+        nextflow secrets set NCBI_API_KEY ${{ env.NCBI_API_KEY }}
 
     - name: Set up Python
       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6

@@ -98,6 +98,7 @@ jobs:
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
