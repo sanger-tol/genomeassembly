@@ -26,6 +26,9 @@ workflow BUILD_KMER_DATABASES {
     //
     FASTK_FASTK(ch_fastk_status.no_fastk)
 
+    //
+    // Logic: Mix the FastK outputs back with the existing data
+    //
     ch_data_with_fastk = ch_fastk_status.no_fastk
         .combine(FASTK_FASTK.out.hist, by: 0)
         .combine(FASTK_FASTK.out.ktab, by: 0)
@@ -35,16 +38,38 @@ workflow BUILD_KMER_DATABASES {
         }
         .mix(ch_fastk_status.has_fastk)
 
-    ch_illumina = ch_data_with_fastk
-        .filter { meta, _reads, _fastk ->
-            meta.platform == "illumina"
+    //
+    // Logic: Fiter the input datasets to get those that are being used as maternal
+    // or paternal datasets, and stage them for YAK building.
+    //
+    ch_data_for_yak = ch_specs
+        .filter { spec ->
+            ["maternal_dataset", "maternal_platform", "paternal_dataset", "paternal_platform"]
+            .every { dataset -> spec[dataset] }
         }
+        .flatMap { spec ->
+            spec = spec[0]
+            return [
+                [
+                    dataset: spec.maternal_dataset,
+                    platform: spec.maternal_platform,
+                ], [
+                    dataset: spec.paternal_dataset,
+                    platform: spec.paternal_platform
+                ]
+            ]
+        }
+        .combine(ch_data_with_fastk)
+        .filter { platform_key, data_meta, _reads, _fastk ->
+            data_meta.id == platform_key.dataset && data_meta.platform == platform_key.platform
+        }
+        .map { _platform_key, data_meta, reads, fastk -> [data_meta, reads] }
 
     //
     // Module: Generate YAK kmer databases for maternal and paternal read sets
     //         for trio assembly with hifiasm
     //
-    YAK_COUNT(ch_illumina)
+    YAK_COUNT(ch_data_for_yak)
 
     ch_yakdbs = YAK_COUNT.out.yak
         .map { meta, yak ->
@@ -58,14 +83,17 @@ workflow BUILD_KMER_DATABASES {
     //         for QC with Merquryfk
     //
     ch_hapmaker_inputs = ch_specs
-        .filter { spec -> spec.trio_assembly }
+        .filter { spec ->
+            ["maternal_dataset", "maternal_platform", "paternal_dataset", "paternal_platform"]
+            .every { dataset -> spec[dataset] }
+        }
         // This combines all the datasets into a list of datasets that we can map through
         .combine(ch_data_with_fastk.map { data -> [data] }.collect())
         .map { spec, datasets ->
-            def out_meta = spec.subMap(["long_read_dataset", "long_read_platform", "maternal_illumina_dataset", "paternal_illumina_dataset"])
+            def out_meta = spec.subMap(["long_read_dataset", "long_read_platform", "maternal_dataset", "paternal_dataset"])
 
-            def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_illumina_dataset && meta.platform == "illumina" }.get(2).get(1)
-            def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_illumina_dataset && meta.platform == "illumina"  }.get(2).get(1)
+            def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_dataset && meta.platform == spec.maternal_platform }.get(2).get(1)
+            def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_dataset && meta.platform == spec.paternal_platform  }.get(2).get(1)
             def child = datasets.find { meta, _reads, _fastk -> meta.id == spec.long_read_dataset && meta.platform == spec.long_read_platform }.get(2).get(1)
 
             [ out_meta, mat, pat, child ]

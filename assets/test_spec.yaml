@@ -2,7 +2,7 @@
   assembler: "hifiasm"
   long_read_dataset: baUndUnlc1
   long_read_platform: "pacbio_hifi"
-  illumina_hic_dataset: baUndUnlc1
+  hic_dataset: baUndUnlc1
   purge: true
   find_mito: true
   find_plastid: true
@@ -14,7 +14,7 @@
   assembler: "hifiasm"
   long_read_dataset: baUndUnlc1
   long_read_platform: "pacbio_hifi"
-  illumina_hic_dataset: baUndUnlc1
+  hic_dataset: baUndUnlc1
   phased_assembly: true
   find_mito: false
   find_plastid: false

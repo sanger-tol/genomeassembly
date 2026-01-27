@@ -97,7 +97,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Logic: read raw genomic data from the input sheet and validate the dataset inputs.
     //
-    ch_raw_genomic_data = channel.fromList(
+    ch_genomic_data = channel.fromList(
             samplesheetToList(genomic_data, "${projectDir}/assets/schema_genomic.json")
         )
         .map { meta, reads, fastk ->
@@ -116,8 +116,12 @@ workflow PIPELINE_INITIALISATION {
     ch_assembly_specs = channel.fromList(
             samplesheetToList(asm_specs, "${projectDir}/assets/schema_assembly.json")
         )
-        .map { spec ->
-            spec = spec.get(0)
+        .combine(
+            ch_genomic_data.map { meta, reads, fastk -> meta }.collect().map { metas -> [metas] }
+        )
+        .map { spec, data_metas ->
+            // Check that the data requested for the spec exists in the input data
+            checkDataExists(spec, data_metas)
 
             // Validate check assembly is not both trio and phased
             if(spec.trio_assembly && spec.phased_assembly) {
@@ -125,12 +129,12 @@ workflow PIPELINE_INITIALISATION {
             }
 
             // Validate trio assembly inputs
-            if(spec.trio_assembly && (spec.maternal_illumina_dataset == spec.paternal_illumina_dataset)) {
+            if(spec.trio_assembly && (spec.maternal_dataset == spec.paternal_dataset)) {
                 error("Assembly specification error [${spec.id}]: maternal and paternal Illumina datasets are the same")
             }
 
             // Validate phased assembly inputs
-            if(spec.phased_assembly && (spec.long_read_dataset != spec.illumina_hic_dataset)) {
+            if(spec.phased_assembly && (spec.long_read_dataset != spec.hic_dataset)) {
                 log.warn("Assembly specification warning [${spec.id}]: Phased assembly is enabled, but the long read and Hi-C datasets are not the same. This might lead to incorrect results.")
             }
 
@@ -145,40 +149,24 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [polish: false]
             }
 
+            // If assembling with oatk, locate and check the existence of all HMM files
+            if(spec.assembler == "oatk") {
+                def hmm_extensions = [".h3f", ".h3i", ".h3m", ".h3p"]
+
+                def createHmmFilesList = { hmmPath ->
+                    hmmPath ? [file(hmmPath, checkIfExists: true)] + hmm_extensions.collect { ext -> file(hmmPath + ext, checkIfExists: true) } : null
+                }
+
+                spec.oatk_mito_hmm = createHmmFilesList(spec.oatk_mito_hmm)
+                spec.oatk_plastid_hmm = createHmmFilesList(spec.oatk_plastid_hmm)
+            }
+
             return spec
         }
 
-    //
-    // Logic: After validation, create a channel containing the names of all the used
-    // datasets to filter the whole dataset channel.
-    //
-    ch_used_datasets = ch_assembly_specs
-        .map { spec ->
-            return [
-                [id: spec.long_read_dataset, platform: spec.long_read_platform],
-                [id: spec.illumina_hic_dataset, platform: "illumina_hic"],
-                [id: spec.illumina_10x_dataset, platform: "illumina_10x"],
-                [id: spec.maternal_illumina_dataset, platform: "illumina"],
-                [id: spec.paternal_illumina_dataset, platform: "illumina"]
-            ].findAll { map -> map.id }
-        }.transpose().unique().collect().map { list -> [list] }
-
-    //
-    // Logic: Filter the input genomic datasets to only include those used in an assembly
-    // specification
-    //
-    ch_genomic_data = ch_raw_genomic_data
-        .combine(ch_used_datasets)
-        .filter { meta, _reads, _fastk, data_list ->
-            meta.subMap(["id", "platform"]) in data_list
-        }
-        .map { meta, reads, fastk, _data_list ->
-            [ meta, reads, fastk ]
-        }
-
     emit:
-    specs          = ch_assembly_specs
-    data           = ch_genomic_data
+    specs = ch_assembly_specs
+    data  = ch_genomic_data
 }
 
 /*
@@ -306,9 +294,9 @@ def methodsDescriptionText(mqc_methods_yaml) {
     return description_html.toString()
 }
 
-//
-// sanger-tol/genomeassembly specific functions
-//
+/*
+   sanger-tol/genomeassembly specific functions
+*/
 
 // Validate that all the reads in a dataset have the same file extension, and that
 // the file extensions are correct for the sequencing platform.
@@ -345,11 +333,11 @@ def validateReadFiles(meta, reads) {
 def checkDataExists(spec, datasets) {
     def platform_key = [
         [name: 'long_read_dataset', platform: spec.long_read_platform],
-        [name: 'illumina_hic_dataset', platform: "illumina_hic"],
-        [name: 'illumina_10x_dataset', platform: "illumina_10x"],
-        [name: 'maternal_illumina_dataset', platform: "illumina"],
-        [name: 'paternal_illumina_dataset', platform: "illumina"]
-    ]
+        [name: 'hic_dataset', platform: spec.hic_platform],
+        [name: 'polishing_dataset', platform: spec.polishing_platform],
+        [name: 'maternal_dataset', platform: spec.maternal_platform],
+        [name: 'paternal_dataset', platform: spec.paternal_platform]
+    ].findAll { dataKey -> spec[dataKey.name] }
 
     platform_key.each { platform ->
         if(spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform } ) {

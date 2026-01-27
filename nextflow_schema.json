@@ -42,7 +42,7 @@
         "input_preparation_options": {
             "title": "Input preparation options",
             "type": "object",
-            "description": "Options for the kmer profiling subworkflow.",
+            "description": "Options to control input preparation prior to starting assembly.",
             "default": "",
             "properties": {
                 "kmer_size": {
@@ -60,21 +60,26 @@
         "purging_options": {
             "title": "Purging options",
             "type": "object",
-            "description": "",
+            "description": "Options to contol the purging of duplicated haplotigs from an assembly.",
             "default": "",
             "properties": {
                 "purging_reads_chunk_size": {
                     "type": "integer",
                     "default": 500000,
                     "description": "How many reads to map in a single chunk when mapping reads to the primary assembly during purging."
+                },
+                "ont_minimap2_map_mode": {
+                    "type": "string",
+                    "default": "map-ont",
+                    "description": "Which minimap2 mapping mode to use when mapping ONT? See https://lh3.github.io/minimap2/minimap2.html for a full list."
                 }
             },
-            "required": ["purging_reads_chunk_size"]
+            "required": ["purging_reads_chunk_size", "ont_minimap2_map_mode"]
         },
         "polishing_options": {
             "title": "Polishing options",
             "type": "object",
-            "description": "Options for polishing genomes with 10X Illumina reads.",
+            "description": "Options to control polishing an assembly.",
             "default": "",
             "properties": {
                 "polishing_longranger_container_path": {
@@ -91,7 +96,7 @@
         "hi_c_mapping_and_scaffolding_options": {
             "title": "Hi-C mapping and scaffolding options",
             "type": "object",
-            "description": "",
+            "description": "Options to control the mapping of Hi-C reads and scaffolding of an assembly.",
             "default": "",
             "properties": {
                 "hic_aligner": {
@@ -130,6 +135,20 @@
                     "format": "directory-path"
                 }
             }
+        },
+        "organelle_assembly_options": {
+            "title": "Organelle assembly options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "mitohifi_min_ref_len": {
+                    "type": "integer",
+                    "default": 15000,
+                    "description": "The minimum size of a reference organellar genome to use in reference-based organelle assembly with Mitohifi"
+                }
+            },
+            "required": ["mitohifi_min_ref_len"]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -281,6 +300,9 @@
         },
         {
             "$ref": "#/$defs/assembly_qc_options"
+        },
+        {
+            "$ref": "#/$defs/organelle_assembly_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

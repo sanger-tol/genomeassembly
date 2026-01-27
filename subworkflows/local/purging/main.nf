@@ -6,7 +6,6 @@ workflow PURGING {
     take:
     ch_purging_specs // channel: spec
     ch_assemblies    // channel: [spec, hap1, hap2]
-    ch_data          // channel: data_map
     val_fastx_reads_per_chunk // int
 
     main:
@@ -19,17 +18,12 @@ workflow PURGING {
     //
     ch_purging_input = ch_assemblies
         .combine(ch_purging_specs)
-        .combine(ch_data)
-        .filter { meta, asm1, asm2, spec, datasets ->
+        .filter { meta, asm1, asm2, spec ->
             meta.hash == spec.prevHash
         }
-        .multiMap { meta, asm1, asm2, spec, datasets ->
-            def long_reads = datasets.find { data ->
-                data.id == spec.long_read_dataset && data.platform == spec.long_read_platform
-            }
-
+        .multiMap { meta, asm1, asm2, spec ->
             assemblies: [ spec, asm1, asm2 ]
-            long_reads: [ spec, long_reads.reads ]
+            long_reads: [ spec, spec.data.long_read_reads ]
         }
 
     //

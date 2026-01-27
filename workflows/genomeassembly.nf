@@ -4,13 +4,14 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { PREPARE_INPUTS                            } from '../subworkflows/local/prepare_inputs'
-include { NUCLEAR_ASSEMBLY                          } from '../subworkflows/local/nuclear_assembly'
+include { PREPARE_INPUTS         } from '../subworkflows/local/prepare_inputs'
+include { NUCLEAR_ASSEMBLY       } from '../subworkflows/local/nuclear_assembly'
+include { ORGANELLE_ASSEMBLY     } from '../subworkflows/local/organelle_assembly'
 
 // Functions
-include { paramsSummaryMap                          } from 'plugin/nf-schema'
-include { softwareVersionsToYAML                    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                    } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,9 +50,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: perform assembly of nuclear genome
     //
     NUCLEAR_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler == "hifiasm" },
-        PREPARE_INPUTS.out.data,
-        PREPARE_INPUTS.out.merqury_trio_haptabs,
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["hifiasm"] },
         val_fastx_reads_per_chunk,
         val_polishing_container_provided,
         val_hic_aligner,
@@ -60,6 +59,13 @@ workflow GENOMEASSEMBLY {
         val_busco_lineage_directory
     )
     ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
+
+    //
+    // Subworkflow: assemble organellar genomes
+    //
+    ORGANELLE_ASSEMBLY(
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi"] }
+    )
 
     //
     // Collate and save software versions

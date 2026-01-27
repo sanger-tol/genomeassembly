@@ -6,7 +6,6 @@ workflow HIFIASM_ASSEMBLY {
     take:
     ch_bin_assembly_specs // channel: spec
     ch_assembly_specs     // channel: spec
-    ch_data               // channel: data_map
 
     main:
     ch_versions = channel.empty()
@@ -15,13 +14,8 @@ workflow HIFIASM_ASSEMBLY {
     // Module: Run Hifiasm but only generate the .bin files
     //
     ch_hifiasm_bin_input = ch_bin_assembly_specs
-        .combine(ch_data)
-        .map { spec, datasets ->
-            def long_reads = datasets.find { data ->
-                data.id == spec.long_read_dataset && data.platform == spec.long_read_platform
-            }
-
-            [ spec, long_reads.reads, [] ]
+        .map { spec ->
+            [ spec, spec.data.long_read_reads, [] ]
         }
 
     HIFIASM_BIN(
@@ -40,31 +34,13 @@ workflow HIFIASM_ASSEMBLY {
     ch_hifiasm_input = HIFIASM_BIN.out.bin_files
         .combine(HIFIASM_BIN.out.log, by: 0)
         .combine(ch_assembly_specs)
-        .combine(ch_data)
-        .filter { meta, _bin, _log, spec, _datasets -> meta.hash == spec.prevHash }
-        .multiMap { meta, bin, log, spec, datasets ->
-            def long_read_data = datasets.find { data ->
-                data.id == spec.long_read_dataset && data.platform == spec.long_read_platform
-            }
-            def hic_data = datasets.find { data ->
-                data.id == spec.illumina_hic_dataset && data.platform == "illumina_hic"
-            }
-            def maternal_data = datasets.find { data ->
-                data.id == spec.illumina_hic_dataset && data.platform == "illumina"
-            }
-            def paternal_data = datasets.find { data ->
-                data.id == spec.illumina_hic_dataset && data.platform == "illumina"
-            }
-
-            def hic_reads = hic_data?.reads && spec.phased_assembly ? hic_data.reads : []
-            def mat_yak = maternal_data?.yak && spec.trio_assembly? maternal_data.yak : []
-            def pat_yak = paternal_data?.yak && spec.trio_assembly? paternal_data.yak : []
-
-            long_reads: [ spec, long_read_data.reads, [] ]
-            hic: [ spec, hic_reads ]
-            trio: [ spec, mat_yak, pat_yak ]
-            bin: [ spec, bin ]
-            log: [ spec, log ]
+        .filter { meta, _bin, _log, spec -> meta.hash == spec.prevHash }
+        .multiMap { meta, bin, log, spec ->
+            long_reads: [spec, spec.data.long_read_reads, spec.data.ultralong_reads]
+            hic: [spec, spec.data.hic_reads]
+            trio: [spec, spec.data.maternal_yak, spec.data.paternal_yak]
+            bin: [spec, bin]
+            log: [spec, log]
         }
 
     //
@@ -125,8 +101,7 @@ workflow HIFIASM_ASSEMBLY {
             // If hifiasm is run with `--primary` or `-l0`, we do not get
             // hap1/hap2 files - instead we get only p_ctg and a_ctg files, if
             // we don't run in phased or trio mode.
-            def primary_flags = meta.hifiasm_arguments =~ /(--primary)|(-l\s*0)/
-            if(primary_flags && !(meta.phased_assembly || meta.trio_assembly) ) {
+            if(!(asms.find { asm -> asm.name =~ pri } && asms.find { asm -> asm.name =~ alt })) {
                 pri = /^[^.]+\.p_ctg\.fa$/
                 alt = /a_ctg.fa$/
             }

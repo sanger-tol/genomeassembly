@@ -1,27 +1,26 @@
 include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
 include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi/main'
 
-workflow MITOHIFI {
+workflow MITOHIFI_ASSEMBLY {
     take:
     ch_mitohifi_specs  // channel: spec
     ch_assemblies      // channel: [spec, hap1, hap2]
-    ch_data            // channel: data_map
 
     main:
-    //
-    // Logic: set up the inputs to mitohifi findMitoReference script to download
-    // reference mito and plastid genomes for reference-based organelle assembly
-    //
-    ch_species_to_download = ch_mitohifi_specs
-        .map { spec ->
-            [spec.subMap(["mitohifi_reference_species", "organelle"]), spec.mitohifi_reference_species]
-        }
-        .unique()
-
     //
     // Logic: Mitohifi does not support Conda
     //
     if(workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() == 0) {
+        //
+        // Logic: set up the inputs to mitohifi findMitoReference script to download
+        // reference mito and plastid genomes for reference-based organelle assembly
+        //
+        ch_species_to_download = ch_mitohifi_specs
+            .map { spec ->
+                [spec.params.subMap(["mitohifi_reference_species", "organelle"]), spec.params.mitohifi_reference_species]
+            }
+            .unique()
+
         //
         // Module: Download reference organelle assembly
         //
@@ -33,8 +32,8 @@ workflow MITOHIFI {
         //
         ch_mitohifi_specs_split = ch_mitohifi_specs
             .branch { spec ->
-                reads_input: spec.mode == "reads"
-                assembly_input: spec.mode == "contigs"
+                reads_input: spec.params.mode == "reads"
+                assembly_input: spec.params.mode == "contigs"
             }
 
         // Stage the mitohifi assembly input. We need to match the assemblies
@@ -44,8 +43,8 @@ workflow MITOHIFI {
             .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
             .filter { spec, asm_meta, _asm1, _asm2, ref_meta, _ref_fa, _ref_gb ->
                 def hash_match = spec.prevHash == asm_meta.hash
-                def species_match = spec.mitohifi_reference_species == ref_meta.mitohifi_reference_species
-                def organelle_match = spec.organelle == ref_meta.organelle
+                def species_match = spec.params.mitohifi_reference_species == ref_meta.mitohifi_reference_species
+                def organelle_match = spec.params.organelle == ref_meta.organelle
 
                 hash_match && species_match && organelle_match
             }
@@ -54,30 +53,25 @@ workflow MITOHIFI {
             }
 
         ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input
-            .combine(ch_data)
             .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
-            .filter { spec, datasets, ref_meta, _ref_fa, _ref_gb ->
-                def species_match = spec.mitohifi_reference_species == ref_meta.mitohifi_reference_species
-                def organelle_match = spec.organelle == ref_meta.organelle
+            .filter { spec, ref_meta, _ref_fa, _ref_gb ->
+                def species_match = spec.params.mitohifi_reference_species == ref_meta.mitohifi_reference_species
+                def organelle_match = spec.params.organelle == ref_meta.organelle
 
                 species_match && organelle_match
             }
-            .map { spec, datasets, _ref_meta, ref_fa, ref_gb ->
-                def long_reads = datasets.find { data ->
-                    data.id == spec.long_read_dataset && data.platform == spec.long_read_platform
-                }
-
-                return [spec, long_reads.reads, ref_fa, ref_gb]
+            .map { spec, _ref_meta, ref_fa, ref_gb ->
+                return [spec, spec.data.long_read_reads, ref_fa, ref_gb]
             }
 
 
         ch_mitohifi_input = ch_mitohifi_asm_input.mix(ch_mitohifi_reads_input)
             .multiMap { spec, input, ref_fa, ref_gb ->
-                def genetic_code = spec.organelle == "mito" ? spec.mitohifi_genetic_code : spec.mitohifi_plastid_genetic_code
+                def genetic_code = spec.params.organelle == "mito" ? spec.params.mitohifi_genetic_code : spec.params.mitohifi_plastid_genetic_code
 
                 input: [ spec, input ]
                 reference: [ spec, ref_fa, ref_gb ]
-                method: spec.mode
+                method: spec.params.mode
                 code: genetic_code
             }
 
@@ -139,5 +133,5 @@ workflow MITOHIFI {
     }
 
     emit:
-    assemblies = ch_mitohifi_output
+    mitohifi_assemblies = ch_mitohifi_output
 }

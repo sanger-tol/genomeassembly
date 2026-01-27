@@ -8,7 +8,6 @@ workflow SCAFFOLDING {
     take:
     ch_scaffolding_specs            // spec
     ch_assemblies                   // [meta, hap1, hap2]
-    ch_data                         // data_map
     val_hic_aligner                 // "bwamem2" or "minimap2"
     val_hic_mapping_cram_chunk_size // int > 1
     val_cool_bin                    // int > 1
@@ -23,18 +22,13 @@ workflow SCAFFOLDING {
     //
     ch_hic_mapping_inputs = ch_assemblies
         .combine(ch_scaffolding_specs)
-        .combine(ch_data)
-        .filter { meta, asm1, asm2, spec, datasets ->
+        .filter { meta, asm1, asm2, spec ->
             meta.hash == spec.prevHash
         }
-        .multiMap { meta, asm1, asm2, spec, datasets ->
-            def illumina_hic_reads = datasets.find { data ->
-                data.id == spec.illumina_hic_dataset && data.platform == "illumina_hic"
-            }
-
+        .multiMap { meta, asm1, asm2, spec ->
             hap1: [ spec + [_hap: "hap1"], asm1 ]
             hap2: [ spec + [_hap: "hap2"], asm2 ]
-            illumina_hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], illumina_hic_reads.reads ]
+            hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], spec.data.hic_reads ]
         }
 
     //
@@ -42,7 +36,7 @@ workflow SCAFFOLDING {
     //
     CRAM_MAP_ILLUMINA_HIC(
         ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2),
-        ch_hic_mapping_inputs.illumina_hic_reads.transpose(by: 0),
+        ch_hic_mapping_inputs.hic_reads.transpose(by: 0),
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
     )
@@ -92,6 +86,7 @@ workflow SCAFFOLDING {
         .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta, scaffolds -> meta._hap == "hap2" })
         .map { meta, asm -> [meta - meta.subMap("_hap"), asm] }
         .groupTuple(size: 2)
+        .map { meta, asms -> [meta, asms[0], asms[1]] }
 
     //
     // Logic: combine all scaffolding outputs into a single map for ease of publishing

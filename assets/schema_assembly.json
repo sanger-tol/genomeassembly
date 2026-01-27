@@ -39,29 +39,72 @@
                 "minumum": "1",
                 "meta": "long_read_1n_coverage"
             },
-            "illumina_hic_dataset": {
+            "ultralong_dataset": {
                 "type": "string",
-                "description": "A dataset name from the input dataset sheet supplying Illumina Hi-C reads for assembly.",
+                "description": "A dataset name from the input dataset sheet supplying ultralong reads for assembly.",
                 "pattern": "^\\S+$",
-                "meta": "illumina_hic_dataset"
+                "meta": "ultralong_read_dataset"
             },
-            "illumina_10x_dataset": {
+            "ultralong_platform": {
                 "type": "string",
-                "description": "A dataset name from the input dataset sheet supplying Illumina 10X reads for assembly.",
+                "enum": ["oxford_nanopore"],
+                "description": "Use reads from this sequencing platform as the ultralong reads.",
                 "pattern": "^\\S+$",
-                "meta": "illumina_10x_dataset"
+                "meta": "ultralong_read_platform"
             },
-            "maternal_illumina_dataset": {
+            "hic_dataset": {
                 "type": "string",
-                "description": "A dataset name from the input dataset sheet supplying Illumina reads from the maternal genome for trio assembly.",
+                "description": "A dataset name from the input dataset sheet supplying Hi-C reads for assembly.",
                 "pattern": "^\\S+$",
-                "meta": "maternal_illumina_dataset"
+                "meta": "hic_dataset"
             },
-            "paternal_illumina_dataset": {
+            "hic_platform": {
                 "type": "string",
-                "description": "A dataset name from the input dataset sheet supplying Illumina reads from the paternal genome for trio assembly.",
+                "description": "The sequencing platform to use for the Hi-C reads",
                 "pattern": "^\\S+$",
-                "meta": "paternal_illumina_dataset"
+                "enum": ["illumina_hic"],
+                "default": "illumina_hic",
+                "meta": "hic_platform"
+            },
+            "polishing_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads for polishing.",
+                "pattern": "^\\S+$",
+                "meta": "polishing_dataset"
+            },
+            "polishing_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the polishing reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina_10x"],
+                "default": "illumina_10x",
+                "meta": "polishing_platform"
+            },
+            "maternal_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads from the maternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "maternal_dataset"
+            },
+            "maternal_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the maternal reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina", "illumina_10x", "pacbio_hifi", "oxford_nanopore"],
+                "meta": "maternal_platform"
+            },
+            "paternal_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads from the paternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "paternal_dataset"
+            },
+            "paternal_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the paternal reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina", "illumina_10x", "pacbio_hifi", "oxford_nanopore"],
+                "meta": "paternal_platform"
             },
             "phased_assembly": {
                 "type": "boolean",
@@ -217,10 +260,15 @@
                         }
                     },
                     "dependentRequired": {
-                        "phased_assembly": ["illumina_hic_dataset"],
-                        "trio_assembly": ["maternal_illumina_dataset", "paternal_illumina_dataset"],
-                        "scaffold": ["illumina_hic_dataset"],
-                        "polish": ["illumina_10x_dataset"]
+                        "phased_assembly": ["hic_dataset"],
+                        "trio_assembly": [
+                            "maternal_dataset",
+                            "maternal_platform",
+                            "paternal_dataset",
+                            "paternal_platform"
+                        ],
+                        "scaffold": ["hic_dataset"],
+                        "polish": ["polishing_dataset"]
                     }
                 }
             },
