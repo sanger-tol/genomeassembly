@@ -80,7 +80,7 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.read_overlaps, remainder: true, by: 0)
         .map { spec, fasta, graphs, bed, log, reads, paf ->
             return [
-                id: spec.hash,
+                id: spec.id,
                 fasta: fasta,
                 graphs: graphs,
                 bed: bed,
@@ -113,6 +113,6 @@ workflow HIFIASM_ASSEMBLY {
 
     emit:
     hifiasm_assemblies = ch_assemblies_fasta
-    hifiasm_all = ch_hifiasm_output
+    hifiasm_output = ch_hifiasm_output
     versions = ch_versions
 }

@@ -89,7 +89,6 @@ workflow SCAFFOLDING {
     //
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
     //
-    CRAM_MAP_ILLUMINA_HIC.out.bam_index
     ch_scaffolding_output = BGZIP_SCAFFOLDED.out.output
         .join(CRAM_MAP_ILLUMINA_HIC.out.bam, by: 0)
         .join(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
@@ -107,7 +106,8 @@ workflow SCAFFOLDING {
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.hic, by: 0, remainder: true)
         .map { meta, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
             return [
-                id: meta.hash,
+                id: meta.id,
+                hap: meta._hap,
                 fasta: fasta,
                 bam: bam,
                 bai: bai,

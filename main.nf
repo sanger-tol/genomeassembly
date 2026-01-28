@@ -39,7 +39,6 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     val_busco_lineage_directory
 
     main:
-
     //
     // WORKFLOW: Run pipeline
     //
@@ -54,6 +53,9 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         val_scaffolding_cool_bin_size,
         val_busco_lineage_directory
     )
+
+    emit:
+    hifiasm_output = GENOMEASSEMBLY.out.hifiasm_output
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,6 +109,20 @@ workflow {
         params.monochrome_logs,
         params.hook_url,
     )
+
+    publish:
+    hifiasm_output = SANGERTOL_GENOMEASSEMBLY.out.hifiasm_output
+}
+
+output {
+    hifiasm_output {
+        path { assembly ->
+            assembly.hifiasm >> "${assembly.id}/"
+            assembly.statistics.stats >> "${assembly.id}/"
+            assembly.statistics.busco >> "${assembly.id}/busco.${assembly.statistics.busco.busco_lineage}/"
+            assembly.statistics.merqury >> "${assembly.id}/merqury.${assembly.spec.data.long_read.platform}/"
+        }
+    }
 }
 
 /*

@@ -102,7 +102,54 @@ workflow NUCLEAR_ASSEMBLY {
         ch_assemblies,
     )
 
+    //
+    // Logic: Re-join stages to their input specifications for publishing
+    //
+    ch_hifiasm_out = ch_specs.combine(HIFIASM_ASSEMBLY.out.hifiasm_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
+        .filter { meta, hifiasm, statistics ->
+            hifiasm.id == statistics.id && hifiasm.id in meta.hashes.values()
+        }
+        .map { spec, hifiasm, statistics ->
+            spec + [hifiasm: hifiasm, statistics: statistics]
+        }.view()
+
+    ch_purging_out = ch_specs.combine(PURGING.out.purging_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
+        .filter { meta, purging, statistics ->
+            purging.id == statistics.id && purging.id in meta.hashes.values()
+        }
+        .map { spec, purging, statistics ->
+            spec + [purging: purging, statistics: statistics]
+        }
+
+    ch_polishing_out = ch_specs.combine(POLISHING.out.polishing_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
+        .filter { meta, polishing, statistics ->
+            purging.id == statistics.id && polishing.id in meta.hashes.values()
+        }
+        .map { spec, polishing, statistics ->
+            spec + [polishing: polishing, statistics: statistics]
+        }
+
+    ch_scaffolding_out = ch_specs
+        .combine(SCAFFOLDING.out.scaffolding_output.filter { res -> res._hap == "hap1" })
+        .combine(SCAFFOLDING.out.scaffolding_output.filter { res -> res._hap == "hap2" })
+        .combine(GENOME_STATISTICS.out.genome_statistics_output)
+        .filter { meta, hap1, hap2, statistics ->
+            (hap1.id == hap2.id) &&
+            (hap1.id == statistics.id) &&
+            hap1.id in meta.hashes.values()
+        }
+        .map { spec, hap1, hap2, statistics ->
+            spec + [scaffolding: [hap1, hap2], statistics: statistics]
+        }
+
+    ch_organelle_out = ch_specs.combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
+        .filter { spec, mitohifi -> mitohifi.id in spec.hashes.values() }
+        .map { spec, mitohifi ->
+            spec + [mitohifi: mitohifi]
+        }
+
     emit:
+    hifiasm_output = ch_hifiasm_out
     versions = ch_versions
 
 }

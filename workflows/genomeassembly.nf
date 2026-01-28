@@ -98,6 +98,7 @@ workflow GENOMEASSEMBLY {
 
 
     emit:
+    hifiasm_output = NUCLEAR_ASSEMBLY.out.hifiasm_output
     versions = ch_versions // channel: [ path(versions.yml) ]
 
 }

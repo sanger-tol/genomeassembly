@@ -106,7 +106,7 @@ workflow POLISHING {
             .join(POLISHING_10X.out.merged_vcf_tbi, by: 0)
             .map { meta, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
                 return [
-                    id: meta.hash,
+                    id: meta.id,
                     fasta: fasta,
                     bed_chunks: bed_chunks,
                     longranger_bam: bam,
