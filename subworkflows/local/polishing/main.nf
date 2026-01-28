@@ -25,12 +25,10 @@ workflow POLISHING {
         //
         ch_polishing_input = ch_assemblies
             .combine(ch_polishing_specs)
-            .filter { meta, asm1, asm2, spec ->
-                meta.hash == spec.prevHash
-            }
+            .filter { meta, asm1, asm2, spec -> meta.id == spec.prevID }
             .multiMap { meta, asm1, asm2, spec ->
                 assemblies: [ spec, asm1, asm2 ]
-                polishing_reads_reads: [ spec, spec.data.polishing_reads ]
+                polishing_reads_reads: [ spec, spec.data.polishing.reads ]
             }
 
         //

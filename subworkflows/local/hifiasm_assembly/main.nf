@@ -15,7 +15,7 @@ workflow HIFIASM_ASSEMBLY {
     //
     ch_hifiasm_bin_input = ch_bin_assembly_specs
         .map { spec ->
-            [ spec, spec.data.long_read_reads, [] ]
+            [ spec, spec.data.long_read.reads, [] ]
         }
 
     HIFIASM_BIN(
@@ -28,17 +28,17 @@ workflow HIFIASM_ASSEMBLY {
 
     //
     // Logic: get the relevant outputs from the Hifiasm bin file generation,
-    // then map on the assembly specifications and data. Filter to match each
+    // then map on the assembly specifications. Filter to match each
     // specification to the required hifiasm outputs, then map out the data.
     //
     ch_hifiasm_input = HIFIASM_BIN.out.bin_files
         .combine(HIFIASM_BIN.out.log, by: 0)
         .combine(ch_assembly_specs)
-        .filter { meta, _bin, _log, spec -> meta.hash == spec.prevHash }
+        .filter { meta, _bin, _log, spec -> meta.id == spec.prevID }
         .multiMap { meta, bin, log, spec ->
-            long_reads: [spec, spec.data.long_read_reads, spec.data.ultralong_reads]
-            hic: [spec, spec.data.hic_reads]
-            trio: [spec, spec.data.maternal_yak, spec.data.paternal_yak]
+            long_reads: [spec, spec.data.long_read.reads, spec.data.ultralong.reads]
+            hic: [spec, spec.params.phased_assembly ? spec.data.hic.reads : []]
+            trio: [spec, spec.params.trio_assembly ? spec.data.maternal.yak : [], spec.params.trio_assembly ? spec.data.paternal.yak : []]
             bin: [spec, bin]
             log: [spec, log]
         }

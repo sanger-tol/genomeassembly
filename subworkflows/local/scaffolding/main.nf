@@ -22,13 +22,11 @@ workflow SCAFFOLDING {
     //
     ch_hic_mapping_inputs = ch_assemblies
         .combine(ch_scaffolding_specs)
-        .filter { meta, asm1, asm2, spec ->
-            meta.hash == spec.prevHash
-        }
+        .filter { meta, asm1, asm2, spec -> meta.id == spec.prevID }
         .multiMap { meta, asm1, asm2, spec ->
             hap1: [ spec + [_hap: "hap1"], asm1 ]
             hap2: [ spec + [_hap: "hap2"], asm2 ]
-            hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], spec.data.hic_reads ]
+            hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], spec.data.hic.reads ]
         }
 
     //

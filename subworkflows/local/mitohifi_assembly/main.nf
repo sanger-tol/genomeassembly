@@ -42,7 +42,7 @@ workflow MITOHIFI_ASSEMBLY {
             .combine(ch_assemblies)
             .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
             .filter { spec, asm_meta, _asm1, _asm2, ref_meta, _ref_fa, _ref_gb ->
-                def hash_match = spec.prevHash == asm_meta.hash
+                def hash_match = spec.prevID == asm_meta.id
                 def species_match = spec.params.mitohifi_reference_species == ref_meta.mitohifi_reference_species
                 def organelle_match = spec.params.organelle == ref_meta.organelle
 
@@ -61,7 +61,7 @@ workflow MITOHIFI_ASSEMBLY {
                 species_match && organelle_match
             }
             .map { spec, _ref_meta, ref_fa, ref_gb ->
-                return [spec, spec.data.long_read_reads, ref_fa, ref_gb]
+                return [spec, spec.data.long_read.reads, ref_fa, ref_gb]
             }
 
 

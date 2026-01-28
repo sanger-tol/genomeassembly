@@ -12,7 +12,7 @@ workflow OATK_ASSEMBLY {
     //
     ch_oatk_input = ch_oatk_specs
         .multiMap { spec ->
-            reads: [spec, spec.data.long_read_reads]
+            reads: [spec, spec.data.long_read.reads]
             mito_hmm: spec.params.oatk_mito_hmm ? [spec, spec.params.oatk_mito_hmm] : [[], []]
             plastid_hmm: spec.params.oatk_plastid_hmm ? [spec, spec.params.oatk_plastid_hmm] : [[], []]
         }

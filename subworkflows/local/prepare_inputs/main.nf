@@ -103,28 +103,118 @@ workflow PREPARE_INPUTS {
   ===================================================== */
 
 /*
-   Process a flat specification for a Hifiasm assembly, producing the set of specifications
-   of each of the following steps:
+   Process a flat specification for a an assembly, producing a map that nests each
+   stage of an assembly specification. Each stage gets a hash that is built from its
+   data, params, and the hash of the preceeding stage (if specified). This means that
+   the dependency tree of stages can be tracked using md5 sums.
 
-   bin_assembly: production of Hifiasm bin files using long reads only with hifiasm error correction
-   assembly: final raw hifiasm assembly, with optional Hi-C phasing or trio binning
-   purging: purging pipeline with purge_dups
-   polishing: polishing pipeline with longranger + freebayes
-   scaffolding: scaffolding with YaHS
+   Takes a paramsConfig - a map of maps, where each key should be the name of a stage
+   and each value is a config describing that stage:
 
-   mito: find the mitogenome using mitohifi
-   plastid: find the chloroplast genome using mitohifi
+   [
+     data: <a list of dataset names present in the flat spec>
+     params: <a list of param names present in the flat spec>
+     enabled: <an expression evaluating to a boolean that enables this stage>
+     depends: <the name of a previous stage that this stage depends on, or null>
+     extraParams: <a map of extra parameters to add that are not present in the flat spec>
+   ]
 
-   Each stage is defined in the STAGE_SPEC and ORGANELLE_SPEC variables for ease of adding
-   new specs later.
+   Returns a map describing a nested specification:
+
+   [
+     id: <assembly id>,
+     hashes: <map of key-pair values of stageName -> hash>
+     <spec name 1>: <stage map>
+     ...
+     <spec name N>: <stage map>
+   ]
+
+   Where a stage map has the following structure:
+
+   [
+     hash: <md5 hash that identifies the stage>
+     prevHash: <md5 hash of the stage that this stage depends on>
+     data: <map describing the dataset names required by the stage>
+     params: <map containing params to parameterise the stage>
+   ]
+
+*/
+def stageSpec(spec, paramsConfig) {
+    def stageHashes = [:]
+    def prevHash = null
+    def stages = [:]
+
+    // Process each assembly stage. If the stage is not enabled, we return nothing
+    // Otherwise the unique stage hash is calculated using the data, parameters, and if
+    // applicable the previous stage's hash.
+    paramsConfig.each { stageName, config ->
+        if(!config.enabled) return
+
+        // Extract data and params into submaps
+        def dataSpec = spec.subMap(config.data)
+        def paramsSpec = spec.subMap(config.params)
+
+        if(config.extraParams) {
+            paramsSpec = paramsSpec + config.extraParams
+        }
+
+        // Concatenate the data and params values to hash and generate it
+        def hashContent = dataSpec.values().join("") + paramsSpec.values().join("")
+
+        // If a specific dependency is requested, find its hash
+        // Otherwise use the last used hash for generation
+        def addHash = ""
+        if (config.depends) {
+            if(!stageHashes[config.depends]) {
+                error("Error processing spec [${spec.id}]: No hash has been generated for stage ${config.depends}.")
+            }
+            addHash = stageHashes[config.depends]
+        } else if (prevHash) {
+            addHash = prevHash
+        }
+        hash = (addHash + hashContent).md5()
+
+        // Store the hash in useful places
+        stageHashes[stageName] = hash
+        stageSpec = [
+            stage: stageName,
+            id: hash,
+            prevID: prevHash,
+            data: dataSpec,
+            params: paramsSpec
+        ]
+
+        // Add the stage to the stages list
+        stages = stages + [(stageName): stageSpec]
+
+        // Finally, store the hash for the next iteration but only
+        // if we didn't depend on a specific step
+        if(!config.depends) {
+            prevHash = hash
+        }
+    }
+
+    return spec.subMap(["id", "assembler"]) + [hashes: stageHashes, stages: stages]
+}
+
+/*
+    Stage a specification for the Hifiasm assembly process
+
+    Defines three data config levels:
+    bin_data: data required for construction of the base overlap graph
+    asm_data: data required to produce a genome assembly and purge it
+    polish_scaff_data: data requried from the polishing stage onwards
+
+    And 7 assembly stages:
+    bin_assembly: construction of the overlap graph
+    assembly: production of the (optionally phased, trio) assembly
+    purging: purging the assembly
+    polishing: polishing the assembly
+    scaffolding: scaffolding the assembly
+    mito: find mitochondrial genome contigs in the assembly
+    plastid: find plastid genome contigs in the assembly
 */
 def stageHifiasmSpec(spec) {
-    // Define the datasets types required. We do this additively as once we add a data type,
-    // it causes a fork in the specification.
-    //
-    // bin_data: data required for the production of the overlap graph
-    // asm_data: data required for assembly and purging
-    // polish_scaff_data: data required for purging and scaffolding
     def DATA_CONFIG = [
         bin_data: ["long_read_dataset", "long_read_platform"],
     ]
@@ -145,201 +235,105 @@ def stageHifiasmSpec(spec) {
         "polishing_platform"
     ]
 
-    // Define the data and parameters needed at each step of the nuclear assembly process.
-    //
-    // We define each stage as a map with a list containing the required fields for the data,
-    // a list of the required fields for parameterisation, and a flag that determines whether
-    // the stage is enabled or not.
     def STAGE_CONFIG = [
         bin_assembly: [
             data: DATA_CONFIG.bin_data,
             params: ["hifiasm_arguments", "coverage", "busco_lineage"],
-            enabled: true
+            enabled: true,
+            depends: null,
+            extraParams: null
         ],
         assembly: [
             data: DATA_CONFIG.asm_data,
             params: ["phased_assembly", "trio_assembly", "hifiasm_arguments", "coverage", "busco_lineage"],
-            enabled: true
+            enabled: true,
+            depends: null,
+            extraParams: null
         ],
         purging: [
             data: DATA_CONFIG.asm_data,
             params: ["purging_cutoffs", "purge_middle", "coverage", "busco_lineage"],
-            enabled: spec.purge
+            enabled: spec.purge,
+            depends: null,
+            extraParams: null
         ],
         polishing: [
             data: DATA_CONFIG.polish_scaff_data,
             params: ["busco_lineage"],
-            enabled: spec.polish
+            enabled: spec.polish,
+            depends: null,
+            extraParams: null
         ],
         scaffolding: [
             data: DATA_CONFIG.polish_scaff_data,
             params: ["yahs_arguments", "busco_lineage"],
-            enabled: spec.scaffold
-        ]
-    ]
-
-    // Define the data and parameters needed at each step of the organellar  assembly process.
-    //
-    // We define each stage as a map with a list containing the required fields for the data,
-    // a list of the required fields for parameterisation, and a flag that determines whether
-    // the stage is enabled or not.
-    def ORGANELLE_SPEC = [
+            enabled: spec.scaffold,
+            depends: null,
+            extraParams: null
+        ],
         mito: [
             data: DATA_CONFIG.bin_data,
             params: ["assembler", "mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"],
-            enabled: spec.find_mito
+            enabled: spec.find_mito,
+            depends: "assembly",
+            extraParams: [mode: "contigs", organelle: "mito"]
         ],
         plastid: [
             data: DATA_CONFIG.bin_data,
             params: ["assembler", "mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"],
-            enabled: spec.find_plastid
+            enabled: spec.find_plastid,
+            depends: "assembly",
+            extraParams: [mode: "contigs", organelle: "plastid"]
         ]
     ]
 
-    // Holder variables
-    def output_specification = spec.subMap(["id", "assembler"])
-    def stageHashes = [:]
-    def prevHash = null
-
-    // Process each assembly stage. If the stage is not enabled, we return nothing
-    // Otherwise the unique stage hash is calculated using the data, parameters, and if
-    // applicable the previous stage's hash.
-    STAGE_CONFIG.each { stageName, config ->
-        if(!config.enabled) return
-
-        // Extract data and params into submaps
-        def dataSpec = spec.subMap(config.data)
-        def paramsSpec = spec.subMap(config.params)
-
-        // Concatenate the data and params values to hash and generate it
-        // If we have a previous hash, we add this to the computed hash and recompute
-        def hashContent = dataSpec.values().join("") + paramsSpec.values().join("")
-        def hash = hashContent.sha256()
-
-        if(prevHash) {
-            hash = (prevHash + hashContent).sha256()
-        }
-
-        // Store the hash in useful places
-        stageHashes[stageName] = hash
-        stageSpec = [
-            hash: hash,
-            prevHash: prevHash,
-            data: dataSpec,
-            params: paramsSpec
-        ]
-
-        // Add the stage to the output specification
-        output_specification = output_specification + [(stageName): stageSpec]
-
-        // Finally, store the hash for the next iteration
-        prevHash = hash
-    }
-
-    // Process each organelle stage. If the stage is not enabled, we return nothing
-    // Otherwise the hash is calculated using the parameters as well as the stage name,
-    // to differentiate organelles and plastids.
-    ORGANELLE_SPEC.each { stageName, config ->
-        if(!config.enabled) return
-
-        // Force organelle assembly mode "contigs"
-        def mode = "contigs"
-
-        // Organelle assembly always depends on the assembly stage
-        prevHash = stageHashes["assembly"]
-
-        // Extract data and params into submaps
-        def dataSpec = spec.subMap(config.data)
-        def paramsSpec = spec.subMap(config.params)
-
-        // We add the stageName (mito or plastid) to the hash to ensure uniqueness
-        // Concatenate the data and params values to hash and generate it
-        // If we have a previous hash, we add this to the computed hash and recompute
-        def hashContent = dataSpec.values().join("") + paramsSpec.values().join("") + stageName + mode
-        def hash = (prevHash + hashContent).sha256()
-
-        stageSpec = [
-            hash: hash,
-            prevHash: prevHash,
-            data: dataSpec,
-            params: paramsSpec + [organelle: stageName, mode: mode]
-        ]
-
-        output_specification = output_specification + [(stageName): stageSpec]
-    }
-
-    return output_specification
+    return stageSpec(spec, STAGE_CONFIG)
 }
 
-//
-// Process a flat assembly specification for oatk
-//
+/*
+    Stage a specification for the Oatk assembly process
+*/
 def stageOatkSpec(spec) {
-    // Data required for oatk run
-    def OATK_DATA = [
-        "long_read_dataset",
-        "long_read_platform"
+    def OATK_CONFIG = [
+        oatk: [
+            data: ["long_read_dataset", "long_read_platform"],
+            params: [
+                "coverage",
+                "oatk_kmer_size",
+                "oatk_coverage_cutoff",
+                "oatk_arguments",
+                "oatk_mito_hmm",
+                "oatk_plastid_hmm",
+            ],
+            enabled: true,
+            depends: null,
+            extraParams: null
+        ]
+
     ]
 
-    // Params required for oatk run
-    def OATK_PARAMS = [
-        "coverage",
-        "oatk_kmer_size",
-        "oatk_coverage_cutoff",
-        "oatk_arguments",
-        "oatk_mito_hmm",
-        "oatk_plastid_hmm"
-    ]
-
-    // Extract data and params from spec
-    def dataSpec = spec.subMap(OATK_DATA)
-    def paramsSpec = spec.subMap(OATK_PARAMS)
-
-    // Generate hash from configuration to detect changes
-    def hash_input = dataSpec.values().join("") + paramsSpec.values().flatten().join("")
-    def hash = hash_input.sha256()
-
-    def stageSpec = [
-        hash: hash,
-        data: dataSpec,
-        params: paramsSpec
-    ]
-
-    return spec.subMap(["id", "assembler"]) + [oatk: stageSpec]
+    stageSpec(spec, OATK_CONFIG)
 }
 
-//
-// Process a flat assembly specification for mitohifi
-//
+/*
+    Stage a specification for the Mitohifi assembly process
+*/
 def stageMitohifiSpec(spec) {
-    // Data required for mitohifi run
-    def MITOHIFI_DATA = [
-        "long_read_dataset",
-        "long_read_platform"
+    def MITOHIFI_CONFIG = [
+        mitohifi: [
+            data: ["long_read_dataset", "long_read_platform"],
+            params: [
+                "mitohifi_reference_species",
+                "mitohifi_mito_genetic_code",
+                "mitohifi_arguments"
+            ],
+            enabled: true,
+            depends: null,
+            extraParams: [mode: "reads", organelle: "mito"]
+        ]
     ]
 
-    // Params required for mitohifi run
-    def MITOHIFI_PARAMS = [
-        "mitohifi_reference_species",
-        "mitohifi_mito_genetic_code",
-        "mitohifi_arguments"
-    ]
-
-    // Extract data and params from spec
-    def dataSpec = spec.subMap(MITOHIFI_DATA)
-    def paramsSpec = spec.subMap(MITOHIFI_PARAMS)
-
-    // Generate hash from configuration to detect changes
-    def hash_input = dataSpec.values().join("") + paramsSpec.values().flatten().join("")
-    def hash = hash_input.sha256()
-
-    def stageSpec = [
-        hash: hash,
-        data: dataSpec,
-        params: paramsSpec + [organelle: "mito", mode: "reads"]
-    ]
-
-    return spec.subMap(["id", "assembler"]) + [mitohifi: stageSpec]
+    return stageSpec(spec, MITOHIFI_CONFIG)
 }
 
 //
@@ -347,76 +341,55 @@ def stageMitohifiSpec(spec) {
 //
 def addData(spec, data_list, merqury_haptabs) {
 
-    // Iterate over the key-value pairs in the spec and modify those
-    // that are maps in place
-    def specWithData = spec.collectEntries { key, value ->
-        if (value instanceof Map) {
-            // Pull out the dataset list
-            def dataMap = value.data
+    // Define an empty dataset specification
+    def emptyDataset = [id: null, platform: null, reads: [], fk_hist: [], fk_ktab: [], yak: [], haptab: []]
+    def allDataTypes = ["long_read", "ultralong", "hic", "polishing", "maternal", "paternal"]
 
-            def allDataTypes = ["long_read", "ultralong", "hic", "polishing", "maternal", "paternal"]
+    // Iterate over the stages in spec and update the data entry
+    def specWithData = spec.stages.collectEntries { stageName, stageSpec ->
+        // Create a fresh outputDataMap for each stage
+        def outputDataMap = allDataTypes.collectEntries { type -> [(type): emptyDataset.clone()] }
+        def stageDataMap = stageSpec.data
 
-            // Get the data types used
-            def usedDataTypes = dataMap.keySet()
-                .findAll { k -> k.endsWith("dataset") && dataMap[k] }
-                .collect { type -> type - ~/_dataset/ }
+        // Get the data types used
+        def usedDataTypes = stageDataMap.keySet()
+            .findAll { k -> k.endsWith("dataset") && stageDataMap[k] }
+            .collect { type -> type - ~/_dataset/ }
 
-            def updatedDataMap = allDataTypes.inject(dataMap) { data_map, dataType ->
-                if(dataType in usedDataTypes) {
-                    // Get dataset ID and platform
-                    def dataID = data_map[(dataType + "_dataset")]
-                    def dataPlatform = data_map[(dataType + "_platform")]
+        usedDataTypes.each { dataType ->
+            // Get dataset ID and platform
+            def dataID = stageDataMap[(dataType + "_dataset")]
+            def dataPlatform = stageDataMap[(dataType + "_platform")]
 
-                    // Find dataset
-                    def dataSet = data_list.find { data ->
-                        data.id == dataID && data.platform == dataPlatform
-                    }
-
-                    data_map + [
-                        (dataType + "_reads"): dataSet.reads,
-                        (dataType + "_fk_hist"): dataSet.fk_hist,
-                        (dataType + "_fk_ktab"): dataSet.fk_ktab,
-                        (dataType + "_yak"): dataSet.yak,
-                    ]
-                } else {
-                    data_map + [
-                        (dataType + "_reads"): [],
-                        (dataType + "_fk_hist"): [],
-                        (dataType + "_fk_ktab"): [],
-                        (dataType + "_yak"): [],
-                    ]
-                }
+            // Find dataset
+            def dataSet = data_list.find { data ->
+                data.id == dataID && data.platform == dataPlatform
             }
 
-            // Determine if this is a "trio" assembly
-            def trioAssembly = ["maternal_dataset", "maternal_platform", "paternal_dataset", "paternal_platform"]
-                .every { dataset -> dataMap[dataset] }
-
-            // Add maternal and paternal haptabs to the dataset
-            if(trioAssembly && merqury_haptabs) {
-                def haptabs = merqury_haptabs.find { data ->
-                    data.long_read_dataset == dataMap.long_read_dataset &&
-                    data.platform == dataMap.long_read_platform &&
-                    data.maternal_illumina_dataset == dataMap.illumina_maternal_dataset &&
-                    data.paternal_illumina_dataset == dataMap.illumina_paternal_dataset
-                }
-
-                updatedDataMap = updatedDataMap + [
-                    maternal_haptab: mat_haptab,
-                    paternal_haptab: pat_haptab,
-                ]
-            } else {
-                updatedDataMap = updatedDataMap + [
-                    maternal_haptab: [],
-                    paternal_haptab: [],
-                ]
-            }
-
-            return [(key): value + [data: updatedDataMap]]
-        } else {
-            return [(key): value]
+            outputDataMap[dataType] = dataSet.clone()
         }
+
+        // Determine if this is a "trio" assembly
+        def trioAssembly = ["maternal_dataset", "maternal_platform", "paternal_dataset", "paternal_platform"]
+            .every { dataset -> stageDataMap[dataset] }
+
+        // Add maternal and paternal haptabs to the dataset
+        if(trioAssembly && merqury_haptabs) {
+            def haptabs = merqury_haptabs.find { data ->
+                data.long_read_dataset == stageDataMap.long_read_dataset &&
+                data.long_read_platform == stageDataMap.long_read_platform &&
+                data.maternal_dataset == stageDataMap.maternal_dataset &&
+                data.maternal_platform == stageDataMap.maternal_platform &&
+                data.paternal_dataset == stageDataMap.paternal_dataset &&
+                data.paternal_platform == stageDataMap.paternal_platform
+            }
+
+            outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs?.mat_haptab]
+            outputDataMap["paternal"] = outputDataMap["paternal"] + [haptab: haptabs?.pat_haptab]
+        }
+
+        [(stageName): stageSpec + [data: outputDataMap]]
     }
 
-    return specWithData
+    return spec + [stages: specWithData]
 }

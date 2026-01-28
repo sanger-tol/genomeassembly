@@ -24,12 +24,12 @@ workflow NUCLEAR_ASSEMBLY {
     // stages (purging, polishing and scaffolding, organelles), we need to filter to
     // ensure that we have no null channels where these were unspecified
     //
-    ch_bin_assembly_specs = ch_specs.map { spec -> spec.bin_assembly }.unique()
-    ch_assembly_specs = ch_specs.map { spec -> spec.assembly }.unique()
-    ch_purging_specs = ch_specs.map { spec -> spec?.purging }.filter { spec -> spec }.unique()
-    ch_polishing_specs = ch_specs.map { spec -> spec?.polishing }.filter { spec -> spec }.unique()
-    ch_scaffolding_specs = ch_specs.map { spec -> spec?.scaffolding }.filter { spec -> spec }.unique()
-    ch_organelle_specs = ch_specs.flatMap { spec -> [spec?.mito, spec?.plastid] }.filter { spec -> spec }.unique()
+    ch_bin_assembly_specs = ch_specs.map { spec -> spec.stages.bin_assembly }.unique()
+    ch_assembly_specs = ch_specs.map { spec -> spec.stages.assembly }.unique()
+    ch_purging_specs = ch_specs.map { spec -> spec.stages?.purging }.filter { spec -> spec }.unique()
+    ch_polishing_specs = ch_specs.map { spec -> spec.stages?.polishing }.filter { spec -> spec }.unique()
+    ch_scaffolding_specs = ch_specs.map { spec -> spec.stages?.scaffolding }.filter { spec -> spec }.unique()
+    ch_organelle_specs = ch_specs.flatMap { spec -> [spec.stages?.mito, spec.stages?.plastid] }.filter { spec -> spec }.unique()
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
@@ -82,7 +82,7 @@ workflow NUCLEAR_ASSEMBLY {
     ch_genome_statistics_inputs = ch_assemblies
         .multiMap { spec, hap1, hap2 ->
             assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
-            fastk: [spec, spec.data.long_read_fk_hist, spec.data.long_read_fk_ktab, spec.data.maternal_haptab, spec.data.paternal_haptab]
+            fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
             busco_lineage: [spec, spec.params.busco_lineage]
         }
 

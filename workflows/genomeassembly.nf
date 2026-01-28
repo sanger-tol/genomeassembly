@@ -60,12 +60,12 @@ workflow GENOMEASSEMBLY {
     )
     ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
 
-    //
-    // Subworkflow: assemble organellar genomes
-    //
-    ORGANELLE_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi"] }
-    )
+    // //
+    // // Subworkflow: assemble organellar genomes
+    // //
+    // ORGANELLE_ASSEMBLY(
+    //     PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi"] }
+    // )
 
     //
     // Collate and save software versions
@@ -98,7 +98,7 @@ workflow GENOMEASSEMBLY {
 
 
     emit:
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    versions = ch_versions // channel: [ path(versions.yml) ]
 
 }
 

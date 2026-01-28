@@ -90,13 +90,27 @@ workflow BUILD_KMER_DATABASES {
         // This combines all the datasets into a list of datasets that we can map through
         .combine(ch_data_with_fastk.map { data -> [data] }.collect())
         .map { spec, datasets ->
-            def out_meta = spec.subMap(["long_read_dataset", "long_read_platform", "maternal_dataset", "paternal_dataset"])
+            def out_meta = spec.subMap([
+                "long_read_dataset",
+                "long_read_platform",
+                "maternal_dataset",
+                "maternal_platform",
+                "paternal_dataset",
+                "paternal_platform"
+            ])
 
-            def mat = datasets.find { meta, _reads, _fastk -> meta.id == spec.maternal_dataset && meta.platform == spec.maternal_platform }.get(2).get(1)
-            def pat = datasets.find { meta, _reads, _fastk -> meta.id == spec.paternal_dataset && meta.platform == spec.paternal_platform  }.get(2).get(1)
-            def child = datasets.find { meta, _reads, _fastk -> meta.id == spec.long_read_dataset && meta.platform == spec.long_read_platform }.get(2).get(1)
+            // Extract the required FastK ktabs
+            def mat = datasets.find { meta, _reads, _fastk ->
+                meta.id == spec.maternal_dataset && meta.platform == spec.maternal_platform
+            }.get(2).get(1)
+            def pat = datasets.find { meta, _reads, _fastk ->
+                meta.id == spec.paternal_dataset && meta.platform == spec.paternal_platform
+            }.get(2).get(1)
+            def child = datasets.find { meta, _reads, _fastk ->
+                meta.id == spec.long_read_dataset && meta.platform == spec.long_read_platform
+            }.get(2).get(1)
 
-            [ out_meta, mat, pat, child ]
+            [out_meta, mat, pat, child]
         }
         .unique()
         .multiMap { meta, mat, pat, child ->
