@@ -6,7 +6,7 @@ Changes in 'genome_statistics/main.nf':
 @@ -95,17 +95,45 @@
          ch_merquryfk_asm_input.pat
      )
- 
+
 +    //
 +    // Logic: Join all the outputs into a single map for ease of
 +    // publishing with workflow outputs
