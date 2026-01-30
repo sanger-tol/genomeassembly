@@ -70,7 +70,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         }
 
         // Concatenate the data and params values to hash and generate it
-        def hashContent = datasetsRequired.join("") + paramsSpec.values().join("")
+        def hashContent = spec.assembler + datasetsRequired.join("") + paramsSpec.values().join("")
 
         // If a specific dependency is requested, find its hash
         // Otherwise use the last used hash for generation

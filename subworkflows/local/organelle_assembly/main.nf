@@ -32,6 +32,9 @@ workflow ORGANELLE_ASSEMBLY {
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
+    // ch_output_specs.view { spec -> "spec: $spec" }
+    // OATK_ASSEMBLY.out.oatk_output.view { oatk -> "oatk: $oatk"}
+
     ch_oatk_output = ch_output_specs
         .combine(OATK_ASSEMBLY.out.oatk_output)
         .filter { spec, oatk -> oatk.hash in spec.hashes.values() }
@@ -43,6 +46,6 @@ workflow ORGANELLE_ASSEMBLY {
         .map { spec, mitohifi -> spec + mitohifi }
 
     emit:
-    oatk           = ch_output_specs
+    oatk           = ch_oatk_output
     reads_mitohifi = ch_mitohifi_output
 }

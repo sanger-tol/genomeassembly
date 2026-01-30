@@ -127,7 +127,7 @@ workflow {
     scaffolding      = SANGERTOL_GENOMEASSEMBLY.out.scaffolding
     statistics       = SANGERTOL_GENOMEASSEMBLY.out.statistics
     contigs_mitohifi = SANGERTOL_GENOMEASSEMBLY.out.contigs_mitohifi
-    // oatk             = SANGERTOL_GENOMEASSEMBLY.out.oatk
+    oatk             = SANGERTOL_GENOMEASSEMBLY.out.oatk
     reads_mitohifi   = SANGERTOL_GENOMEASSEMBLY.out.reads_mitohifi
 }
 
@@ -222,22 +222,22 @@ output {
             ].join("/")
         }
     }
-    // oatk {
-    //     path { assembly ->
-    //         assembly.mito_fasta >> "${assembly.id}/"
-    //         assembly.pltd_fasta >> "${assembly.id}/"
-    //         assembly.mito_bed >> "${assembly.id}/"
-    //         assembly.pltd_bed >> "${assembly.id}/"
-    //         assembly.mito_gfa >> "${assembly.id}/"
-    //         assembly.pltd_gfa >> "${assembly.id}/"
-    //         assembly.mito_annot >> "${assembly.id}/"
-    //         assembly.pltd_annot >> "${assembly.id}/"
-    //         assembly.initial_gfa >> "${assembly.id}/"
-    //         assembly.final_gfa >> "${assembly.id}/"
-    //         assembly.oatk_log >> "${assembly.id}/"
-    //         assembly.bandage_plots >> "${assembly.id}/"
-    //     }
-    // }
+    oatk {
+        path { assembly ->
+            assembly.mito_fasta >> "${assembly.id}/"
+            assembly.pltd_fasta >> "${assembly.id}/"
+            assembly.mito_bed >> "${assembly.id}/"
+            assembly.pltd_bed >> "${assembly.id}/"
+            assembly.mito_gfa >> "${assembly.id}/"
+            assembly.pltd_gfa >> "${assembly.id}/"
+            assembly.mito_annot >> "${assembly.id}/"
+            assembly.pltd_annot >> "${assembly.id}/"
+            assembly.initial_gfa >> "${assembly.id}/"
+            assembly.final_gfa >> "${assembly.id}/"
+            assembly.oatk_log >> "${assembly.id}/"
+            assembly.bandage_plots >> "${assembly.id}/"
+        }
+    }
     reads_mitohifi {
         path { assembly ->
             assembly.fasta >> "${assembly.id}/"
