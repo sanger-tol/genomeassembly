@@ -6,7 +6,8 @@
   purge: true
   find_mito: true
   find_plastid: true
-  hifiasm_arguments: "--primary -f0"
+  hifiasm_bin_arguments: "-f0"
+  hifiasm_arguments: "--primary"
   mitohifi_reference_species: "Caradrina clavipalpis"
   mitohifi_mito_genetic_code: 5
   busco_lineage: bacteria_odb12
@@ -18,7 +19,7 @@
   phased_assembly: true
   find_mito: false
   find_plastid: false
-  hifiasm_arguments: "--primary -f0"
+  hifiasm_bin_arguments: "-f0"
   busco_lineage: bacteria_odb12
 - id: baUndUnlc1.oatk
   assembler: "oatk"

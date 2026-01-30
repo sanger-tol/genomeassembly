@@ -148,11 +148,15 @@
                 "default": false,
                 "meta": "find_plastid"
             },
+            "hifiasm_bin_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to Hifiasm that are included at the time of bin file generation. This typically would include the error correction options.",
+                "meta": "hifiasm_bin_arguments"
+            },
             "hifiasm_arguments": {
                 "type": "string",
-                "description": "Additional command-line arguments to pass to Hifiasm, excluding those that control error correction.",
-                "meta": "hifiasm_arguments",
-                "default": ""
+                "description": "Additional command-line arguments to pass to Hifiasm when processing bin files. The options from hifiasm_bin_arguments are already included at this stage and do not need to be re-specified.",
+                "meta": "hifiasm_arguments"
             },
             "purging_cutoffs": {
                 "type": "string",
@@ -169,8 +173,7 @@
             "yahs_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments to pass to YaHS",
-                "meta": "yahs_arguments",
-                "default": ""
+                "meta": "yahs_arguments"
             },
             "busco_lineage": {
                 "type": "string",
@@ -197,8 +200,7 @@
             "mitohifi_arguments": {
                 "type": "string",
                 "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
-                "meta": "mitohifi_reads_arguments",
-                "default": ""
+                "meta": "mitohifi_reads_arguments"
             },
             "oatk_kmer_size": {
                 "type": "integer",
@@ -214,8 +216,7 @@
             "oatk_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments for oatk, excluding -k and -c.",
-                "meta": "oatk_arguments",
-                "default": ""
+                "meta": "oatk_arguments"
             },
             "oatk_mito_hmm": {
                 "type": "string",

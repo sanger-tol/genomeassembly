@@ -98,8 +98,15 @@ workflow GENOMEASSEMBLY {
 
 
     emit:
-    hifiasm_output = NUCLEAR_ASSEMBLY.out.hifiasm_output
-    versions = ch_versions // channel: [ path(versions.yml) ]
+    hifiasm           = NUCLEAR_ASSEMBLY.out.hifiasm
+    purging           = NUCLEAR_ASSEMBLY.out.purging
+    polishing         = NUCLEAR_ASSEMBLY.out.polishing
+    scaffolding       = NUCLEAR_ASSEMBLY.out.scaffolding
+    contigs_mitohifi  = NUCLEAR_ASSEMBLY.out.organelle
+    statistics        = NUCLEAR_ASSEMBLY.out.statistics
+    oatk              = ORGANELLE_ASSEMBLY.out.oatk
+    reads_mitohifi    = ORGANELLE_ASSEMBLY.out.reads_mitohifi
+    versions           = ch_versions // channel: [ path(versions.yml) ]
 
 }
 

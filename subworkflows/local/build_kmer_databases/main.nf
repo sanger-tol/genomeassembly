@@ -144,7 +144,8 @@ workflow BUILD_KMER_DATABASES {
                 reads: reads_list,
                 fk_hist: fastk[0],
                 fk_ktab: fastk[1],
-                yak: yakdb
+                yak: yakdb,
+                haptab: []
             ]
 
             return out_meta

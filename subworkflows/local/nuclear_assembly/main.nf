@@ -5,6 +5,8 @@ include { PURGING           } from '../../../subworkflows/local/purging'
 include { POLISHING         } from '../../../subworkflows/local/polishing'
 include { SCAFFOLDING       } from '../../../subworkflows/local/scaffolding'
 
+include { setupStage        } from '../../../functions/local/assembly_stages'
+
 workflow NUCLEAR_ASSEMBLY {
     take:
     ch_specs
@@ -24,12 +26,13 @@ workflow NUCLEAR_ASSEMBLY {
     // stages (purging, polishing and scaffolding, organelles), we need to filter to
     // ensure that we have no null channels where these were unspecified
     //
-    ch_bin_assembly_specs = ch_specs.map { spec -> spec.stages.bin_assembly }.unique()
-    ch_assembly_specs = ch_specs.map { spec -> spec.stages.assembly }.unique()
-    ch_purging_specs = ch_specs.map { spec -> spec.stages?.purging }.filter { spec -> spec }.unique()
-    ch_polishing_specs = ch_specs.map { spec -> spec.stages?.polishing }.filter { spec -> spec }.unique()
-    ch_scaffolding_specs = ch_specs.map { spec -> spec.stages?.scaffolding }.filter { spec -> spec }.unique()
-    ch_organelle_specs = ch_specs.flatMap { spec -> [spec.stages?.mito, spec.stages?.plastid] }.filter { spec -> spec }.unique()
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["id", "hashes", "data"]) }.unique()
+    ch_bin_assembly_specs = ch_specs.map { spec -> setupStage(spec, "bin_assembly") }.unique()
+    ch_assembly_specs = ch_specs.map { spec -> setupStage(spec, "assembly") }.unique()
+    ch_purging_specs = ch_specs.map { spec -> setupStage(spec, "purging") }.filter { spec -> spec }.unique()
+    ch_polishing_specs = ch_specs.map { spec -> setupStage(spec, "polishing") }.filter { spec -> spec }.unique()
+    ch_scaffolding_specs = ch_specs.map { spec -> setupStage(spec, "scaffolding") }.filter { spec -> spec }.unique()
+    ch_organelle_specs = ch_specs.flatMap { spec -> [setupStage(spec, "mito"), setupStage(spec, "plastid")] }.filter { spec -> spec }.unique()
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
@@ -94,6 +97,21 @@ workflow NUCLEAR_ASSEMBLY {
     )
     ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
+    ch_statistics = GENOME_STATISTICS.out.stats
+        .join(GENOME_STATISTICS.out.busco, remainder: true)
+        .join(GENOME_STATISTICS.out.merqury, remainder: true)
+        .map { spec, stats, busco, merqury ->
+            return [
+                hash: spec.id,
+                stage: spec.stage,
+                data: spec.data,
+                params: spec.params,
+                stats: stats,
+                busco: busco,
+                merqury: merqury
+            ]
+        }
+
     //
     // Subworkflow: Find organellar genomes using mitohifi
     //
@@ -105,51 +123,43 @@ workflow NUCLEAR_ASSEMBLY {
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
-    ch_hifiasm_out = ch_specs.combine(HIFIASM_ASSEMBLY.out.hifiasm_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
-        .filter { meta, hifiasm, statistics ->
-            hifiasm.id == statistics.id && hifiasm.id in meta.hashes.values()
-        }
-        .map { spec, hifiasm, statistics ->
-            spec + [hifiasm: hifiasm, statistics: statistics]
-        }.view()
+    ch_hifiasm_out = ch_output_specs
+        .combine(HIFIASM_ASSEMBLY.out.hifiasm_output)
+        .filter { spec, hifiasm -> hifiasm.hash in spec.hashes.values() }
+        .map { spec, hifiasm -> spec + hifiasm }
 
-    ch_purging_out = ch_specs.combine(PURGING.out.purging_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
-        .filter { meta, purging, statistics ->
-            purging.id == statistics.id && purging.id in meta.hashes.values()
-        }
-        .map { spec, purging, statistics ->
-            spec + [purging: purging, statistics: statistics]
-        }
+    ch_purging_out = ch_output_specs
+        .combine(PURGING.out.purging_output)
+        .filter { spec, purging -> purging.hash in spec.hashes.values() }
+        .map { spec, purging -> spec + purging }
 
-    ch_polishing_out = ch_specs.combine(POLISHING.out.polishing_output).combine(GENOME_STATISTICS.out.genome_statistics_output)
-        .filter { meta, polishing, statistics ->
-            purging.id == statistics.id && polishing.id in meta.hashes.values()
-        }
-        .map { spec, polishing, statistics ->
-            spec + [polishing: polishing, statistics: statistics]
-        }
+    ch_polishing_out = ch_output_specs
+        .combine(POLISHING.out.polishing_output)
+        .filter { spec, polishing -> polishing.hash in spec.hashes.values() }
+        .map { spec, polishing -> spec + polishing }
 
     ch_scaffolding_out = ch_specs
-        .combine(SCAFFOLDING.out.scaffolding_output.filter { res -> res._hap == "hap1" })
-        .combine(SCAFFOLDING.out.scaffolding_output.filter { res -> res._hap == "hap2" })
-        .combine(GENOME_STATISTICS.out.genome_statistics_output)
-        .filter { meta, hap1, hap2, statistics ->
-            (hap1.id == hap2.id) &&
-            (hap1.id == statistics.id) &&
-            hap1.id in meta.hashes.values()
-        }
-        .map { spec, hap1, hap2, statistics ->
-            spec + [scaffolding: [hap1, hap2], statistics: statistics]
-        }
+        .combine(SCAFFOLDING.out.scaffolding_output)
+        .filter { spec, scaffolding -> scaffolding.hash in spec.hashes.values() }
+        .map { spec, scaffolding -> spec + scaffolding }
 
-    ch_organelle_out = ch_specs.combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
-        .filter { spec, mitohifi -> mitohifi.id in spec.hashes.values() }
-        .map { spec, mitohifi ->
-            spec + [mitohifi: mitohifi]
-        }
+    ch_organelle_out = ch_specs
+        .combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
+        .filter { spec, organelle -> organelle.hash in spec.hashes.values() }
+        .map { spec, organelle -> spec + organelle }
+
+    ch_statistics_out = ch_specs
+        .combine(ch_statistics)
+        .filter { spec, statistics -> statistics.hash in spec.hashes.values() }
+        .map { spec, statistics -> spec + statistics }
 
     emit:
-    hifiasm_output = ch_hifiasm_out
-    versions = ch_versions
+    hifiasm     = ch_hifiasm_out
+    purging     = ch_purging_out
+    polishing   = ch_polishing_out
+    scaffolding = ch_scaffolding_out
+    organelle   = ch_organelle_out
+    statistics  = ch_statistics_out
+    versions    = ch_versions
 
 }

@@ -104,9 +104,12 @@ workflow POLISHING {
             .join(POLISHING_10X.out.longranger_summary, by: 0)
             .join(POLISHING_10X.out.merged_vcf, by: 0)
             .join(POLISHING_10X.out.merged_vcf_tbi, by: 0)
-            .map { meta, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
+            .map { spec, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
                 return [
-                    id: meta.id,
+                    hash: spec.id,
+                    stage: spec.stage,
+                    data: spec.data,
+                    params: spec.params,
                     fasta: fasta,
                     bed_chunks: bed_chunks,
                     longranger_bam: bam,

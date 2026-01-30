@@ -109,12 +109,13 @@ workflow MITOHIFI_ASSEMBLY {
             .map { spec, fasta, gb, gff, apc, annot, circ, filt, map, cov_plot, final_annot,
                 final_choice, final_coverage, pot_contigs, rma, shared, log ->
                 return [
-                    id: spec.hash,
-                    organelle: spec.organelle,
+                    hash: spec.hash,
+                    stage: spec.stage,
+                    data: spec.data,
+                    params: spec.params,
                     fasta: fasta,
                     stats: stats,
-                    gb: gb,
-                    gff: gff,
+                    annot: gb ?: gff,
                     all_potential_contigs: apc,
                     contigs_annotations: annot,
                     contigs_circularisation: circ,

@@ -60,7 +60,7 @@ workflow HIFIASM_ASSEMBLY {
     ch_bgzip_input = HIFIASM.out.assembly_fasta
         .map { meta, fasta ->
             def key = groupKey(meta, fasta.size())
-            [ key, fasta ]
+            [key, fasta]
         }
         .transpose()
 
@@ -76,17 +76,16 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.assembly_graphs, by: 0)
         .join(HIFIASM.out.bed, by: 0)
         .join(HIFIASM.out.log, by: 0)
-        .join(HIFIASM.out.corrected_reads, remainder: true, by: 0)
-        .join(HIFIASM.out.read_overlaps, remainder: true, by: 0)
-        .map { spec, fasta, graphs, bed, log, reads, paf ->
+        .map { spec, fasta, graphs, bed, log ->
             return [
-                id: spec.id,
+                hash: spec.id,
+                stage: spec.stage,
+                data: spec.data,
+                params: spec.params,
                 fasta: fasta,
                 graphs: graphs,
                 bed: bed,
-                log: log,
-                reads: reads,
-                paf: paf
+                log: log
             ]
         }
 

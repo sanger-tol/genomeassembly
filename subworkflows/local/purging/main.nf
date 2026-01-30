@@ -67,7 +67,10 @@ workflow PURGING {
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.primary_reads_paf, by: 0)
         .map { spec, fasta, split_fa, splitfa_paf, pbcstat_hist, pbcstat_basecov, calcuts_cutoffs, calcuts_log, histplot, bed, log, reads_paf ->
             return [
-                id: spec.id,
+                hash: spec.id,
+                stage: spec.stage,
+                data: spec.data,
+                params: spec.params,
                 fasta: fasta,
                 split_fa: split_fa,
                 split_paf: splitfa_paf,

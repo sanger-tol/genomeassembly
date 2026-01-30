@@ -104,10 +104,13 @@ workflow SCAFFOLDING {
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.pretext_png, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.cool, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.hic, by: 0, remainder: true)
-        .map { meta, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
+        .map { spec, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
             return [
-                id: meta.id,
-                hap: meta._hap,
+                hash: spec.id,
+                stage: spec.stage,
+                data: spec.data,
+                params: spec.params,
+                hap: spec._hap,
                 fasta: fasta,
                 bam: bam,
                 bai: bai,

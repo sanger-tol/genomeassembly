@@ -16,6 +16,9 @@
 include { GENOMEASSEMBLY          } from './workflows/genomeassembly'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
+
+include { getPlatformShortName    } from './functions/local/publishing'
+include { stageToAssemblyDir      } from './functions/local/publishing'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -55,7 +58,14 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     )
 
     emit:
-    hifiasm_output = GENOMEASSEMBLY.out.hifiasm_output
+    hifiasm          = GENOMEASSEMBLY.out.hifiasm
+    purging          = GENOMEASSEMBLY.out.purging
+    polishing        = GENOMEASSEMBLY.out.polishing
+    scaffolding      = GENOMEASSEMBLY.out.scaffolding
+    contigs_mitohifi = GENOMEASSEMBLY.out.contigs_mitohifi
+    oatk             = GENOMEASSEMBLY.out.oatk
+    reads_mitohifi   = GENOMEASSEMBLY.out.reads_mitohifi
+    statistics       = GENOMEASSEMBLY.out.statistics
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,16 +121,141 @@ workflow {
     )
 
     publish:
-    hifiasm_output = SANGERTOL_GENOMEASSEMBLY.out.hifiasm_output
+    hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
+    purging          = SANGERTOL_GENOMEASSEMBLY.out.purging
+    polishing        = SANGERTOL_GENOMEASSEMBLY.out.polishing
+    scaffolding      = SANGERTOL_GENOMEASSEMBLY.out.scaffolding
+    statistics       = SANGERTOL_GENOMEASSEMBLY.out.statistics
+    contigs_mitohifi = SANGERTOL_GENOMEASSEMBLY.out.contigs_mitohifi
+    // oatk             = SANGERTOL_GENOMEASSEMBLY.out.oatk
+    reads_mitohifi   = SANGERTOL_GENOMEASSEMBLY.out.reads_mitohifi
 }
 
 output {
-    hifiasm_output {
+    hifiasm {
         path { assembly ->
-            assembly.hifiasm >> "${assembly.id}/"
-            assembly.statistics.stats >> "${assembly.id}/"
-            assembly.statistics.busco >> "${assembly.id}/busco.${assembly.statistics.busco.busco_lineage}/"
-            assembly.statistics.merqury >> "${assembly.id}/merqury.${assembly.spec.data.long_read.platform}/"
+            assembly.fasta >> "${assembly.id}/raw/"
+            assembly.graphs >> "${assembly.id}/raw/"
+            assembly.bed >> "${assembly.id}/raw/"
+            assembly.log >> "${assembly.id}/raw/"
+        }
+    }
+    purging {
+        path { assembly ->
+            assembly.fasta >> "${assembly.id}/purging/"
+            assembly.split_fa >> "${assembly.id}/purging/split_aln/"
+            assembly.split_paf >> "${assembly.id}/purging/split_aln/"
+            assembly.pbcstat_hist >> "${assembly.id}/purging/coverage/"
+            assembly.pbcstat_basecov >> "${assembly.id}/purging/coverage/"
+            assembly.calcuts_cutoffs >> "${assembly.id}/purging/coverage/"
+            assembly.calcuts_log >> "${assembly.id}/purging/coverage/"
+            assembly.histplot >> "${assembly.id}/purging/coverage/"
+            assembly.bed >> "${assembly.id}/purging/purge_dups/"
+            assembly.log >> "${assembly.id}/purging/purge_dups/"
+        }
+    }
+    polishing {
+        path { assembly ->
+            assembly.fasta >> "${assembly.id}/polishing/"
+            assembly.bed_chunks >> "${assembly.id}/polishing/chunks/"
+            assembly.longranger_bam >> "${assembly.id}/polishing/aln/"
+            assembly.longranger_bai >> "${assembly.id}/polishing/aln/"
+            assembly.longranger_csv >> "${assembly.id}/polishing/aln/"
+            assembly.merged_vcf >> "${assembly.id}/polishing/vcf/"
+            assembly.merged_vcf_tbi >> "${assembly.id}/polishing/vcf/"
+        }
+    }
+    scaffolding {
+        path { assembly ->
+            assembly.fasta >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.bam >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
+            assembly.bai >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
+            assembly.stats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
+            assembly.flagstats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
+            assembly.idxstats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
+            assembly.yahs_agp >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.yahs_bin >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.yahs_initial >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.yahs_intermeriate >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.yahs_log >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.pretext >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.pretext_png >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.cool >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+            assembly.hic >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+        }
+    }
+    contigs_mitohifi {
+        path { assembly ->
+            assembly.fasta >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.stats >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.annot >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.all_potential_contigs >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.contigs_annotations >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.contigs_circularisation >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.contigs_filtering >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.coverage_mapping >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.coverage_plot >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.final_mitogenome_annotation >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.final_mitogenome_choice >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.final_mitogenome_coverage >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.potential_contigs >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.reads_mapping_and_assembly >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.shared_genes >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.log >> "${assembly.id}/${assembly.params.organelle}/"
+        }
+    }
+    statistics {
+        path { statistics ->
+            statistics.stats >> [
+                "${statistics.id}",
+                "${stageToAssemblyDir(statistics.stage)}/"
+            ].join("/")
+            statistics.merqury >> [
+                "${statistics.id}",
+                "${stageToAssemblyDir(statistics.stage)}",
+                "merqury.${getPlatformShortName(statistics.data.long_read.platform)}/"
+            ].join("/")
+            statistics.busco >> [
+                "${statistics.id}",
+                "${stageToAssemblyDir(statistics.stage)}",
+                "busco.${statistics.params.busco_lineage}/"
+            ].join("/")
+        }
+    }
+    // oatk {
+    //     path { assembly ->
+    //         assembly.mito_fasta >> "${assembly.id}/"
+    //         assembly.pltd_fasta >> "${assembly.id}/"
+    //         assembly.mito_bed >> "${assembly.id}/"
+    //         assembly.pltd_bed >> "${assembly.id}/"
+    //         assembly.mito_gfa >> "${assembly.id}/"
+    //         assembly.pltd_gfa >> "${assembly.id}/"
+    //         assembly.mito_annot >> "${assembly.id}/"
+    //         assembly.pltd_annot >> "${assembly.id}/"
+    //         assembly.initial_gfa >> "${assembly.id}/"
+    //         assembly.final_gfa >> "${assembly.id}/"
+    //         assembly.oatk_log >> "${assembly.id}/"
+    //         assembly.bandage_plots >> "${assembly.id}/"
+    //     }
+    // }
+    reads_mitohifi {
+        path { assembly ->
+            assembly.fasta >> "${assembly.id}/"
+            assembly.stats >> "${assembly.id}/"
+            assembly.annot >> "${assembly.id}/"
+            assembly.all_potential_contigs >> "${assembly.id}/"
+            assembly.contigs_annotations >> "${assembly.id}/"
+            assembly.contigs_circularisation >> "${assembly.id}/"
+            assembly.contigs_filtering >> "${assembly.id}/"
+            assembly.coverage_mapping >> "${assembly.id}/"
+            assembly.coverage_plot >> "${assembly.id}/"
+            assembly.final_mitogenome_annotation >> "${assembly.id}/"
+            assembly.final_mitogenome_choice >> "${assembly.id}/"
+            assembly.final_mitogenome_coverage >> "${assembly.id}/"
+            assembly.potential_contigs >> "${assembly.id}/"
+            assembly.reads_mapping_and_assembly >> "${assembly.id}/"
+            assembly.shared_genes >> "${assembly.id}/"
+            assembly.log >> "${assembly.id}/"
         }
     }
 }
