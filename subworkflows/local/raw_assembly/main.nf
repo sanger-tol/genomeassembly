@@ -1,6 +1,7 @@
 include { GAWK as GAWK_GFA_TO_FASTA } from '../../../modules/nf-core/gawk/main'
 include { HIFIASM                   } from '../../../modules/sanger-tol/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN    } from '../../../modules/sanger-tol/hifiasm/main'
+include { HIFIASM as HIFIASM_BIN          } from '../../../modules/sanger-tol/hifiasm/main'
+include { CAT_CAT as CONCATENATE_ALTERNATES } from '../../../modules/nf-core/cat/cat'
 
 workflow RAW_ASSEMBLY {
     take:
@@ -92,29 +93,50 @@ workflow RAW_ASSEMBLY {
     //
     ch_assemblies_fasta = HIFIASM.out.assembly_fasta
         .transpose()
-        .filter { meta, asm ->
-            asm.getName() =~ /^[^.]+\.p_ctg\.fa$/ ||
-            asm.getName() =~ /a_ctg\.fa$/ ||
-            asm.getName() =~ /hap1\.p_ctg\.fa$/ ||
-            asm.getName() =~ /hap2\.p_ctg\.fa$/
-        }
-        .groupTuple(by: 0, size: 2, remainder: true)
-        .flatMap { meta, asms ->
-            if(asms.size() == 1) { return [] }
-            def pri = /hap1.p_ctg.fa$/
-            def alt = /hap2.p_ctg.fa$/
-            if(meta.assembly_type == "primary") {
-                if(asms.findAll { asm -> asm.name =~ /hap/ }.size() == 0) {
-                    pri = /^[^.]+\.p_ctg\.fa$/
-                    alt = /a_ctg.fa$/
-                }
+        .groupTuple(by: 0)
+        .map { meta, asms ->
+            // Identify Primary (hap1.p_ctg.fa or p_ctg.fa)
+            def pri_pattern_hap = /hap1.p_ctg.fa$/
+            def pri_pattern_gen = /^[^.]+\.p_ctg\.fa$/
+
+            // Filter to only keep contig files (*ctg.fa)
+            def ctg_asms = asms.findAll { it.name =~ /ctg.fa/ }
+
+            def pri = ctg_asms.find { it.name =~ pri_pattern_hap }
+            if (!pri) {
+                 // Fallback: check generally for p_ctg.fa if no "hap" naming is used in ANY file
+                 def has_hap = ctg_asms.any { it.name =~ /hap/ }
+                 if (!has_hap) {
+                      pri = ctg_asms.find { it.name =~ pri_pattern_gen }
+                 }
             }
 
-            return [[meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]]
+            // Alternates are everything else
+            def alts = ctg_asms - pri
+
+            [ meta, pri, alts ]
+        }
+        .branch { meta, pri, alts ->
+             concat: alts.size() > 1
+             ready: true
+        }
+
+    CONCATENATE_ALTERNATES(
+        ch_assemblies_fasta.concat.map { meta, pri, alts -> [ meta, alts ] }
+    )
+    ch_versions = ch_versions.mix(CONCATENATE_ALTERNATES.out.versions)
+
+    ch_assemblies_ready = ch_assemblies_fasta.concat
+        .join(CONCATENATE_ALTERNATES.out.file_out)
+        .map { meta, pri, alts_orig, merged_alt -> [ meta, pri, [merged_alt] ] }
+        .mix(ch_assemblies_fasta.ready)
+        .map { meta, pri, alts ->
+            def alt = alts ? alts[0] : []
+            [ meta, pri, alt ]
         }
 
     emit:
-    hifiasm_fasta = ch_assemblies_fasta
+    hifiasm_fasta = ch_assemblies_ready
     hifiasm_gfa   = HIFIASM.out.assembly_graphs
     hifiasm_bed   = HIFIASM.out.bed
     hifiasm_log   = HIFIASM.out.log
