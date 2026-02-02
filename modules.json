@@ -362,9 +362,8 @@
                     },
                     "genome_statistics": {
                         "branch": "main",
-                        "git_sha": "eae94e12d0d73d799d4370662416bfb57455191e",
-                        "installed_by": ["subworkflows"],
-                        "patch": "subworkflows/sanger-tol/genome_statistics/genome_statistics.diff"
+                        "git_sha": "aef8b24649313b76028060c4def4c7eb00dbfaaa",
+                        "installed_by": ["subworkflows"]
                     },
                     "pairs_create_contact_maps": {
                         "branch": "main",

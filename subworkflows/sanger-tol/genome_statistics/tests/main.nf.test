@@ -48,7 +48,7 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success               },
+                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -103,10 +103,14 @@ nextflow_workflow {
                     .every()
                 },
                 { assert snapshot(
-                    workflow.out.asmstats,
-                    workflow.out.gfastats,
-                    workflow.out.versions
-                    ).match()
+                    sanitizeOutput(workflow.out, unstableKeys:[
+                        "busco",
+                        "busco_batch_summary",
+                        "busco_summary_txt",
+                        "busco_summary_json",
+                        "busco_log",
+                        "busco_directory"
+                    ])).match()
                 }
             )
         }
@@ -179,15 +183,17 @@ nextflow_workflow {
                     .collect { json -> path(json).text.contains("one_line_summary") }
                     .every()
                 },
-                { assert snapshot(
-                    workflow.out.asmstats,
-                    workflow.out.gfastats,
-                    workflow.out.merqury_qv,
-                    workflow.out.merqury_completeness,
-                    workflow.out.merqury_phased_stats,
-                    workflow.out.merqury_images.collect { meta, images -> [ meta, images.collect { file(it).name }.sort() ] },
-                    workflow.out.versions
-                    ).match()
+                { assert snapshot(sanitizeOutput(workflow.out,
+                    unstableKeys:[
+                        "busco",
+                        "busco_batch_summary",
+                        "busco_summary_txt",
+                        "busco_summary_json",
+                        "busco_log",
+                        "busco_directory",
+                        "merqury",
+                        "merqury_images"
+                    ])).match()
                 }
             )
         }
