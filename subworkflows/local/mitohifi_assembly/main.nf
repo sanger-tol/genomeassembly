@@ -67,7 +67,9 @@ workflow MITOHIFI_ASSEMBLY {
 
         ch_mitohifi_input = ch_mitohifi_asm_input.mix(ch_mitohifi_reads_input)
             .multiMap { spec, input, ref_fa, ref_gb ->
-                def genetic_code = spec.params.organelle == "mito" ? spec.params.mitohifi_genetic_code : spec.params.mitohifi_plastid_genetic_code
+                def genetic_code = spec.params.organelle == "mito"
+                    ? spec.params.mitohifi_mito_genetic_code
+                    : spec.params.mitohifi_plastid_genetic_code
 
                 input: [ spec, input ]
                 reference: [ spec, ref_fa, ref_gb ]
@@ -89,46 +91,30 @@ workflow MITOHIFI_ASSEMBLY {
         // Logic: Prepare all outputs from Mitohifi for emission
         //        Do it this way as we will move to a channel publishing structure in future
         //
-        ch_mitohifi_output = MITOHIFI_MITOHIFI.out.fasta
-                .join(MITOHIFI_MITOHIFI.out.stats, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.gb, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI.out.gff, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI.out.all_potential_contigs, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.contigs_annotations, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.contigs_circularization, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.contigs_filtering, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.coverage_mapping, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI.out.coverage_plot, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_annotation, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_choice, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.final_mitogenome_coverage, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.potential_contigs, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.reads_mapping_and_assembly, by: 0, remainder: true)
-                .join(MITOHIFI_MITOHIFI.out.shared_genes, by: 0)
-                .join(MITOHIFI_MITOHIFI.out.log, by: 0)
-            .map { spec, fasta, gb, gff, apc, annot, circ, filt, map, cov_plot, final_annot,
-                final_choice, final_coverage, pot_contigs, rma, shared, log ->
+        ch_mitohifi_output = MITOHIFI_MITOHIFI.out.all_files
+            .map { spec, mitohifi_files ->
+
+                // The potential contigs directory contains symlinks which cannot be published.
+                // Loop through all contents and discard these.
+                def valid_publish_files = []
+                mitohifi_files.each { mitohifi_file ->
+                    if(mitohifi_file.isDirectory()) {
+                        mitohifi_file.eachFileRecurse { contents ->
+                            if(!contents.isLink() && !contents.isDirectory()) {
+                                valid_publish_files << contents
+                            }
+                        }
+                    } else if(!mitohifi_file.isLink()) {
+                        valid_publish_files << mitohifi_file
+                    }
+                }
+
                 return [
-                    hash: spec.hash,
+                    hash: spec.id,
                     stage: spec.stage,
                     data: spec.data,
                     params: spec.params,
-                    fasta: fasta,
-                    stats: stats,
-                    annot: gb ?: gff,
-                    all_potential_contigs: apc,
-                    contigs_annotations: annot,
-                    contigs_circularisation: circ,
-                    contigs_filtering: filt,
-                    coverage_mapping: map,
-                    coverage_plot: cov_plot,
-                    final_mitogenome_annotation: final_annot,
-                    final_mitogenome_choice: final_choice,
-                    final_mitogenome_coverage: final_coverage,
-                    potential_contigs: pot_contigs,
-                    reads_mapping_and_assembly: rma,
-                    shared_genes: shared_genes,
-                    log: log
+                    mitohifi_files: valid_publish_files
                 ]
             }
     }

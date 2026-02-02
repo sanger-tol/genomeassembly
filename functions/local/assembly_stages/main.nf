@@ -74,23 +74,23 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 
         // If a specific dependency is requested, find its hash
         // Otherwise use the last used hash for generation
-        def addHash = ""
+        def dependHash = ""
         if (config.depends) {
             if(!stageHashes[config.depends]) {
                 error("Error processing spec [${spec.id}]: No hash has been generated for stage ${config.depends}.")
             }
-            addHash = stageHashes[config.depends]
+            dependHash = stageHashes[config.depends]
         } else if (prevHash) {
-            addHash = prevHash
+            dependHash = prevHash
         }
-        hash = (addHash + hashContent).md5()
+        hash = (dependHash + hashContent).md5()
 
         // Store the hash in useful places
         stageHashes[stageName] = hash
         stageSpec = [
             stage: stageName,
             id: hash,
-            prevID: prevHash,
+            prevID: dependHash,
             dataList: datasetsRequired,
             params: paramsSpec
         ]

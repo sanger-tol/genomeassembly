@@ -186,22 +186,7 @@ output {
     }
     contigs_mitohifi {
         path { assembly ->
-            assembly.fasta >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.stats >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.annot >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.all_potential_contigs >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.contigs_annotations >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.contigs_circularisation >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.contigs_filtering >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.coverage_mapping >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.coverage_plot >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.final_mitogenome_annotation >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.final_mitogenome_choice >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.final_mitogenome_coverage >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.potential_contigs >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.reads_mapping_and_assembly >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.shared_genes >> "${assembly.id}/${assembly.params.organelle}/"
-            assembly.log >> "${assembly.id}/${assembly.params.organelle}/"
+            assembly.mitohifi_files >> "${assembly.id}/${assembly.params.organelle}/"
         }
     }
     statistics {
@@ -240,22 +225,7 @@ output {
     }
     reads_mitohifi {
         path { assembly ->
-            assembly.fasta >> "${assembly.id}/"
-            assembly.stats >> "${assembly.id}/"
-            assembly.annot >> "${assembly.id}/"
-            assembly.all_potential_contigs >> "${assembly.id}/"
-            assembly.contigs_annotations >> "${assembly.id}/"
-            assembly.contigs_circularisation >> "${assembly.id}/"
-            assembly.contigs_filtering >> "${assembly.id}/"
-            assembly.coverage_mapping >> "${assembly.id}/"
-            assembly.coverage_plot >> "${assembly.id}/"
-            assembly.final_mitogenome_annotation >> "${assembly.id}/"
-            assembly.final_mitogenome_choice >> "${assembly.id}/"
-            assembly.final_mitogenome_coverage >> "${assembly.id}/"
-            assembly.potential_contigs >> "${assembly.id}/"
-            assembly.reads_mapping_and_assembly >> "${assembly.id}/"
-            assembly.shared_genes >> "${assembly.id}/"
-            assembly.log >> "${assembly.id}/"
+            assembly.mitohifi_files >> "${assembly.id}/"
         }
     }
 }

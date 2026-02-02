@@ -12,6 +12,7 @@ process MITOHIFI_MITOHIFI {
     val mito_code
 
     output:
+    tuple val(meta), path("*")                              , emit: all_files
     tuple val(meta), path("final_mitogenome.fasta")         , emit: fasta
     tuple val(meta), path("contigs_stats.tsv")              , emit: stats
     tuple val(meta), path("final_mitogenome.gb")            , emit: gb                         , optional: true
