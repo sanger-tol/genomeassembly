@@ -1,0 +1,134 @@
+{
+    "Undibacterium unclassified - Meles meles - fasta - bam - double files": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 32471,
+                    "minReadLength": 0,
+                    "meanReadLength": 2688,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 4,
+                    "readCount": 91130,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                },
+                {
+                    "maxReadLength": 26402,
+                    "minReadLength": 0,
+                    "meanReadLength": 7644,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 54,
+                    "readCount": 1038,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam",
+                "test2.bam"
+            ],
+            [
+                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
+                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
+                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
+                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
+                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
+                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
+                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
+                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
+                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T09:09:06.147102"
+    },
+    "Undibacterium unclassified - fasta - bam": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 26402,
+                    "minReadLength": 0,
+                    "meanReadLength": 7644,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 54,
+                    "readCount": 1038,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam"
+            ],
+            [
+                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
+                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
+                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
+                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T09:07:02.199662"
+    },
+    "Undibacterium unclassified - fasta - paf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "HiFi.reads.fasta.0.test.paf.gz:md5,d74ffe5ca051a58b834712bbfecb7875",
+                        "HiFi.reads.fasta.1.test.paf.gz:md5,b534510e942d0b8ea7150bb08a0ac9e1",
+                        "HiFi.reads.fasta.2.test.paf.gz:md5,ba98f31b846d1830279c51d3bc829760",
+                        "HiFi.reads.fasta.3.test.paf.gz:md5,7f945c1697a0e727c672bffe0dab8799",
+                        "HiFi.reads.fasta.4.test.paf.gz:md5,ee7fdba4b0311d309292f28ada0ef137"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
+                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
+                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-12T11:23:53.888197"
+    }
+}

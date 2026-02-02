@@ -1,61 +1,129 @@
 # sanger-tol/genomeassembly: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
-
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the data you would like to assemble before running the pipeline. Use this parameter to specify its location. It has to be a YAML file, following the specification in the [Full samplesheet](#full-samplesheet) section below.
 
-```bash
---input '[path to samplesheet file]'
 ```
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+--input '[path to samplesheet file]'
 ```
 
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The input data for the pipeline is described in [YAML format](https://yaml.org/). It is a human readable file which contains information
+about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs,
+BUSCO lineage, mitochondrial code etc.
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+Briefly, the YAML describes three main subsections. The first is `metadata`, which described metadata about the target species, including a sample ID, the species binomial, and the mitochondrial genetic code. The second is `sequencing_data`, which describes the locations of the sequencing data to use for assembly. This has four sections (`long_reads`, `hic`, `illumina_10x`, `trio`), of which the only required section is `long_reads`. Any specified section **must** have a `reads` section, and the `long_reads` and `hic` sections also have a required `platform` and `hic_motif` section, respectively. All sections can optionally have a FastK database specified in the `fastk` section. Finally, there is a `databases` section which specifies which BUSCO and `oatk` databases to use.
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+An list of all the possible fields is given below, with their contents described as comments. Optional fields are tagged with `(optional)`:
+
+```yaml
+metadata:
+  id: sampleID # str: unique identifier for the sample
+  species: Bellis perennis # str: binomial name of species being assembled
+  mitochondrial_code: 1 # int: mitochondrial genetic code (https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
+sequencing_data:
+  long_reads: # mandatory - information about location and platform of long reads
+    platform: "pacbio" # str: "PacBio" or "ONT"
+    reads: # List of str: Paths to long-read read files in FASTA or FASTQ format
+      - /path/to/reads1.fa.gz
+      - /path/to/reads2.fa.gz
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+    coverage: 25 # (optional): int: haploid coverage of the genome to assemble.
+  hic: # (optional): if not specified, no scaffolding will be run.
+    reads: # List of str: Paths to Hi-C read files in CRAM format
+      - /path/to/reads1.cram
+      - /path/to/reads2.cram
+    hic_motif: # List of str: Cutting motifs of enzymes used in Hi-C library preparation
+      - GATC
+      - GANTC
+      - CTNAG
+      - TTAA
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the Hi-C reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+  illumina_10x: # (optional): if not specified, no polishing can be run.
+    reads: # List of str: Paths to Illumina 10X read files in Fastq format
+      - /path/to/fastq1.fq.gz
+      - /path/to/fastq2.fq.gz
+    fastk: # (optional): if specified, all sub-fields must be present.
+      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+      basename: basename # str: Basename of the FastK database in the directory
+      kmer_size: 31 # int: Kmer size used to generate the FastK database
+  trio: # (optional) - if specified, both maternal and paternal must be specified
+    maternal:
+      reads: # List of str: Paths to Illumina WGS read files in Fastq format
+        - /path/to/fastq1.fq.gz
+        - /path/to/fastq2.fq.gz
+      fastk: # (optional): if specified, all sub-fields must be present.
+        directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+        basename: basename # str: Basename of the FastK database in the directory
+        kmer_size: 31 # int: Kmer size used to generate the FastK database
+    paternal:
+      reads: # List of str: Paths to Illumina WGS read files in Fastq format
+        - /path/to/fastq1.fq.gz
+        - /path/to/fastq2.fq.gz
+      fastk: # (optional): if specified, all sub-fields must be present.
+        directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
+        basename: basename # str: Basename of the FastK database in the directory
+        kmer_size: 31 # int: Kmer size used to generate the FastK database
+databases:
+  busco:
+    lineage: bacteria_odb10 # str: BUSCO lineage name to use for QC
+  oatk:
+    mito_hmm: /path/to/.hmm # str: Path to oatk HMM database
+    plastid_hmm: /path/to/.hmm # str: Path to oatk HMM database
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+## Additional setup procedures
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+### Longranger (polishing)
+
+Longranger is a proprietary software product from 10X Genomics.
+Its terms and conditions state that we _cannot_ redistribute the copy we use in the Tree of Life department.
+
+To run the polishing subroutine of this pipeline, you will have to install longranger yourself.
+
+Go to <https://support.10xgenomics.com/genome-exome/software/downloads/latest>,
+read their End User Software License Agreement, and you'll be able to download the software if you accept it.
+
+To make a Docker (or Singularity) container out of it, use the following Dockerfile.
+
+```Dockerfile
+FROM ubuntu:22.04
+LABEL org.opencontainers.image.licenses="10x Genomics End User Software License Agreement - https://support.10xgenomics.com/genome-exome/software/downloads/latest"
+ARG DEST=/opt
+ADD ./longranger-2.2.2.tar.gz $DEST
+RUN ln -s $DEST/longranger-2.2.2/longranger /usr/local/bin/
+```
+
+Then, to use the container in the pipeline, pass the path or name of the container to the
+`--polishing_longranger_container_path` parameter when running the pipeline.
+
+### NCBI API Key
+
+Running Mitohifi for organelle assembly requires access to the NCBI API. Although this
+is possible without configuration, it is possible to specify an NCBI API key, if you have
+one. To do this, configure the [Nextflow secret](https://www.nextflow.io/docs/latest/secrets.html)
+NCBI_API_KEY as follows:
+
+```bash
+  nextflow secrets set NCBI_API_KEY '[API key]'
+```
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
-```bash
-nextflow run sanger-tol/genomeassembly --input ./samplesheet.csv --outdir ./results  -profile docker
+```console
+nextflow run sanger-tol/genomeassembly --input assets/dataset.yaml --outdir <OUTDIR> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -90,13 +158,13 @@ outdir: './results/'
 <...>
 ```
 
-You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+You can also generate such `YAML`/`JSON` files via [sanger-tol/launch](https://pipelines.tol.sanger.ac.uk/launch).
 
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```bash
+```console
 nextflow pull sanger-tol/genomeassembly
 ```
 

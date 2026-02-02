@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "bedtools_bamtobedsort"
+description: |
+  Streams a BAM file into bedtools bamToBed with samtools (with optional filtering), then sorts
+  the resulting BED file using GNU sort.
+keywords:
+  - sort
+  - bam
+  - bed
+  - hic
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+  - bedtools:
+      description: |
+        BEDTools is an extensive suite of utilities for comparing genomic features in BED format.
+      homepage: https://github.com/arq5x/bedtools2
+      documentation: https://bedtools.readthedocs.io/en/latest/
+      doi: 10.1093/bioinformatics/btr539
+      licence: ["GPL v2.0"]
+      identifier: "biotools:bedtools"
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - bam:
+        type: file
+        description: |
+          BAM file to convert to BED format.
+        pattern: "*.bam"
+        ontologies:
+          - edam: http://edamontology.org/format_2572
+output:
+  sorted_bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.bed":
+          type: file
+          description: |
+            Sorted BED file generated from the input BAM.
+          ontologies:
+            - edam: http://edamontology.org/format_3003
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

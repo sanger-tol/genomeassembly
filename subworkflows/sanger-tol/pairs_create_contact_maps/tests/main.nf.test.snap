@@ -1,0 +1,76 @@
+{
+    "Undibacterium_unclassified - pairs - hap2 - all maps": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool",
+            "test.hic",
+            [
+                "versions.yml:md5,233913cd50f0784c6531af9bddafe894",
+                "versions.yml:md5,26ea58ea2328790e9133eeafb3c0c335",
+                "versions.yml:md5,5621f2ebbec68103a6246577240ae91e",
+                "versions.yml:md5,79b7e3fca9c7ede2a11735c875d66bc1",
+                "versions.yml:md5,b3b08753a501b15237ba6c5ae8f2f5eb",
+                "versions.yml:md5,ba2e456c3c7e17334410ae4405d8bb98"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-11-04T13:13:30.533266"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no pretext": {
+        "content": [
+            "test.mcool",
+            "test.hic",
+            [
+                "versions.yml:md5,233913cd50f0784c6531af9bddafe894",
+                "versions.yml:md5,26ea58ea2328790e9133eeafb3c0c335",
+                "versions.yml:md5,5621f2ebbec68103a6246577240ae91e",
+                "versions.yml:md5,ba2e456c3c7e17334410ae4405d8bb98"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-11-04T13:19:52.132059"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no juicer": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool",
+            [
+                "versions.yml:md5,233913cd50f0784c6531af9bddafe894",
+                "versions.yml:md5,79b7e3fca9c7ede2a11735c875d66bc1",
+                "versions.yml:md5,b3b08753a501b15237ba6c5ae8f2f5eb",
+                "versions.yml:md5,ba2e456c3c7e17334410ae4405d8bb98"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-11-04T13:26:27.056688"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no cooler": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.hic",
+            [
+                "versions.yml:md5,26ea58ea2328790e9133eeafb3c0c335",
+                "versions.yml:md5,5621f2ebbec68103a6246577240ae91e",
+                "versions.yml:md5,79b7e3fca9c7ede2a11735c875d66bc1",
+                "versions.yml:md5,b3b08753a501b15237ba6c5ae8f2f5eb"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-11-04T13:23:06.582472"
+    }
+}

@@ -1,0 +1,121 @@
+nextflow_process {
+
+    name "Test Process LONGRANGER_ALIGN"
+    script "../main.nf"
+    process "LONGRANGER_ALIGN"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_sangertol"
+    tag "nf-core/gunzip"
+    tag "longranger"
+    tag "longranger/mkref"
+    tag "longranger/align"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall("${launchDir}/library/", ["gunzip"])
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules")
+
+        run("GUNZIP"){
+            script "../../../../nf-core/gunzip/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id: "baUndUnlc1" ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        run("LONGRANGER_MKREF") {
+            script "../../mkref/main.nf"
+            process {
+                """
+                input[0] = GUNZIP.out.gunzip
+                """
+            }
+        }
+    }
+
+    test("undibacterium unclassified") {
+
+        when {
+
+		    params {
+                longranger_align_args = "--disable-ui --nopreflight"
+		    }
+
+			process {
+                """
+                input[0] = [
+                    [ id: "baUndUnlc1" ],
+                    [
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz"),
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz"),
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz")
+					]
+                ]
+                input[1] = LONGRANGER_MKREF.out.reference
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    bam(process.out.bam.get(0).get(1)).getStatistics(),
+                    file(process.out.bai.get(0).get(1)).getName(),
+                    process.out.csv,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules")
+        }
+
+    }
+
+    test("undibacterium unclassified - stub") {
+
+        options "-stub"
+
+        when {
+
+		    params {
+                longranger_align_args = "--disable-ui --nopreflight"
+		    }
+
+            process {
+                """
+                input[0] = [
+                    [ id: "baUndUncl1" ],
+					[
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz"),
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz"),
+						file(params.modules_testdata_base_path + "Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz")
+					]
+                ]
+                input[1] = LONGRANGER_MKREF.out.reference
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules")
+        }
+
+    }
+
+}

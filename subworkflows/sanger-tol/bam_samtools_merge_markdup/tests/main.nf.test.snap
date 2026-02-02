@@ -1,0 +1,68 @@
+{
+    "Undibacterium unclassified - hap1 - no markdup": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 10,
+                    "meanQuality": 50,
+                    "readCount": 11583,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
+                "versions.yml:md5,747adb74c8d8e46aeeb149c9053718b5"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T10:26:47.387869"
+    },
+    "Undibacterium unclassified - hap1 - markdup": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 10,
+                    "meanQuality": 50,
+                    "readCount": 11583,
+                    "duplicateReadCount": 508,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,7816ccaa9f01adce0ee1a5e620e933a1"
+                ]
+            ],
+            [
+                "versions.yml:md5,3810f6c8d241f6e18c118c3eee06c931",
+                "versions.yml:md5,f33b351589ee358c1d3e5252b2cb3ec8"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T10:46:45.75"
+    }
+}

@@ -1,0 +1,80 @@
+{
+    "Undibacterium_unclassified - fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "HiFi.reads.fasta:md5,dca9cfab99e713e33da77b375d728564",
+                        "HiFi.reads.fasta.fxi:md5,3e9c4aa709ec1b185045bfd44d07db22",
+                        "930"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,df71a9c1c15afae42d50c6150e13df66"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "HiFi.reads.fasta:md5,dca9cfab99e713e33da77b375d728564",
+                        "HiFi.reads.fasta.fxi:md5,3e9c4aa709ec1b185045bfd44d07db22",
+                        "930"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,df71a9c1c15afae42d50c6150e13df66"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-11T13:41:12.128676"
+    },
+    "Undibacterium_unclassified - fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "HiFi.reads.fasta:md5,dca9cfab99e713e33da77b375d728564",
+                        "HiFi.reads.fasta.fxi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "100"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,df71a9c1c15afae42d50c6150e13df66"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "HiFi.reads.fasta:md5,dca9cfab99e713e33da77b375d728564",
+                        "HiFi.reads.fasta.fxi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "100"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,df71a9c1c15afae42d50c6150e13df66"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-11T13:41:16.204121"
+    }
+}

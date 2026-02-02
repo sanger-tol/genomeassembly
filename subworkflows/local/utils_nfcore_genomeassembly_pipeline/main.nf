@@ -17,6 +17,7 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { READ_YAML                 } from '../../../modules/local/read_yaml'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,6 +55,26 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    before_text = """
+-\033[2m----------------------------------------------------\033[0m-
+\033[0;34m   _____                               \033[0;32m _______   \033[0;31m _\033[0m
+\033[0;34m  / ____|                              \033[0;32m|__   __|  \033[0;31m| |\033[0m
+\033[0;34m | (___   __ _ _ __   __ _  ___ _ __ \033[0m ___ \033[0;32m| |\033[0;33m ___ \033[0;31m| |\033[0m
+\033[0;34m  \\___ \\ / _` | '_ \\ / _` |/ _ \\ '__|\033[0m|___|\033[0;32m| |\033[0;33m/ _ \\\033[0;31m| |\033[0m
+\033[0;34m  ____) | (_| | | | | (_| |  __/ |        \033[0;32m| |\033[0;33m (_) \033[0;31m| |____\033[0m
+\033[0;34m |_____/ \\__,_|_| |_|\\__, |\\___|_|        \033[0;32m|_|\033[0;33m\\___/\033[0;31m|______|\033[0m
+\033[0;34m                      __/ |\033[0m
+\033[0;34m                     |___/\033[0m
+\033[0;35m  ${workflow.manifest.name} ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------\033[0m-
+        """
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/genomeassembly/blob/main/CITATIONS.md
+"""
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
@@ -63,8 +84,8 @@ workflow PIPELINE_INITIALISATION {
         help,
         help_full,
         show_hidden,
-        "",
-        "",
+        before_text,
+        after_text,
         command
     )
 
@@ -76,32 +97,54 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Logic: Check that purging and polishing parameter strings only contains valid options
     //
+    channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
+        .map { purging, polishing ->
+            def valid_types     = ["primary", "hic_phased", "trio_binned"]
+            def check_purging   = purging.tokenize(",").collect   { type -> type in valid_types }
+            def check_polishing = polishing.tokenize(",").collect { type -> type in valid_types }
 
-    channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+            if(!check_purging.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_purging].join(", ")}")
+            }
+            if(!check_polishing.every()) {
+                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_polishing].join(", ")}")
+            }
         }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+
+    //
+    // Module: Create channels from input file provided through params.input
+    //
+    READ_YAML(file(input))
+
+    //
+    // LOGIC: Create channels for reads for raw assembly input
+    //        [meta, reads, fk_hist, fk_ktab]
+    //
+    ch_long_reads = READ_YAML.out.long_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_hic_reads  = READ_YAML.out.hic_reads.filter      { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_i10x_reads = READ_YAML.out.i10x_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_mat_reads  = READ_YAML.out.maternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+    ch_pat_reads  = READ_YAML.out.paternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+
+    //
+    // LOGIC: Create channels for databases
+    //
+    ch_busco_lineage = READ_YAML.out.busco_lineage
+    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm.filter { list -> !list.isEmpty() }.collect()
+    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm.collect()
 
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    long_reads    = ch_long_reads
+    hic_reads     = ch_hic_reads
+    illumina_10x  = ch_i10x_reads
+    mat_reads     = ch_mat_reads
+    pat_reads     = ch_pat_reads
+    busco_lineage = ch_busco_lineage
+    oatk_mito     = ch_oatk_mito
+    oatk_plastid  = ch_oatk_plastid
+    versions      = ch_versions
 }
 
 /*
@@ -174,7 +217,6 @@ def validateInputSamplesheet(input) {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
@@ -186,7 +228,6 @@ def toolCitationText() {
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
@@ -219,7 +260,6 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["tool_citations"] = ""
     meta["tool_bibliography"] = ""
 
-    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
     // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
     // meta["tool_bibliography"] = toolBibliographyText()
 

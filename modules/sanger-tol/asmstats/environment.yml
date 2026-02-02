@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/modules/environment-schema.json
+---
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::seqtk=1.5
+  - conda-forge::perl=5.32.1
