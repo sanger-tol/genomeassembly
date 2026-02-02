@@ -13,8 +13,8 @@ repos:
         exclude: |
           (?x)^(
               .*ro-crate-metadata.json$|
-              modules/(?!local/)/.*|
-              subworkflows/(?!local/)/.*|
+              modules/(?!local/).*|
+              subworkflows/(?!local/).*|
               .*\.drawio$|
               .*\.snap$
           )$
@@ -22,8 +22,8 @@ repos:
         exclude: |
           (?x)^(
               .*ro-crate-metadata.json$|
-              modules/(?!local/)/.*|
-              subworkflows/(?!local/)/.*|
+              modules/(?!local/).*|
+              subworkflows/(?!local/).*|
               .*\.drawio$|
               .*\.snap$
           )$
