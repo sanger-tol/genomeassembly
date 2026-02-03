@@ -49,7 +49,11 @@ workflow MITOHIFI_ASSEMBLY {
                 hash_match && species_match && organelle_match
             }
             .map { spec, _asm_meta, asm1, asm2, _ref_meta, ref_fa, ref_gb ->
-                return [spec, [asm1, asm2], ref_fa, ref_gb]
+                def params_out = spec.params + [
+                    mitohifi_reference_fa: ref_fa,
+                    mitohifi_reference_gb: ref_gb,
+                ]
+                return [spec + params_out, [asm1, asm2], ref_fa, ref_gb]
             }
 
         ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input
@@ -61,7 +65,11 @@ workflow MITOHIFI_ASSEMBLY {
                 species_match && organelle_match
             }
             .map { spec, _ref_meta, ref_fa, ref_gb ->
-                return [spec, spec.data.long_read.reads, ref_fa, ref_gb]
+                def params_out = spec.params + [
+                    mitohifi_reference_fa: ref_fa,
+                    mitohifi_reference_gb: ref_gb,
+                ]
+                return [spec + params_out, spec.data.long_read.reads, ref_fa, ref_gb]
             }
 
 
@@ -71,8 +79,8 @@ workflow MITOHIFI_ASSEMBLY {
                     ? spec.params.mitohifi_mito_genetic_code
                     : spec.params.mitohifi_plastid_genetic_code
 
-                input: [ spec, input ]
-                reference: [ spec, ref_fa, ref_gb ]
+                input: [spec, input]
+                reference: [spec, ref_fa, ref_gb]
                 method: spec.params.mode
                 code: genetic_code
             }
@@ -114,6 +122,8 @@ workflow MITOHIFI_ASSEMBLY {
                     stage: spec.stage,
                     data: spec.data,
                     params: spec.params,
+                    mitohifi_reference_fa: spec.params.mitohifi_reference_fa,
+                    mitohifi_reference_gb: spec.params.mitohifi_reference_gb,
                     mitohifi_files: valid_publish_files
                 ]
             }

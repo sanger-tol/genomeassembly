@@ -186,6 +186,8 @@ output {
     }
     contigs_mitohifi {
         path { assembly ->
+            assembly.mitohifi_reference_fa >> "${assembly.id}/${assembly.params.organelle}/ref/"
+            assembly.mitohifi_reference_gb >> "${assembly.id}/${assembly.params.organelle}/ref/"
             assembly.mitohifi_files >> "${assembly.id}/${assembly.params.organelle}/"
         }
     }
@@ -225,6 +227,8 @@ output {
     }
     reads_mitohifi {
         path { assembly ->
+            assembly.mitohifi_reference_fa >> "${assembly.id}/ref/"
+            assembly.mitohifi_reference_gb >> "${assembly.id}/ref/"
             assembly.mitohifi_files >> "${assembly.id}/"
         }
     }
