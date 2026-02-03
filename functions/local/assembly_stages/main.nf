@@ -83,11 +83,11 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         } else if (prevHash) {
             dependHash = prevHash
         }
-        hash = (dependHash + hashContent).md5()
+        def hash = (dependHash + hashContent).md5()
 
         // Store the hash in useful places
         stageHashes[stageName] = hash
-        stageSpec = [
+        def stageSpec = [
             stage: stageName,
             id: hash,
             prevID: dependHash,
@@ -138,14 +138,14 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
     }
 
     // Add maternal and paternal haptabs to the dataset
-    if(["maternal", "paternal"] in usedDataTypes && merquryHaptabs) {
+    if(merquryHaptabs && ["maternal", "paternal"] in usedDataTypes) {
         def haptabs = merquryHaptabs.find { data ->
-            data.long_read_dataset == stageDataMap.long_read_dataset &&
-            data.long_read_platform == stageDataMap.long_read_platform &&
-            data.maternal_dataset == stageDataMap.maternal_dataset &&
-            data.maternal_platform == stageDataMap.maternal_platform &&
-            data.paternal_dataset == stageDataMap.paternal_dataset &&
-            data.paternal_platform == stageDataMap.paternal_platform
+            data.long_read_dataset == outputDataMap.long_read_dataset &&
+            data.long_read_platform == outputDataMap.long_read_platform &&
+            data.maternal_dataset == outputDataMap.maternal_dataset &&
+            data.maternal_platform == outputDataMap.maternal_platform &&
+            data.paternal_dataset == outputDataMap.paternal_dataset &&
+            data.paternal_platform == outputDataMap.paternal_platform
         }
 
         outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs.mat_haptab]
@@ -160,7 +160,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
 // stage name, and returns the stage map with the required dataset attached.
 //
 def setupStage(spec, stage) {
-    if(!spec.stages?[stage]) {
+    if (!spec.stages?.get(stage)) {
         return null
     }
 
