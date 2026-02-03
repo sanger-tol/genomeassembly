@@ -136,8 +136,8 @@ workflow {
 output {
     datasets {
         path { dataset ->
-            dataset.fk_hist >> "${dataset.id}/${dataset.platform}/kmer/k${params.kmer_size}/"
-            dataset.fk_ktab >> "${dataset.id}/${dataset.platform}/kmer/k${params.kmer_size}/"
+            dataset.fk_hist >> "fastk/${dataset.id}/${dataset.platform}/k${params.kmer_size}/"
+            dataset.fk_ktab >> "fastk/${dataset.id}/${dataset.platform}/k${params.kmer_size}/"
         }
         enabled params.save_fastk_databases
     }
