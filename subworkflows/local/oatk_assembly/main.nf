@@ -32,7 +32,7 @@ workflow OATK_ASSEMBLY {
     //
     BANDAGE_IMAGE(
         OATK.out.mito_gfa.mix(OATK.out.pltd_gfa, OATK.out.final_gfa)
-            .filter { meta, gfa -> gfa.size() > 0 }
+            .filter { _meta, gfa -> gfa.size() > 0 }
     )
 
     //

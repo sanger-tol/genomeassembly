@@ -22,8 +22,8 @@ workflow SCAFFOLDING {
     //
     ch_hic_mapping_inputs = ch_assemblies
         .combine(ch_scaffolding_specs)
-        .filter { meta, asm1, asm2, spec -> meta.id == spec.prevID }
-        .multiMap { meta, asm1, asm2, spec ->
+        .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
+        .multiMap { _asm_meta, asm1, asm2, spec ->
             hap1: [ spec + [_hap: "hap1"], asm1 ]
             hap2: [ spec + [_hap: "hap2"], asm2 ]
             hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], spec.data.hic.reads ]
@@ -80,8 +80,8 @@ workflow SCAFFOLDING {
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
     ch_assemblies_scaffolded = FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta
-        .filter { meta, scaffolds -> meta._hap == "hap1" }
-        .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta, scaffolds -> meta._hap == "hap2" })
+        .filter { meta, _scaffolds -> meta._hap == "hap1" }
+        .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta, _scaffolds -> meta._hap == "hap2" })
         .map { meta, asm -> [meta - meta.subMap("_hap"), asm] }
         .groupTuple(size: 2)
         .map { meta, asms -> [meta, asms[0], asms[1]] }

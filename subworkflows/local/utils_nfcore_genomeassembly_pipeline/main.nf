@@ -19,6 +19,7 @@ include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
 include { checkDataExists           } from '../../../functions/local/input_validation'
+include { createHmmFilesList        } from '../../../functions/local/input_validation'
 include { validateReadFiles         } from '../../../functions/local/input_validation'
 
 /*
@@ -120,7 +121,7 @@ workflow PIPELINE_INITIALISATION {
             samplesheetToList(asm_specs, "${projectDir}/assets/schema_assembly.json")
         )
         .combine(
-            ch_genomic_data.map { meta, reads, fastk -> meta }.collect().map { metas -> [metas] }
+            ch_genomic_data.map { meta, _reads, _fastk -> meta }.collect().map { metas -> [metas] }
         )
         .map { spec, data_metas ->
             // Check that the data requested for the spec exists in the input data
@@ -154,12 +155,6 @@ workflow PIPELINE_INITIALISATION {
 
             // If assembling with oatk, locate and check the existence of all HMM files
             if(spec.assembler == "oatk") {
-                def hmm_extensions = [".h3f", ".h3i", ".h3m", ".h3p"]
-
-                def createHmmFilesList = { hmmPath ->
-                    hmmPath ? [file(hmmPath, checkIfExists: true)] + hmm_extensions.collect { ext -> file(hmmPath + ext, checkIfExists: true) } : null
-                }
-
                 spec.oatk_mito_hmm = createHmmFilesList(spec.oatk_mito_hmm)
                 spec.oatk_plastid_hmm = createHmmFilesList(spec.oatk_plastid_hmm)
             }

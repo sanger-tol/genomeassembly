@@ -49,3 +49,12 @@ def checkDataExists(spec, datasets) {
         }
     }
 }
+
+//
+// Collect all the required HMM input files from an input HMM file
+//
+def createHmmFilesList(hmmPath) {
+    def hmm_extensions = [".h3f", ".h3i", ".h3m", ".h3p"]
+
+    return [file(hmmPath, checkIfExists: true)] + hmm_extensions.collect { ext -> file(hmmPath + ext, checkIfExists: true) }
+}

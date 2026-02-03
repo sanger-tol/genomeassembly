@@ -8,8 +8,6 @@ workflow ORGANELLE_ASSEMBLY {
     ch_specs
 
     main:
-    ch_versions = channel.empty()
-
     ch_output_specs = ch_specs.map { spec -> spec.subMap(["id", "hashes", "data"]) }.unique()
     ch_oatk_specs = ch_specs.map { spec -> setupStage(spec, "oatk") }.filter { spec -> spec }.unique()
     ch_mitohifi_specs = ch_specs.map { spec -> setupStage(spec, "mitohifi") }.filter { spec -> spec }.unique()

@@ -25,10 +25,10 @@ workflow POLISHING {
         //
         ch_polishing_input = ch_assemblies
             .combine(ch_polishing_specs)
-            .filter { meta, asm1, asm2, spec -> meta.id == spec.prevID }
-            .multiMap { meta, asm1, asm2, spec ->
-                assemblies: [ spec, asm1, asm2 ]
-                polishing_reads_reads: [ spec, spec.data.polishing.reads ]
+            .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
+            .multiMap { _asm_meta, asm1, asm2, spec ->
+                assemblies: [spec, asm1, asm2]
+                polishing_reads_reads: [spec, spec.data.polishing.reads]
             }
 
         //
@@ -50,9 +50,9 @@ workflow POLISHING {
         // Module: Separate back out primary/alt/hap1/hap2 contigs
         //
         ch_polished_assemblies_to_separate = POLISHING_10X.out.polished_assemblies
-            .flatMap { meta, asm, hap ->
+            .flatMap { meta, asm ->
                 return (1..2).collect { count ->
-                    [meta + [_hap: "$hap{count}"], asm]
+                    [meta + [_hap: "hap${count}"], asm]
                 }
             }
 
@@ -112,8 +112,8 @@ workflow POLISHING {
                     params: spec.params,
                     fasta: fasta,
                     bed_chunks: bed_chunks,
-                    longranger_bam: bam,
-                    longranger_bai: bai,
+                    longranger_bam: lr_bam,
+                    longranger_bai: lr_bai,
                     longranger_csv: lr_csv,
                     merged_vcf: vcf,
                     merged_vcf_tbi: tbi

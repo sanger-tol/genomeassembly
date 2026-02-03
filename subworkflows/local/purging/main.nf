@@ -18,8 +18,8 @@ workflow PURGING {
     //
     ch_purging_input = ch_assemblies
         .combine(ch_purging_specs)
-        .filter { meta, asm1, asm2, spec -> meta.id == spec.prevID }
-        .multiMap { meta, asm1, asm2, spec ->
+        .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
+        .multiMap { _asm_meta, asm1, asm2, spec ->
             assemblies: [ spec, asm1, asm2 ]
             long_reads: [ spec, spec.data.long_read.reads ]
         }

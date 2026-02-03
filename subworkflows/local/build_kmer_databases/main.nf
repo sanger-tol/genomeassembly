@@ -63,7 +63,7 @@ workflow BUILD_KMER_DATABASES {
         .filter { platform_key, data_meta, _reads, _fastk ->
             data_meta.id == platform_key.dataset && data_meta.platform == platform_key.platform
         }
-        .map { _platform_key, data_meta, reads, fastk -> [data_meta, reads] }
+        .map { _platform_key, data_meta, reads, _fastk -> [data_meta, reads] }
 
     //
     // Module: Generate YAK kmer databases for maternal and paternal read sets

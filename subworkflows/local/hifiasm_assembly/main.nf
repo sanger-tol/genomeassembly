@@ -34,8 +34,8 @@ workflow HIFIASM_ASSEMBLY {
     ch_hifiasm_input = HIFIASM_BIN.out.bin_files
         .combine(HIFIASM_BIN.out.log, by: 0)
         .combine(ch_assembly_specs)
-        .filter { meta, _bin, _log, spec -> meta.id == spec.prevID }
-        .multiMap { meta, bin, log, spec ->
+        .filter { asm_meta, _bin, _log, spec -> asm_meta.id == spec.prevID }
+        .multiMap { _asm_meta, bin, log, spec ->
             long_reads: [spec, spec.data.long_read.reads, spec.data.ultralong.reads]
             hic: [spec, spec.params.phased_assembly ? spec.data.hic.reads : []]
             trio: [spec, spec.params.trio_assembly ? spec.data.maternal.yak : [], spec.params.trio_assembly ? spec.data.paternal.yak : []]
