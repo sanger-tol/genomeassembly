@@ -58,6 +58,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     )
 
     emit:
+    datasets         = GENOMEASSEMBLY.out.datasets
     hifiasm          = GENOMEASSEMBLY.out.hifiasm
     purging          = GENOMEASSEMBLY.out.purging
     polishing        = GENOMEASSEMBLY.out.polishing
@@ -121,6 +122,7 @@ workflow {
     )
 
     publish:
+    datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets
     hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
     purging          = SANGERTOL_GENOMEASSEMBLY.out.purging
     polishing        = SANGERTOL_GENOMEASSEMBLY.out.polishing
@@ -132,6 +134,13 @@ workflow {
 }
 
 output {
+    datasets {
+        path { dataset ->
+            dataset.fk_hist >> "${dataset.id}/${dataset.platform}/kmer/k${params.kmer_size}/"
+            dataset.fk_ktab >> "${dataset.id}/${dataset.platform}/kmer/k${params.kmer_size}/"
+        }
+        enabled params.save_fastk_databases
+    }
     hifiasm {
         path { assembly ->
             assembly.fasta >> "${assembly.id}/raw/"
