@@ -19,7 +19,7 @@ def validateReadFiles(meta, reads) {
     }
 
     def platform_ext_map = [
-        ["pacbio_hifi", /^fn?(asta)?(\.gz)?$/],
+        ["pacbio_hifi", /^fn?(ast)?a(\.gz)?$/],
         ["oxford_nanopore", /^f(ast)?q(\.gz)?$/],
         ["illumina_hic", /^cram$/],
         ["illumina_10x", /^f(ast)?q(\.gz)?$/],
