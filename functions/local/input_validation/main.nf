@@ -1,6 +1,11 @@
-/*
-   sanger-tol/genomeassembly input validation functions
-*/
+/**
+ * Input validation for sequencing datasets and assembly specifications.
+ *
+ * Functions validate:
+ * - Read file consistency (extensions match platform expectations)
+ * - Dataset existence and availability
+ * - HMMER3 database file integrity
+ */
 
 /**
  * Validates that all read files in a dataset have consistent file extensions and that

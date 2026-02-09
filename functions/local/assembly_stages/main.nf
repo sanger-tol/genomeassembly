@@ -1,13 +1,14 @@
-
-/* ====================================================
-  Assembly specification processing functions
-
-  For simplicity, we pass in the assembly specification in a flat format. We then need to
-  post-process each simplification, identifing unique entries at each step of a specification,
-  and branch points, to reduce extra computation.
-
-  We identify each independent stage of an assembly using a md5 hash.
-  ===================================================== */
+/**
+ * Assembly Specification Processing Functions
+ *
+ * This module transforms a flat assembly specification into a structured specification
+ * for dependency tracking and deduplication. Each assembly stage is uniquely
+ * identified via MD5 hash, enabling:
+ *
+ * - Detection of duplicate work across assembly specifications
+ * - Identification of independent stages
+ * - Stage-level caching and reuse
+ */
 
 /**
  * Transforms a flat assembly specification into a nested structure with stage-specific

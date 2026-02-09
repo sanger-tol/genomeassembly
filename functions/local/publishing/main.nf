@@ -1,6 +1,9 @@
-/*
-    Publishing functions for sanger-tol/genomeassembly
-*/
+/**
+ * Output Publishing Functions
+ *
+ * Transforms internal naming conventions to output-ready formats: platform names
+ * to abbreviations and assembly stages to output directory structures.
+ */
 
 /**
  * Converts sequencing platform names to short abbreviations for file naming.
