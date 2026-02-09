@@ -1,0 +1,71 @@
+name: "yak_count"
+description: a tool to build k-mer hash table for fasta and fastq files
+keywords:
+  - kmer
+  - fastq
+  - sequence
+  - count
+  - assembly
+tools:
+  - "yak":
+      description: "Yet another k-mer analyzer"
+      homepage: "https://github.com/lh3/yak"
+      documentation: "https://github.com/lh3/yak/blob/master/README.md"
+      tool_dev_url: "https://github.com/lh3/yak"
+      licence: ["MIT"]
+      identifier: ""
+extra_args:
+  - "args1":
+      description: Command-line arguments for samtools fastq
+  - "args2":
+      description: Command-line arguments for yak count
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - reads:
+        type: file
+        description: reads fastq/cram file
+        pattern: "*.{fastq.gz,fq.gz,fasta.gz,fa.gz,cram}"
+        ontologies: []
+output:
+  yak:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.yak":
+          type: file
+          description: k-mer hash table of input
+          pattern: "*.{yak}"
+          ontologies: []
+  versions_yak:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - yak:
+          type: string
+          description: The tool name
+      - "yak version":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - yak:
+          type: string
+          description: The tool name
+      - "yak version":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@yumisims"
+  - "@prototaxites"
+maintainers:
+  - "@yumisims"
+  - "@prototaxites"

@@ -12,7 +12,9 @@ process ASMSTATS {
 
     output:
     tuple val(meta), path("*.stats"), emit: stats
-    path "versions.yml"             , emit: versions
+    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    tuple val("${task.process}"), val('asmstats'), eval('echo 1.0.0'), emit: versions_asmstats, topic: versions
+    tuple val("${task.process}"), val('seqtk'), eval('seqtk |& sed "/Version/!d; s/.* //"'), emit: versions_seqtk, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,30 +26,16 @@ process ASMSTATS {
     // nextflow.enable.moduleBinaries = true in your nextflow.config file.
     def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${assembly.getName()}"
-    def VERSION = "1.0.0"
     """
     asmstats \\
         $args \\
         ${assembly} \\
         > ${prefix}.stats
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        asmstats: ${VERSION}
-        seqtk: \$(seqtk |& sed '/Version/!d; s/.* //')
-    END_VERSIONS
     """
 
     stub:
     def prefix  = task.ext.prefix ?: "${meta.id}"
-    def VERSION = "1.0.0"
     """
     touch ${prefix}.stats
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        asmstats: ${VERSION}
-        seqtk: \$(seqtk |& sed '/Version/!d; s/.* //')
-    END_VERSIONS
     """
 }

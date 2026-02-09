@@ -77,7 +77,7 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "25.04.0"
+          - "25.10.3"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
@@ -98,6 +98,7 @@ jobs:
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}

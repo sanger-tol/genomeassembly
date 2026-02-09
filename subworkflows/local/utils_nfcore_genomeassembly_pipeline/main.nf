@@ -17,7 +17,10 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { READ_YAML                 } from '../../../modules/local/read_yaml'
+
+include { checkDataExists           } from '../../../functions/local/input_validation'
+include { createHmmFilesList        } from '../../../functions/local/input_validation'
+include { validateReadFiles         } from '../../../functions/local/input_validation'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,18 +33,17 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
+    genomic_data      //  string: Path to genome data samplesheet
+    asm_specs         //  string: Path to assembly specification samplesheet
+    val_polishing_container_supplied // boolean: whether or not the polishing container was specified
 
     main:
-
-    ch_versions = channel.empty()
-
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
@@ -97,54 +99,72 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Logic: Check that purging and polishing parameter strings only contains valid options
+    // Logic: read raw genomic data from the input sheet and validate the dataset inputs.
     //
-    channel.of([params.purging_assemblytypes, params.polishing_assemblytypes])
-        .map { purging, polishing ->
-            def valid_types     = ["primary", "hic_phased", "trio_binned"]
-            def check_purging   = purging.tokenize(",").collect   { type -> type in valid_types }
-            def check_polishing = polishing.tokenize(",").collect { type -> type in valid_types }
+    ch_genomic_data = channel.fromList(
+            samplesheetToList(genomic_data, "${projectDir}/assets/schema_genomic.json")
+        )
+        .map { meta, reads, fastk ->
+            // Validate that all read files have the same extension and have the correct
+            // file format for the platform
+            validateReadFiles(meta, reads)
 
-            if(!check_purging.every()) {
-                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_purging].join(", ")}")
-            }
-            if(!check_polishing.every()) {
-                log.error("Error: Invalid entries detected in params.purging_assemblytypes: ${input[check_polishing].join(", ")}")
-            }
+            return [ meta, reads, fastk ]
         }
 
     //
-    // Module: Create channels from input file provided through params.input
+    // Logic: read assembly specifications from the assembly specification sheet, and
+    // validate that the requested data entries exist and that the optional tuning arguments
+    // are valid.
     //
-    READ_YAML(file(input))
+    ch_assembly_specs = channel.fromList(
+            samplesheetToList(asm_specs, "${projectDir}/assets/schema_assembly.json")
+        )
+        .combine(
+            ch_genomic_data.map { meta, _reads, _fastk -> meta }.collect().map { metas -> [metas] }
+        )
+        .map { spec, data_metas ->
+            // Check that the data requested for the spec exists in the input data
+            checkDataExists(spec, data_metas)
 
-    //
-    // LOGIC: Create channels for reads for raw assembly input
-    //        [meta, reads, fk_hist, fk_ktab]
-    //
-    ch_long_reads = READ_YAML.out.long_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
-    ch_hic_reads  = READ_YAML.out.hic_reads.filter      { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
-    ch_i10x_reads = READ_YAML.out.i10x_reads.filter     { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
-    ch_mat_reads  = READ_YAML.out.maternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
-    ch_pat_reads  = READ_YAML.out.paternal_reads.filter { _meta, reads, _hist, _ktab -> !reads.isEmpty() }.collect()
+            // Validate check assembly is not both trio and phased
+            if(spec.trio_assembly && spec.phased_assembly) {
+                error("Assembly specification error [${spec.id}]: cannot have both phased_assembly and trio_assembly!")
+            }
 
-    //
-    // LOGIC: Create channels for databases
-    //
-    ch_busco_lineage = READ_YAML.out.busco_lineage
-    ch_oatk_mito     = READ_YAML.out.oatk_mito_hmm.filter { list -> !list.isEmpty() }.collect()
-    ch_oatk_plastid  = READ_YAML.out.oatk_plastid_hmm.collect()
+            // Validate trio assembly inputs
+            if(spec.trio_assembly && (spec.maternal_dataset == spec.paternal_dataset)) {
+                error("Assembly specification error [${spec.id}]: maternal and paternal Illumina datasets are the same")
+            }
+
+            // Validate phased assembly inputs
+            if(spec.phased_assembly && (spec.long_read_dataset != spec.hic_dataset)) {
+                log.warn("Assembly specification warning [${spec.id}]: Phased assembly is enabled, but the long read and Hi-C datasets are not the same. This might lead to incorrect results.")
+            }
+
+            // Organelle assemblers currently only support pacbio hifi
+            if(spec.assembler in ["oatk", "mitohifi"] && spec.long_read_platform == "oxford_nanopore") {
+                error("Assembly specification error [${spec.id}]: oatk and mitohifi currently only support pacbio_hifi inputs!")
+            }
+
+            // Disable polishing and print a warning if it was enabled without supplying a longranger container
+            if(spec.polish && !val_polishing_container_supplied) {
+                log.warn("Assembly specification warning [${spec.id}]: Polishing was enabled but --polishing_longranger_container_path was not set. Polishing will be disabled for this assembly.")
+                spec = spec + [polish: false]
+            }
+
+            // If assembling with oatk, locate and check the existence of all HMM files
+            if(spec.assembler == "oatk") {
+                spec.oatk_mito_hmm = createHmmFilesList(spec.oatk_mito_hmm)
+                spec.oatk_plastid_hmm = createHmmFilesList(spec.oatk_plastid_hmm)
+            }
+
+            return spec
+        }
 
     emit:
-    long_reads    = ch_long_reads
-    hic_reads     = ch_hic_reads
-    illumina_10x  = ch_i10x_reads
-    mat_reads     = ch_mat_reads
-    pat_reads     = ch_pat_reads
-    busco_lineage = ch_busco_lineage
-    oatk_mito     = ch_oatk_mito
-    oatk_plastid  = ch_oatk_plastid
-    versions      = ch_versions
+    specs = ch_assembly_specs
+    data  = ch_genomic_data
 }
 
 /*

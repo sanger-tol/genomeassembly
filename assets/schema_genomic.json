@@ -1,0 +1,69 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/test/test/master/assets/schema_input.json",
+    "title": "Test schema for samplesheets",
+    "description": "Schema for the file provided with params.data_input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Sample identifier for the dataset.",
+                "errorMessage": "Identifier for a dataset must be provided and contain no spaces.",
+                "pattern": "^\\S+$",
+                "meta": "id"
+            },
+            "platform": {
+                "type": "string",
+                "description": "Sequencing platform .",
+                "errorMessage": "Unique identifier for a dataset must be provided and contain no spaces.",
+                "pattern": "^\\S+$",
+                "meta": "platform",
+                "enum": ["pacbio_clr", "pacbio_hifi", "oxford_nanopore", "illumina", "illumina_hic", "illumina_10x"]
+            },
+            "reads": {
+                "type": "array",
+                "description": "List of files containing the sequencing reads for the sample. Can be in FASTA, FASTQ or CRAM format.",
+                "items": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(f(astq|q|n?a(sta)?)(\\.gz)?|cram)$",
+                    "exists": true
+                },
+                "uniqueItems": true
+            },
+            "fastk": {
+                "type": "object",
+                "properties": {
+                    "hist": {
+                        "type": "string",
+                        "format": "file-path",
+                        "description": "FastK histogram .hist file",
+                        "pattern": "^\\S+\\.hist$",
+                        "exists": true
+                    },
+                    "ktab": {
+                        "type": "array",
+                        "description": "List of FastK ktab files, including hidden files.",
+                        "items": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\.?\\S+\\.ktab(\\.\\d+)?$",
+                            "exists": true
+                        }
+                    },
+                    "kmer_size": {
+                        "type": "integer",
+                        "description": "Length of kmer used to generate the FastK database.",
+                        "minimum": 5,
+                        "meta": "kmer_size"
+                    }
+                },
+                "required": ["hist", "ktab", "kmer_size"]
+            }
+        },
+        "required": ["id", "platform", "reads"],
+        "uniqueEntries": ["id", "platform"]
+    }
+}
