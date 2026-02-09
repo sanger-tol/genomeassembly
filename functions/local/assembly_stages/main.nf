@@ -6,7 +6,7 @@
   post-process each simplification, identifing unique entries at each step of a specification,
   and branch points, to reduce extra computation.
 
-  We identify each independent stage of an assembly using a sha256 hash.
+  We identify each independent stage of an assembly using a md5 hash.
   ===================================================== */
 
 /*
@@ -175,7 +175,7 @@ def setupStage(spec, stage) {
     Defines three data config levels:
     bin_data: data required for construction of the base overlap graph
     asm_data: data required to produce a genome assembly and purge it
-    polish_scaff_data: data requried from the polishing stage onwards
+    polish_scaff_data: data required from the polishing stage onwards
 
     And 7 assembly stages:
     bin_assembly: construction of the overlap graph
