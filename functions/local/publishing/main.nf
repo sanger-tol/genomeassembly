@@ -2,9 +2,13 @@
     Publishing functions for sanger-tol/genomeassembly
 */
 
-//
-// Get Shane's short-style name for read platform
-//
+/**
+ * Converts sequencing platform names to short abbreviations for file naming.
+ *
+ * @param platform Full platform name (pacbio_hifi, oxford_nanopore, illumina_10x, illumina_hic, illumina)
+ *
+ * @return Short platform abbreviation (ccs, ont, 10x, illumina) or empty string if unknown
+ */
 def getPlatformShortName(platform) {
     def shortname = ""
     if(platform == "pacbio_hifi") {
@@ -22,9 +26,13 @@ def getPlatformShortName(platform) {
     return shortname
 }
 
-//
-// Convert internal stage names to output dirs
-//
+/**
+ * Maps internal assembly stage names to their corresponding output directory names.
+ *
+ * @param stage Internal stage name (assembly, purging, polishing, scaffolding)
+ *
+ * @return Output directory name (raw, purging, polishing, scaffolding) or null if unknown
+ */
 def stageToAssemblyDir(stage) {
     if (stage == "assembly") { return "raw" }
     if (stage == "purging") { return "purging" }

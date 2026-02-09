@@ -9,44 +9,48 @@
   We identify each independent stage of an assembly using a md5 hash.
   ===================================================== */
 
-/*
-   Process a flat specification for a an assembly, producing a map that nests each
-   stage of an assembly specification. Each stage gets a hash that is built from its
-   data, params, and the hash of the preceeding stage (if specified). This means that
-   the dependency tree of stages can be tracked using md5 sums.
-
-   Takes a paramsConfig - a map of maps, where each key should be the name of a stage
-   and each value is a config describing that stage:
-
-   [
-     data: <a list of dataset names present in the flat spec>
-     params: <a list of param names present in the flat spec>
-     enabled: <an expression evaluating to a boolean that enables this stage>
-     depends: <the name of a previous stage that this stage depends on, or null>
-     extraParams: <a map of extra parameters to add that are not present in the flat spec>
-   ]
-
-   Returns a map describing a nested specification:
-
-   [
-     id: <assembly id>,
-     hashes: <map of key-pair values of stageName -> hash>
-     data: <map of datatypes to data locations>
-     <spec name 1>: <stage map>
-     ...
-     <spec name N>: <stage map>
-   ]
-
-   Where a stage map has the following structure:
-
-   [
-     hash: <md5 hash that identifies the stage>
-     prevHash: <md5 hash of the stage that this stage depends on>
-     data: <map describing the dataset names required by the stage>
-     params: <map containing params to parameterise the stage>
-   ]
-
-*/
+/**
+ * Transforms a flat assembly specification into a nested structure with stage-specific
+ * configurations and dependency tracking via MD5 hashes.
+ *
+ * This function processes each assembly stage defined in paramsConfig, generating unique
+ * MD5 hashes that incorporate the stage's data requirements, parameters, and optionally
+ * the hash of a preceding stage. This hash-based approach enables dependency tracking
+ * throughout the assembly pipeline.
+ *
+ * @param spec A flat map containing the assembly specification with id, assembler,
+ *             dataset references, and parameter values
+ * @param paramsConfig Configuration map defining each assembly stage. Keys are stage names,
+ *                     values are configuration maps with the following structure:
+ *                     [
+ *                       data: <list of dataset names required by this stage>
+ *                       params: <list of parameter names to extract from spec>
+ *                       enabled: <boolean expression to enable/disable this stage>
+ *                       depends: <optional: name of stage this depends on, or null>
+ *                       extraParams: <optional: additional parameters not in spec>
+ *                     ]
+ * @param dataList List of available dataset objects to resolve data references
+ * @param haptabList List of available trio haplotype tables, with information about the
+ *                   child, mother and father
+ *
+ * @return A nested map containing the processed assembly specification:
+ *         [
+ *           id: <original assembly id from spec>
+ *           assembler: <assembler name from spec>
+ *           hashes: <map of stageName to its MD5 hash string>
+ *           data: <consolidated map of all data locations keyed by type>
+ *           stages: <map of stageName to stage configuration>
+ *         ]
+ *
+ *         Each stage configuration in the 'stages' map contains:
+ *         [
+ *           stage: <name of this stage>
+ *           id: <unique MD5 hash identifying this stage configuration>
+ *           prevID: <MD5 hash of the dependent stage, or empty string if none>
+ *           dataList: <list of dataset names this stage requires>
+ *           params: <map of parameter names to values for this stage>
+ *         ]
+ */
 def stageSpec(spec, paramsConfig, dataList, haptabList) {
     def stageHashes = [:]
     def prevHash = null
@@ -108,9 +112,41 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
     return spec.subMap(["id", "assembler"]) + [hashes: stageHashes, data: dataMap, stages: stages]
 }
 
-//
-// Add read file and FASTK dataset data to a spec .data list
-//
+/**
+ * Generates a consolidated data map by resolving dataset references from the assembly
+ * specification and enriching them with haplotype table information when available.
+ *
+ * This function creates a standardized map containing all data types used in genome
+ * assembly (long_read, ultralong, hic, polishing, maternal, paternal). For each data
+ * type referenced in the specification, it looks up the corresponding dataset from
+ * dataList and populates the output map. Additionally, if maternal and paternal datasets
+ * are used, it attempts to locate and attach the appropriate haplotype tables.
+ *
+ * @param spec The assembly specification containing dataset references in the form
+ *             of <datatype>_dataset and <datatype>_platform keys (e.g., long_read_dataset,
+ *             long_read_platform)
+ * @param dataList List of available dataset objects, each containing:
+ *                 [
+ *                   id: <dataset identifier>
+ *                   platform: <sequencing platform>
+ *                   reads: <list of read files>
+ *                   fk_hist: <FASTK histogram files>
+ *                   fk_ktab: <FASTK k-mer table files>
+ *                   yak: <YAK database files>
+ *                   haptab: <haplotype table files>
+ *                 ]
+ * @param merquryHaptabs Optional list of Merqury haplotype table objects that link
+ *                       parental datasets to their corresponding haplotype tables.
+ *                       Each object should contain dataset/platform identifiers and
+ *                       mat_haptab/pat_haptab file references
+ *
+ * @return A map with keys for all supported data types (long_read, ultralong, hic,
+ *         polishing, maternal, paternal). Each key maps to either:
+ *         - A populated dataset object if that data type is used in the spec
+ *         - An empty dataset object with null/empty values if not used
+ *         Maternal and paternal entries will have their haptab field populated if
+ *         matching haplotype tables are found in merquryHaptabs
+ */
 def generateDataMap(spec, dataList, merquryHaptabs) {
 
     // Define an empty dataset specification
@@ -155,10 +191,30 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
     return outputDataMap
 }
 
-//
-// Set up a stage for use in a subworkflow. Takes a whole spec and a
-// stage name, and returns the stage map with the required dataset attached.
-//
+/**
+ * Prepares a specific assembly stage for execution by attaching its required datasets.
+ *
+ * This function extracts a stage configuration from the processed specification and
+ * enriches it with the actual dataset objects needed for that stage. It serves as a
+ * bridge between the stage specification (which only lists dataset names) and the
+ * execution environment (which needs the actual dataset objects).
+ *
+ * @param spec The processed assembly specification returned by stageSpec(), containing:
+ *             - stages: map of stage configurations
+ *             - data: consolidated map of all available datasets
+ * @param stage The name of the stage to set up (must match a key in spec.stages)
+ *
+ * @return A stage configuration map ready for execution:
+ *         [
+ *           stage: <stage name>
+ *           id: <stage MD5 hash>
+ *           prevID: <previous stage hash or empty string>
+ *           dataList: <list of dataset names>
+ *           params: <stage parameters>
+ *           data: <map of dataset name to dataset object for this stage>
+ *         ]
+ *         Returns null if the specified stage does not exist in the spec
+ */
 def setupStage(spec, stage) {
     if (!spec.stages?.get(stage)) {
         return null
@@ -169,23 +225,36 @@ def setupStage(spec, stage) {
     return spec.stages[stage] + [data: stageData]
 }
 
-/*
-    Stage a specification for the Hifiasm assembly process
-
-    Defines three data config levels:
-    bin_data: data required for construction of the base overlap graph
-    asm_data: data required to produce a genome assembly and purge it
-    polish_scaff_data: data required from the polishing stage onwards
-
-    And 7 assembly stages:
-    bin_assembly: construction of the overlap graph
-    assembly: production of the (optionally phased, trio) assembly
-    purging: purging the assembly
-    polishing: polishing the assembly
-    scaffolding: scaffolding the assembly
-    mito: find mitochondrial genome contigs in the assembly
-    plastid: find plastid genome contigs in the assembly
-*/
+/**
+ * Configures and stages an assembly specification for the Hifiasm assembler workflow.
+ *
+ * This function defines the complete pipeline for Hifiasm-based genome assembly, including
+ * data requirements and parameters for each stage. It organizes datasets into three tiers
+ * based on when they're needed in the pipeline, and configures seven distinct assembly
+ * stages with their dependencies and enablement conditions.
+ *
+ * Data configuration tiers:
+ * - bin_data: Datasets for constructing the base overlap graph (long_read only)
+ * - asm_data: Datasets for assembly and purging (adds ultralong, hic, maternal, paternal)
+ * - polish_scaff_data: Datasets for polishing onwards (adds polishing reads)
+ *
+ * Assembly stages (in typical execution order):
+ * 1. bin_assembly: Constructs the overlap graph from long reads
+ * 2. assembly: Produces the genome assembly (optionally phased or trio-based)
+ * 3. purging: Removes duplicates and haplotigs (conditional on spec.purge)
+ * 4. polishing: Polishes the assembly with additional reads (conditional on spec.polish)
+ * 5. scaffolding: Scaffolds contigs using Hi-C data (conditional on spec.scaffold)
+ * 6. mito: Identifies mitochondrial contigs (conditional on spec.find_mito, depends on assembly)
+ * 7. plastid: Identifies plastid contigs (conditional on spec.find_plastid, depends on assembly)
+ *
+ * @param spec The flat assembly specification containing assembler parameters, dataset
+ *             references, and boolean flags (purge, polish, scaffold, find_mito, find_plastid)
+ * @param dataList List of available dataset objects to resolve data references
+ * @param haptabList List of available haplotype table objects for trio assembly
+ *
+ * @return A nested assembly specification with stage configurations and hashes,
+ *         as returned by stageSpec()
+ */
 def stageHifiasmSpec(spec, dataList, haptabList) {
     def DATA_CONFIG = [
         bin_data: ["long_read"],
@@ -257,9 +326,24 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
     return stageSpec(spec, STAGE_CONFIG, dataList, haptabList)
 }
 
-/*
-    Stage a specification for the Oatk assembly process
-*/
+/**
+ * Configures and stages an assembly specification for the Oatk assembler workflow.
+ *
+ * This function defines a simplified single-stage pipeline for organelle assembly with oatk.
+ *
+ * Assembly stage:
+ * - oatk: Performs organelle assembly from long reads.
+ *
+ * @param spec The flat assembly specification containing Oatk parameters, dataset
+ *             references, and configuration values for k-mer size, coverage cutoffs,
+ *             and organelle HMM profiles
+ * @param dataList List of available dataset objects to resolve data references
+ * @param haptabList List of available haplotype table objects (not used by Oatk but
+ *                   required for stageSpec interface compatibility)
+ *
+ * @return A nested assembly specification with stage configurations and hashes,
+ *         as returned by stageSpec()
+ */
 def stageOatkSpec(spec, dataList, haptabList) {
     def OATK_CONFIG = [
         oatk: [
@@ -282,9 +366,23 @@ def stageOatkSpec(spec, dataList, haptabList) {
     stageSpec(spec, OATK_CONFIG, dataList, haptabList)
 }
 
-/*
-    Stage a specification for the Mitohifi assembly process
-*/
+/**
+ * Configures and stages an assembly specification for the MitoHiFi organelle assembler workflow.
+ *
+ * This function defines a single-stage pipeline for MitoHiFi-based mitochondrial genome assembly.
+ *
+ * Assembly stage:
+ * - mitohifi: Assembles mitochondrial genome directly from long reads
+ *
+ * @param spec The flat assembly specification containing MitoHiFi parameters, dataset
+ *             references, reference species name, and mitochondrial genetic code
+ * @param dataList List of available dataset objects to resolve data references
+ * @param haptabList List of available haplotype table objects (not used by MitoHiFi but
+ *                   required for stageSpec interface compatibility)
+ *
+ * @return A nested assembly specification with stage configurations and hashes,
+ *         as returned by stageSpec()
+ */
 def stageMitohifiSpec(spec, dataList, haptabList) {
     def MITOHIFI_CONFIG = [
         mitohifi: [

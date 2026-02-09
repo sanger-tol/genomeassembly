@@ -2,8 +2,32 @@
    sanger-tol/genomeassembly input validation functions
 */
 
-// Validate that all the reads in a dataset have the same file extension, and that
-// the file extensions are correct for the sequencing platform.
+/**
+ * Validates that all read files in a dataset have consistent file extensions and that
+ * those extensions match the expected format for the sequencing platform.
+ *
+ * This function performs two key validations:
+ * 1. Ensures all files in the dataset share the same extension (e.g., all .fastq.gz or all .cram)
+ * 2. Verifies the extension matches the platform's expected format (e.g., PacBio HiFi uses .fasta)
+ *
+ * Supported platforms and their expected extensions:
+ * - pacbio_hifi: .fna, .fa, .fasta (optionally .gz compressed)
+ * - oxford_nanopore: .fq, .fastq (optionally .gz compressed)
+ * - illumina_hic: .cram (uncompressed only)
+ * - illumina_10x: .fq, .fastq (optionally .gz compressed)
+ * - illumina: .cram (uncompressed only)
+ *
+ * @param meta Metadata map containing dataset identifiers:
+ *             [
+ *               id: <dataset identifier>
+ *               platform: <sequencing platform name>
+ *             ]
+ * @param reads List of file objects representing the sequencing read files to validate
+ *
+ * @throws Error if files have inconsistent extensions or if extensions don't match
+ *         the platform requirements. Error messages include the dataset id and platform
+ *         for debugging purposes.
+ */
 def validateReadFiles(meta, reads) {
     // Check that all files have the same extension
     def extensions = reads.collect { file ->
@@ -32,8 +56,27 @@ def validateReadFiles(meta, reads) {
     }
 }
 
-// For each dataset in an assembly specification, check that it exists in the data
-// specification.
+/**
+ * Validates that all datasets referenced in an assembly specification exist in the
+ * available datasets list.
+ *
+ * This function checks that each dataset referenced by the assembly specification
+ * (identified by dataset name and platform) can be found in the provided datasets list.
+ *
+ * Only datasets that are specified (non-null) in the assembly spec are validated.
+ *
+ * @param spec The assembly specification containing dataset references in the form
+ *             of <type>_dataset (dataset name) and <type>_platform (platform name) pairs.
+ *             Must also contain an 'id' field for error reporting.
+ * @param datasets List of available dataset objects, each containing at minimum:
+ *                 [
+ *                   id: <dataset identifier>
+ *                   platform: <sequencing platform name>
+ *                 ]
+ *
+ * @throws Error if any referenced dataset cannot be found in the datasets list.
+ *         Error messages include the assembly id, platform, and dataset name for debugging.
+ */
 def checkDataExists(spec, datasets) {
     def platform_key = [
         [name: 'long_read_dataset', platform: spec.long_read_platform],
@@ -50,9 +93,17 @@ def checkDataExists(spec, datasets) {
     }
 }
 
-//
-// Collect all the required HMM input files from an input HMM file
-//
+/**
+ * Collects all required HMMER3 database files associated with a base HMM profile.
+ *
+ * Returns the base HMM file plus its four required index files (.h3f, .h3i, .h3m, .h3p).
+ *
+ * @param hmmPath Path to the base HMM profile file (without index extensions)
+ *
+ * @return List of file objects: [base HMM file, .h3f, .h3i, .h3m, .h3p]
+ *
+ * @throws FileNotFoundException if any required file cannot be found
+ */
 def createHmmFilesList(hmmPath) {
     def hmm_extensions = [".h3f", ".h3i", ".h3m", ".h3p"]
 
