@@ -50,7 +50,7 @@ nextflow_process {
                         bam(process.out.bam[0][1]).getReadsMD5(),
                         file(process.out.csi[0][1]).getName(),
                         process.out.metrics,
-                        process.out.versions
+                        process.out.findAll { key, val -> key.startsWith("versions") }
                     ).match()
                 }
             )

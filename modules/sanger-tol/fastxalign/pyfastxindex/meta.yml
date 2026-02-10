@@ -15,7 +15,8 @@ tools:
         from plain and gzipped FASTA/Q files. This module aims to provide simple APIs for users to extract
         seqeunce from FASTA and reads from FASTQ by identifier and index number.
       homepage: "https://github.com/lmdu/pyfastx"
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: ""
 input:
   - - meta:
@@ -28,7 +29,8 @@ input:
         description: FASTx file of reads to index
         pattern: "*.{fasta,fa,fasta.gz,fa.gz,fq,fq.gz}"
         ontologies:
-          - edam: "http://edamontology.org/format_2546" # FASTA-like
+          - edam: "http://edamontology.org/format_2546"
+          - edam: http://edamontology.org/format_1930
 output:
   index:
     - - meta:
@@ -41,19 +43,34 @@ output:
           description: FASTx file of reads to index
           pattern: "*.{fasta,fa,fasta.gz,fa.gz,fq,fq.gz}"
           ontologies:
-            - edam: "http://edamontology.org/format_2546" # FASTA-like
+            - edam: "http://edamontology.org/format_2546"
+            - edam: http://edamontology.org/format_1930
       - "*.fxi":
           type: file
           description: pyfastx-format FASTA index file
           pattern: "*.fxi"
           ontologies: []
+  versions_slice_fasta:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - slice_fasta.py:
+          type: string
+          description: The name of the tool
+      - slice_fasta.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - slice_fasta.py:
+          type: string
+          description: The name of the tool
+      - slice_fasta.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

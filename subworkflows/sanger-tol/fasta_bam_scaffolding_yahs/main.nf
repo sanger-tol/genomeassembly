@@ -33,7 +33,6 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
         [[],[]],
         false
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_CONTIGS.out.versions)
 
     //
     // Module: scaffold contigs with YaHS
@@ -57,7 +56,6 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
         [[],[]],
         true
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX_SCAFFOLDS.out.versions)
 
     //
     // Module: Make pairs file to build contact maps with

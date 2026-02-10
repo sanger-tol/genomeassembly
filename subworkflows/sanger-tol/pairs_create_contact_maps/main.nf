@@ -24,7 +24,6 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         ch_pairs.filter { val_build_pretext }, // Pairs file
         [[], [], []]
     )
-    ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
 
     //
     // Module: Make a PNG of the PretextMap for fast viz

@@ -22,7 +22,7 @@ process BEDTOOLS_BAMTOBEDSORT {
     def args1       = task.ext.args1  ?: ""
     def args2       = task.ext.args2  ?: ""
     def args3       = task.ext.args3  ?: ""
-    def st_cores    = task.cpus > 4 ? 4 : "${task.cpus}"
+    def st_cores    = task.cpus > 4 ? 4 : task.cpus
     def buffer_mem  = (task.memory.toGiga() / 2).round()
     """
     samtools view \\

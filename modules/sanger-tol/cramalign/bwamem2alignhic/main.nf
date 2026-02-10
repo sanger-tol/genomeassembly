@@ -14,7 +14,8 @@ process CRAMALIGN_BWAMEM2ALIGNHIC {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('bwamem2'), eval('bwa-mem2 version 2>| grep -o -E "[0-9]+(\\.[0-9]+)+"'), emit: versions_bwamem2, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools --version | head -1 | sed -e "s/samtools //"'), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,23 +47,11 @@ process CRAMALIGN_BWAMEM2ALIGNHIC {
         samtools fixmate ${args4} - - |\\
         samtools view -h ${args5} |\\
         samtools sort ${args6} -@${task.cpus} -T ${prefix}_tmp -o ${prefix}.bam -
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        bwamem2: \$(echo \$(bwa-mem2 version 2>&1) | sed 's/.* //')
-    END_VERSIONS
     """
 
     stub:
     def prefix  = task.ext.prefix ?: "${cram}.${chunkn}.${meta.id}"
     """
     touch ${prefix}.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        bwamem2: \$(echo \$(bwa-mem2 version 2>&1) | sed 's/.* //')
-    END_VERSIONS
     """
 }

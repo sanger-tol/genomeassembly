@@ -17,7 +17,8 @@ tools:
         from plain and gzipped FASTA/Q files. This module aims to provide simple APIs for users to extract
         seqeunce from FASTA and reads from FASTQ by identifier and index number.
       homepage: "https://github.com/lmdu/pyfastx"
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: ""
   - samtools:
       description: |
@@ -27,14 +28,16 @@ tools:
       homepage: http://www.htslib.org/
       documentation: http://www.htslib.org/doc/samtools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:samtools
   - minimap2:
       description: |
         A versatile pairwise aligner for genomic and spliced nucleotide sequences.
       homepage: https://github.com/lh3/minimap2
       documentation: https://github.com/lh3/minimap2#uguide
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: "biotools:minimap2"
 input:
   - - meta:
@@ -47,7 +50,8 @@ input:
         description: FASTx file of reads to map a chunk of
         pattern: "*.{fasta,fa,fasta.gz,fa.gz,fq,fq.gz}"
         ontologies:
-          - edam: "http://edamontology.org/format_2546" # FASTA-like
+          - edam: "http://edamontology.org/format_2546"
+          - edam: http://edamontology.org/format_1930
     - fxi:
         type: file
         description: FXI index file of the input created by pyfastx
@@ -61,17 +65,19 @@ input:
     - index:
         type: file
         description: minimap2 index of the reference to be aligned to
+        ontologies: []
     - reference:
         type: file
-        description: FASTA file or minimap2 index of the reference to be aligned to
+        description: FASTA file or minimap2 index of the reference to be aligned
+          to
         ontologies: []
   - - chunkn:
         type: integer
         description: Integer index of FASTA chunk to map
     - range:
         type: list
-        description: Start and end indices defining FASTA slices to align, 0-indexed
-
+        description: Start and end indices defining FASTA slices to align,
+          0-indexed
   - bam_format:
       type: boolean
       description: Output PAF format or BAM format alignments
@@ -87,7 +93,7 @@ output:
           description: BAM file of mapped sequences
           pattern: "*.bam"
           ontologies:
-            - edam: "http://edamontology.org/format_2572" # BAM
+            - edam: "http://edamontology.org/format_2572"
   paf:
     - - meta:
           type: map
@@ -99,15 +105,67 @@ output:
           description: bgzipped PAF file of mapped sequences
           pattern: "*.paf.gz"
           ontologies:
-            - edam: "http://edamontology.org/format_3475" # TSV
-            - edam: http://edamontology.org/format_3989 # GZIP format
+            - edam: "http://edamontology.org/format_3475"
+            - edam: http://edamontology.org/format_3989
+  versions_slice_fasta:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - slice_fasta.py:
+          type: string
+          description: The name of the tool
+      - slice_fasta.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_minimap2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - minimap2:
+          type: string
+          description: The name of the tool
+      - minimap2 --version | sed "s/minimap2 //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - slice_fasta.py:
+          type: string
+          description: The name of the tool
+      - slice_fasta.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - minimap2:
+          type: string
+          description: The name of the tool
+      - minimap2 --version | sed "s/minimap2 //g":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

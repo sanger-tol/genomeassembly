@@ -1,7 +1,6 @@
 include { BCFTOOLS_VIEW                            } from '../../../modules/nf-core/bcftools/view'
 include { BCFTOOLS_CONSENSUS                       } from '../../../modules/nf-core/bcftools/consensus'
 include { BCFTOOLS_NORM                            } from '../../../modules/nf-core/bcftools/norm'
-include { BCFTOOLS_CONCAT                          } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_SORT                            } from '../../../modules/nf-core/bcftools/sort'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_FB      } from '../../../modules/nf-core/bcftools/index'
 include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_NORM    } from '../../../modules/nf-core/bcftools/index'

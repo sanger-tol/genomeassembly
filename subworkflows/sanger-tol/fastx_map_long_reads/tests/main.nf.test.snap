@@ -28,40 +28,13 @@
             [
                 "test.bam",
                 "test2.bam"
-            ],
-            [
-                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
-                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
-                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
-                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
-                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
-                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
-                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
-                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
-                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-14T09:09:06.147102"
+        "timestamp": "2026-02-10T10:38:20.394754"
     },
     "Undibacterium unclassified - fasta - bam": {
         "content": [
@@ -80,24 +53,13 @@
             ],
             [
                 "test.bam"
-            ],
-            [
-                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
-                "versions.yml:md5,0f8abad8666548b83cdf8a2087056aed",
-                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
-                "versions.yml:md5,e2202eedd003106e612336bcd8036b07",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-14T09:07:02.199662"
+        "timestamp": "2026-02-10T10:36:33.71967"
     },
     "Undibacterium unclassified - fasta - paf": {
         "content": [
@@ -114,21 +76,12 @@
                         "HiFi.reads.fasta.4.test.paf.gz:md5,ee7fdba4b0311d309292f28ada0ef137"
                     ]
                 ]
-            ],
-            [
-                "versions.yml:md5,0c140183a1240ea56d0d489501143554",
-                "versions.yml:md5,ab7cf2afd6c2bc60cfe7452fa4f5282b",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084",
-                "versions.yml:md5,fb7f80773e78298912f0a6f3d80f0084"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-12T11:23:53.888197"
+        "timestamp": "2026-02-10T10:36:03.255886"
     }
 }

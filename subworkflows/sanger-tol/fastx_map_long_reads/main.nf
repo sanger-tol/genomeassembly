@@ -13,8 +13,6 @@ workflow FASTX_MAP_LONG_READS {
     val_output_bam            // boolean: if true output alignments in BAM format
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Logic: rolling check of assembly meta objects to detect duplicates
     //
@@ -32,7 +30,6 @@ workflow FASTX_MAP_LONG_READS {
     // Module: Index FASTA files
     //
     FASTXALIGN_PYFASTXINDEX(ch_fasta.transpose())
-    ch_versions = ch_versions.mix(FASTXALIGN_PYFASTXINDEX.out.versions)
 
     //
     // Logic: Identify FASTA chunks
@@ -66,7 +63,6 @@ workflow FASTX_MAP_LONG_READS {
     // MODULE: generate minimap2 mmi file
     //
     MINIMAP2_INDEX(ch_assemblies)
-    ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
 
     //
     // Module: Map slices of each FASTA file to the reference
@@ -87,7 +83,6 @@ workflow FASTX_MAP_LONG_READS {
         ch_fasta_with_slices.slices,
         val_output_bam
     )
-    ch_versions = ch_versions.mix(FASTXALIGN_MINIMAP2ALIGN.out.versions)
 
     //
     // Logic: Group all PAF files together, using a groupKey to output when
@@ -128,7 +123,6 @@ workflow FASTX_MAP_LONG_READS {
             ch_assemblies,
             false
         )
-        ch_versions = ch_versions.mix(BAM_SAMTOOLS_MERGE_MARKDUP.out.versions)
 
         ch_output_bam       = ch_output_bam.mix(BAM_SAMTOOLS_MERGE_MARKDUP.out.bam)
         ch_output_bam_index = ch_output_bam.mix(BAM_SAMTOOLS_MERGE_MARKDUP.out.bam_index)
@@ -138,5 +132,4 @@ workflow FASTX_MAP_LONG_READS {
     bam       = ch_output_bam
     bam_index = ch_output_bam_index
     paf       = ch_grouped_paf
-    versions  = ch_versions
 }

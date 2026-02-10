@@ -70,7 +70,7 @@ workflow GENOMEASSEMBLY {
     //
     // Collate and save software versions
     //
-    def topic_versions = Channel.topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
@@ -87,14 +87,14 @@ workflow GENOMEASSEMBLY {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name:  'genomeassembly_software_'  + 'versions.yml',
             sort: true,
             newLine: true
-        ).set { ch_collated_versions }
+        )
 
 
     emit:
@@ -107,7 +107,7 @@ workflow GENOMEASSEMBLY {
     statistics        = NUCLEAR_ASSEMBLY.out.statistics
     oatk              = ORGANELLE_ASSEMBLY.out.oatk
     reads_mitohifi    = ORGANELLE_ASSEMBLY.out.reads_mitohifi
-    versions           = ch_versions // channel: [ path(versions.yml) ]
+    versions          = ch_collated_versions // channel: [ path(versions.yml) ]
 
 }
 
