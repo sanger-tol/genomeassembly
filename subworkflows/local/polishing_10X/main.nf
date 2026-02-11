@@ -20,8 +20,7 @@ workflow POLISHING_10X {
     ch_versions = channel.empty()
 
     SAMTOOLS_FAIDX(
-        ch_assemblies,
-        [[:], []],
+        ch_assemblies.map { meta, assembly -> [meta, assembly, []] },
         false)
 
     ch_assemblies_with_index = ch_assemblies.join(SAMTOOLS_FAIDX.out.fai)
