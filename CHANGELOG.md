@@ -16,26 +16,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#110](https://github.com/sanger-tol/genomeassembly/issues/110) Fixed issue with minimap2 mapping settings not being correctly applied at the index building stage (reported by @muffato, fixed by @prototaxites)
+- [#115](https://github.com/sanger-tol/genomeassembly/pull/115) Pipeline now conforms to Nextflow strict syntax (by @prototaxites)
 
 ### Dependencies
 
-| Module              | Tool       | Old version | New version       |
-| ------------------- | ---------- | ----------- | ----------------- |
-| bcftools/concat     | bcftools   | 1.21        | <removed, unused> |
-| bcftools/consensus  | bcftools   | 1.21        | 1.22              |
-| bcftools/index      | bcftools   | 1.21        | 1.22              |
-| bcftools/norm       | bcftools   | 1.21        | 1.22              |
-| bcftools/sort       | bcftools   | 1.21        | 1.22              |
-| bcftools/view       | bcftools   | 1.21        | 1.22              |
-| cat/cat             | pigz       | 2.3.4       | 2.8               |
-| fastk/fastk         | fastk      | 1.1.0       | 1.2               |
-| fastk/histex        | fastk      | 1.1.0       | 1.2               |
-| freebayes           | freebayes  | 1.3.6       | 1.3.10            |
-| gatk4/mergevcfs     | gatk4      | 4.6.1.0     | 4.6.2.0           |
-| merquryfk/hapmaker  | merquryfk  | 1.1.1       | 1.2               |
-| merquryfk/merquryfk | merquryfk  | 1.1.1       | 1.2               |
-| pretextmap          | samtools   | 1.17        | 1.23              |
-| pretextmap          | pretextmap | 0.1.9       | 0.2.3             |
+| Module                  | Tool            | Old version | New version       |
+| ----------------------- | --------------- | ----------- | ----------------- |
+| bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
+| bcftools/consensus      | bcftools        | 1.21        | 1.22              |
+| bcftools/index          | bcftools        | 1.21        | 1.22              |
+| bcftools/norm           | bcftools        | 1.21        | 1.22              |
+| bcftools/sort           | bcftools        | 1.21        | 1.22              |
+| bcftools/view           | bcftools        | 1.21        | 1.22              |
+| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
+| cat/cat                 | pigz            | 2.3.4       | 2.8               |
+| fastk/fastk             | fastk           | 1.1.0       | 1.2               |
+| fastk/histex            | fastk           | 1.1.0       | 1.2               |
+| freebayes               | freebayes       | 1.3.6       | 1.3.10            |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
+| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
+| gfastats                | gfastats        | 1.3.10      | 1.3.11            |
+| gunzip                  | gzip            | <unknown>   | <removed, unused> |
+| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
+| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
+| pretextmap              | samtools        | 1.17        | 1.23              |
+| pretextmap              | pretextmap      | 0.1.9       | 0.2.3             |
+| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5             |
+| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23              |
+| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
 
 ### Deprecated
 
