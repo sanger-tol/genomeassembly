@@ -23,10 +23,8 @@ workflow POLISHING_10X {
         ch_assemblies,
         [[:], []],
         false)
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
 
-    ch_assemblies_with_index = ch_assemblies
-        .join(SAMTOOLS_FAIDX.out.fai)
+    ch_assemblies_with_index = ch_assemblies.join(SAMTOOLS_FAIDX.out.fai)
 
     //
     // Module: Generate references
@@ -70,7 +68,6 @@ workflow POLISHING_10X {
         ch_bed_chunks_awk,
         true
     )
-    ch_versions = ch_versions.mix(GAWK_BED_CHUNKS.out.versions)
 
     //
     // Logic: Generate inputs for freebayes
@@ -109,25 +106,21 @@ workflow POLISHING_10X {
     // Module: Index Freebayes output
     //
     BCFTOOLS_INDEX_FB(FREEBAYES.out.vcf)
-    ch_versions = ch_versions.mix(BCFTOOLS_INDEX_FB.out.versions)
 
     //
     // Logic: Refactor and combine VCF channels for further processing
     //
-    ch_bcftools_view_input = FREEBAYES.out.vcf
-        .combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
+    ch_bcftools_view_input = FREEBAYES.out.vcf.combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
 
     //
     // MODULE: FILTER FREEBAYES RESULTS
     //
     BCFTOOLS_VIEW(ch_bcftools_view_input, [], [], [])
-    ch_versions = ch_versions.mix(BCFTOOLS_VIEW.out.versions)
 
     //
     // Module: Sort filtered VCFs
     //
     BCFTOOLS_SORT(BCFTOOLS_VIEW.out.vcf)
-    ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
 
     //
     // Module: Merge Freebayes results on chunks
@@ -143,7 +136,6 @@ workflow POLISHING_10X {
         ch_merge_freebayes_input,
         [[:], []]
     )
-    ch_versions = ch_versions.mix(GATK4_MERGE_FREEBAYES.out.versions)
 
     //
     // Module: Left-align and normalize indels
@@ -160,13 +152,11 @@ workflow POLISHING_10X {
         ch_bcftools_norm_input.vcf,
         ch_bcftools_norm_input.fasta
     )
-    ch_versions = ch_versions.mix(BCFTOOLS_NORM.out.versions)
 
     //
     // Module: Index normalised variants
     //
     BCFTOOLS_INDEX_NORM(BCFTOOLS_NORM.out.vcf)
-    ch_versions = ch_versions.mix(BCFTOOLS_INDEX_NORM.out.versions)
 
     //
     // Module: Generate consensus FASTA file
@@ -179,7 +169,6 @@ workflow POLISHING_10X {
         }
 
     BCFTOOLS_CONSENSUS(ch_bcftools_consensus_input)
-    ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
     emit:
     polished_assemblies = BCFTOOLS_CONSENSUS.out.fasta

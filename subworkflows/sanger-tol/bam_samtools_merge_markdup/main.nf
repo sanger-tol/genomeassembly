@@ -14,9 +14,8 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     // Module: Index assembly fastas
     //
     SAMTOOLS_FAIDX(
-        ch_assemblies, // reference
-        [ [:],[] ],    // fai
-        false          // get sizes
+        ch_assemblies.map { meta, assembly -> [meta, assembly, []] },
+        false
     )
 
     //
@@ -38,9 +37,7 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
         .combine(ch_fai_gzi, by: 0)
         .multiMap { meta, bams, assembly, fai, gzi ->
             bam:   [ meta, bams ]
-            fasta: [ meta, assembly ]
-            fai:   [ meta, fai ]
-            gzi:   [ meta, gzi ]
+            fasta: [ meta, assembly, fai, gzi ]
         }
 
     //
@@ -49,9 +46,7 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     if(val_mark_duplicates) {
         SAMTOOLS_MERGEDUP(
             ch_samtools_merge_input.bam,
-            ch_samtools_merge_input.fasta,
-            ch_samtools_merge_input.fai,
-            ch_samtools_merge_input.gzi,
+            ch_samtools_merge_input.fasta
         )
 
         ch_output_bam  = SAMTOOLS_MERGEDUP.out.bam.mix(SAMTOOLS_MERGEDUP.out.cram)
@@ -60,9 +55,7 @@ workflow BAM_SAMTOOLS_MERGE_MARKDUP {
     } else {
         SAMTOOLS_MERGE(
             ch_samtools_merge_input.bam,
-            ch_samtools_merge_input.fasta,
-            ch_samtools_merge_input.fai,
-            ch_samtools_merge_input.gzi,
+            ch_samtools_merge_input.fasta
         )
 
         ch_output_bam  = SAMTOOLS_MERGE.out.bam.mix(SAMTOOLS_MERGE.out.cram)

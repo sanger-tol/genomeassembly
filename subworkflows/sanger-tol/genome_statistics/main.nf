@@ -55,7 +55,6 @@ workflow GENOME_STATISTICS {
         [[],[]],             // exclude bed
         [[],[]]              // instructions
     )
-    ch_versions = ch_versions.mix(GFASTATS.out.versions)
 
     //
     // Module: Assess assembly using BUSCO.
@@ -76,7 +75,6 @@ workflow GENOME_STATISTICS {
         [],                                // busco config
         true                               // clean intermediates
     )
-    ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions)
 
     //
     // Module: assess kmer completeness/QV using MerquryFK
@@ -135,5 +133,4 @@ workflow GENOME_STATISTICS {
     merqury_completeness     = MERQURYFK_MERQURYFK.out.stats
     merqury_phased_stats     = MERQURYFK_MERQURYFK.out.phased_block_stats
     merqury_images           = MERQURYFK_MERQURYFK.out.images
-    versions                 = ch_versions
 }

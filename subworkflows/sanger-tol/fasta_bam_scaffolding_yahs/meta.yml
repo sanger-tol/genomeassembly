@@ -102,12 +102,6 @@ output:
         Contact map in Juicer format
         Structure: [ val(meta), path(hic) ]
       pattern: "*.hic"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

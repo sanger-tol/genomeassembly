@@ -35,7 +35,6 @@ workflow POLISHING {
         // Module: Concatenate hap1/hap2 together for polishing
         //
         CONCATENATE_ASSEMBLIES(ch_polishing_input.assemblies)
-        ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
 
         //
         // Subworkflow: run polishing pipeline
@@ -63,7 +62,6 @@ workflow POLISHING {
             ch_polished_assemblies_to_separate,
             []
         )
-        ch_versions = ch_versions.mix(SEPARATE_HAPLOTYPES.out.versions)
 
         //
         // Logic: Take the split assemblies and re-orgnaise into a [meta, hap1, hap2] format
@@ -90,7 +88,6 @@ workflow POLISHING {
             .transpose()
 
         BGZIP_POLISHED(ch_bgzip_input)
-        ch_versions = ch_versions.mix(BGZIP_POLISHED.out.versions)
 
         //
         // Logic: combine all polishing outputs into a single map for ease of publishing

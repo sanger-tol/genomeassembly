@@ -9,9 +9,7 @@ process SAMTOOLS_MERGEDUP {
 
     input:
     tuple val(meta) , path(input)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fai)
-    tuple val(meta4), path(gzi)
+    tuple val(meta2), path(fasta), path(fai),  path(gzi)
 
     output:
     tuple val(meta), path("*.bam")      , emit: bam,  optional: true

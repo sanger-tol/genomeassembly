@@ -8,8 +8,6 @@ workflow HIFIASM_ASSEMBLY {
     ch_assembly_specs     // channel: spec
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Module: Run Hifiasm but only generate the .bin files
     //
@@ -65,7 +63,6 @@ workflow HIFIASM_ASSEMBLY {
         .transpose()
 
     BGZIP_HIFIASM(ch_bgzip_input)
-    ch_versions = ch_versions.mix(BGZIP_HIFIASM.out.versions)
 
     //
     // Logic: combine all hifiasm outputs into a single map for ease of publishing
@@ -113,5 +110,4 @@ workflow HIFIASM_ASSEMBLY {
     emit:
     hifiasm_assemblies = ch_assemblies_fasta
     hifiasm_output = ch_hifiasm_output
-    versions = ch_versions
 }

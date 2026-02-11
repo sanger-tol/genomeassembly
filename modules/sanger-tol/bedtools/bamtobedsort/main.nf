@@ -4,15 +4,16 @@ process BEDTOOLS_BAMTOBEDSORT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/cf/cf65e22485bc417775bef295e324b214d5a4ddfea5c3cbfedf8623bf8af55612/data' :
-        'community.wave.seqera.io/library/bedtools_samtools_coreutils:43e34cbcf7cfff84' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/7a/7a011a9c08762afa2e8f56f8bc27b8c4acabf6d7e3f922febed2cdb279a2e5da/data' :
+        'community.wave.seqera.io/library/bedtools_htslib_samtools_coreutils:c291642efc7551d0' }"
 
     input:
     tuple val(meta), path(bam)
 
     output:
     tuple val(meta), path("*.bed"), emit: sorted_bed
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('bedtools'), eval('bedtools --version | sed -e "s/bedtools v//g"'), emit: versions_bedtools, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools version | sed "1!d;s/.* //"'), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -35,23 +36,11 @@ process BEDTOOLS_BAMTOBEDSORT {
         -S ${buffer_mem}G \\
         -T . > \\
     ${prefix}.bed
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bed
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        bedtools: \$(bedtools --version | sed -e "s/bedtools v//g")
-    END_VERSIONS
     """
 }

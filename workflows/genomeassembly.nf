@@ -44,7 +44,6 @@ workflow GENOMEASSEMBLY {
         ch_data,
         val_kmer_size
     )
-    ch_versions = ch_versions.mix(PREPARE_INPUTS.out.versions)
 
     //
     // Subworkflow: perform assembly of nuclear genome
