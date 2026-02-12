@@ -12,6 +12,7 @@ workflow NUCLEAR_ASSEMBLY {
     ch_specs
     val_fastx_reads_per_chunk
     val_polishing_container_provided
+    val_sequences_per_polishing_chunk
     val_hic_aligner
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
@@ -60,7 +61,8 @@ workflow NUCLEAR_ASSEMBLY {
     POLISHING(
         ch_polishing_specs,
         ch_assemblies,
-        val_polishing_container_provided
+        val_polishing_container_provided,
+        val_sequences_per_polishing_chunk
     )
     ch_versions = ch_versions.mix(POLISHING.out.versions)
     ch_assemblies = ch_assemblies.mix(POLISHING.out.polished_assemblies)

@@ -27,6 +27,7 @@ workflow GENOMEASSEMBLY {
     val_kmer_size
     val_fastx_reads_per_chunk
     val_polishing_container_provided
+    val_sequences_per_polishing_chunk
     val_hic_aligner
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
@@ -52,6 +53,7 @@ workflow GENOMEASSEMBLY {
         PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["hifiasm"] },
         val_fastx_reads_per_chunk,
         val_polishing_container_provided,
+        val_sequences_per_polishing_chunk,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,

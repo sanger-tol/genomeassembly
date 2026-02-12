@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "bedchunks_create"
+description: Create a set of BED files, each describing a chunk of a FASTA
+keywords:
+  - fai
+  - bed
+  - chunking
+tools:
+  - "gawk":
+      description: "GNU awk"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/"
+      tool_dev_url: "https://www.gnu.org/prep/ftp.html"
+      licence: ["GPL v3"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - fai:
+        type: file
+        description: Sorted BAM/CRAM/SAM file
+        pattern: "*.{fai}"
+        ontologies:
+          - edam: "http://edamontology.org/format_3475" # TSV
+  - chunk_size:
+      type: integer
+      description: The number of sequences to include per chunk
+output:
+  bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.bed":
+          type: file
+          description: Sorted BAM/CRAM/SAM file
+          pattern: "*.{bed}"
+          ontologies:
+            - edam: "http://edamontology.org/format_3003" # BED
+  versions_gawk:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - "gawk":
+          type: string
+          description: The name of the tool
+      - gawk -Wversion | sed "1!d; s/.*Awk //; s/,.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - gawk -Wversion | sed "1!d; s/.*Awk //; s/,.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

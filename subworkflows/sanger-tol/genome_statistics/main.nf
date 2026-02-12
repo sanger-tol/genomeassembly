@@ -12,8 +12,6 @@ workflow GENOME_STATISTICS {
     val_busco_lineage_directory // path: path to local busco lineages directory - optional
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Logic: rolling check of assembly meta objects to detect duplicates
     //
