@@ -61,8 +61,7 @@ nextflow_workflow {
             assertAll(
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
-                    workflow.out.bam_index.collect { file(it.get(1)).getName() },
-                    workflow.out.versions
+                    workflow.out.bam_index.collect { file(it.get(1)).getName() }
                 ).match() }
             )
         }
@@ -105,8 +104,7 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
                     workflow.out.bam_index.collect { file(it.get(1)).getName() },
-                    workflow.out.metrics,
-                    workflow.out.versions
+                    workflow.out.metrics
                 ).match() }
             )
         }

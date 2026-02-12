@@ -36,6 +36,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     val_kmer_size
     val_fastx_reads_per_chunk
     val_polishing_container_provided
+    val_sequences_per_polishing_chunk
     val_hic_aligner
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
@@ -51,6 +52,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         val_kmer_size,
         val_fastx_reads_per_chunk,
         val_polishing_container_provided,
+        val_sequences_per_polishing_chunk,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,
@@ -103,6 +105,7 @@ workflow {
         params.kmer_size,
         params.purging_reads_chunk_size,
         params.polishing_longranger_container_path,
+        params.polishing_n_chunks_bed,
         params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
         params.scaffolding_cool_bin_size,
@@ -166,7 +169,6 @@ output {
     polishing {
         path { assembly ->
             assembly.fasta >> "${assembly.id}/polishing/"
-            assembly.bed_chunks >> "${assembly.id}/polishing/chunks/"
             assembly.longranger_bam >> "${assembly.id}/polishing/aln/"
             assembly.longranger_bai >> "${assembly.id}/polishing/aln/"
             assembly.longranger_csv >> "${assembly.id}/polishing/aln/"

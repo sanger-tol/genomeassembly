@@ -16,7 +16,8 @@ tools:
       documentation: "https://github.com/c-zhou/yahs"
       tool_dev_url: "https://github.com/c-zhou/yahs"
       doi: "10.1093/bioinformatics/btac808"
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:yahs
 input:
   - - meta:
@@ -31,14 +32,14 @@ input:
           make a pairs file for
         pattern: "*.fai"
         ontologies:
-          - edam: "http://edamontology.org/format_3475" # TSV
+          - edam: "http://edamontology.org/format_3475"
     - scaffolds_agp:
         type: file
         description: |
           AGP file describing the mapping of raw contigs to scaffolds
         pattern: "*.agp"
         ontologies:
-          - edam: "http://edamontology.org/format_3693" # AGP
+          - edam: "http://edamontology.org/format_3693"
     - contigs_fai:
         type: file
         description: |
@@ -46,7 +47,7 @@ input:
           make a pairs file for
         pattern: "*.fai"
         ontologies:
-          - edam: "http://edamontology.org/format_3475" # TSV
+          - edam: "http://edamontology.org/format_3475"
     - contigs_contacts:
         type: file
         description: |
@@ -54,9 +55,9 @@ input:
           contacts between contigs
         pattern: "*.{bam,bed,bin,pa5}"
         ontologies:
-          - edam: "http://edamontology.org/format_2572" # BAM
-          - edam: "http://edamontology.org/format_3003" # BED
-          - edam: "http://edamontology.org/format_3475" # TSV
+          - edam: "http://edamontology.org/format_2572"
+          - edam: "http://edamontology.org/format_3003"
+          - edam: "http://edamontology.org/format_3475"
 output:
   pairs:
     - - meta:
@@ -70,14 +71,67 @@ output:
             Pairs file describing Hi-C contacts between scaffolds
           pattern: "*.pairs.gz"
           ontologies:
-            - edam: "http://edamontology.org/format_3475" # TSV
+            - edam: "http://edamontology.org/format_3475"
+            - edam: http://edamontology.org/format_3989
+  versions_juicerpre:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - juicer_pre:
+          type: string
+          description: The name of the tool
+      - juicer pre --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_gawk:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - awk -Wversion | sed "1!d; s/.*Awk //; s/,.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_sort:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sort:
+          type: string
+          description: The name of the tool
+      - sort --version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: "http://edamontology.org/format_3750" # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - juicer_pre:
+          type: string
+          description: The name of the tool
+      - juicer pre --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - awk -Wversion | sed "1!d; s/.*Awk //; s/,.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sort:
+          type: string
+          description: The name of the tool
+      - sort --version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

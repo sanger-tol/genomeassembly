@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/modules/master/subworkflows/yaml-schema.json
+name: "fasta_10x_polishing_longranger_freebayes"
+description: Align 10X data using Longranger and FreeBayes to a genome assembly and polish
+keywords:
+  - polishing
+  - variant calling
+  - vcf
+  - bam
+components:
+  - bedchunks/create
+  - longranger/align
+  - longranger/mkref
+  - bcftools/consensus:
+      git_remote: https://github.com/nf-core/modules.git
+  - bcftools/index:
+      git_remote: https://github.com/nf-core/modules.git
+  - bcftools/norm:
+      git_remote: https://github.com/nf-core/modules.git
+  - bcftools/sort:
+      git_remote: https://github.com/nf-core/modules.git
+  - bcftools/view:
+      git_remote: https://github.com/nf-core/modules.git
+  - cat/cat:
+      git_remote: https://github.com/nf-core/modules.git
+  - freebayes:
+      git_remote: https://github.com/nf-core/modules.git
+  - gatk4/mergevcfs:
+      git_remote: https://github.com/nf-core/modules.git
+  - samtools/faidx:
+      git_remote: https://github.com/nf-core/modules.git
+  - seqkit/grep:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_assemblies:
+      description: |
+        Input assemblies to be polished. Should be a concatenation of all haplotypes.
+
+        Structure: [meta, fasta]
+  - ch_illumina_10x_reads:
+      description: |
+        Illumina 10X reads to use for polishing, in FastQ format.
+
+        Strucure: [meta, [reads]]
+output:
+  - polished_assembly:
+      description: The final polished assemblies
+  - assembly_consensus:
+      description: The consensus polished assembly output by bcftools/consensus, containing all haplotypes
+  - longranger_bam:
+      description: BAM file of mapped 10X reads to the combined assembly by Longranger
+  - longranger_bai:
+      description: BAM index of Longranger BAM
+  - longranger_summary:
+      description: CSV file describing longranger mapping results
+  - merged_vcf:
+      description: Merged VCF of variants called by Freebayes across the combined assembly
+  - merged_vcf_tbi:
+      description: Index for VCF
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

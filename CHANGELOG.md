@@ -3,15 +3,76 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0dev - TBD - [TBD]
+## v1.0dev - TDB - [TDB]
 
-### `Added`
+### Added
 
-### `Fixed`
+- [#109](https://github.com/sanger-tol/genomeassembly/pull/109) Split the pipeline inputs into two separate samplesheets (by @prototaxites).
+- `--genomic_data` describes the specific datasets available to produce an assembly, including the sample name, sequencing platform, path to the sequencing data, and optional paths to FastK databases built from the reads.
+- `--assembly_specs` describes the assemblies to build as a function of the provided datasets, including parameters for assembly at different stages, and the choice of genome assembler (currently hifiasm for nuclear genome assembly, or oatk and mitohifi for organellar genome assembly) .
+- For nuclear assemblies, each assembly is split into stages (overlap graph construction, raw assembly, purging, polishing, and scaffolding). The inputs for each stage (including raw data, previous assembly, and params) are hashed and deduplicated, so that when assemblies share the same stage the computation is only executed once. Thus, two identical assembly specifications in the input sheet would only result in one set of genome assemblies being processed, but published twice, and two assemblies that differ only in scaffolding parameters would result in a single computation running until branching into two at the scaffolding stage.
+- For organellar assemblies, available assemblers are oatk (mitochondrial and plastid genomes) and mitohifi (mitochondrial genomes) and use the same staging logic, although they presently only have a single stage. These are also de-duplicated prior to running.
 
-### `Dependencies`
+### Fixed
 
-### `Deprecated`
+- [#110](https://github.com/sanger-tol/genomeassembly/issues/110) Fixed issue with minimap2 mapping settings not being correctly applied at the index building stage (reported by @muffato, fixed by @prototaxites)
+- [#115](https://github.com/sanger-tol/genomeassembly/pull/115) Pipeline now conforms to Nextflow strict syntax (by @prototaxites)
+
+### Dependencies
+
+| Module                  | Tool            | Old version | New version       |
+| ----------------------- | --------------- | ----------- | ----------------- |
+| bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
+| bcftools/consensus      | bcftools        | 1.21        | 1.22              |
+| bcftools/index          | bcftools        | 1.21        | 1.22              |
+| bcftools/norm           | bcftools        | 1.21        | 1.22              |
+| bcftools/sort           | bcftools        | 1.21        | 1.22              |
+| bcftools/view           | bcftools        | 1.21        | 1.22              |
+| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
+| cat/cat                 | pigz            | 2.3.4       | 2.8               |
+| fastk/fastk             | fastk           | 1.1.0       | 1.2               |
+| fastk/histex            | fastk           | 1.1.0       | 1.2               |
+| freebayes               | freebayes       | 1.3.6       | 1.3.10            |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
+| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
+| gfastats                | gfastats        | 1.3.10      | 1.3.11            |
+| gunzip                  | gzip            | <unknown>   | <removed, unused> |
+| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
+| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
+| pretextmap              | samtools        | 1.17        | 1.23              |
+| pretextmap              | pretextmap      | 0.1.9       | 0.2.3             |
+| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5             |
+| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23              |
+| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
+
+### Deprecated
+
+A lot of parameters have been deprecated, and replaced with fields in the assembly specification samplesheet.
+
+| Parameter                            | Replacement                                  |
+| ------------------------------------ | -------------------------------------------- |
+| `--input`                            | `--genomic_data`, `--assembly_specs`         |
+| `--enable_hic_phasing`               | `phased_assembly` in assembly spec           |
+| `--enable_trio_binning`              | `trio_assembly` in assembly spec             |
+| `--hifiasm_error_correction_options` | `hifiasm_bin_arguments` in assembly spec     |
+| `--hifiasm_assembly_options`         | `hifiasm_arguments` in assembly spec         |
+| `--purging_assemblytypes`            | `purge: true` in assembly spec               |
+| `--purging_purge_middle`             | `purge_middle: true` in assembly spec        |
+| `--purging_cutoffs`                  | `purging_cutoffs` in assembly spec           |
+| `--enable_organelle_assembly`        | `assembler: <oatk,mitohifi> in assembly spec |
+| `--mitohifi_reads_args`              | `mitohifi_arguments` in assembly spec        |
+| `--mitohifi_contigs_args`            | `mitohifi_arguments` in assembly spec        |
+| `--oatk_kmer_size`                   | `oatk_kmer_size` in assembly spec            |
+| `--oatk_coverage`                    | `oatk_coverage_cutoff` in assembly spec      |
+| `--enable_polishing`                 | `polish: true` in assembly spec              |
+| `--polishing_assemblytypes`          | `polish: true` in assembly spec              |
+| `--enable_scaffolding`               | `scaffold: true` in assembly spec            |
+| `--yahs_break_contigs`               | `yahs_arguments` in assembly spec            |
+| `--yahs_resolutions`                 | `yahs_arguments` in assembly spec            |
+| `--yahs_min_contig_length`           | `yahs_arguments` in assembly spec            |
 
 ## v0.50.0 - Threadtail - [2025-12-16]
 

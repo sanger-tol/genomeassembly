@@ -13,8 +13,6 @@ workflow SCAFFOLDING {
     val_cool_bin                    // int > 1
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Logic: join all the assemblies with the scaffolding specifications and
     // data, filter for those assemblies which are to be scaffolded, then
@@ -38,7 +36,6 @@ workflow SCAFFOLDING {
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
     )
-    ch_versions = ch_versions.mix(CRAM_MAP_ILLUMINA_HIC.out.versions)
 
     //
     // Subworkflow: Calculate stats for Hi-C mapping
@@ -55,7 +52,6 @@ workflow SCAFFOLDING {
         ch_hic_mapping_stats_input.bam,
         ch_hic_mapping_stats_input.asm
     )
-    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     //
     // Subworkflow: scaffold assemblies using yahs and create contact maps
@@ -68,13 +64,11 @@ workflow SCAFFOLDING {
         true,
         val_cool_bin
     )
-    ch_versions = ch_versions.mix(FASTA_BAM_SCAFFOLDING_YAHS.out.versions)
 
     //
     // Module: bgzip all scaffolded assembly fasta
     //
     BGZIP_SCAFFOLDED(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta)
-    ch_versions = ch_versions.mix(BGZIP_SCAFFOLDED.out.versions)
 
     //
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
@@ -132,5 +126,4 @@ workflow SCAFFOLDING {
     emit:
     scaffolded_assemblies = ch_assemblies_scaffolded
     scaffolding_output = ch_scaffolding_output
-    versions = ch_versions
 }

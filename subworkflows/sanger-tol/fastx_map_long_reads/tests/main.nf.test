@@ -53,10 +53,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert snapshot(
-                    workflow.out.paf,
-                    workflow.out.versions
-                ).match() }
+                { assert snapshot(workflow.out.paf).match() }
             )
         }
         cleanup {
@@ -89,7 +86,6 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
                     workflow.out.bam_index.collect { file(it.get(1)).getName() },
-                    workflow.out.versions
                 ).match() }
             )
         }
@@ -139,7 +135,6 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() }.sort(),
                     workflow.out.bam_index.collect { file(it.get(1)).getName() }.sort(),
-                    workflow.out.versions
                 ).match() }
             )
         }

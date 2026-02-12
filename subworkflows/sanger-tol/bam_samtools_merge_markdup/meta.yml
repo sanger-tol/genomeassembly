@@ -48,12 +48,6 @@ output:
         Channel containing markdup metrics, if duplicates marked
         Structure: [ val(meta), path(index) ]
       pattern: "*.{bai,csi,crai}"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

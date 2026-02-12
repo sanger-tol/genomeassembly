@@ -47,7 +47,6 @@ workflow PURGING {
         .transpose()
 
     BGZIP_PURGED(ch_bgzip_input)
-    ch_versions = ch_versions.mix(BGZIP_PURGED.out.versions)
 
     //
     // Logic: combine all purging outputs into a single map for ease of publishing

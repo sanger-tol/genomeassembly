@@ -14,7 +14,10 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('minimap2'), eval('minimap2 --version | sed "s/minimap2 //g"'), emit: versions_minimap2, topic: versions
+    tuple val("${task.process}"), val('gawk'), eval('gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1'), emit: versions_gawk, topic: versions
+    tuple val("${task.process}"), val('filter_five_end.pl'), eval('echo 1.0'), emit: versions_filterfiveend, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools --version | head -1 | sed -e "s/samtools //"'), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -60,25 +63,11 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
         samtools fixmate ${args4} - - |\\
         samtools view -h ${args5} |\\
         samtools sort ${args6} -@${task.cpus} -T ${prefix}_tmp -o ${prefix}.bam -
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-        gawk: \$(gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1)
-    END_VERSIONS
     """
 
     stub:
     def prefix  = task.ext.prefix ?: "${cram}.${chunkn}.${meta.id}"
     """
     touch ${prefix}.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-        gawk: \$(gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1)
-    END_VERSIONS
     """
 }

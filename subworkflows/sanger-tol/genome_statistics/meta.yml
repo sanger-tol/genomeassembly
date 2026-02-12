@@ -96,12 +96,6 @@ output:
 
         Structure: [ val(meta), path(image) ]
       pattern: "*.{png,pdf}"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

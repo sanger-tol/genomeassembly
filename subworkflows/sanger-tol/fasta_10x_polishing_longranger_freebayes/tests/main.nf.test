@@ -1,0 +1,89 @@
+// nf-core subworkflows test fasta_10x_polishing_longranger
+nextflow_workflow {
+
+    name "Test Subworkflow FASTA_10X_POLISHING_LONGRANGER_FREEBAYES"
+    script "../main.nf"
+    workflow "FASTA_10X_POLISHING_LONGRANGER_FREEBAYES"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/fasta_10x_polishing_longranger_freebayes"
+    tag "subworkflows/../../modules/nf-core/bcftools/view"
+    tag "subworkflows/../../modules/nf-core/bcftools/consensus"
+    tag "subworkflows/../../modules/nf-core/bcftools/norm"
+    tag "subworkflows/../../modules/nf-core/bcftools/sort"
+    tag "subworkflows/../../modules/nf-core/bcftools/index"
+    tag "subworkflows/../../modules/nf-core/cat/cat"
+    tag "subworkflows/../../modules/nf-core/freebayes"
+    tag "subworkflows/../../modules/nf-core/gatk4/mergevcfs"
+    tag "subworkflows/../../modules/nf-core/samtools/faidx"
+    tag "subworkflows/../../modules/nf-core/seqkit/grep"
+    tag "bedchunks/create"
+    tag "longranger/mkref"
+    tag "longranger/align"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                'bcftools/view',
+                'bcftools/consensus',
+                'bcftools/norm',
+                'bcftools/sort',
+                'bcftools/index',
+                'cat/cat',
+                'freebayes',
+                'gatk4/mergevcfs',
+                'samtools/faidx',
+                'seqkit/grep'
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+    }
+
+    test("Undibacterium_unclassified - 10x") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'test' ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap2.p_ctg.fa', checkIfExists: true)
+                        ]
+                    ]
+                )
+                input[1] = Channel.of(
+                    [
+                        [ id: 'test' ],
+                        [
+                            file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz', checkIfExists: true)
+                        ]
+                    ]
+                )
+                input[2] = 100
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+				    workflow.out.polished_assemblies,
+					workflow.out.assembly_consensus,
+				    workflow.out.longranger_bam.collect { ch -> bam(ch.get(1)).getStatistics() },
+				    workflow.out.longranger_bai.collect { ch -> file(ch.get(1)).name },
+					workflow.out.longranger_summary,
+					workflow.out.merged_vcf.collect { ch -> path(ch.get(1)).vcf.summary },
+					workflow.out.merged_vcf_tbi.collect { ch -> file(ch.get(1)).name }
+				).match() }
+            )
+        }
+    }
+}

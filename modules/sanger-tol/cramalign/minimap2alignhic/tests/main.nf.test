@@ -69,7 +69,7 @@ nextflow_process {
                 {
                     assert snapshot(
                         bam(process.out.bam.get(0).get(1)).getReadsMD5(),
-                        process.out.versions
+                        process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )
@@ -120,7 +120,7 @@ nextflow_process {
                 {
                     assert snapshot(
                         bam(process.out.bam.get(0).get(1)).getReadsMD5(),
-                        process.out.versions
+                        process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )

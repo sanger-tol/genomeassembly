@@ -14,14 +14,14 @@ workflow PREPARE_INPUTS {
     val_kmer_size
 
     main:
-    ch_versions = channel.empty()
-
+    //
+    // Subworkflow: build kmer databases from inputs
+    //
     BUILD_KMER_DATABASES(
         ch_specs,
         ch_data,
         val_kmer_size
     )
-    ch_versions = ch_versions.mix(BUILD_KMER_DATABASES.out.versions)
 
     //
     // Module: FastK histogram to ASCII for Genomescope.
@@ -36,7 +36,6 @@ workflow PREPARE_INPUTS {
     // Module: Estimate nuclear coverage with Genomescope
     //
     GENOMESCOPE2(FASTK_HISTEX.out.hist)
-    ch_versions = ch_versions.mix(GENOMESCOPE2.out.versions)
 
     ch_coverage = GENOMESCOPE2.out.model
         .map { meta, model ->
@@ -91,5 +90,4 @@ workflow PREPARE_INPUTS {
     emit:
     specs    = ch_out_assembly_specs
     datasets = BUILD_KMER_DATABASES.out.data
-    versions = ch_versions
 }

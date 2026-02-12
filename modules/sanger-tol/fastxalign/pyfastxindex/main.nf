@@ -4,15 +4,15 @@ process FASTXALIGN_PYFASTXINDEX {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/637ecb387eaafe0b1689e3e32c5eda589e016cfd46c482946425181f69f0733e/data' :
-        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_click:bfd8f60cc27aa6d6' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e3/e3e96ee4627b21402c6503d365bdc27e61f3ef5ae6dbeeda02b70a7157f2de9d/data' :
+        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_pruned:58888de833fa75ea' }"
 
     input:
     tuple val(meta), path(fastx)
 
     output:
     tuple val(meta), path(fastx), path("*.fxi"), stdout, emit: index
-    path "versions.yml"                        , emit: versions
+    tuple val("${task.process}"), val('slice_fasta.py'), eval('slice_fasta.py --version'), emit: versions_slice_fasta, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,11 +28,6 @@ process FASTXALIGN_PYFASTXINDEX {
     slice_fasta.py index \\
         ${fastx} \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-    END_VERSIONS
     """
 
     stub:
@@ -40,10 +35,5 @@ process FASTXALIGN_PYFASTXINDEX {
     touch ${fastx}.fxi
     ## output dummy count to stdout
     echo -n 100
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-    END_VERSIONS
     """
 }

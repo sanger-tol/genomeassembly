@@ -51,12 +51,6 @@ output:
         Channel containing PAF files
         Structure: [ val(meta), path(paf) ]
       pattern: "*.paf"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

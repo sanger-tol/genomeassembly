@@ -4,7 +4,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::samtools=1.22.1
+  - bioconda::htslib=1.23
+  - bioconda::samtools=1.23
   - bioconda::yahs=1.2.2
   - conda-forge::coreutils=9.5
   - conda-forge::gawk=5.3.1

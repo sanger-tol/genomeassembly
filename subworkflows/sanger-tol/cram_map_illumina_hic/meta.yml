@@ -55,12 +55,6 @@ output:
         Channel containing the indexes for the output BAM
         Structure: [ val(meta), path(bam) ]
       pattern: "*.{bai,csi,crai}"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

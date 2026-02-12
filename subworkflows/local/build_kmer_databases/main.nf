@@ -9,8 +9,6 @@ workflow BUILD_KMER_DATABASES {
     val_kmer_size   // integer: kmer size
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Logic: separate input with FastK databases from input without
     //
@@ -154,5 +152,4 @@ workflow BUILD_KMER_DATABASES {
     emit:
     data = ch_out_data
     merqury_trio_haptabs = ch_merqury_haptabs
-    versions = ch_versions
 }

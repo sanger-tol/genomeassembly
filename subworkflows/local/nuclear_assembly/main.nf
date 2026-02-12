@@ -12,6 +12,7 @@ workflow NUCLEAR_ASSEMBLY {
     ch_specs
     val_fastx_reads_per_chunk
     val_polishing_container_provided
+    val_sequences_per_polishing_chunk
     val_hic_aligner
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
@@ -41,7 +42,6 @@ workflow NUCLEAR_ASSEMBLY {
         ch_bin_assembly_specs,
         ch_assembly_specs,
     )
-    ch_versions = ch_versions.mix(HIFIASM_ASSEMBLY.out.versions)
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
 
     //
@@ -61,9 +61,9 @@ workflow NUCLEAR_ASSEMBLY {
     POLISHING(
         ch_polishing_specs,
         ch_assemblies,
-        val_polishing_container_provided
+        val_polishing_container_provided,
+        val_sequences_per_polishing_chunk
     )
-    ch_versions = ch_versions.mix(POLISHING.out.versions)
     ch_assemblies = ch_assemblies.mix(POLISHING.out.polished_assemblies)
 
     //
@@ -76,7 +76,6 @@ workflow NUCLEAR_ASSEMBLY {
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size
     )
-    ch_versions = ch_versions.mix(SCAFFOLDING.out.versions)
     ch_assemblies = ch_assemblies.mix(SCAFFOLDING.out.scaffolded_assemblies)
 
     //
@@ -95,7 +94,6 @@ workflow NUCLEAR_ASSEMBLY {
         ch_genome_statistics_inputs.busco_lineage,
         val_busco_lineage_directory
     )
-    ch_versions = ch_versions.mix(GENOME_STATISTICS.out.versions)
 
     ch_statistics = GENOME_STATISTICS.out.stats
         .join(GENOME_STATISTICS.out.busco, remainder: true)

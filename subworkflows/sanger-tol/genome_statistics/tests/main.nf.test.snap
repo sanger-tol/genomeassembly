@@ -123,11 +123,6 @@
                             "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49"
                 ]
             }
         ],
@@ -135,7 +130,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-29T12:02:12.259647"
+        "timestamp": "2026-02-10T18:05:52.922649"
     },
     "meles meles - no trio - fastk": {
         "content": [
@@ -309,11 +304,6 @@
                             "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,09622cb9d9239872f0aa737cff7a2d5f",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49"
                 ]
             }
         ],
@@ -321,7 +311,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-29T12:03:30.013082"
+        "timestamp": "2026-02-10T18:07:51.498938"
     },
     "meles meles - no trio - no busco - no fastk": {
         "content": [
@@ -366,10 +356,6 @@
                 ],
                 "13": [
                     
-                ],
-                "14": [
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49"
                 ],
                 "2": [
                     [
@@ -485,10 +471,6 @@
                             "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49",
-                    "versions.yml:md5,ae8574670b9067c621698ce70bdfac49"
                 ]
             }
         ],
@@ -496,6 +478,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-29T11:57:23.726553"
+        "timestamp": "2026-02-10T18:04:58.650381"
     }
 }

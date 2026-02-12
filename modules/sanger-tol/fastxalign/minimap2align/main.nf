@@ -4,8 +4,8 @@ process FASTXALIGN_MINIMAP2ALIGN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/637ecb387eaafe0b1689e3e32c5eda589e016cfd46c482946425181f69f0733e/data' :
-        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_click:bfd8f60cc27aa6d6' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e3/e3e96ee4627b21402c6503d365bdc27e61f3ef5ae6dbeeda02b70a7157f2de9d/data' :
+        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_pruned:58888de833fa75ea' }"
 
     input:
     tuple val(meta),  path(fastx), path(fxi)
@@ -16,7 +16,9 @@ process FASTXALIGN_MINIMAP2ALIGN {
     output:
     tuple val(meta), path("*.bam")   , emit: bam, optional: true
     tuple val(meta), path("*.paf.gz"), emit: paf, optional: true
-    path "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('slice_fasta.py'), eval('slice_fasta.py --version'), emit: versions_slice_fasta, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools version | sed "1!d;s/.* //"'), emit: versions_samtools, topic: versions
+    tuple val("${task.process}"), val('minimap2'), eval('minimap2 --version | sed "s/minimap2 //g"'), emit: versions_minimap2, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,13 +40,6 @@ process FASTXALIGN_MINIMAP2ALIGN {
     slice_fasta.py slice ${fastx} ${range[0]} ${range[1]} | \\
         minimap2 -t${task.cpus} ${args1} ${index} - \\
         ${bam_output}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-    END_VERSIONS
     """
 
     stub:
@@ -52,12 +47,5 @@ process FASTXALIGN_MINIMAP2ALIGN {
     """
     touch ${prefix}.bam
     echo "" | gzip > ${prefix}.paf.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-    END_VERSIONS
     """
 }
