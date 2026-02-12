@@ -64,7 +64,6 @@ workflow NUCLEAR_ASSEMBLY {
         val_polishing_container_provided,
         val_sequences_per_polishing_chunk
     )
-    ch_versions = ch_versions.mix(POLISHING.out.versions)
     ch_assemblies = ch_assemblies.mix(POLISHING.out.polished_assemblies)
 
     //
