@@ -169,7 +169,6 @@ output {
     polishing {
         path { assembly ->
             assembly.fasta >> "${assembly.id}/polishing/"
-            assembly.bed_chunks >> "${assembly.id}/polishing/chunks/"
             assembly.longranger_bam >> "${assembly.id}/polishing/aln/"
             assembly.longranger_bai >> "${assembly.id}/polishing/aln/"
             assembly.longranger_csv >> "${assembly.id}/polishing/aln/"

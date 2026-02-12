@@ -58,7 +58,6 @@ workflow POLISHING {
         ch_polishing_output = BGZIP_POLISHED.out.output
             .groupTuple(by: 0)
             .map { key, fasta -> [key.target, fasta] }
-            .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.bed_chunks, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.longranger_bam, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.longranger_bai, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.longranger_summary, by: 0)
@@ -71,7 +70,6 @@ workflow POLISHING {
                     data: spec.data,
                     params: spec.params,
                     fasta: fasta,
-                    bed_chunks: bed_chunks,
                     longranger_bam: lr_bam,
                     longranger_bai: lr_bai,
                     longranger_csv: lr_csv,
