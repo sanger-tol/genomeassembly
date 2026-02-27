@@ -1,0 +1,1078 @@
+Feb-27 16:52:44.489 [main] DEBUG nextflow.cli.Launcher - $> nextflow -log run1.log run . -profile docker,test --outdir results -dump-hashes
+Feb-27 16:52:44.517 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.3
+Feb-27 16:52:44.533 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/Users/jd42/.nextflow/plugins; core-plugins: nf-amazon@3.4.3,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.4,nf-k8s@1.2.2,nf-tower@1.17.4,nf-wave@1.16.1
+Feb-27 16:52:44.549 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Feb-27 16:52:44.550 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Feb-27 16:52:44.551 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Feb-27 16:52:44.558 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Feb-27 16:52:44.631 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Feb-27 16:52:44.981 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /Users/jd42/Projects/genomeassembly/nextflow.config
+Feb-27 16:52:44.981 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /Users/jd42/Projects/genomeassembly/nextflow.config
+Feb-27 16:52:44.990 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `docker,test`
+Feb-27 16:52:45.597 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [bih, cfc_dev, uzl_omics, ifb_core, embl_hd, denbi_qbic, alice, mjolnir_globe, uppmax, giga, incliva, ilifu, ki_luria, uge, icr_alma, rosalind_uge, lugh, mccleary, unibe_ibu, vai, czbiohub_aws, jax, roslin, github, iris, tes, scw, unc_longleaf, tigem, tubingen_apg, apollo, ipop_up, vsc_calcua, pdc_kth, ceci_nic5, ccga_cau, humantechnopole, stjude, daisybio, eddie, medair, biowulf, apptainer, bi, bigpurple, adcra, cedars, pawsey_setonix, vsc_kul_uhasselt, pawsey_nimbus, rki, ucl_myriad, utd_ganymede, charliecloud, fred_hutch, seattlechildrens, icr_davros, ceres, munin, rosalind, hasta, cfc, emulate_amd64, uzh, shu_bmrc, ebi_codon_slurm, ebc, ccga_dx, crick, ku_sund_danhead, marvin, lrz_cm4, shifter, biohpc_gen, mana, mamba, york_viking, unc_lccc, wehi, awsbatch, wustl_htcf, arcc, ceci_dragon2, imperial, maestro, software_license, cannon, genotoul, nci_gadi, abims, eva_grace, janelia, nu_genomics, googlebatch, oist, sahmri, kaust, alliance_canada, arm64, mpcdf, leicester, vsc_ugent, create, sage, cambridge, jex, podman, ebi_codon, cheaha, xanadu, nyu_hpc, test, marjorie, computerome, ucd_sonic, gpu, seg_globe, mssm, sanger, dkfz, cleanup, bluebear, pasteur, einstein, ethz_euler, m3c, test_full, imb, ucl_cscluster, tuos_stanage, azurebatch, seadragon, crukmi, csiro_petrichor, qmul_apocrita, wave, docker, engaging, gis, hypatia, psmn, eva, unity, cropdiversityhpc, nygc, fgcz, conda, crg, singularity, mpcdf_viper, dirac, self_hosted_runner, tufts, uw_hyak_pedslabs, binac2, debug, hki_genie, genouest, cbe, unsw_katana, utd_juno, phoenix, seawulf, uod_hpc, fub_curta, lovelace, uct_hpc, aws_tower, longranger_lsf_sanger, binac, fsu_draco]
+Feb-27 16:52:45.618 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins declared=[nf-schema@2.6.1]
+Feb-27 16:52:45.619 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Feb-27 16:52:45.619 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[nf-schema@2.6.1, nf-tower@1.17.4]
+Feb-27 16:52:45.711 [main] DEBUG n.plugin.HttpPluginRepository - Registry request: https://registry.nextflow.io/api/v1/plugins/dependencies?plugins=nf-schema%402.6.1%2Cnf-tower%401.17.4&nextflowVersion=25.10.3
+- code: 200
+- body: {"plugins":[{"id":"nf-schema","releases":[{"version":"2.6.1","url":"https://registry.nextflow.io/api/v1/plugins/nf-schema/2.6.1/download/nf-schema-2.6.1.zip","date":"2025-10-27T10:50:21.364829Z","sha512sum":"467832f2987f90e2d2aa8e6d8387e45d4a0406ce8b5579a71fcd506155b85491bc6e978a536d767508a8ed1a4610a60c1f0cd3d9dc226f4fea1ce2973a23d043","requires":">=25.10.0","dependsOn":[],"status":"PUBLISHED"}],"projectUrl":"https://github.com/nextflow-io/nf-schema","provider":"nextflow-io"},{"id":"nf-tower","releases":[{"version":"1.17.4","url":"https://registry.nextflow.io/api/v1/plugins/nf-tower/1.17.4/download/nf-tower-1.17.4.zip","date":"2026-01-22T15:37:58.587283Z","sha512sum":"8515394ab1b5c79fcb0a76117692dbbf276e6139257e5b220e279669cbce6e750f79d685185caa98e013b12c51e679fda61ee2d2fe77613eb4d23f879011fe45","requires":">=25.09.2-edge","dependsOn":[],"status":"PUBLISHED"}],"projectUrl":"https://github.com/nextflow-io/nf-tower","provider":"nextflow-io"}]}
+Feb-27 16:52:45.740 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-schema version: 2.6.1
+Feb-27 16:52:45.748 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-schema@2.6.1' resolved
+Feb-27 16:52:45.748 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-schema@2.6.1'
+Feb-27 16:52:45.757 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-schema@2.6.1
+Feb-27 16:52:45.757 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-tower version: 1.17.4
+Feb-27 16:52:45.760 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-tower@1.17.4' resolved
+Feb-27 16:52:45.760 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-tower@1.17.4'
+Feb-27 16:52:45.766 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-tower@1.17.4
+Feb-27 16:52:45.773 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /Users/jd42/.nextflow/secrets/store.json
+Feb-27 16:52:45.774 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@5fd4e67f] - activable => nextflow.secret.LocalSecretsProvider@5fd4e67f
+Feb-27 16:52:45.777 [main] DEBUG nextflow.cli.CmdRun - Enabling module binaries
+Feb-27 16:52:45.778 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Feb-27 16:52:45.786 [main] DEBUG nextflow.cli.CmdRun - Launching `./main.nf` [serene_curran] DSL2 - revision: ddd1dc6634
+Feb-27 16:52:45.811 [main] DEBUG nextflow.Session - Session UUID: f950e61b-3aec-4f06-9526-54286260bb12
+Feb-27 16:52:45.811 [main] DEBUG nextflow.Session - Run name: serene_curran
+Feb-27 16:52:45.811 [main] DEBUG nextflow.Session - Executor pool size: 11
+Feb-27 16:52:45.815 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Feb-27 16:52:45.817 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=33; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-27 16:52:45.830 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.3 build 10983
+  Created: 22-01-2026 15:34 UTC (15:34 BST)
+  System: Mac OS X 26.3
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2+7
+  Encoding: UTF-8 (UTF-8)
+  Process: 16437@mib120118s [172.20.241.203]
+  CPUs: 11 - Mem: 18 GB (67.1 MB) - Swap: 3 GB (1.3 GB)
+Feb-27 16:52:45.837 [main] DEBUG nextflow.Session - Work-dir: /Users/jd42/Projects/genomeassembly/work [Mac OS X]
+Feb-27 16:52:45.837 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /Users/jd42/Projects/genomeassembly/bin
+Feb-27 16:52:45.841 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Feb-27 16:52:45.847 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Feb-27 16:52:45.848 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Feb-27 16:52:45.855 [main] DEBUG nextflow.Session - Observer factory (v2): TowerFactory
+Feb-27 16:52:45.859 [main] DEBUG nextflow.Session - Observer factory (v2): ValidationObserverFactory
+Feb-27 16:52:45.874 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Feb-27 16:52:45.878 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 12; maxThreads: 1000
+Feb-27 16:52:45.909 [main] DEBUG nextflow.Session - Session start
+Feb-27 16:52:45.911 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: results/pipeline_info/execution_trace_2026-02-27_16-52-45.txt
+Feb-27 16:52:46.021 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Feb-27 16:52:49.247 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Feb-27 16:52:49.252 [main] DEBUG n.validation.config.ValidationConfig - Set `validation.monochromeLogs` to false
+Feb-27 16:52:49.252 [main] DEBUG n.validation.config.ValidationConfig - Added the following parameters to the ignored parameters: [genomes]
+Feb-27 16:52:49.384 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryLog:paramsSummaryLog]; plugin Id: nf-schema
+Feb-27 16:52:49.384 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [validateParameters:validateParameters]; plugin Id: nf-schema
+Feb-27 16:52:49.384 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsHelp:paramsHelp]; plugin Id: nf-schema
+Feb-27 16:52:49.385 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Feb-27 16:52:49.385 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [samplesheetToList:samplesheetToList]; plugin Id: nf-schema
+Feb-27 16:52:49.385 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsHelp:paramsHelp]; plugin Id: nf-schema
+Feb-27 16:52:49.453 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryLog:paramsSummaryLog]; plugin Id: nf-schema
+Feb-27 16:52:49.453 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [validateParameters:validateParameters]; plugin Id: nf-schema
+Feb-27 16:52:49.454 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsHelp:paramsHelp]; plugin Id: nf-schema
+Feb-27 16:52:49.455 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Feb-27 16:52:49.455 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [samplesheetToList:samplesheetToList]; plugin Id: nf-schema
+Feb-27 16:52:49.455 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsHelp:paramsHelp]; plugin Id: nf-schema
+Feb-27 16:52:49.517 [main] INFO  nextflow.Nextflow - 
+-[2m----------------------------------------------------[0m-
+[0;34m   _____                               [0;32m _______   [0;31m _[0m
+[0;34m  / ____|                              [0;32m|__   __|  [0;31m| |[0m
+[0;34m | (___   __ _ _ __   __ _  ___ _ __ [0m ___ [0;32m| |[0;33m ___ [0;31m| |[0m
+[0;34m  \___ \ / _` | '_ \ / _` |/ _ \ '__|[0m|___|[0;32m| |[0;33m/ _ \[0;31m| |[0m
+[0;34m  ____) | (_| | | | | (_| |  __/ |        [0;32m| |[0;33m (_) [0;31m| |____[0m
+[0;34m |_____/ \__,_|_| |_|\__, |\___|_|        [0;32m|_|[0;33m\___/[0;31m|______|[0m
+[0;34m                      __/ |[0m
+[0;34m                     |___/[0m
+[0;35m  sanger-tol/genomeassembly 1.0.0dev[0m
+-[2m----------------------------------------------------[0m-
+        
+Feb-27 16:52:49.530 [main] INFO  nextflow.Nextflow - [1mInput/output options[0m
+  [0;34mgenomic_data              : [0;32m/Users/jd42/Projects/genomeassembly/assets/test_genomic.yaml[0m
+  [0;34massembly_specs            : [0;32m/Users/jd42/Projects/genomeassembly/assets/test_spec.yaml[0m
+  [0;34moutdir                    : [0;32mresults[0m
+
+[1mInstitutional config options[0m
+  [0;34mconfig_profile_name       : [0;32mTest profile[0m
+  [0;34mconfig_profile_description: [0;32mMinimal test dataset to check pipeline function[0m
+
+[1mGeneric options[0m
+  [0;34mtrace_report_suffix       : [0;32m2026-02-27_16-52-45[0m
+
+[1mCore Nextflow options[0m
+  [0;34mrunName                   : [0;32mserene_curran[0m
+  [0;34mcontainerEngine           : [0;32mdocker[0m
+  [0;34mlaunchDir                 : [0;32m/Users/jd42/Projects/genomeassembly[0m
+  [0;34mworkDir                   : [0;32m/Users/jd42/Projects/genomeassembly/work[0m
+  [0;34mprojectDir                : [0;32m/Users/jd42/Projects/genomeassembly[0m
+  [0;34muserName                  : [0;32mjd42[0m
+  [0;34mprofile                   : [0;32mdocker,test[0m
+  [0;34mconfigFiles               : [0;32m/Users/jd42/Projects/genomeassembly/nextflow.config[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+Feb-27 16:52:49.531 [main] INFO  nextflow.Nextflow - 
+* The pipeline
+    https://doi.org/10.5281/zenodo.10391851
+
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/genomeassembly/blob/main/CITATIONS.md
+
+Feb-27 16:52:49.534 [main] DEBUG n.v.parameters.ParameterValidator - Starting parameters validation
+Feb-27 16:52:49.576 [main] DEBUG n.v.v.evaluators.SchemaEvaluator - Started validating /Users/jd42/Projects/genomeassembly/assets/test_spec.yaml
+Feb-27 16:52:50.055 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:50.181 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:50.312 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:50.362 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:50.643 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:50.992 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:51.045 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:51.107 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:51.162 [main] DEBUG n.v.v.evaluators.SchemaEvaluator - Validation of file '/Users/jd42/Projects/genomeassembly/assets/test_spec.yaml' passed!
+Feb-27 16:52:51.163 [main] DEBUG n.v.v.evaluators.SchemaEvaluator - Started validating /Users/jd42/Projects/genomeassembly/assets/test_genomic.yaml
+Feb-27 16:52:52.076 [main] DEBUG n.v.v.evaluators.SchemaEvaluator - Validation of file '/Users/jd42/Projects/genomeassembly/assets/test_genomic.yaml' passed!
+Feb-27 16:52:52.087 [main] DEBUG n.v.parameters.ParameterValidator - Finishing parameters validation
+Feb-27 16:52:52.995 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:53.041 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:53.223 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:53.266 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:53.325 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:53.623 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:53.704 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:53.775 [main] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:53.890 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK
+Feb-27 16:52:53.893 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK
+Feb-27 16:52:53.895 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.895 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.900 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Feb-27 16:52:53.904 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=11; memory=18 GB; capacity=11; pollInterval=100ms; dumpInterval=5m
+Feb-27 16:52:53.905 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Feb-27 16:52:53.913 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.929 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT
+Feb-27 16:52:53.931 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT
+Feb-27 16:52:53.932 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.932 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.932 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.939 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER
+Feb-27 16:52:53.941 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER
+Feb-27 16:52:53.942 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.942 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.942 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.947 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:FASTK_HISTEX
+Feb-27 16:52:53.949 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:PREPARE_INPUTS:FASTK_HISTEX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:FASTK_HISTEX
+Feb-27 16:52:53.950 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.950 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.950 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:FASTK_HISTEX': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.952 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:GENOMESCOPE2
+Feb-27 16:52:53.953 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:PREPARE_INPUTS:GENOMESCOPE2` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:GENOMESCOPE2
+Feb-27 16:52:53.954 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.954 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.954 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:GENOMESCOPE2': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.964 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high_memory` matches labels `process_high_memory` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN
+Feb-27 16:52:53.965 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM.*` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN
+Feb-27 16:52:53.966 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN
+Feb-27 16:52:53.967 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.967 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.967 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.973 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high_memory` matches labels `process_high_memory` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM
+Feb-27 16:52:53.973 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM.*` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM
+Feb-27 16:52:53.973 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM
+Feb-27 16:52:53.974 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.974 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.975 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.980 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM
+Feb-27 16:52:53.982 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM
+Feb-27 16:52:53.983 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.983 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.983 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM': maxForks=0; fair=false; array=0
+Feb-27 16:52:53.997 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX
+Feb-27 16:52:53.998 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX
+Feb-27 16:52:53.999 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:53.999 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:53.999 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.002 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX
+Feb-27 16:52:54.003 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX
+Feb-27 16:52:54.004 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.004 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.004 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.009 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN
+Feb-27 16:52:54.009 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN
+Feb-27 16:52:54.011 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.011 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.011 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.018 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT
+Feb-27 16:52:54.019 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT
+Feb-27 16:52:54.020 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.020 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.020 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.022 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS
+Feb-27 16:52:54.023 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS
+Feb-27 16:52:54.024 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.024 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.024 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.026 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT
+Feb-27 16:52:54.027 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT
+Feb-27 16:52:54.028 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.028 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.028 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.030 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA
+Feb-27 16:52:54.031 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA
+Feb-27 16:52:54.032 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.032 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.032 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.035 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY
+Feb-27 16:52:54.036 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY
+Feb-27 16:52:54.037 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.037 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.037 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.040 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS
+Feb-27 16:52:54.041 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS
+Feb-27 16:52:54.042 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.042 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.042 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.045 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS
+Feb-27 16:52:54.046 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS
+Feb-27 16:52:54.046 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.046 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.047 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.050 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES
+Feb-27 16:52:54.051 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES
+Feb-27 16:52:54.052 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.052 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.052 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.058 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED
+Feb-27 16:52:54.059 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED
+Feb-27 16:52:54.059 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.059 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.060 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.081 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX
+Feb-27 16:52:54.082 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX
+Feb-27 16:52:54.082 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.082 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.083 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.086 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_GENCRAMCHUNKS
+Feb-27 16:52:54.088 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Feb-27 16:52:54.088 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.089 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_GENCRAMCHUNKS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.093 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER
+Feb-27 16:52:54.094 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER
+Feb-27 16:52:54.095 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.095 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.095 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.099 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BWAMEM2_INDEX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BWAMEM2_INDEX
+Feb-27 16:52:54.100 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.100 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.101 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BWAMEM2_INDEX': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.104 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC
+Feb-27 16:52:54.105 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC
+Feb-27 16:52:54.106 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.106 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.106 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.111 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX
+Feb-27 16:52:54.112 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX
+Feb-27 16:52:54.113 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.113 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.113 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.119 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP
+Feb-27 16:52:54.120 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP
+Feb-27 16:52:54.121 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.121 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.121 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.127 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS
+Feb-27 16:52:54.128 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS
+Feb-27 16:52:54.129 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.129 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.129 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.131 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT
+Feb-27 16:52:54.131 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT
+Feb-27 16:52:54.132 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.132 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.132 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.133 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS
+Feb-27 16:52:54.134 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS
+Feb-27 16:52:54.135 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.135 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.135 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.138 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT
+Feb-27 16:52:54.139 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT
+Feb-27 16:52:54.140 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.140 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.140 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.142 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS
+Feb-27 16:52:54.143 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS
+Feb-27 16:52:54.144 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.144 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.144 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.148 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS
+Feb-27 16:52:54.149 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:YAHS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS
+Feb-27 16:52:54.149 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS
+Feb-27 16:52:54.150 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.150 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.150 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.153 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS
+Feb-27 16:52:54.154 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS
+Feb-27 16:52:54.155 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.155 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.155 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.159 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE
+Feb-27 16:52:54.160 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE
+Feb-27 16:52:54.162 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.162 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.162 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.167 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP
+Feb-27 16:52:54.169 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP
+Feb-27 16:52:54.170 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.170 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.170 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.172 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT
+Feb-27 16:52:54.174 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT
+Feb-27 16:52:54.175 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.175 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.175 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.178 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD
+Feb-27 16:52:54.180 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD
+Feb-27 16:52:54.181 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.181 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.181 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.183 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY
+Feb-27 16:52:54.184 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY
+Feb-27 16:52:54.185 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.185 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.185 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.194 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE
+Feb-27 16:52:54.195 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE
+Feb-27 16:52:54.196 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.196 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.196 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.199 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE
+Feb-27 16:52:54.200 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:JUICERTOOLS_PRE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE
+Feb-27 16:52:54.200 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE
+Feb-27 16:52:54.201 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.201 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.201 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.203 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED
+Feb-27 16:52:54.204 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED
+Feb-27 16:52:54.205 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.205 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.205 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.222 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS
+Feb-27 16:52:54.223 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS
+Feb-27 16:52:54.224 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.224 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.224 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.226 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS
+Feb-27 16:52:54.227 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS
+Feb-27 16:52:54.227 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.227 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.227 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.234 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO
+Feb-27 16:52:54.235 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO
+Feb-27 16:52:54.236 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.236 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.236 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.243 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK
+Feb-27 16:52:54.244 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK
+Feb-27 16:52:54.245 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.245 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.245 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.260 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.261 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.262 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.262 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.262 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.279 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.280 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.281 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.281 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.281 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.290 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.290 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.290 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_STAGE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.294 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.294 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.294 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_SPEC': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.313 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK
+Feb-27 16:52:54.314 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK
+Feb-27 16:52:54.314 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.314 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.315 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.320 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE
+Feb-27 16:52:54.321 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE
+Feb-27 16:52:54.321 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.321 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.321 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.335 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.335 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.336 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.336 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.336 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.346 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.347 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:.*:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI` matches process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.347 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.347 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.348 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.357 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Feb-27 16:52:54.357 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Feb-27 16:52:54.357 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:INDEX_SPEC': maxForks=0; fair=false; array=0
+Feb-27 16:52:54.380 [main] DEBUG nextflow.Session - Config process names validation disabled as requested
+Feb-27 16:52:54.382 [main] DEBUG nextflow.Session - Igniting dataflow network (69)
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:FASTK_HISTEX
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:GENOMESCOPE2
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM
+Feb-27 16:52:54.383 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_GENCRAMCHUNKS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BWAMEM2_INDEX
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_STAGE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_SPEC
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+Feb-27 16:52:54.384 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:INDEX_SPEC
+Feb-27 16:52:54.385 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_39fcdad82d05eaa5: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/histplot/main.nf
+  Script_74f7d854ee887611: /Users/jd42/Projects/genomeassembly/modules/nf-core/genomescope2/main.nf
+  Script_5eeb1eff53a97f0c: /Users/jd42/Projects/genomeassembly/modules/nf-core/merquryfk/hapmaker/main.nf
+  Script_e11ead50278dca6c: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main.nf
+  Script_2074beab21dd0d50: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/pairs_create_contact_maps/main.nf
+  Script_23f6a26c16dda2a9: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/cramalign/gencramchunks/main.nf
+  Script_d13baec2f652bd96: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/idxstats/main.nf
+  Script_66e08027045b368b: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/genome_statistics/main.nf
+  Script_4fc56e52aaca2507: /Users/jd42/Projects/genomeassembly/subworkflows/local/utils_nfcore_genomeassembly_pipeline/main.nf
+  Script_272a6e16bb0d43ba: /Users/jd42/Projects/genomeassembly/modules/nf-core/busco/busco/main.nf
+  Script_8ceed2580f4f8dab: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/pbcstat/main.nf
+  Script_b240c8ce6651b3e1: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/cram_map_illumina_hic/main.nf
+  Script_b1f3ac431f08e86b: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/asmstats/main.nf
+  Script_2e3e44b2f3e5a1b4: /Users/jd42/Projects/genomeassembly/functions/local/input_validation/main.nf
+  Script_82e40c1698614ac9: /Users/jd42/Projects/genomeassembly/subworkflows/local/organelle_assembly/main.nf
+  Script_7d0a696cf9718341: /Users/jd42/Projects/genomeassembly/subworkflows/nf-core/bam_stats_samtools/main.nf
+  Script_403ef250fe7902c9: /Users/jd42/Projects/genomeassembly/modules/nf-core/bwamem2/index/main.nf
+  Script_5fcb87d49c252e8b: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/samtools/mergedup/main.nf
+  Script_775fd3eb66c97c97: /Users/jd42/Projects/genomeassembly/modules/nf-core/cooler/zoomify/main.nf
+  Script_cf64135686f2cba1: /Users/jd42/Projects/genomeassembly/modules/nf-core/bcftools/norm/main.nf
+  Script_7db0198e9c3acb93: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/stats/main.nf
+  Script_bb5cc4f69e3e6d54: /Users/jd42/Projects/genomeassembly/modules/nf-core/juicertools/pre/main.nf
+  Script_75c2f339de01584b: /Users/jd42/Projects/genomeassembly/modules/nf-core/bcftools/consensus/main.nf
+  Script_9dfc901c072afa7d: /Users/jd42/Projects/genomeassembly/modules/nf-core/bcftools/sort/main.nf
+  Script_80fa55e3bf5026b8: /Users/jd42/Projects/genomeassembly/modules/nf-core/cooler/cload/main.nf
+  Script_32a1cef3355ee7c3: /Users/jd42/Projects/genomeassembly/modules/nf-core/bcftools/view/main.nf
+  Script_fb451a24cb8a0126: /Users/jd42/Projects/genomeassembly/modules/nf-core/pretextmap/main.nf
+  Script_cd739b4f93b84365: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/merge/main.nf
+  Script_403b04b544cad6de: /Users/jd42/Projects/genomeassembly/subworkflows/local/hifiasm_assembly/main.nf
+  Script_dd4d05d6ea9e4050: /Users/jd42/Projects/genomeassembly/modules/nf-core/merquryfk/merquryfk/main.nf
+  Script_e7e4b25f13a21319: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/fastxalign/minimap2align/main.nf
+  Script_dfa027b3cee76e36: /Users/jd42/Projects/genomeassembly/modules/nf-core/bandage/image/main.nf
+  Script_223b5f077cb1204a: /Users/jd42/Projects/genomeassembly/functions/local/publishing/main.nf
+  Script_d8145da240fbd8f6: /Users/jd42/Projects/genomeassembly/modules/nf-core/mitohifi/findmitoreference/main.nf
+  Script_2161c5157739ad6e: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/cramalign/bwamem2alignhic/main.nf
+  Script_991c01ddaab57c23: /Users/jd42/Projects/genomeassembly/subworkflows/local/polishing/main.nf
+  Script_ef6e7b627d245e53: /Users/jd42/Projects/genomeassembly/workflows/genomeassembly.nf
+  Script_9834e6a0f64645f2: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/bam_samtools_merge_markdup/main.nf
+  Script_6e623f37af4aa670: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/getseqs/main.nf
+  Script_c325f5deda00add2: /Users/jd42/Projects/genomeassembly/subworkflows/local/mitohifi_assembly/main.nf
+  Script_5b05eec91ad3b0ae: /Users/jd42/Projects/genomeassembly/functions/local/assembly_stages/main.nf
+  Script_650dce2235fd7577: /Users/jd42/Projects/genomeassembly/modules/nf-core/gawk/main.nf
+  Script_17529f9dbebbdae8: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/index/main.nf
+  Script_639b8d14ee6efada: /Users/jd42/Projects/genomeassembly/modules/local/generate_specification_index/main.nf
+  Script_b5ad5aed38bde938: /Users/jd42/Projects/genomeassembly/subworkflows/local/build_kmer_databases/main.nf
+  Script_6d9f3a546f4b213c: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/bedchunks/create/main.nf
+  Script_0cb847ce02a0c1f4: /Users/jd42/Projects/genomeassembly/modules/nf-core/fastk/fastk/main.nf
+  Script_0defe1910b1936cf: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/bedtools/bamtobedsort/main.nf
+  Script_5ccbd5b90f53b6b6: /Users/jd42/Projects/genomeassembly/modules/nf-core/tabix/bgzip/main.nf
+  Script_e2ce1c9bd1bd13a3: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/hifiasm/main.nf
+  Script_a29b67cfe4f9798c: /Users/jd42/Projects/genomeassembly/modules/nf-core/bcftools/index/main.nf
+  Script_84a06691afecd7ba: /Users/jd42/Projects/genomeassembly/modules/nf-core/gfastats/main.nf
+  Script_2737dc0e25ec272b: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/calcuts/main.nf
+  Script_9d6d99c8572887f6: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/purgedups/main.nf
+  Script_e5253c9b5b3bd36d: /Users/jd42/Projects/genomeassembly/modules/nf-core/mitohifi/mitohifi/main.nf
+  Script_ec694474a7d586d3: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/flagstat/main.nf
+  Script_a51208457bd61a59: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/cramalign/minimap2alignhic/main.nf
+  Script_8907547d29b7d508: /Users/jd42/Projects/genomeassembly/modules/nf-core/oatk/main.nf
+  Script_cc35d2abb3d0fc1b: /Users/jd42/Projects/genomeassembly/subworkflows/local/nuclear_assembly/main.nf
+  Script_4dfde344f1a80498: /Users/jd42/Projects/genomeassembly/subworkflows/local/scaffolding/main.nf
+  Script_603e335371e887c3: /Users/jd42/Projects/genomeassembly/modules/nf-core/pretextsnapshot/main.nf
+  Script_40415a9666ae5c9f: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/faidx/main.nf
+  Script_4f612cfd8c52e8cd: /Users/jd42/Projects/genomeassembly/subworkflows/nf-core/utils_nextflow_pipeline/main.nf
+  Script_0cb9500631ed51bd: /Users/jd42/Projects/genomeassembly/subworkflows/local/oatk_assembly/main.nf
+  Script_291c1597e9056f36: /Users/jd42/Projects/genomeassembly/modules/nf-core/fastk/histex/main.nf
+  Script_bce93be0a529e9ef: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/fastxalign/pyfastxindex/main.nf
+  Script_de9e1419f41ea17d: /Users/jd42/Projects/genomeassembly/modules/nf-core/purgedups/splitfa/main.nf
+  Script_702935f7c7ce5eab: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/yak/count/main.nf
+  Script_01655477384265e8: /Users/jd42/Projects/genomeassembly/modules/nf-core/cat/cat/main.nf
+  Script_5977f542cd315b9b: /Users/jd42/Projects/genomeassembly/subworkflows/nf-core/utils_nfcore_pipeline/main.nf
+  Script_1568f669999d81e4: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/yahs/makepairsfile/main.nf
+  Script_ac637b6d71dec058: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/longranger/align/main.nf
+  Script_70233e3bacb5fae3: /Users/jd42/Projects/genomeassembly/modules/nf-core/seqkit/grep/main.nf
+  Script_ca2b06e95280f37a: /Users/jd42/Projects/genomeassembly/modules/nf-core/yahs/main.nf
+  Script_227a083b76587a8a: /Users/jd42/Projects/genomeassembly/modules/nf-core/gatk4/mergevcfs/main.nf
+  Script_d9cab81d9e71fecb: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes/main.nf
+  Script_49f262b1f93caa53: /Users/jd42/Projects/genomeassembly/modules/nf-core/minimap2/index/main.nf
+  Script_7ee3308ce57629d9: /Users/jd42/Projects/genomeassembly/modules/sanger-tol/longranger/mkref/main.nf
+  Script_5534a7e7839def63: /Users/jd42/Projects/genomeassembly/modules/nf-core/samtools/splitheader/main.nf
+  Script_f4c18bc3508b2686: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/fasta_purge_retained_haplotype/main.nf
+  Script_f526ea333b3ea25e: /Users/jd42/Projects/genomeassembly/modules/nf-core/freebayes/main.nf
+  Script_ee073be0fa2c151d: /Users/jd42/Projects/genomeassembly/modules/nf-core/minimap2/align/main.nf
+  Script_1a2037a6183f7e1a: /Users/jd42/Projects/genomeassembly/subworkflows/nf-core/utils_nfschema_plugin/main.nf
+  Script_d7f4f4e7679c49c7: /Users/jd42/Projects/genomeassembly/subworkflows/local/prepare_inputs/main.nf
+  Script_b53841bd46cc6a5e: /Users/jd42/Projects/genomeassembly/subworkflows/local/purging/main.nf
+  Script_9501c2319ba65ae9: /Users/jd42/Projects/genomeassembly/main.nf
+  Script_01cc067559cd4c49: /Users/jd42/Projects/genomeassembly/subworkflows/sanger-tol/fastx_map_long_reads/main.nf
+Feb-27 16:52:54.385 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Feb-27 16:52:54.385 [main] DEBUG nextflow.Session - Session await
+Feb-27 16:52:54.426 [Actor Thread 12] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.0 s; external sort time: 0.011 s; total time: 0.011 s
+Feb-27 16:52:54.429 [Actor Thread 12] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /Users/jd42/Projects/genomeassembly/work/collect-file/42d5e22854a4e33adb8913bf1b182e66
+Feb-27 16:52:54.434 [Actor Thread 12] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /var/folders/l1/kf47hp3n46bblhf2q18qm6s80000gq/T/nxf-15878869782670198704
+Feb-27 16:52:54.487 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam; attempt=0
+Feb-27 16:52:54.594 [FileTransfer-1] DEBUG nextflow.file.FilePorter - Copying foreign file https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta to work dir: /Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/54/0612434f83d651095571098fb76ab4/HiFi.reads.fasta
+Feb-27 16:52:54.595 [FileTransfer-2] DEBUG nextflow.file.FilePorter - Copying foreign file https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram to work dir: /Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/a7/fff0f8428840a688599688fcc05090/41741_2_7.sub.cram
+Feb-27 16:52:54.692 [FileTransfer-3] DEBUG nextflow.file.FilePorter - Copying foreign file https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz to work dir: /Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/de/32f246ae5c219a7695e018f304bc74/baUndUnlc1_S12_L002_R1_001.fastq.gz
+Feb-27 16:52:54.692 [FileTransfer-4] DEBUG nextflow.file.FilePorter - Copying foreign file https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz to work dir: /Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/28/e79c548c09d50cb98d85ba6d47a9c3/baUndUnlc1_S12_L002_R2_001.fastq.gz
+Feb-27 16:52:54.692 [FileTransfer-5] DEBUG nextflow.file.FilePorter - Copying foreign file https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz to work dir: /Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/84/9020bb0231deca0f346bdd6f5ba196/baUndUnlc1_S12_L002_I1_001.fastq.gz
+Feb-27 16:52:54.699 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam.h3f; attempt=0
+Feb-27 16:52:55.035 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam.h3i; attempt=0
+Feb-27 16:52:55.194 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (1)] cache hash: d158df922fdf4dda580f1d5b1fab93d2; mode: STANDARD; entries: 
+  f43b62a482129a4bc7fa81fbb9a4a20f [java.util.UUID] f950e61b-3aec-4f06-9526-54286260bb12 
+  55f6b5c2a169a93142c0611ebea45b22 [java.lang.String] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK 
+  a578717dc13b9cb243be453611ad95e9 [java.lang.String]     def args      = task.ext.args ?: ''
+    def prefix    = task.ext.prefix ?: "${meta.id}"
+    """
+    FastK \\
+        $args \\
+        -T$task.cpus \\
+        -M${task.memory.toGiga()} \\
+        -N${prefix} \\
+        $reads
+
+    find . -name '*.ktab*' -exec chmod a+r {} \\;
+    """
+ 
+  56a7cd07b98e039ee288ea00cb817cd1 [java.lang.String] community.wave.seqera.io/library/fastk:1.2--4bc70c6cd0d420bd 
+  22a9e5e0e97f0475e310f04c56b1393a [java.lang.String] meta 
+  96362ea2285517492b79befaf2a859fb [java.util.LinkedHashMap] [id:baUndUnlc1, platform:pacbio_hifi] 
+  553096c532e666fb42214fdf0520fe4a [java.lang.String] reads 
+  ed424ca5ce97509d1c27471148b54312 [nextflow.util.ArrayBag] [FileHolder(sourceObj:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta, storePath:/Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/54/0612434f83d651095571098fb76ab4/HiFi.reads.fasta, stageName:HiFi.reads.fasta, sourcePath:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta)] 
+  4f9d4b0d22865056c37fb6d9c2a04a67 [java.lang.String] $ 
+  16fe7483905cce7a85670e43e4678877 [java.lang.Boolean] true 
+  6793eb8c58cdc73e27a8de7b307a8529 [java.lang.String] eval_outputs 
+  636ef9974752a199235d9b1a021840da [java.lang.String] nxf_out_eval_3=echo 1.2 
+  fcb021e286fd8c495e27e054fc28661e [java.util.HashMap$EntrySet] [task.ext.args=-k31 -t -P., task.ext.prefix=fastk] 
+
+Feb-27 16:52:55.218 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-27 16:52:55.218 [Task submitter] INFO  nextflow.Session - [5a/c9f5cf] Submitted process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (baUndUnlc1.pacbio_hifi.k31)
+Feb-27 16:52:55.240 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (3)] cache hash: 8a42f865268db49d3dd7b597ce0d58d9; mode: STANDARD; entries: 
+  f43b62a482129a4bc7fa81fbb9a4a20f [java.util.UUID] f950e61b-3aec-4f06-9526-54286260bb12 
+  55f6b5c2a169a93142c0611ebea45b22 [java.lang.String] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK 
+  a578717dc13b9cb243be453611ad95e9 [java.lang.String]     def args      = task.ext.args ?: ''
+    def prefix    = task.ext.prefix ?: "${meta.id}"
+    """
+    FastK \\
+        $args \\
+        -T$task.cpus \\
+        -M${task.memory.toGiga()} \\
+        -N${prefix} \\
+        $reads
+
+    find . -name '*.ktab*' -exec chmod a+r {} \\;
+    """
+ 
+  56a7cd07b98e039ee288ea00cb817cd1 [java.lang.String] community.wave.seqera.io/library/fastk:1.2--4bc70c6cd0d420bd 
+  22a9e5e0e97f0475e310f04c56b1393a [java.lang.String] meta 
+  9a784d2b72b84ff2f2cc22172e7fe503 [java.util.LinkedHashMap] [id:baUndUnlc1, platform:illumina_10x] 
+  553096c532e666fb42214fdf0520fe4a [java.lang.String] reads 
+  f5003d77d4ee7050c824d0ba7d667a8e [nextflow.util.ArrayBag] [FileHolder(sourceObj:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz, storePath:/Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/de/32f246ae5c219a7695e018f304bc74/baUndUnlc1_S12_L002_R1_001.fastq.gz, stageName:baUndUnlc1_S12_L002_R1_001.fastq.gz, sourcePath:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz), FileHolder(sourceObj:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz, storePath:/Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/28/e79c548c09d50cb98d85ba6d47a9c3/baUndUnlc1_S12_L002_R2_001.fastq.gz, stageName:baUndUnlc1_S12_L002_R2_001.fastq.gz, sourcePath:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz), FileHolder(sourceObj:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz, storePath:/Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/84/9020bb0231deca0f346bdd6f5ba196/baUndUnlc1_S12_L002_I1_001.fastq.gz, stageName:baUndUnlc1_S12_L002_I1_001.fastq.gz, sourcePath:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_I1_001.fastq.gz)] 
+  4f9d4b0d22865056c37fb6d9c2a04a67 [java.lang.String] $ 
+  16fe7483905cce7a85670e43e4678877 [java.lang.Boolean] true 
+  6793eb8c58cdc73e27a8de7b307a8529 [java.lang.String] eval_outputs 
+  636ef9974752a199235d9b1a021840da [java.lang.String] nxf_out_eval_3=echo 1.2 
+  fcb021e286fd8c495e27e054fc28661e [java.util.HashMap$EntrySet] [task.ext.args=-k31 -t -P., task.ext.prefix=fastk] 
+
+Feb-27 16:52:55.345 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam.h3m; attempt=0
+Feb-27 16:52:56.105 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/insecta_mito.fam.h3p; attempt=0
+Feb-27 16:52:56.283 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam; attempt=0
+Feb-27 16:52:56.600 [Actor Thread 15] INFO  nextflow.file.FilePorter - Staging foreign file: https://tolit.cog.sanger.ac.uk/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram
+Feb-27 16:52:56.837 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (baUndUnlc1.pacbio_hifi.k31); status: COMPLETED; exit: 0; error: -; workDir: /Users/jd42/Projects/genomeassembly/work/5a/c9f5cf9b546c8d1e50c6915712fe37]
+Feb-27 16:52:56.838 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=33; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Feb-27 16:52:56.842 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-27 16:52:56.842 [Task submitter] INFO  nextflow.Session - [84/bc4b96] Submitted process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (baUndUnlc1.illumina_10x.k31)
+Feb-27 16:52:56.879 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam.h3f; attempt=0
+Feb-27 16:52:56.897 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Feb-27 16:52:57.203 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam.h3i; attempt=0
+Feb-27 16:52:57.985 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (baUndUnlc1.illumina_10x.k31); status: COMPLETED; exit: 0; error: -; workDir: /Users/jd42/Projects/genomeassembly/work/84/bc4b969e7a7e87cd05a36ebd9c62cf]
+Feb-27 16:52:57.989 [TaskFinalizer-2] DEBUG nextflow.processor.TaskProcessor - Process SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Feb-27 16:52:58.018 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam.h3m; attempt=0
+Feb-27 16:52:58.325 [Actor Thread 7] DEBUG n.file.http.XFileSystemProvider - Remote redirect location=https://raw.githubusercontent.com/c-zhou/OatkDB/main/v20230921/acrogymnospermae_pltd.fam.h3p; attempt=0
+Feb-27 16:53:02.167 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (2)] cache hash: e01c740a0e58397f402726d7004697d8; mode: STANDARD; entries: 
+  f43b62a482129a4bc7fa81fbb9a4a20f [java.util.UUID] f950e61b-3aec-4f06-9526-54286260bb12 
+  55f6b5c2a169a93142c0611ebea45b22 [java.lang.String] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK 
+  a578717dc13b9cb243be453611ad95e9 [java.lang.String]     def args      = task.ext.args ?: ''
+    def prefix    = task.ext.prefix ?: "${meta.id}"
+    """
+    FastK \\
+        $args \\
+        -T$task.cpus \\
+        -M${task.memory.toGiga()} \\
+        -N${prefix} \\
+        $reads
+
+    find . -name '*.ktab*' -exec chmod a+r {} \\;
+    """
+ 
+  56a7cd07b98e039ee288ea00cb817cd1 [java.lang.String] community.wave.seqera.io/library/fastk:1.2--4bc70c6cd0d420bd 
+  22a9e5e0e97f0475e310f04c56b1393a [java.lang.String] meta 
+  3f7bb8da811fca1f7f80234f6397e7c4 [java.util.LinkedHashMap] [id:baUndUnlc1, platform:illumina_hic] 
+  553096c532e666fb42214fdf0520fe4a [java.lang.String] reads 
+  d885010109bba992277c5539efafc3eb [nextflow.util.ArrayBag] [FileHolder(sourceObj:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram, storePath:/Users/jd42/Projects/genomeassembly/work/stage-f950e61b-3aec-4f06-9526-54286260bb12/a7/fff0f8428840a688599688fcc05090/41741_2_7.sub.cram, stageName:41741_2_7.sub.cram, sourcePath:/test-data/Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2_7.sub.cram)] 
+  4f9d4b0d22865056c37fb6d9c2a04a67 [java.lang.String] $ 
+  16fe7483905cce7a85670e43e4678877 [java.lang.Boolean] true 
+  6793eb8c58cdc73e27a8de7b307a8529 [java.lang.String] eval_outputs 
+  636ef9974752a199235d9b1a021840da [java.lang.String] nxf_out_eval_3=echo 1.2 
+  fcb021e286fd8c495e27e054fc28661e [java.util.HashMap$EntrySet] [task.ext.args=-k31 -t -P., task.ext.prefix=fastk] 
+
+Feb-27 16:53:02.176 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Feb-27 16:53:02.177 [Task submitter] INFO  nextflow.Session - [c1/665c7b] Submitted process > SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:FASTK_FASTK (baUndUnlc1.illumina_hic.k31)
+Feb-27 16:53:11.326 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Feb-27 16:53:11.367 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:YAK_COUNT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:BUILD_KMER_DATABASES:MERQURYFK_HAPMAKER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:FASTK_HISTEX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:PREPARE_INPUTS:GENOMESCOPE2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM_BIN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: -
+  port 2: (value) bound ; channel: -
+  port 3: (value) bound ; channel: -
+  port 4: (value) bound ; channel: -
+  port 5: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:HIFIASM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (queue) OPEN  ; channel: -
+  port 4: (queue) OPEN  ; channel: -
+  port 5: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:HIFIASM_ASSEMBLY:BGZIP_HIFIASM
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:MINIMAP2_INDEX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_MINIMAP2ALIGN
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (value) bound ; channel: bam_format
+  port 4: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PBCSTAT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_CALCUTS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_HISTPLOT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_SPLITFA
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:MINIMAP2_ALIGN_ASSEMBLY
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: -
+  port 2: (value) bound ; channel: bam_format
+  port 3: (value) bound ; channel: bam_index_extension
+  port 4: (value) bound ; channel: cigar_paf_format
+  port 5: (value) bound ; channel: cigar_bam
+  port 6: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_PURGEDUPS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:PURGEDUPS_GETSEQS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:CONCATENATE_HAPLOTYPES
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:BGZIP_PURGED
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_INDEX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_GENCRAMCHUNKS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: cram_bin_size
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:SAMTOOLS_SPLITHEADER
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BWAMEM2_INDEX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:CRAMALIGN_BWAMEM2ALIGNHIC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_FAIDX
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: get_sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:CRAM_MAP_ILLUMINA_HIC:BAM_SAMTOOLS_MERGE_MARKDUP:SAMTOOLS_MERGEDUP
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_STATS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_FLAGSTAT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BAM_STATS_SAMTOOLS:SAMTOOLS_IDXSTATS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:BEDTOOLS_BAMTOBEDSORT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_CONTIGS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: get_sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:SAMTOOLS_FAIDX_SCAFFOLDS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: get_sizes
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:YAHS_MAKEPAIRSFILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTMAP
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:PRETEXTSNAPSHOT
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_CLOAD
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (value) bound ; channel: mode
+  port 3: (value) bound ; channel: cool_bin
+  port 4: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:COOLER_ZOOMIFY
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:GAWK_PROCESS_PAIRS_FILE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: program_file
+  port 2: (value) bound ; channel: disable_redirect_output
+  port 3: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:FASTA_BAM_SCAFFOLDING_YAHS:PAIRS_CREATE_CONTACT_MAPS:JUICERTOOLS_PRE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:SCAFFOLDING:BGZIP_SCAFFOLDED
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:ASMSTATS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:GFASTATS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: out_fmt
+  port 2: (value) bound ; channel: genome_size
+  port 3: (value) bound ; channel: target
+  port 4: (value) bound ; channel: -
+  port 5: (value) bound ; channel: -
+  port 6: (value) bound ; channel: -
+  port 7: (value) bound ; channel: -
+  port 8: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:BUSCO_BUSCO
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: mode
+  port 2: (queue) OPEN  ; channel: lineage
+  port 3: (value) bound ; channel: busco_lineages_path
+  port 4: (value) bound ; channel: config_file
+  port 5: (value) bound ; channel: clean_intermediates
+  port 6: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:GENOME_STATISTICS:MERQURYFK_MERQURYFK
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: input_mode
+  port 3: (queue) OPEN  ; channel: mito_code
+  port 4: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_STAGE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: spec
+  port 1: (value) OPEN  ; channel: versions
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:INDEX_SPEC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: spec
+  port 1: (value) OPEN  ; channel: versions
+  port 2: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:OATK
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: -
+  port 3: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:OATK_ASSEMBLY:BANDAGE_IMAGE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_FINDMITOREFERENCE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:MITOHIFI_ASSEMBLY:MITOHIFI_MITOHIFI
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (queue) OPEN  ; channel: -
+  port 2: (queue) OPEN  ; channel: input_mode
+  port 3: (queue) OPEN  ; channel: mito_code
+  port 4: (cntrl) -     ; channel: $
+
+[process] SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:ORGANELLE_ASSEMBLY:INDEX_SPEC
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: spec
+  port 1: (value) OPEN  ; channel: versions
+  port 2: (cntrl) -     ; channel: $
+
+Feb-27 16:53:11.369 [SIGINT handler] INFO  nextflow.Nextflow - -[0;35m[sanger-tol/genomeassembly][0;31m Pipeline completed with errors[0m-
+Feb-27 16:53:11.371 [SIGINT handler] WARN  n.processor.TaskPollingMonitor - Killing running tasks (1)
+Feb-27 16:53:11.379 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Feb-27 16:53:11.390 [SIGINT handler] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=2; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=1; succeedDuration=3.4s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=4; peakMemory=15 GB; ]
+Feb-27 16:53:11.468 [SIGINT handler] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Feb-27 16:53:12.039 [SIGINT handler] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Feb-27 16:53:12.093 [SIGINT handler] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Feb-27 16:53:12.096 [SIGINT handler] ERROR nextflow.Nextflow - Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting
+Feb-27 16:53:12.096 [main] DEBUG nextflow.Session - Session await > all processes finished
+Feb-27 16:53:12.096 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Feb-27 16:53:12.097 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=2; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=1; succeedDuration=3.4s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=4; peakMemory=15 GB; ]
+Feb-27 16:53:12.100 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=SANGERTOL_GENOMEASSEMBLY:GENOMEASSEMBLY:NUCLEAR_ASSEMBLY:PURGING:FASTA_PURGE_RETAINED_HAPLOTYPE:FASTX_MAP_LONG_READS:FASTXALIGN_PYFASTXINDEX; work-dir=null
+  error [java.lang.InterruptedException]: java.lang.InterruptedException
+Feb-27 16:53:12.109 [Actor Thread 23] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.0 s; external sort time: 0.001 s; total time: 0.001 s
+Feb-27 16:53:12.110 [Actor Thread 23] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /Users/jd42/Projects/genomeassembly/work/collect-file/34bf34ebae85534d6a80070c575ea01d
+Feb-27 16:53:12.111 [Actor Thread 23] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /var/folders/l1/kf47hp3n46bblhf2q18qm6s80000gq/T/nxf-5083389820445232896
+Feb-27 16:53:12.122 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Feb-27 16:53:12.634 [main] WARN  nextflow.trace.ReportObserver - Failed to render execution report -- see the log file for details
+nextflow.exception.AbortOperationException: Report file already exists: results/pipeline_info/execution_report_2026-02-27_16-52-45.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.ReportObserver.renderHtml(ReportObserver.groovy:243)
+	at nextflow.trace.ReportObserver.onFlowComplete(ReportObserver.groovy:129)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: results/pipeline_info/execution_report_2026-02-27_16-52-45.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:262)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:482)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3012)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Feb-27 16:53:12.635 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Feb-27 16:53:12.682 [main] WARN  nextflow.trace.TimelineObserver - Failed to render execution timeline -- see the log file for details
+nextflow.exception.AbortOperationException: Timeline file already exists: results/pipeline_info/execution_timeline_2026-02-27_16-52-45.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.TimelineObserver.renderHtml(TimelineObserver.groovy:164)
+	at nextflow.trace.TimelineObserver.onFlowComplete(TimelineObserver.groovy:91)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:429)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: results/pipeline_info/execution_timeline_2026-02-27_16-52-45.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:262)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:482)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3012)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Feb-27 16:53:12.682 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Feb-27 16:53:12.683 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Feb-27 16:53:12.745 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-tower@1.17.4'
+Feb-27 16:53:12.745 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-tower
+Feb-27 16:53:12.745 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-schema@2.6.1'
+Feb-27 16:53:12.745 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-schema
+Feb-27 16:53:12.745 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
