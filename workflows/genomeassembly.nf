@@ -97,19 +97,19 @@ workflow GENOMEASSEMBLY {
             newLine: true
         )
 
-
     emit:
-    datasets          = PREPARE_INPUTS.out.datasets
-    hifiasm           = NUCLEAR_ASSEMBLY.out.hifiasm
-    purging           = NUCLEAR_ASSEMBLY.out.purging
-    polishing         = NUCLEAR_ASSEMBLY.out.polishing
-    scaffolding       = NUCLEAR_ASSEMBLY.out.scaffolding
-    contigs_mitohifi  = NUCLEAR_ASSEMBLY.out.organelle
-    statistics        = NUCLEAR_ASSEMBLY.out.statistics
-    oatk              = ORGANELLE_ASSEMBLY.out.oatk
-    reads_mitohifi    = ORGANELLE_ASSEMBLY.out.reads_mitohifi
-    versions          = ch_collated_versions // channel: [ path(versions.yml) ]
-
+    datasets         = PREPARE_INPUTS.out.datasets
+    hifiasm          = NUCLEAR_ASSEMBLY.out.hifiasm
+    purging          = NUCLEAR_ASSEMBLY.out.purging
+    polishing        = NUCLEAR_ASSEMBLY.out.polishing
+    scaffolding      = NUCLEAR_ASSEMBLY.out.scaffolding
+    contigs_mitohifi = NUCLEAR_ASSEMBLY.out.organelle
+    statistics       = NUCLEAR_ASSEMBLY.out.statistics
+    oatk             = ORGANELLE_ASSEMBLY.out.oatk
+    reads_mitohifi   = ORGANELLE_ASSEMBLY.out.reads_mitohifi
+    stage_indexes    = NUCLEAR_ASSEMBLY.out.stage_indexes
+    spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes.mix(ORGANELLE_ASSEMBLY.out.spec_indexes)
+    versions         = ch_collated_versions // channel: [ path(versions.yml) ]
 }
 
 /*

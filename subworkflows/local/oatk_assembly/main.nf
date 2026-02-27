@@ -51,23 +51,23 @@ workflow OATK_ASSEMBLY {
         .join(OATK.out.log)
         .join(BANDAGE_IMAGE.out.png.groupTuple(by: 0))
         .map { spec, mito_fa, mito_bed, mito_gfa, mito_annot, pltd_fa, pltd_bed, pltd_gfa, pltd_annot, init_gfa, final_gfa, log, images ->
-            return [
-                hash: spec.id,
-                stage: spec.stage,
-                data: spec.data,
-                params: spec.params,
-                mito_fasta: mito_fa,
-                pltd_fasta: pltd_fa,
-                mito_bed: mito_bed,
-                pltd_bed: pltd_bed,
-                mito_gfa: mito_gfa,
-                pltd_gfa: pltd_gfa,
-                mito_annot: mito_annot,
-                pltd_annot: pltd_annot,
-                initial_gfa: init_gfa,
-                final_gfa: final_gfa,
-                oatk_log: log,
-                bandage_plots: images
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    oatk: [
+                        mito_fasta: mito_fa,
+                        pltd_fasta: pltd_fa,
+                        mito_bed: mito_bed,
+                        pltd_bed: pltd_bed,
+                        mito_gfa: mito_gfa,
+                        pltd_gfa: pltd_gfa,
+                        mito_annot: mito_annot,
+                        pltd_annot: pltd_annot,
+                        initial_gfa: init_gfa,
+                        final_gfa: final_gfa,
+                        oatk_log: log,
+                        bandage_plots: images
+                    ]
+                ]
             ]
         }
 

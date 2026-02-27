@@ -99,27 +99,27 @@ workflow SCAFFOLDING {
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.cool, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.hic, by: 0, remainder: true)
         .map { spec, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
-            return [
-                hash: spec.id,
-                stage: spec.stage,
-                data: spec.data,
-                params: spec.params,
-                hap: spec._hap,
-                fasta: fasta,
-                bam: bam,
-                bai: bai,
-                stats: stats,
-                flagstats: flagstats,
-                idxstats: idxstats,
-                yahs_agp: agp,
-                yahs_bin: bin,
-                yahs_initial: initial,
-                yahs_intermeriate: intermed,
-                yahs_log: log,
-                pretext: pretext,
-                pretext_png: png,
-                cool: cool,
-                hic: hic
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    scaffolding: [
+                        hap: spec._hap,
+                        fasta: fasta,
+                        bam: bam,
+                        bai: bai,
+                        stats: stats,
+                        flagstats: flagstats,
+                        idxstats: idxstats,
+                        yahs_agp: agp,
+                        yahs_bin: bin,
+                        yahs_initial: initial,
+                        yahs_intermeriate: intermed,
+                        yahs_log: log,
+                        pretext: pretext,
+                        pretext_png: png,
+                        cool: cool,
+                        hic: hic
+                    ]
+                ]
             ]
         }
 

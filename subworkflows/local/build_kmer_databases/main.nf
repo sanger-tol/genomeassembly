@@ -139,7 +139,7 @@ workflow BUILD_KMER_DATABASES {
         .join(ch_yakdbs, remainder: true)
         .map { meta, reads_list, fastk, yakdb ->
             def out_meta = meta + [
-                reads: reads_list,
+                reads: reads_list.sort { f -> f.getName() },
                 fk_hist: fastk[0],
                 fk_ktab: fastk[1],
                 yak: yakdb,
