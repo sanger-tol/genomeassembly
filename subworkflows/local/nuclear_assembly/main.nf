@@ -26,11 +26,18 @@ workflow NUCLEAR_ASSEMBLY {
     ch_assemblies = channel.empty()
 
     //
+    // Logic: Set up and deduplicate input stages
+    //
+    ch_stages = ch_specs.flatMap { spec ->
+        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
+    }.unique()
+
+    //
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     HIFIASM_ASSEMBLY(
-        ch_specs.map { spec -> setupStage(spec, "bin_assembly") }.unique(),
-        ch_specs.map { spec -> setupStage(spec, "assembly") }.unique(),
+        ch_stages.filter { stage -> stage.stage == "bin_assembly" },
+        ch_stages.filter { stage -> stage.stage == "assembly" }
     )
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
 
@@ -38,9 +45,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: purge assemblies with purge_dups pipeline
     //
     PURGING(
-        ch_specs.map { spec ->
-            setupStage(spec, "purging")
-        }.filter { spec -> spec }.unique(),
+        ch_stages.filter { stage -> stage.stage == "purging" },
         ch_assemblies,
         val_fastx_reads_per_chunk
     )
@@ -51,9 +56,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: polish assemblies with the polishing pipeline
     //
     POLISHING(
-        ch_specs.map { spec ->
-            setupStage(spec, "polishing")
-        }.filter { spec -> spec }.unique(),
+        ch_stages.filter { stage -> stage.stage == "polishing" },
         ch_assemblies,
         val_polishing_container_provided,
         val_sequences_per_polishing_chunk
@@ -64,9 +67,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: run hic-mapping and scaffolding
     //
     SCAFFOLDING(
-        ch_specs.map { spec ->
-            setupStage(spec, "scaffolding")
-        }.filter { spec -> spec }.unique(),
+        ch_stages.filter { stage -> stage.stage == "scaffolding" },
         ch_assemblies,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
@@ -110,9 +111,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: Find organellar genomes using mitohifi
     //
     MITOHIFI_ASSEMBLY(
-        ch_specs.flatMap { spec ->
-            [setupStage(spec, "mito"), setupStage(spec, "plastid")]
-        }.filter { spec -> spec }.unique(),
+        ch_stages.filter { stage -> stage.stage in ["mito", "plastid"] },
         ch_assemblies,
     )
 
@@ -121,12 +120,11 @@ workflow NUCLEAR_ASSEMBLY {
     //
     ch_versions_to_index = channel.topic("versions")
         .map { task, tool, version -> [(tool): version] }
-        .collect()
+        .unique()
+        .reduce { a, b -> a + b }
 
     INDEX_STAGE(
-        ch_specs.flatMap { spec ->
-            spec.stages.collect { stageName, stageData -> stageData }
-        }.filter { stage -> stage.stage != "bin_assembly" },
+        ch_stages.filter { stage -> stage.stage != "bin_assembly" },
         ch_versions_to_index
     )
 

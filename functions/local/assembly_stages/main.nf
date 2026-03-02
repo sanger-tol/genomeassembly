@@ -251,40 +251,6 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
 }
 
 /**
- * Prepares a specific assembly stage for execution by attaching its required datasets.
- *
- * This function extracts a stage configuration from the processed specification and
- * enriches it with the actual dataset objects needed for that stage. It serves as a
- * bridge between the stage specification (which only lists dataset names) and the
- * execution environment (which needs the actual dataset objects).
- *
- * @param spec The processed assembly specification returned by stageSpec(), containing:
- *             - stages: map of stage configurations
- *             - data: consolidated map of all available datasets
- * @param stage The name of the stage to set up (must match a key in spec.stages)
- *
- * @return A stage configuration map ready for execution:
- *         [
- *           stage: <stage name>
- *           id: <stage MD5 hash>
- *           prevID: <previous stage hash or empty string>
- *           dataList: <list of dataset names>
- *           params: <stage parameters>
- *           data: <map of dataset name to dataset object for this stage>
- *         ]
- *         Returns null if the specified stage does not exist in the spec
- */
-def setupStage(spec, stage) {
-    if (!spec.stages?.get(stage)) {
-        return null
-    }
-
-    def stageData = spec.data.subMap(spec.stages[stage].dataList)
-
-    return spec.stages[stage] + [data: stageData]
-}
-
-/**
  * Configures and stages an assembly specification for the Hifiasm assembler workflow.
  *
  * This function defines the complete pipeline for Hifiasm-based genome assembly, including
@@ -452,4 +418,38 @@ def stageMitohifiSpec(spec, dataList, haptabList) {
     ]
 
     return stageSpec(spec, MITOHIFI_CONFIG, dataList, haptabList)
+}
+
+/**
+ * Prepares a specific assembly stage for execution by attaching its required datasets.
+ *
+ * This function extracts a stage configuration from the processed specification and
+ * enriches it with the actual dataset objects needed for that stage. It serves as a
+ * bridge between the stage specification (which only lists dataset names) and the
+ * execution environment (which needs the actual dataset objects).
+ *
+ * @param spec The processed assembly specification returned by stageSpec(), containing:
+ *             - stages: map of stage configurations
+ *             - data: consolidated map of all available datasets
+ * @param stage The name of the stage to set up (must match a key in spec.stages)
+ *
+ * @return A stage configuration map ready for execution:
+ *         [
+ *           stage: <stage name>
+ *           id: <stage MD5 hash>
+ *           prevID: <previous stage hash or empty string>
+ *           dataList: <list of dataset names>
+ *           params: <stage parameters>
+ *           data: <map of dataset name to dataset object for this stage>
+ *         ]
+ *         Returns null if the specified stage does not exist in the spec
+ */
+def setupStage(spec, stage) {
+    if (!spec.stages?.get(stage)) {
+        return null
+    }
+
+    def stageData = spec.data.subMap(spec.stages[stage].dataList)
+
+    return spec.stages[stage] + [data: stageData, assembler: spec.assembler]
 }

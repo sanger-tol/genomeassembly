@@ -7,13 +7,15 @@
  * @param item the object to convert (Path or any other type)
  * @return String representation of the item
  */
-def convertString(item) {
-    if (item instanceof Path) {
-        return item.toUriString()
-    } else {
-        return item.toString()
-    }
-}
+ def convertString(item) {
+     if (item instanceof Path) {
+         return item.toUriString()
+     } else if (item instanceof List && item.isEmpty()) {
+         return ""
+     } else {
+         return item.toString()
+     }
+ }
 
 /**
  * Recursively converts all values in a map to strings.
@@ -32,7 +34,7 @@ def stringifyMap(Map m) {
         if (v instanceof Map) {
             stringifiedValue = stringifyMap(v)
         } else if (v instanceof List) {
-            stringifiedValue = v.collect { item ->
+            stringifiedValue = v.isEmpty() ? "" : v.collect { item ->
                convertString(item)
             }
         } else {
@@ -40,7 +42,7 @@ def stringifyMap(Map m) {
         }
 
         [k, stringifiedValue]
-    }
+    }.sort()
 }
 
 process GENERATE_SPECIFICATION_INDEX {
@@ -63,7 +65,7 @@ process GENERATE_SPECIFICATION_INDEX {
     def json_spec = spec.subMap(["data", "params", "tools"])
 
     // Replace tools list with tools map
-    json_spec.tools = versions.collectEntries { [it.tool, it.version] }.subMap(json_spec.tools)
+    json_spec.tools = versions.subMap(json_spec.tools)
 
     // Filter to remove unused datasets
     json_spec.data = json_spec.data.findAll { _datatype, datamap -> datamap.id }

@@ -11,17 +11,24 @@ workflow ORGANELLE_ASSEMBLY {
 
     main:
     //
+    // Logic: Set up and deduplicate input stages
+    //
+    ch_stages = ch_specs.flatMap { spec ->
+        spec.stages.collect { stageName, stageData -> setupStage(spec, stageName) }
+    }.unique()
+
+    //
     // Subworkflow: assemble organelles with Oatk
     //
     OATK_ASSEMBLY(
-        ch_specs.map { spec -> setupStage(spec, "oatk") }.filter { spec -> spec }.unique()
+        ch_stages.filter { stage -> stage.stage == "oatk" }
     )
 
     //
     // Subworkflow: assemble organelles with Mitohifi
     //
     MITOHIFI_ASSEMBLY(
-        ch_specs.map { spec -> setupStage(spec, "mitohifi") }.filter { spec -> spec }.unique(),
+        ch_stages.filter { stage -> stage.stage == "mitohifi" },
         channel.empty(),
     )
 
@@ -30,7 +37,7 @@ workflow ORGANELLE_ASSEMBLY {
     //
     ch_versions_to_index = channel.topic("versions")
         .map { task, tool, version -> [(tool): version] }
-        .collect()
+        .reduce { a, b -> a + b }
 
     INDEX_SPEC(
         ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
@@ -40,16 +47,16 @@ workflow ORGANELLE_ASSEMBLY {
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
-    ch_output_specs = ch_specs.map { spec -> spec.subMap(["id", "hashes", "data"]) }.unique()
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
 
     ch_oatk_output = ch_output_specs
         .combine(OATK_ASSEMBLY.out.oatk_output)
-        .filter { spec, oatk -> oatk.hash in spec.hashes.values() }
+        .filter { spec, oatk -> oatk.id in spec.hashes.values() }
         .map { spec, oatk -> spec + oatk }
 
     ch_mitohifi_output = ch_output_specs
         .combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
-        .filter { spec, mitohifi -> mitohifi.hash in spec.hashes.values() }
+        .filter { spec, mitohifi -> mitohifi.id in spec.hashes.values() }
         .map { spec, mitohifi -> spec + mitohifi }
 
     emit:
