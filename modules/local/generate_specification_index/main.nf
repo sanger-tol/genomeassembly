@@ -65,7 +65,16 @@ process GENERATE_SPECIFICATION_INDEX {
     def json_spec = spec.subMap(["data", "params", "tools"])
 
     // Replace tools list with tools map
-    json_spec.tools = versions.subMap(json_spec.tools)
+    json_spec.tools = json_spec.tools.collectEntries { stage, tools ->
+        if (tools.isEmpty()) {
+            return  // skip this stage
+        }
+
+        def stageVersions = versions.subMap(tools)
+            .values()
+            .inject([:]) { a, b -> a + b }
+        [stage, stageVersions]
+    }
 
     // Filter to remove unused datasets
     json_spec.data = json_spec.data.findAll { _datatype, datamap -> datamap.id }

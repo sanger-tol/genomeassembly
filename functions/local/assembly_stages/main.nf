@@ -59,7 +59,7 @@
 def stageSpec(spec, paramsConfig, dataList, haptabList) {
     // Setup outputs
     def allParams = [:]
-    def allTools = []
+    def allTools = [:]
     def allStages = [:]
 
     // Store hashes - the previous hash, as well as a map of hashes by stages
@@ -76,9 +76,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 
     // Store tools - the previous tools, as well as a map of tools
     def toolsByStage = [:]
-    def prevTools = []
-
-
+    def prevTools = [:]
 
     // Create an overall data map
     def dataMap = generateDataMap(spec, dataList, haptabList)
@@ -100,7 +98,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
             dependHash = hashesByStage[config.depends]
             dependData = dataByStage[config.depends]
             dependParams = paramsByStage[config.depends]
-            dependTools = toolsByStage[config.depends]
+            dependTools = toolsByStage.subMap(config.depends)
         } else {
             dependHash = prevHash
             dependData = prevData
@@ -111,7 +109,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         // Extract data and params into submaps
         def stageData = dependData + config.data
         def stageParams = dependParams + spec.subMap(config.params)
-        def stageTools = dependTools + config.tools
+        def stageTools = dependTools + [(stageName): config.tools]
 
         // If provided, append the extraParams to the spec
         if(config.extraParams) {
@@ -131,7 +129,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         hashesByStage[stageName] = stageHash
         dataByStage[stageName] = stageData
         paramsByStage[stageName] = stageParams
-        toolsByStage[stageName] = stageTools
+        toolsByStage[stageName] = config.tools
 
         // Set up the stage specification
         def stageSpec = [
@@ -296,7 +294,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: true,
             depends: null,
             extraParams: null,
-            tools: ["hifiasm"]
+            tools: ["HIFIASM"]
         ],
         purging: [
             data: [],
@@ -304,7 +302,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.purge,
             depends: null,
             extraParams: null,
-            tools: ["purgedups"]
+            tools: ["FASTXALIGN_MINIMAP2ALIGN", "PURGEDUPS_PURGEDUPS"]
         ],
         polishing: [
             data: ["polishing"],
@@ -312,7 +310,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.polish,
             depends: null,
             extraParams: null,
-            tools: ["longranger", "freebayes"]
+            tools: ["LONGRANGER_ALIGN", "FREEBAYES"]
         ],
         scaffolding: [
             data: [],
@@ -320,7 +318,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.scaffold,
             depends: null,
             extraParams: null,
-            tools: ["yahs"]
+            tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"]
         ],
         mito: [
             data: [],
@@ -328,7 +326,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.find_mito,
             depends: "assembly",
             extraParams: [mode: "contigs", organelle: "mito"],
-            tools: ["mitohifi"]
+            tools: ["MITOHIFI_MITOHIFI"]
         ],
         plastid: [
             data: [],
@@ -336,7 +334,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.find_plastid,
             depends: "assembly",
             extraParams: [mode: "contigs", organelle: "plastid"],
-            tools: ["mitohifi"]
+            tools: ["MITOHIFI_MITOHIFI"]
         ]
     ]
 
@@ -376,7 +374,7 @@ def stageOatkSpec(spec, dataList, haptabList) {
             enabled: true,
             depends: null,
             extraParams: null,
-            tools: ["oatk"]
+            tools: ["OATK"]
         ]
 
     ]
@@ -413,7 +411,7 @@ def stageMitohifiSpec(spec, dataList, haptabList) {
             enabled: true,
             depends: null,
             extraParams: [mode: "reads", organelle: "mito"],
-            tools: ["mitohifi"]
+            tools: ["MITOHIFI_MITOHIFI"]
         ]
     ]
 

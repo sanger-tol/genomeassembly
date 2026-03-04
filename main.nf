@@ -178,27 +178,25 @@ output {
             spec.output.polishing.longranger_csv >> "${spec.name}/polishing/aln/"
             spec.output.polishing.merged_vcf >> "${spec.name}/polishing/vcf/"
             spec.output.polishing.merged_vcf_tbi >> "${spec.name}/polishing/vcf/"
-            spec.output.polishing.index >> "${spec.name}/polishing/purging.json"
         }
     }
     scaffolding {
         path { spec ->
-            spec.output.scaffolding.fasta >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.bam >> "${spec.name}/scaffolding/${spec.hap}/hic_aln/"
-            spec.output.scaffolding.bai >> "${spec.name}/scaffolding/${spec.hap}/hic_aln/"
-            spec.output.scaffolding.stats >> "${spec.name}/scaffolding/${spec.hap}/hic_aln/"
-            spec.output.scaffolding.flagstats >> "${spec.name}/scaffolding/${spec.hap}/hic_aln/"
-            spec.output.scaffolding.idxstats >> "${spec.name}/scaffolding/${spec.hap}/hic_aln/"
-            spec.output.scaffolding.yahs_agp >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.yahs_bin >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.yahs_initial >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.yahs_intermeriate >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.yahs_log >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.pretext >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.pretext_png >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.cool >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.hic >> "${spec.name}/scaffolding/${spec.hap}/yahs/"
-            spec.output.scaffolding.index >> "${spec.name}/scaffolding/${spec.hap}/scaffolding.json"
+            spec.output.scaffolding.fasta >> "${spec.name}/scaffolding/"
+            spec.output.scaffolding.bam >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.bai >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.stats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.flagstats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.idxstats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.yahs_agp >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_bin >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_initial >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_intermeriate >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_log >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.pretext >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.pretext_png >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.cool >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.hic >> "${spec.name}/scaffolding/contact_maps/"
         }
     }
     contigs_mitohifi {

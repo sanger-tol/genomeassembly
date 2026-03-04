@@ -36,7 +36,12 @@ workflow ORGANELLE_ASSEMBLY {
     // Module: Generate index files for each stage and the overall stage
     //
     ch_versions_to_index = channel.topic("versions")
-        .map { task, tool, version -> [(tool): version] }
+        .map { task, tool, version -> [task.split(':').last(), tool, version] }
+        .unique()
+        .groupTuple(by: 0)
+        .map { task, tools, versions ->
+            [(task): [tools, versions].transpose().collectEntries()]
+        }
         .reduce { a, b -> a + b }
 
     INDEX_SPEC(

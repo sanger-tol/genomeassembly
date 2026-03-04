@@ -97,6 +97,7 @@ workflow NUCLEAR_ASSEMBLY {
         .join(GENOME_STATISTICS.out.merqury, remainder: true)
         .map { spec, stats, busco, merqury ->
             spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
                 output: [
                     statistics: [
                         stats: stats,
@@ -119,8 +120,12 @@ workflow NUCLEAR_ASSEMBLY {
     // Module: Generate index files for each stage and the overall stage
     //
     ch_versions_to_index = channel.topic("versions")
-        .map { task, tool, version -> [(tool): version] }
+        .map { task, tool, version -> [task.split(':').last(), tool, version] }
         .unique()
+        .groupTuple(by: 0)
+        .map { task, tools, versions ->
+            [(task): [tools, versions].transpose().collectEntries()]
+        }
         .reduce { a, b -> a + b }
 
     INDEX_STAGE(

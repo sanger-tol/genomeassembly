@@ -100,9 +100,9 @@ workflow SCAFFOLDING {
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.hic, by: 0, remainder: true)
         .map { spec, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
                 output: [
                     scaffolding: [
-                        hap: spec._hap,
                         fasta: fasta,
                         bam: bam,
                         bai: bai,
