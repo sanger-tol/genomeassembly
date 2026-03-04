@@ -36,8 +36,8 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     HIFIASM_ASSEMBLY(
-        ch_stages.filter { stage -> stage.stage == "bin_assembly" },
-        ch_stages.filter { stage -> stage.stage == "assembly" }
+        ch_stages.filter { stage -> stage.stage == "base" },
+        ch_stages.filter { stage -> stage.stage == "hifiasm_assembly" }
     )
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
 
@@ -112,7 +112,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: Find organellar genomes using mitohifi
     //
     MITOHIFI_ASSEMBLY(
-        ch_stages.filter { stage -> stage.stage in ["mito", "plastid"] },
+        ch_stages.filter { stage -> stage.stage in ["mitohifi_mito", "mitohifi_plastid"] },
         ch_assemblies,
     )
 
@@ -129,7 +129,7 @@ workflow NUCLEAR_ASSEMBLY {
         .reduce { a, b -> a + b }
 
     INDEX_STAGE(
-        ch_stages.filter { stage -> stage.stage != "bin_assembly" },
+        ch_stages.filter { stage -> stage.stage != "base" },
         ch_versions_to_index
     )
 

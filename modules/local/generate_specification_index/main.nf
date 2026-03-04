@@ -42,7 +42,7 @@ def stringifyMap(Map m) {
         }
 
         [k, stringifiedValue]
-    }.sort()
+    }
 }
 
 process GENERATE_SPECIFICATION_INDEX {

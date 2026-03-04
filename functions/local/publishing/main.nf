@@ -44,8 +44,8 @@ def specToAssemblyDir(spec) {
         if (stage == "purging") { return "purging" }
         if (stage == "polishing") { return "polishing" }
         if (stage == "scaffolding") { return "scaffolding" }
-        if (stage == "mito") { return "mito" }
-        if (stage == "plastid") { return "plastid" }
+        if (stage == "mitohifi_mito") { return "mito" }
+        if (stage == "mitohifi_plastid") { return "plastid" }
     } else if (spec.assembler == "mitohifi") {
         return ""
     } else if (spec.assembler == "oatk") {

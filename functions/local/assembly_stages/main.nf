@@ -275,7 +275,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
  */
 def stageHifiasmSpec(spec, dataList, haptabList) {
     def STAGE_CONFIG = [
-        bin_assembly: [
+        base: [
             data: ["long_read"],
             params: ["assembler", "hifiasm_bin_arguments", "coverage", "busco_lineage"],
             enabled: true,
@@ -283,7 +283,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             extraParams: null,
             tools: []
         ],
-        assembly: [
+        hifiasm_assembly: [
             data: [
                 "ultralong",
                 "hic",
@@ -320,19 +320,19 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             extraParams: null,
             tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"]
         ],
-        mito: [
+        mitohifi_mito: [
             data: [],
             params: ["mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"],
             enabled: spec.find_mito,
-            depends: "assembly",
+            depends: "hifiasm_assembly",
             extraParams: [mode: "contigs", organelle: "mito"],
             tools: ["MITOHIFI_MITOHIFI"]
         ],
-        plastid: [
+        mitohifi_plastid: [
             data: [],
             params: ["mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"],
             enabled: spec.find_plastid,
-            depends: "assembly",
+            depends: "hifiasm_assembly",
             extraParams: [mode: "contigs", organelle: "plastid"],
             tools: ["MITOHIFI_MITOHIFI"]
         ]
