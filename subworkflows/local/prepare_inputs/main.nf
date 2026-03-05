@@ -37,7 +37,7 @@ workflow PREPARE_INPUTS {
     //
     GENOMESCOPE2(FASTK_HISTEX.out.hist)
 
-    ch_coverage = GENOMESCOPE2.out.json
+    ch_coverage = GENOMESCOPE2.out.json_report
         .map { meta, json ->
             def output = new groovy.json.JsonSlurper().parse(json)
             return [meta, Math.round(output.kcov) ?: null]
