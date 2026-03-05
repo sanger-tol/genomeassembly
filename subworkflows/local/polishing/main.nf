@@ -66,7 +66,7 @@ workflow POLISHING {
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf_tbi, by: 0)
             .map { spec, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
-                return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])_ + [
+                return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
                     output: [
                         polishing: [
                             fasta: fasta,
