@@ -10,6 +10,30 @@
  * - Stage-level caching and reuse
  */
 
+ /**
+  * Deep clones a map recursively, ensuring no shared references between the clone
+  * and the original. This is critical for Nextflow resume operations where specs
+  * and data maps must be completely independent.
+  *
+  * @param obj The object to deep clone (typically a Map, List, or primitive)
+  * @return A new object with no shared references to the original
+  */
+ def deepClone(obj) {
+     if (obj == null) return null
+
+     if (obj instanceof Map) {
+         return obj.collectEntries { k, v -> [(k): deepClone(v)] }
+     } else if (obj instanceof List) {
+         return obj.collect { item -> deepClone(item) }
+     } else if (obj instanceof File) {
+         // Files are immutable at the path level, safe to reuse
+         return obj
+     } else {
+         // Primitives (String, Integer, Boolean, etc.) are immutable
+         return obj
+     }
+ }
+
 /**
  * Transforms a flat assembly specification into a nested structure with stage-specific
  * configurations and dependency tracking via MD5 hashes.
@@ -95,20 +119,20 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
             if(!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
                 error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
             }
-            dependHash = hashesByStage[config.depends]
-            dependData = dataByStage[config.depends]
-            dependParams = paramsByStage[config.depends]
-            dependTools = toolsByStage.subMap(config.depends)
+            dependHash = deepClone(hashesByStage[config.depends])
+            dependData = deepClone(dataByStage[config.depends])
+            dependParams = deepClone(paramsByStage[config.depends])
+            dependTools = deepClone(toolsByStage.subMap(config.depends))
         } else {
             dependHash = prevHash
-            dependData = prevData
-            dependParams = prevParams
-            dependTools = prevTools
+            dependData = deepClone(prevData)
+            dependParams = deepClone(prevParams)
+            dependTools = deepClone(prevTools)
         }
 
         // Extract data and params into submaps
         def stageData = dependData + config.data
-        def stageParams = dependParams + spec.subMap(config.params)
+        def stageParams = dependParams + deepClone(spec.subMap(config.params))
         def stageTools = dependTools + [(stageName): config.tools]
 
         // If provided, append the extraParams to the spec
@@ -151,10 +175,10 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         // Finally, store the hash for the next iteration but only
         // if we didn't depend on a specific step
         if(!config.depends) {
-            prevData = stageData
+            prevData = deepClone(stageData)
             prevHash = stageHash
-            prevParams = stageParams
-            prevTools = stageTools
+            prevParams = deepClone(stageParams)
+            prevTools = deepClone(stageTools)
         }
     }
 
@@ -227,7 +251,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
             data.id == dataID && data.platform == dataPlatform
         }
 
-        outputDataMap[dataType] = dataSet.clone()
+        outputDataMap[dataType] = deepClone(dataSet)
     }
 
     // Add maternal and paternal haptabs to the dataset
@@ -241,8 +265,8 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
             data.paternal_platform == outputDataMap.paternal_platform
         }
 
-        outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs.mat_haptab]
-        outputDataMap["paternal"] = outputDataMap["paternal"] + [haptab: haptabs.pat_haptab]
+        outputDataMap["maternal"] = deepClone(outputDataMap["maternal"]) + [haptab: haptabs.mat_haptab]
+        outputDataMap["paternal"] = deepClone(outputDataMap["paternal"]) + [haptab: haptabs.pat_haptab]
     }
 
     return outputDataMap
@@ -447,7 +471,7 @@ def setupStage(spec, stage) {
         return null
     }
 
-    def stageData = spec.data.subMap(spec.stages[stage].dataList)
+    def stageData = deepClone(spec.data).subMap(spec.stages[stage].dataList)
 
     return spec.stages[stage] + [data: stageData, assembler: spec.assembler]
 }

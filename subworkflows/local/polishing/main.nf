@@ -4,6 +4,8 @@ include { CAT_CAT as CONCATENATE_ASSEMBLIES } from '../../../modules/nf-core/cat
 include { SEQKIT_GREP as SEPARATE_HAPLOTYPES } from '../../../modules/nf-core/seqkit/grep/main'
 include { TABIX_BGZIP as BGZIP_POLISHED } from '../../../modules/nf-core/tabix/bgzip/main'
 
+include { deepClone } from '../../../functions/assembly_stages'
+
 workflow POLISHING {
     take:
     ch_polishing_specs // channel: spec
@@ -64,7 +66,7 @@ workflow POLISHING {
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf_tbi, by: 0)
             .map { spec, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
-                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])_ + [
                     output: [
                         polishing: [
                             fasta: fasta,

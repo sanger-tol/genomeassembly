@@ -1,6 +1,8 @@
 include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
 include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi/main'
 
+include { deepClone } from '../../../functions/assembly_stages'
+
 workflow MITOHIFI_ASSEMBLY {
     take:
     ch_mitohifi_specs  // channel: spec
@@ -117,7 +119,7 @@ workflow MITOHIFI_ASSEMBLY {
                     }
                 }
 
-                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
                     output: [
                         mitohifi: [
                             mitohifi_reference_fa: spec.params.mitohifi_reference_fa,
