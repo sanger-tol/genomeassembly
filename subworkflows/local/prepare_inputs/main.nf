@@ -62,7 +62,7 @@ workflow PREPARE_INPUTS {
                     "and retry."
                 )
             }
-            def coverage = spec.long_read_1n_coverage ? spec.long_read_1n_coverage : Math.round
+            def coverage = spec.long_read_1n_coverage ? spec.long_read_1n_coverage : cov
 
             def oatk_coverage_cutoff = spec.oatk_coverage_cutoff ?: coverage * 5
             def purging_cov = coverage + (coverage / 2)
