@@ -111,23 +111,22 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
     paramsConfig.each { stageName, config ->
         if(!config.enabled) return
 
-        // First, check if we depend on a previous stage and extract the correct
-        // params, tools and hashes from the dependent stage
+        // First, set the stage depenendencies as the previous stage processed.
         //
-        // Otherwise, we fall back to the previous stage.
+        // However, if we depend on a named stage, we override this by loading the
+        // data for the named stage.
+        def dependHash = prevHash
+        def dependData = deepClone(prevData)
+        def dependParams = deepClone(prevParams)
+        def dependTools = deepClone(prevTools)
         if (config.depends) {
             if(!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
                 error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
             }
-            def dependHash = deepClone(hashesByStage[config.depends])
-            def dependData = deepClone(dataByStage[config.depends])
-            def dependParams = deepClone(paramsByStage[config.depends])
-            def dependTools = deepClone(toolsByStage.subMap(config.depends))
-        } else {
-            def dependHash = prevHash
-            def dependData = deepClone(prevData)
-            def dependParams = deepClone(prevParams)
-            def dependTools = deepClone(prevTools)
+            dependHash = deepClone(hashesByStage[config.depends])
+            dependData = deepClone(dataByStage[config.depends])
+            dependParams = deepClone(paramsByStage[config.depends])
+            dependTools = deepClone(toolsByStage.subMap(config.depends))
         }
 
         // Extract data and params into submaps
