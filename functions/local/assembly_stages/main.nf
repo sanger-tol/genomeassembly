@@ -119,15 +119,15 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
             if(!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
                 error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
             }
-            dependHash = deepClone(hashesByStage[config.depends])
-            dependData = deepClone(dataByStage[config.depends])
-            dependParams = deepClone(paramsByStage[config.depends])
-            dependTools = deepClone(toolsByStage.subMap(config.depends))
+            def dependHash = deepClone(hashesByStage[config.depends])
+            def dependData = deepClone(dataByStage[config.depends])
+            def dependParams = deepClone(paramsByStage[config.depends])
+            def dependTools = deepClone(toolsByStage.subMap(config.depends))
         } else {
-            dependHash = prevHash
-            dependData = deepClone(prevData)
-            dependParams = deepClone(prevParams)
-            dependTools = deepClone(prevTools)
+            def dependHash = prevHash
+            def dependData = deepClone(prevData)
+            def dependParams = deepClone(prevParams)
+            def dependTools = deepClone(prevTools)
         }
 
         // Extract data and params into submaps

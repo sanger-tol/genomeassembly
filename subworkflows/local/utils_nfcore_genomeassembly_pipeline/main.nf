@@ -155,8 +155,8 @@ workflow PIPELINE_INITIALISATION {
 
             // If assembling with oatk, locate and check the existence of all HMM files
             if(spec.assembler == "oatk") {
-                mito_hmm_list = spec.oatk_mito_hmm ? createHmmFilesList(spec.oatk_mito_hmm) : []
-                plastid_hmm_list = spec.oatk_plastid_hmm ? createHmmFilesList(spec.oatk_plastid_hmm) : []
+                def mito_hmm_list = spec.oatk_mito_hmm ? createHmmFilesList(spec.oatk_mito_hmm) : []
+                def plastid_hmm_list = spec.oatk_plastid_hmm ? createHmmFilesList(spec.oatk_plastid_hmm) : []
 
                 spec = spec + [
                     oatk_mito_hmm: mito_hmm_list,
