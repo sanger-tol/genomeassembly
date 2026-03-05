@@ -1,8 +1,8 @@
-include { CRAM_MAP_ILLUMINA_HIC      } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { BAM_STATS_SAMTOOLS         } from '../../../subworkflows/nf-core/bam_stats_samtools/main'
-include { FASTA_BAM_SCAFFOLDING_YAHS } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs/main'
+include { CRAM_MAP_ILLUMINA_HIC           } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { BAM_STATS_SAMTOOLS              } from '../../../subworkflows/nf-core/bam_stats_samtools'
+include { FASTA_BAM_SCAFFOLDING_YAHS      } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs'
 
-include { TABIX_BGZIP as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/tabix/bgzip'
 
 workflow SCAFFOLDING {
     take:
@@ -22,9 +22,11 @@ workflow SCAFFOLDING {
         .combine(ch_scaffolding_specs)
         .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
         .multiMap { _asm_meta, asm1, asm2, spec ->
-            hap1: [ spec + [_hap: "hap1"], asm1 ]
-            hap2: [ spec + [_hap: "hap2"], asm2 ]
-            hic_reads: [ [spec + [_hap: "hap1"], spec + [_hap: "hap2"]], spec.data.hic.reads ]
+            def spec_hap1 = spec + [_hap: "hap1"]
+            def spec_hap2 = spec + [_hap: "hap2"]
+            hap1: [ spec_hap1, asm1 ]
+            hap2: [ spec_hap2, asm2 ]
+            hic_reads: [ [spec_hap1, spec_hap2], spec.data.hic.reads ]
         }
 
     //
@@ -99,27 +101,27 @@ workflow SCAFFOLDING {
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.cool, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_YAHS.out.hic, by: 0, remainder: true)
         .map { spec, fasta, bam, bai, stats, flagstats, idxstats, agp, bin, initial, intermed, log, pretext, png, cool, hic ->
-            return [
-                hash: spec.id,
-                stage: spec.stage,
-                data: spec.data,
-                params: spec.params,
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 hap: spec._hap,
-                fasta: fasta,
-                bam: bam,
-                bai: bai,
-                stats: stats,
-                flagstats: flagstats,
-                idxstats: idxstats,
-                yahs_agp: agp,
-                yahs_bin: bin,
-                yahs_initial: initial,
-                yahs_intermeriate: intermed,
-                yahs_log: log,
-                pretext: pretext,
-                pretext_png: png,
-                cool: cool,
-                hic: hic
+                output: [
+                    scaffolding: [
+                        fasta: fasta,
+                        bam: bam,
+                        bai: bai,
+                        stats: stats,
+                        flagstats: flagstats,
+                        idxstats: idxstats,
+                        yahs_agp: agp,
+                        yahs_bin: bin,
+                        yahs_initial: initial,
+                        yahs_intermeriate: intermed,
+                        yahs_log: log,
+                        pretext: pretext,
+                        pretext_png: png,
+                        cool: cool,
+                        hic: hic
+                    ]
+                ]
             ]
         }
 

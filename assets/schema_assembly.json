@@ -151,18 +151,21 @@
             "hifiasm_bin_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments to pass to Hifiasm that are included at the time of bin file generation. This typically would include the error correction options.",
-                "meta": "hifiasm_bin_arguments"
+                "meta": "hifiasm_bin_arguments",
+                "default": ""
             },
             "hifiasm_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments to pass to Hifiasm when processing bin files. The options from hifiasm_bin_arguments are already included at this stage and do not need to be re-specified.",
-                "meta": "hifiasm_arguments"
+                "meta": "hifiasm_arguments",
+                "default": ""
             },
             "purging_cutoffs": {
                 "type": "string",
                 "description": "Cutoffs for purging haplotypic duplications. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
                 "pattern": "\\d+,\\d+,\\d+",
-                "meta": "purging_cutoffs"
+                "meta": "purging_cutoffs",
+                "default": ""
             },
             "purge_middle": {
                 "type": "boolean",
@@ -173,7 +176,8 @@
             "yahs_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments to pass to YaHS",
-                "meta": "yahs_arguments"
+                "meta": "yahs_arguments",
+                "default": ""
             },
             "busco_lineage": {
                 "type": "string",
@@ -200,7 +204,8 @@
             "mitohifi_arguments": {
                 "type": "string",
                 "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
-                "meta": "mitohifi_reads_arguments"
+                "meta": "mitohifi_reads_arguments",
+                "default": ""
             },
             "oatk_kmer_size": {
                 "type": "integer",
@@ -216,7 +221,8 @@
             "oatk_arguments": {
                 "type": "string",
                 "description": "Additional command-line arguments for oatk, excluding -k and -c.",
-                "meta": "oatk_arguments"
+                "meta": "oatk_arguments",
+                "default": ""
             },
             "oatk_mito_hmm": {
                 "type": "string",

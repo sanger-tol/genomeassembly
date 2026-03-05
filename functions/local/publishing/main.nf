@@ -36,9 +36,19 @@ def getPlatformShortName(platform) {
  *
  * @return Output directory name (raw, purging, polishing, scaffolding) or null if unknown
  */
-def stageToAssemblyDir(stage) {
-    if (stage == "assembly") { return "raw" }
-    if (stage == "purging") { return "purging" }
-    if (stage == "polishing") { return "polishing" }
-    if (stage == "scaffolding") { return "scaffolding" }
+def specToAssemblyDir(spec) {
+    def stage = spec.stage
+
+    if(spec.assembler == "hifiasm") {
+        if (stage == "assembly") { return "raw" }
+        if (stage == "purging") { return "purging" }
+        if (stage == "polishing") { return "polishing" }
+        if (stage == "scaffolding") { return "scaffolding" }
+        if (stage == "mitohifi_mito") { return "mito" }
+        if (stage == "mitohifi_plastid") { return "plastid" }
+    } else if (spec.assembler == "mitohifi") {
+        return ""
+    } else if (spec.assembler == "oatk") {
+        return ""
+    }
 }

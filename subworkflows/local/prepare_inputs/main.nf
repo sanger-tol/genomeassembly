@@ -37,16 +37,17 @@ workflow PREPARE_INPUTS {
     //
     GENOMESCOPE2(FASTK_HISTEX.out.hist)
 
-    ch_coverage = GENOMESCOPE2.out.model
-        .map { meta, model ->
-            def kcov_line = model.readLines().find { line -> line =~ /^kmercov/ }
-            def kcov = kcov_line ? kcov_line.split(/\s+/).getAt(1).toFloat() : null
-            return [meta, kcov]
+    ch_coverage = GENOMESCOPE2.out.json_report
+        .map { meta, json ->
+            def output = new groovy.json.JsonSlurper().parse(json)
+            return [meta, Math.round(output.kcov) ?: null]
         }
 
     //
     // Logic: attach the Genomescope2-calculated coverage to each spec, then either use
     // the provided coverage if provided, otherwise the estimated coverage
+    //
+    // Also calculate the correct coverage cutoffs for purge_dups and oatk if not provided
     //
     ch_specs_with_coverage = ch_specs
         .combine(ch_coverage)
@@ -61,7 +62,17 @@ workflow PREPARE_INPUTS {
                     "and retry."
                 )
             }
-            return spec + [coverage: spec.long_read_1n_coverage ? spec.long_read_1n_coverage : cov]
+            def coverage = spec.long_read_1n_coverage ? spec.long_read_1n_coverage : cov
+
+            def oatk_coverage_cutoff = spec.oatk_coverage_cutoff ?: coverage * 5
+            def purging_cov = coverage + (coverage / 2)
+            def purging_cutoffs = spec.purging_cutoffs ?: ",${purging_cov},${purging_cov*4}"
+
+            return spec + [
+                coverage: coverage,
+                oatk_coverage_cutoff: oatk_coverage_cutoff,
+                purging_cutoffs: purging_cutoffs
+            ]
         }
 
     //

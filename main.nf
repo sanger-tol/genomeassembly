@@ -18,7 +18,7 @@ include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_geno
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_genomeassembly_pipeline'
 
 include { getPlatformShortName    } from './functions/local/publishing'
-include { stageToAssemblyDir      } from './functions/local/publishing'
+include { specToAssemblyDir       } from './functions/local/publishing'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -69,6 +69,8 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     oatk             = GENOMEASSEMBLY.out.oatk
     reads_mitohifi   = GENOMEASSEMBLY.out.reads_mitohifi
     statistics       = GENOMEASSEMBLY.out.statistics
+    stage_indexes    = GENOMEASSEMBLY.out.stage_indexes
+    spec_indexes     = GENOMEASSEMBLY.out.spec_indexes
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,6 +136,8 @@ workflow {
     contigs_mitohifi = SANGERTOL_GENOMEASSEMBLY.out.contigs_mitohifi
     oatk             = SANGERTOL_GENOMEASSEMBLY.out.oatk
     reads_mitohifi   = SANGERTOL_GENOMEASSEMBLY.out.reads_mitohifi
+    stage_indexes    = SANGERTOL_GENOMEASSEMBLY.out.stage_indexes
+    spec_indexes     = SANGERTOL_GENOMEASSEMBLY.out.spec_indexes
 }
 
 output {
@@ -145,102 +149,112 @@ output {
         enabled params.save_fastk_databases
     }
     hifiasm {
-        path { assembly ->
-            assembly.fasta >> "${assembly.id}/raw/"
-            assembly.graphs >> "${assembly.id}/raw/"
-            assembly.bed >> "${assembly.id}/raw/"
-            assembly.log >> "${assembly.id}/raw/"
+        path { spec ->
+            spec.output.hifiasm.fasta >> "${spec.name}/raw/"
+            spec.output.hifiasm.graphs >> "${spec.name}/raw/"
+            spec.output.hifiasm.bed >> "${spec.name}/raw/"
+            spec.output.hifiasm.log >> "${spec.name}/raw/"
         }
     }
     purging {
-        path { assembly ->
-            assembly.fasta >> "${assembly.id}/purging/"
-            assembly.split_fa >> "${assembly.id}/purging/split_aln/"
-            assembly.split_paf >> "${assembly.id}/purging/split_aln/"
-            assembly.pbcstat_hist >> "${assembly.id}/purging/coverage/"
-            assembly.pbcstat_basecov >> "${assembly.id}/purging/coverage/"
-            assembly.calcuts_cutoffs >> "${assembly.id}/purging/coverage/"
-            assembly.calcuts_log >> "${assembly.id}/purging/coverage/"
-            assembly.histplot >> "${assembly.id}/purging/coverage/"
-            assembly.bed >> "${assembly.id}/purging/purge_dups/"
-            assembly.log >> "${assembly.id}/purging/purge_dups/"
+        path { spec ->
+            spec.output.purging.fasta >> "${spec.name}/purging/"
+            spec.output.purging.split_fa >> "${spec.name}/purging/split_aln/"
+            spec.output.purging.split_paf >> "${spec.name}/purging/split_aln/"
+            spec.output.purging.pbcstat_hist >> "${spec.name}/purging/coverage/"
+            spec.output.purging.pbcstat_basecov >> "${spec.name}/purging/coverage/"
+            spec.output.purging.calcuts_cutoffs >> "${spec.name}/purging/coverage/"
+            spec.output.purging.calcuts_log >> "${spec.name}/purging/coverage/"
+            spec.output.purging.histplot >> "${spec.name}/purging/coverage/"
+            spec.output.purging.bed >> "${spec.name}/purging/purge_dups/"
+            spec.output.purging.log >> "${spec.name}/purging/purge_dups/"
         }
     }
     polishing {
-        path { assembly ->
-            assembly.fasta >> "${assembly.id}/polishing/"
-            assembly.longranger_bam >> "${assembly.id}/polishing/aln/"
-            assembly.longranger_bai >> "${assembly.id}/polishing/aln/"
-            assembly.longranger_csv >> "${assembly.id}/polishing/aln/"
-            assembly.merged_vcf >> "${assembly.id}/polishing/vcf/"
-            assembly.merged_vcf_tbi >> "${assembly.id}/polishing/vcf/"
+        path { spec ->
+            spec.output.polishing.fasta >> "${spec.name}/polishing/"
+            spec.output.polishing.longranger_bam >> "${spec.name}/polishing/aln/"
+            spec.output.polishing.longranger_bai >> "${spec.name}/polishing/aln/"
+            spec.output.polishing.longranger_csv >> "${spec.name}/polishing/aln/"
+            spec.output.polishing.merged_vcf >> "${spec.name}/polishing/vcf/"
+            spec.output.polishing.merged_vcf_tbi >> "${spec.name}/polishing/vcf/"
         }
     }
     scaffolding {
-        path { assembly ->
-            assembly.fasta >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.bam >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
-            assembly.bai >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
-            assembly.stats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
-            assembly.flagstats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
-            assembly.idxstats >> "${assembly.id}/scaffolding/${assembly.hap}/hic_aln/"
-            assembly.yahs_agp >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.yahs_bin >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.yahs_initial >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.yahs_intermeriate >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.yahs_log >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.pretext >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.pretext_png >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.cool >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
-            assembly.hic >> "${assembly.id}/scaffolding/${assembly.hap}/yahs/"
+        path { spec ->
+            spec.output.scaffolding.fasta >> "${spec.name}/scaffolding/"
+            spec.output.scaffolding.bam >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.bai >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.stats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.flagstats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.idxstats >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.yahs_agp >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_bin >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_initial >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_intermeriate >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_log >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.pretext >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.pretext_png >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.cool >> "${spec.name}/scaffolding/contact_maps/"
+            spec.output.scaffolding.hic >> "${spec.name}/scaffolding/contact_maps/"
         }
     }
     contigs_mitohifi {
-        path { assembly ->
-            assembly.mitohifi_reference_fa >> "${assembly.id}/${assembly.params.organelle}/ref/"
-            assembly.mitohifi_reference_gb >> "${assembly.id}/${assembly.params.organelle}/ref/"
-            assembly.mitohifi_files >> "${assembly.id}/${assembly.params.organelle}/"
+        path { spec ->
+            spec.output.mitohifi.mitohifi_reference_fa >> "${spec.name}/${spec.params.organelle}/ref/"
+            spec.output.mitohifi.mitohifi_reference_gb >> "${spec.name}/${spec.params.organelle}/ref/"
+            spec.output.mitohifi.mitohifi_files >> "${spec.name}/${spec.params.organelle}/"
         }
     }
     statistics {
-        path { statistics ->
-            statistics.stats >> [
-                "${statistics.id}",
-                "${stageToAssemblyDir(statistics.stage)}/"
+        path { spec ->
+            spec.output.statistics.stats >> [
+                "${spec.name}",
+                "${specToAssemblyDir(spec)}/"
             ].join("/")
-            statistics.merqury >> [
-                "${statistics.id}",
-                "${stageToAssemblyDir(statistics.stage)}",
-                "merqury.${getPlatformShortName(statistics.data.long_read.platform)}/"
+            spec.output.statistics.merqury >> [
+                "${spec.name}",
+                "${specToAssemblyDir(spec)}",
+                "merqury.${getPlatformShortName(spec.data.long_read.platform)}/"
             ].join("/")
-            statistics.busco >> [
-                "${statistics.id}",
-                "${stageToAssemblyDir(statistics.stage)}",
-                "busco.${statistics.params.busco_lineage}/"
+            spec.output.statistics.busco >> [
+                "${spec.name}",
+                "${specToAssemblyDir(spec)}",
+                "busco.${spec.params.busco_lineage}/"
             ].join("/")
         }
     }
     oatk {
-        path { assembly ->
-            assembly.mito_fasta >> "${assembly.id}/"
-            assembly.pltd_fasta >> "${assembly.id}/"
-            assembly.mito_bed >> "${assembly.id}/"
-            assembly.pltd_bed >> "${assembly.id}/"
-            assembly.mito_gfa >> "${assembly.id}/"
-            assembly.pltd_gfa >> "${assembly.id}/"
-            assembly.mito_annot >> "${assembly.id}/"
-            assembly.pltd_annot >> "${assembly.id}/"
-            assembly.initial_gfa >> "${assembly.id}/"
-            assembly.final_gfa >> "${assembly.id}/"
-            assembly.oatk_log >> "${assembly.id}/"
-            assembly.bandage_plots >> "${assembly.id}/"
+        path { spec ->
+            spec.output.oatk.mito_fasta >> "${spec.name}/"
+            spec.output.oatk.pltd_fasta >> "${spec.name}/"
+            spec.output.oatk.mito_bed >> "${spec.name}/"
+            spec.output.oatk.pltd_bed >> "${spec.name}/"
+            spec.output.oatk.mito_gfa >> "${spec.name}/"
+            spec.output.oatk.pltd_gfa >> "${spec.name}/"
+            spec.output.oatk.mito_annot >> "${spec.name}/"
+            spec.output.oatk.pltd_annot >> "${spec.name}/"
+            spec.output.oatk.initial_gfa >> "${spec.name}/"
+            spec.output.oatk.final_gfa >> "${spec.name}/"
+            spec.output.oatk.oatk_log >> "${spec.name}/"
+            spec.output.oatk.bandage_plots >> "${spec.name}/"
         }
     }
     reads_mitohifi {
-        path { assembly ->
-            assembly.mitohifi_reference_fa >> "${assembly.id}/ref/"
-            assembly.mitohifi_reference_gb >> "${assembly.id}/ref/"
-            assembly.mitohifi_files >> "${assembly.id}/"
+        path { spec ->
+            spec.output.mitohifi.mitohifi_reference_fa >> "${spec.name}/ref/"
+            spec.output.mitohifi.mitohifi_reference_gb >> "${spec.name}/ref/"
+            spec.output.mitohifi.mitohifi_files >> "${spec.name}/"
+        }
+    }
+    stage_indexes {
+        path { spec ->
+            spec.index >> "${spec.name}/${specToAssemblyDir(spec)}/index.json"
+        }
+    }
+    spec_indexes {
+        path { spec ->
+            spec.index >> "${spec.name}/index.json"
         }
     }
 }

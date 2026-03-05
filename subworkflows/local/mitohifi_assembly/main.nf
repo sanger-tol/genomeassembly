@@ -1,5 +1,5 @@
-include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference'
+include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi'
 
 workflow MITOHIFI_ASSEMBLY {
     take:
@@ -117,14 +117,14 @@ workflow MITOHIFI_ASSEMBLY {
                     }
                 }
 
-                return [
-                    hash: spec.id,
-                    stage: spec.stage,
-                    data: spec.data,
-                    params: spec.params,
-                    mitohifi_reference_fa: spec.params.mitohifi_reference_fa,
-                    mitohifi_reference_gb: spec.params.mitohifi_reference_gb,
-                    mitohifi_files: valid_publish_files
+                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                    output: [
+                        mitohifi: [
+                            mitohifi_reference_fa: spec.params.mitohifi_reference_fa,
+                            mitohifi_reference_gb: spec.params.mitohifi_reference_gb,
+                            mitohifi_files: valid_publish_files
+                        ]
+                    ]
                 ]
             }
     }

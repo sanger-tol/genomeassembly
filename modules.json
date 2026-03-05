@@ -342,7 +342,8 @@
                     "cram_map_illumina_hic": {
                         "branch": "main",
                         "git_sha": "d4ca71bc08dc21d68af38c147cbd972c8e25c3e0",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/sanger-tol/cram_map_illumina_hic/cram_map_illumina_hic.diff"
                     },
                     "fasta_10x_polishing_longranger_freebayes": {
                         "branch": "main",

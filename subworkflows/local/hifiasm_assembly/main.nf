@@ -1,6 +1,6 @@
-include { HIFIASM                      } from '../../../modules/sanger-tol/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm/main'
-include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip/main'
+include { HIFIASM                      } from '../../../modules/sanger-tol/hifiasm'
+include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm'
+include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip'
 
 workflow HIFIASM_ASSEMBLY {
     take:
@@ -74,15 +74,15 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.bed, by: 0)
         .join(HIFIASM.out.log, by: 0)
         .map { spec, fasta, graphs, bed, log ->
-            return [
-                hash: spec.id,
-                stage: spec.stage,
-                data: spec.data,
-                params: spec.params,
-                fasta: fasta,
-                graphs: graphs,
-                bed: bed,
-                log: log
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    hifiasm: [
+                        fasta: fasta,
+                        graphs: graphs,
+                        bed: bed,
+                        log: log
+                    ]
+                ]
             ]
         }
 
@@ -90,7 +90,7 @@ workflow HIFIASM_ASSEMBLY {
     // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
     //
     ch_assemblies_fasta = HIFIASM.out.assembly_fasta
-        .flatMap { meta, asms ->
+        .flatMap { spec, asms ->
             def pri = /hap1.p_ctg.fa$/
             def alt = /hap2.p_ctg.fa$/
 
@@ -103,7 +103,7 @@ workflow HIFIASM_ASSEMBLY {
             }
 
             return [
-                [meta, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
+                [spec, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
             ]
         }
 

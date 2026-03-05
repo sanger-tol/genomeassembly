@@ -7,6 +7,9 @@ include { SCAFFOLDING       } from '../../../subworkflows/local/scaffolding'
 
 include { setupStage        } from '../../../functions/local/assembly_stages'
 
+include { GENERATE_SPECIFICATION_INDEX as INDEX_STAGE } from '../../../modules/local/generate_specification_index/main.nf'
+include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC  } from '../../../modules/local/generate_specification_index/main.nf'
+
 workflow NUCLEAR_ASSEMBLY {
     take:
     ch_specs
@@ -23,24 +26,18 @@ workflow NUCLEAR_ASSEMBLY {
     ch_assemblies = channel.empty()
 
     //
-    // Logic: Separate out all the different unique specs, For the optional
-    // stages (purging, polishing and scaffolding, organelles), we need to filter to
-    // ensure that we have no null channels where these were unspecified
+    // Logic: Set up and deduplicate input stages
     //
-    ch_output_specs = ch_specs.map { spec -> spec.subMap(["id", "hashes", "data"]) }.unique()
-    ch_bin_assembly_specs = ch_specs.map { spec -> setupStage(spec, "bin_assembly") }.unique()
-    ch_assembly_specs = ch_specs.map { spec -> setupStage(spec, "assembly") }.unique()
-    ch_purging_specs = ch_specs.map { spec -> setupStage(spec, "purging") }.filter { spec -> spec }.unique()
-    ch_polishing_specs = ch_specs.map { spec -> setupStage(spec, "polishing") }.filter { spec -> spec }.unique()
-    ch_scaffolding_specs = ch_specs.map { spec -> setupStage(spec, "scaffolding") }.filter { spec -> spec }.unique()
-    ch_organelle_specs = ch_specs.flatMap { spec -> [setupStage(spec, "mito"), setupStage(spec, "plastid")] }.filter { spec -> spec }.unique()
+    ch_stages = ch_specs.flatMap { spec ->
+        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
+    }.unique()
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     HIFIASM_ASSEMBLY(
-        ch_bin_assembly_specs,
-        ch_assembly_specs,
+        ch_stages.filter { stage -> stage.stage == "base" },
+        ch_stages.filter { stage -> stage.stage == "hifiasm_assembly" }
     )
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
 
@@ -48,7 +45,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: purge assemblies with purge_dups pipeline
     //
     PURGING(
-        ch_purging_specs,
+        ch_stages.filter { stage -> stage.stage == "purging" },
         ch_assemblies,
         val_fastx_reads_per_chunk
     )
@@ -59,7 +56,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: polish assemblies with the polishing pipeline
     //
     POLISHING(
-        ch_polishing_specs,
+        ch_stages.filter { stage -> stage.stage == "polishing" },
         ch_assemblies,
         val_polishing_container_provided,
         val_sequences_per_polishing_chunk
@@ -70,7 +67,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: run hic-mapping and scaffolding
     //
     SCAFFOLDING(
-        ch_scaffolding_specs,
+        ch_stages.filter { stage -> stage.stage == "scaffolding" },
         ch_assemblies,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
@@ -99,14 +96,15 @@ workflow NUCLEAR_ASSEMBLY {
         .join(GENOME_STATISTICS.out.busco, remainder: true)
         .join(GENOME_STATISTICS.out.merqury, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return [
-                hash: spec.id,
-                stage: spec.stage,
-                data: spec.data,
-                params: spec.params,
-                stats: stats,
-                busco: busco,
-                merqury: merqury
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
+                output: [
+                    statistics: [
+                        stats: stats,
+                        busco: busco,
+                        merqury: merqury
+                    ]
+                ]
             ]
         }
 
@@ -114,50 +112,80 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: Find organellar genomes using mitohifi
     //
     MITOHIFI_ASSEMBLY(
-        ch_organelle_specs,
+        ch_stages.filter { stage -> stage.stage in ["mitohifi_mito", "mitohifi_plastid"] },
         ch_assemblies,
+    )
+
+    //
+    // Module: Generate index files for each stage and the overall stage
+    //
+    ch_versions_to_index = channel.topic("versions")
+        .map { task, tool, version -> [task.split(':').last(), tool, version] }
+        .unique()
+        .groupTuple(by: 0)
+        .map { task, tools, versions ->
+            [(task): [tools, versions].transpose().collectEntries()]
+        }
+        .reduce { a, b -> a + b }
+
+    INDEX_STAGE(
+        ch_stages.filter { stage -> stage.stage != "base" },
+        ch_versions_to_index
+    )
+
+    INDEX_SPEC(
+        ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
+        ch_versions_to_index
     )
 
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
+
     ch_hifiasm_out = ch_output_specs
         .combine(HIFIASM_ASSEMBLY.out.hifiasm_output)
-        .filter { spec, hifiasm -> hifiasm.hash in spec.hashes.values() }
+        .filter { spec, hifiasm -> hifiasm.id in spec.hashes.values() }
         .map { spec, hifiasm -> spec + hifiasm }
 
     ch_purging_out = ch_output_specs
         .combine(PURGING.out.purging_output)
-        .filter { spec, purging -> purging.hash in spec.hashes.values() }
+        .filter { spec, purging -> purging.id in spec.hashes.values() }
         .map { spec, purging -> spec + purging }
 
     ch_polishing_out = ch_output_specs
         .combine(POLISHING.out.polishing_output)
-        .filter { spec, polishing -> polishing.hash in spec.hashes.values() }
+        .filter { spec, polishing -> polishing.id in spec.hashes.values() }
         .map { spec, polishing -> spec + polishing }
 
-    ch_scaffolding_out = ch_specs
+    ch_scaffolding_out = ch_output_specs
         .combine(SCAFFOLDING.out.scaffolding_output)
-        .filter { spec, scaffolding -> scaffolding.hash in spec.hashes.values() }
+        .filter { spec, scaffolding -> scaffolding.id in spec.hashes.values() }
         .map { spec, scaffolding -> spec + scaffolding }
 
-    ch_organelle_out = ch_specs
+    ch_organelle_out = ch_output_specs
         .combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
-        .filter { spec, organelle -> organelle.hash in spec.hashes.values() }
+        .filter { spec, organelle -> organelle.id in spec.hashes.values() }
         .map { spec, organelle -> spec + organelle }
 
-    ch_statistics_out = ch_specs
+    ch_statistics_out = ch_output_specs
         .combine(ch_statistics)
-        .filter { spec, statistics -> statistics.hash in spec.hashes.values() }
+        .filter { spec, statistics -> statistics.id in spec.hashes.values() }
         .map { spec, statistics -> spec + statistics }
 
-    emit:
-    hifiasm     = ch_hifiasm_out
-    purging     = ch_purging_out
-    polishing   = ch_polishing_out
-    scaffolding = ch_scaffolding_out
-    organelle   = ch_organelle_out
-    statistics  = ch_statistics_out
-    versions    = ch_versions
+    ch_stage_indexes = ch_output_specs
+        .combine(INDEX_STAGE.out.spec)
+        .filter { spec, index -> index.id in spec.hashes.values() }
+        .map { spec, index -> spec + index }
 
+    emit:
+    hifiasm       = ch_hifiasm_out
+    purging       = ch_purging_out
+    polishing     = ch_polishing_out
+    scaffolding   = ch_scaffolding_out
+    organelle     = ch_organelle_out
+    statistics    = ch_statistics_out
+    stage_indexes = ch_stage_indexes
+    spec_indexes  = INDEX_SPEC.out.spec
+    versions      = ch_versions
 }

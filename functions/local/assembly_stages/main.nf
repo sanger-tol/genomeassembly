@@ -22,40 +22,61 @@
  * @param spec A flat map containing the assembly specification with id, assembler,
  *             dataset references, and parameter values
  * @param paramsConfig Configuration map defining each assembly stage. Keys are stage names,
- *                     values are configuration maps with the following structure:
- *                     [
- *                       data: <list of dataset names required by this stage>
- *                       params: <list of parameter names to extract from spec>
- *                       enabled: <boolean expression to enable/disable this stage>
- *                       depends: <optional: name of stage this depends on, or null>
- *                       extraParams: <optional: additional parameters not in spec>
- *                     ]
+ *     values are configuration maps with the following structure:
+ *     [
+ *       data: <list of dataset names required by this stage>
+ *       params: <list of parameter names to extract from spec>
+ *       enabled: <boolean expression to enable/disable this stage>
+ *       depends: <optional: name of stage this depends on, or null>
+ *       extraParams: <optional: additional parameters not in spec>
+ *       tools: <optional: list of tools required by this stage>
+ *     ]
  * @param dataList List of available dataset objects to resolve data references
  * @param haptabList List of available trio haplotype tables, with information about the
- *                   child, mother and father
+ *     child, mother and father
  *
  * @return A nested map containing the processed assembly specification:
- *         [
- *           id: <original assembly id from spec>
- *           assembler: <assembler name from spec>
- *           hashes: <map of stageName to its MD5 hash string>
- *           data: <consolidated map of all data locations keyed by type>
- *           stages: <map of stageName to stage configuration>
- *         ]
+ *     [
+ *       id: <original assembly id from spec>
+ *       assembler: <assembler name from spec>
+ *       hashes: <map of stageName to its MD5 hash string>
+ *       data: <consolidated map of all data locations keyed by type>
+ *       params: <list of all params used by the spec>
+ *       stages: <map of stageName to stage configuration>
+ *       tools: <list of all tools used by the spec>
+ *     ]
  *
- *         Each stage configuration in the 'stages' map contains:
- *         [
- *           stage: <name of this stage>
- *           id: <unique MD5 hash identifying this stage configuration>
- *           prevID: <MD5 hash of the dependent stage, or empty string if none>
- *           dataList: <list of dataset names this stage requires>
- *           params: <map of parameter names to values for this stage>
- *         ]
+ *     Each stage configuration in the 'stages' map contains:
+ *     [
+ *       stage: <name of this stage>
+ *       id: <unique MD5 hash identifying this stage configuration>
+ *       prevID: <MD5 hash of the dependent stage, or empty string if none>
+ *       dataList: <list of dataset names this stage requires>
+ *       params: <map of parameter names to values for this stage>
+ *       tools: <list of all tools used by the stage?
+ *     ]
  */
 def stageSpec(spec, paramsConfig, dataList, haptabList) {
-    def stageHashes = [:]
-    def prevHash = null
-    def stages = [:]
+    // Setup outputs
+    def allParams = [:]
+    def allTools = [:]
+    def allStages = [:]
+
+    // Store hashes - the previous hash, as well as a map of hashes by stages
+    def hashesByStage = [:]
+    def prevHash = ""
+
+    // Store data - the previous data, as well as a map of data
+    def dataByStage = [:]
+    def prevData = []
+
+    // Store params - the previous params, as well as a map of params
+    def paramsByStage = [:]
+    def prevParams = [:]
+
+    // Store tools - the previous tools, as well as a map of tools
+    def toolsByStage = [:]
+    def prevTools = [:]
 
     // Create an overall data map
     def dataMap = generateDataMap(spec, dataList, haptabList)
@@ -66,51 +87,85 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
     paramsConfig.each { stageName, config ->
         if(!config.enabled) return
 
-        // Extract data and params into submaps
-        def datasetsRequired = config.data
-        def paramsSpec = spec.subMap(config.params)
+        // First, set the stage depenendencies as the previous stage processed.
+        //
+        // However, if we depend on a named stage, we override this by loading the
+        // data for the named stage.
+        def dependHash = prevHash
+        def dependData = prevData
+        def dependParams = prevParams
+        def dependTools = prevTools
+        if (config.depends) {
+            if(!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
+                error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
+            }
+            dependHash = hashesByStage[config.depends]
+            dependData = dataByStage[config.depends]
+            dependParams = paramsByStage[config.depends]
+            dependTools = toolsByStage.subMap(config.depends)
+        }
 
+        // Extract data and params into submaps
+        def stageData = dependData + config.data
+        def stageParams = dependParams + spec.subMap(config.params)
+        def stageTools = dependTools + [(stageName): config.tools]
+
+        // If provided, append the extraParams to the spec
         if(config.extraParams) {
-            paramsSpec = paramsSpec + config.extraParams
+            stageParams = stageParams + config.extraParams
         }
 
         // Concatenate the data and params values to hash and generate it
-        def hashContent = spec.assembler + datasetsRequired.join("") + paramsSpec.values().join("")
+        def hashContent = [
+            [spec.assembler] +
+            stageData +
+            stageParams.collect { k, v -> "${k}=${v}" }
+        ].join("&")
 
-        // If a specific dependency is requested, find its hash
-        // Otherwise use the last used hash for generation
-        def dependHash = ""
-        if (config.depends) {
-            if(!stageHashes[config.depends]) {
-                error("Error processing spec [${spec.id}]: No hash has been generated for stage ${config.depends}.")
-            }
-            dependHash = stageHashes[config.depends]
-        } else if (prevHash) {
-            dependHash = prevHash
-        }
-        def hash = (dependHash + hashContent).md5()
+        def stageHash = (dependHash + hashContent).md5()
 
-        // Store the hash in useful places
-        stageHashes[stageName] = hash
+        // Save the hash, params and tools in the
+        hashesByStage[stageName] = stageHash
+        dataByStage[stageName] = stageData
+        paramsByStage[stageName] = stageParams
+        toolsByStage[stageName] = config.tools
+
+        // Set up the stage specification
         def stageSpec = [
             stage: stageName,
-            id: hash,
+            id: stageHash,
             prevID: dependHash,
-            dataList: datasetsRequired,
-            params: paramsSpec
+            dataList: stageData,
+            params: stageParams,
+            tools: stageTools
         ]
 
         // Add the stage to the stages list
-        stages = stages + [(stageName): stageSpec]
+        allStages = allStages + [(stageName): stageSpec]
+
+        // Update the list of all params seen
+        allParams = allParams + stageParams
+        allTools = allTools + stageTools
 
         // Finally, store the hash for the next iteration but only
         // if we didn't depend on a specific step
         if(!config.depends) {
-            prevHash = hash
+            prevData = stageData
+            prevHash = stageHash
+            prevParams = stageParams
+            prevTools = stageTools
         }
     }
 
-    return spec.subMap(["id", "assembler"]) + [hashes: stageHashes, data: dataMap, stages: stages]
+    return [
+        name: spec.id,
+        assembler: spec.assembler,
+        hashes: hashesByStage,
+        data: dataMap,
+        params: allParams,
+        stages: allStages,
+        tools: allTools
+    ]
 }
 
 /**
@@ -171,7 +226,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
             data.id == dataID && data.platform == dataPlatform
         }
 
-        outputDataMap[dataType] = dataSet.clone()
+        outputDataMap[dataType] = dataSet
     }
 
     // Add maternal and paternal haptabs to the dataset
@@ -193,51 +248,12 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
 }
 
 /**
- * Prepares a specific assembly stage for execution by attaching its required datasets.
- *
- * This function extracts a stage configuration from the processed specification and
- * enriches it with the actual dataset objects needed for that stage. It serves as a
- * bridge between the stage specification (which only lists dataset names) and the
- * execution environment (which needs the actual dataset objects).
- *
- * @param spec The processed assembly specification returned by stageSpec(), containing:
- *             - stages: map of stage configurations
- *             - data: consolidated map of all available datasets
- * @param stage The name of the stage to set up (must match a key in spec.stages)
- *
- * @return A stage configuration map ready for execution:
- *         [
- *           stage: <stage name>
- *           id: <stage MD5 hash>
- *           prevID: <previous stage hash or empty string>
- *           dataList: <list of dataset names>
- *           params: <stage parameters>
- *           data: <map of dataset name to dataset object for this stage>
- *         ]
- *         Returns null if the specified stage does not exist in the spec
- */
-def setupStage(spec, stage) {
-    if (!spec.stages?.get(stage)) {
-        return null
-    }
-
-    def stageData = spec.data.subMap(spec.stages[stage].dataList)
-
-    return spec.stages[stage] + [data: stageData]
-}
-
-/**
  * Configures and stages an assembly specification for the Hifiasm assembler workflow.
  *
  * This function defines the complete pipeline for Hifiasm-based genome assembly, including
  * data requirements and parameters for each stage. It organizes datasets into three tiers
  * based on when they're needed in the pipeline, and configures seven distinct assembly
  * stages with their dependencies and enablement conditions.
- *
- * Data configuration tiers:
- * - bin_data: Datasets for constructing the base overlap graph (long_read only)
- * - asm_data: Datasets for assembly and purging (adds ultralong, hic, maternal, paternal)
- * - polish_scaff_data: Datasets for polishing onwards (adds polishing reads)
  *
  * Assembly stages (in typical execution order):
  * 1. bin_assembly: Constructs the overlap graph from long reads
@@ -257,70 +273,67 @@ def setupStage(spec, stage) {
  *         as returned by stageSpec()
  */
 def stageHifiasmSpec(spec, dataList, haptabList) {
-    def DATA_CONFIG = [
-        bin_data: ["long_read"],
-    ]
-
-    DATA_CONFIG.asm_data = DATA_CONFIG.bin_data + [
-        "ultralong",
-        "hic",
-        "maternal",
-        "paternal"
-    ]
-
-    DATA_CONFIG.polish_scaff_data = DATA_CONFIG.asm_data + [
-        "polishing"
-    ]
-
     def STAGE_CONFIG = [
-        bin_assembly: [
-            data: DATA_CONFIG.bin_data,
-            params: ["hifiasm_bin_arguments", "coverage", "busco_lineage"],
+        base: [
+            data: ["long_read"],
+            params: ["assembler", "hifiasm_bin_arguments", "coverage", "busco_lineage"],
             enabled: true,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: []
         ],
-        assembly: [
-            data: DATA_CONFIG.asm_data,
-            params: ["phased_assembly", "trio_assembly", "hifiasm_bin_arguments", "hifiasm_arguments", "coverage", "busco_lineage"],
+        hifiasm_assembly: [
+            data: [
+                "ultralong",
+                "hic",
+                "maternal",
+                "paternal"
+            ],
+            params: ["phased_assembly", "trio_assembly", "hifiasm_arguments"],
             enabled: true,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: ["HIFIASM"]
         ],
         purging: [
-            data: DATA_CONFIG.asm_data,
-            params: ["purging_cutoffs", "purge_middle", "coverage", "busco_lineage"],
+            data: [],
+            params: ["purging_cutoffs", "purge_middle"],
             enabled: spec.purge,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: ["FASTXALIGN_MINIMAP2ALIGN", "PURGEDUPS_PURGEDUPS"]
         ],
         polishing: [
-            data: DATA_CONFIG.polish_scaff_data,
-            params: ["busco_lineage"],
+            data: ["polishing"],
+            params: [],
             enabled: spec.polish,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: ["LONGRANGER_ALIGN", "FREEBAYES"]
         ],
         scaffolding: [
-            data: DATA_CONFIG.polish_scaff_data,
-            params: ["yahs_arguments", "busco_lineage"],
+            data: [],
+            params: ["yahs_arguments"],
             enabled: spec.scaffold,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"]
         ],
-        mito: [
-            data: DATA_CONFIG.bin_data,
-            params: ["assembler", "mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"],
+        mitohifi_mito: [
+            data: [],
+            params: ["mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"],
             enabled: spec.find_mito,
-            depends: "assembly",
-            extraParams: [mode: "contigs", organelle: "mito"]
+            depends: "hifiasm_assembly",
+            extraParams: [mode: "contigs", organelle: "mito"],
+            tools: ["MITOHIFI_MITOHIFI"]
         ],
-        plastid: [
-            data: DATA_CONFIG.bin_data,
-            params: ["assembler", "mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"],
+        mitohifi_plastid: [
+            data: [],
+            params: ["mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"],
             enabled: spec.find_plastid,
-            depends: "assembly",
-            extraParams: [mode: "contigs", organelle: "plastid"]
+            depends: "hifiasm_assembly",
+            extraParams: [mode: "contigs", organelle: "plastid"],
+            tools: ["MITOHIFI_MITOHIFI"]
         ]
     ]
 
@@ -359,7 +372,8 @@ def stageOatkSpec(spec, dataList, haptabList) {
             ],
             enabled: true,
             depends: null,
-            extraParams: null
+            extraParams: null,
+            tools: ["OATK"]
         ]
 
     ]
@@ -395,9 +409,44 @@ def stageMitohifiSpec(spec, dataList, haptabList) {
             ],
             enabled: true,
             depends: null,
-            extraParams: [mode: "reads", organelle: "mito"]
+            extraParams: [mode: "reads", organelle: "mito"],
+            tools: ["MITOHIFI_MITOHIFI"]
         ]
     ]
 
     return stageSpec(spec, MITOHIFI_CONFIG, dataList, haptabList)
+}
+
+/**
+ * Prepares a specific assembly stage for execution by attaching its required datasets.
+ *
+ * This function extracts a stage configuration from the processed specification and
+ * enriches it with the actual dataset objects needed for that stage. It serves as a
+ * bridge between the stage specification (which only lists dataset names) and the
+ * execution environment (which needs the actual dataset objects).
+ *
+ * @param spec The processed assembly specification returned by stageSpec(), containing:
+ *             - stages: map of stage configurations
+ *             - data: consolidated map of all available datasets
+ * @param stage The name of the stage to set up (must match a key in spec.stages)
+ *
+ * @return A stage configuration map ready for execution:
+ *         [
+ *           stage: <stage name>
+ *           id: <stage MD5 hash>
+ *           prevID: <previous stage hash or empty string>
+ *           dataList: <list of dataset names>
+ *           params: <stage parameters>
+ *           data: <map of dataset name to dataset object for this stage>
+ *         ]
+ *         Returns null if the specified stage does not exist in the spec
+ */
+def setupStage(spec, stage) {
+    if (!spec.stages?.get(stage)) {
+        return null
+    }
+
+    def stageData = spec.data.subMap(spec.stages[stage].dataList)
+
+    return spec.stages[stage] + [data: stageData, assembler: spec.assembler]
 }

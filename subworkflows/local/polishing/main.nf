@@ -1,8 +1,8 @@
 include { FASTA_10X_POLISHING_LONGRANGER_FREEBAYES } from '../../../subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes'
 
-include { CAT_CAT as CONCATENATE_ASSEMBLIES } from '../../../modules/nf-core/cat/cat'
-include { SEQKIT_GREP as SEPARATE_HAPLOTYPES } from '../../../modules/nf-core/seqkit/grep/main'
-include { TABIX_BGZIP as BGZIP_POLISHED } from '../../../modules/nf-core/tabix/bgzip/main'
+include { CAT_CAT as CONCATENATE_ASSEMBLIES        } from '../../../modules/nf-core/cat/cat'
+include { SEQKIT_GREP as SEPARATE_HAPLOTYPES       } from '../../../modules/nf-core/seqkit/grep'
+include { TABIX_BGZIP as BGZIP_POLISHED            } from '../../../modules/nf-core/tabix/bgzip'
 
 workflow POLISHING {
     take:
@@ -64,17 +64,17 @@ workflow POLISHING {
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf_tbi, by: 0)
             .map { spec, fasta, bed_chunks, lr_bam, lr_bai, lr_csv, vcf, tbi ->
-                return [
-                    hash: spec.id,
-                    stage: spec.stage,
-                    data: spec.data,
-                    params: spec.params,
-                    fasta: fasta,
-                    longranger_bam: lr_bam,
-                    longranger_bai: lr_bai,
-                    longranger_csv: lr_csv,
-                    merged_vcf: vcf,
-                    merged_vcf_tbi: tbi
+                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                    output: [
+                        polishing: [
+                            fasta: fasta,
+                            longranger_bam: lr_bam,
+                            longranger_bai: lr_bai,
+                            longranger_csv: lr_csv,
+                            merged_vcf: vcf,
+                            merged_vcf_tbi: tbi
+                        ]
+                    ]
                 ]
             }
     }
