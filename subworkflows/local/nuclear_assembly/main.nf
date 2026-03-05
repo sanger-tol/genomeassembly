@@ -6,7 +6,7 @@ include { POLISHING         } from '../../../subworkflows/local/polishing'
 include { SCAFFOLDING       } from '../../../subworkflows/local/scaffolding'
 
 include { setupStage        } from '../../../functions/local/assembly_stages'
-include { deepClone         } from '../../../functions/assembly_stages'
+include { deepClone         } from '../../../functions/local/assembly_stages'
 
 include { GENERATE_SPECIFICATION_INDEX as INDEX_STAGE } from '../../../modules/local/generate_specification_index/main.nf'
 include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC  } from '../../../modules/local/generate_specification_index/main.nf'

@@ -1,6 +1,6 @@
-include { FASTK_FASTK        } from "../../../modules/nf-core/fastk/fastk/main"
+include { FASTK_FASTK        } from "../../../modules/nf-core/fastk/fastk"
 include { MERQURYFK_HAPMAKER } from "../../../modules/nf-core/merquryfk/hapmaker"
-include { YAK_COUNT          } from "../../../modules/sanger-tol/yak/count/main"
+include { YAK_COUNT          } from "../../../modules/sanger-tol/yak/count"
 
 workflow BUILD_KMER_DATABASES {
     take:

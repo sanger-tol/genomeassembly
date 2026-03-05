@@ -1,8 +1,8 @@
-include { HIFIASM                      } from '../../../modules/sanger-tol/hifiasm/main'
-include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm/main'
-include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip/main'
+include { HIFIASM                      } from '../../../modules/sanger-tol/hifiasm'
+include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm'
+include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip'
 
-include { deepClone } from '../../../functions/assembly_stages'
+include { deepClone                    } from '../../../functions/local/assembly_stages'
 
 workflow HIFIASM_ASSEMBLY {
     take:

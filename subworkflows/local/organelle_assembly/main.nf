@@ -3,7 +3,7 @@ include { MITOHIFI_ASSEMBLY } from '../../../subworkflows/local/mitohifi_assembl
 
 include { setupStage        } from '../../../functions/local/assembly_stages'
 
-include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC } from '../../../modules/local/generate_specification_index/main.nf'
+include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC } from '../../../modules/local/generate_specification_index'
 
 workflow ORGANELLE_ASSEMBLY {
     take:

@@ -2,7 +2,7 @@ include { FASTA_PURGE_RETAINED_HAPLOTYPE } from '../../../subworkflows/sanger-to
 
 include { TABIX_BGZIP as BGZIP_PURGED    } from '../../../modules/nf-core/tabix/bgzip/main'
 
-include { deepClone } from '../../../functions/assembly_stages'
+include { deepClone                      } from '../../../functions/local/assembly_stages'
 
 workflow PURGING {
     take:

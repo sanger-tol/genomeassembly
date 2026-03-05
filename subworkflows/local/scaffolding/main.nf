@@ -1,10 +1,10 @@
-include { CRAM_MAP_ILLUMINA_HIC      } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { BAM_STATS_SAMTOOLS         } from '../../../subworkflows/nf-core/bam_stats_samtools'
-include { FASTA_BAM_SCAFFOLDING_YAHS } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs'
+include { CRAM_MAP_ILLUMINA_HIC           } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { BAM_STATS_SAMTOOLS              } from '../../../subworkflows/nf-core/bam_stats_samtools'
+include { FASTA_BAM_SCAFFOLDING_YAHS      } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs'
 
 include { TABIX_BGZIP as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/tabix/bgzip'
 
-include { deepClone } from '../../../functions/assembly_stages'
+include { deepClone                       } from '../../../functions/local/assembly_stages'
 
 workflow SCAFFOLDING {
     take:

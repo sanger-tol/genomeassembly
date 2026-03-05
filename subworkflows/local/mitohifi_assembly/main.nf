@@ -1,7 +1,7 @@
-include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi/main'
+include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference'
+include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi'
 
-include { deepClone } from '../../../functions/assembly_stages'
+include { deepClone                         } from '../../../functions/local/assembly_stages'
 
 workflow MITOHIFI_ASSEMBLY {
     take:

@@ -1,7 +1,7 @@
-include { OATK          } from '../../../modules/nf-core/oatk/main'
-include { BANDAGE_IMAGE } from '../../../modules/nf-core/bandage/image/main'
+include { OATK          } from '../../../modules/nf-core/oatk'
+include { BANDAGE_IMAGE } from '../../../modules/nf-core/bandage/image'
 
-include { deepClone } from '../../../functions/assembly_stages'
+include { deepClone } from '../../../functions/local/assembly_stages'
 
 workflow OATK_ASSEMBLY {
     take:
