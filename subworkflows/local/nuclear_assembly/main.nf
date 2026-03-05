@@ -6,7 +6,6 @@ include { POLISHING         } from '../../../subworkflows/local/polishing'
 include { SCAFFOLDING       } from '../../../subworkflows/local/scaffolding'
 
 include { setupStage        } from '../../../functions/local/assembly_stages'
-include { deepClone         } from '../../../functions/local/assembly_stages'
 
 include { GENERATE_SPECIFICATION_INDEX as INDEX_STAGE } from '../../../modules/local/generate_specification_index/main.nf'
 include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC  } from '../../../modules/local/generate_specification_index/main.nf'
@@ -97,7 +96,7 @@ workflow NUCLEAR_ASSEMBLY {
         .join(GENOME_STATISTICS.out.busco, remainder: true)
         .join(GENOME_STATISTICS.out.merqury, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 hap: spec._hap,
                 output: [
                     statistics: [

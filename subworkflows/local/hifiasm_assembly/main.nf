@@ -2,8 +2,6 @@ include { HIFIASM                      } from '../../../modules/sanger-tol/hifia
 include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm'
 include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip'
 
-include { deepClone                    } from '../../../functions/local/assembly_stages'
-
 workflow HIFIASM_ASSEMBLY {
     take:
     ch_bin_assembly_specs // channel: spec
@@ -76,7 +74,7 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.bed, by: 0)
         .join(HIFIASM.out.log, by: 0)
         .map { spec, fasta, graphs, bed, log ->
-            return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     hifiasm: [
                         fasta: fasta,

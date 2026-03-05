@@ -1,8 +1,6 @@
 include { OATK          } from '../../../modules/nf-core/oatk'
 include { BANDAGE_IMAGE } from '../../../modules/nf-core/bandage/image'
 
-include { deepClone } from '../../../functions/local/assembly_stages'
-
 workflow OATK_ASSEMBLY {
     take:
     ch_oatk_specs
@@ -52,7 +50,7 @@ workflow OATK_ASSEMBLY {
         .join(OATK.out.log)
         .join(BANDAGE_IMAGE.out.png.groupTuple(by: 0))
         .map { spec, mito_fa, mito_bed, mito_gfa, mito_annot, pltd_fa, pltd_bed, pltd_gfa, pltd_annot, init_gfa, final_gfa, log, images ->
-            return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     oatk: [
                         mito_fasta: mito_fa,

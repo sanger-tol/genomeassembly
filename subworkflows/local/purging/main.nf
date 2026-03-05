@@ -2,8 +2,6 @@ include { FASTA_PURGE_RETAINED_HAPLOTYPE } from '../../../subworkflows/sanger-to
 
 include { TABIX_BGZIP as BGZIP_PURGED    } from '../../../modules/nf-core/tabix/bgzip/main'
 
-include { deepClone                      } from '../../../functions/local/assembly_stages'
-
 workflow PURGING {
     take:
     ch_purging_specs // channel: spec
@@ -67,7 +65,7 @@ workflow PURGING {
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.purgedups_log, by: 0)
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.primary_reads_paf, by: 0)
         .map { spec, fasta, split_fa, splitfa_paf, pbcstat_hist, pbcstat_basecov, calcuts_cutoffs, calcuts_log, histplot, bed, log, reads_paf ->
-            return deepClone(spec.subMap(["id", "stage", "data", "params", "tools"])) + [
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     purging: [
                         fasta: fasta,
