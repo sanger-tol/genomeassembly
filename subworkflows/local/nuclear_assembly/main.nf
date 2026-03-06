@@ -49,7 +49,6 @@ workflow NUCLEAR_ASSEMBLY {
         ch_assemblies,
         val_fastx_reads_per_chunk
     )
-    ch_versions = ch_versions.mix(PURGING.out.versions)
     ch_assemblies = ch_assemblies.mix(PURGING.out.purged_assemblies)
 
     //
