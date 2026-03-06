@@ -14,7 +14,7 @@ workflow ORGANELLE_ASSEMBLY {
     // Logic: Set up and deduplicate input stages
     //
     ch_stages = ch_specs.flatMap { spec ->
-        spec.stages.collect { stageName, stageData -> setupStage(spec, stageName) }
+        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
     }.unique()
 
     //

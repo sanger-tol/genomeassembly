@@ -39,14 +39,13 @@ workflow CRAM_MAP_ILLUMINA_HIC {
         .map { meta, cram -> [ meta + [ cramfile: cram ], cram ]}
 
     ch_hic_cram_raw = ch_hic_cram_meta_mod
-        .branch { meta, cram ->
-            def cram_file = file(cram, checkIfExists: true)
-            def index = cram + ".crai"
-            have_index: file(index).exists()
-                return [ meta, cram_file, file(index, checkIfExists: true) ]
-            no_index: true
-                return [ meta, cram_file ]
-        }
+            .branch { meta, cram ->
+                def index = file(cram.toUriString() + ".crai")
+                have_index: index.exists()
+                    return [ meta, cram, index ]
+                no_index: true
+                    return [ meta, cram ]
+            }
 
     //
     // Module: Index CRAM files without indexes

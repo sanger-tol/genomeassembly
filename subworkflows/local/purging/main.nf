@@ -32,7 +32,6 @@ workflow PURGING {
         ch_purging_input.long_reads,
         val_fastx_reads_per_chunk
     )
-    ch_versions = ch_versions.mix(FASTA_PURGE_RETAINED_HAPLOTYPE.out.versions)
 
     //
     // Module: bgzip all purged assembly fasta
@@ -87,6 +86,4 @@ workflow PURGING {
     emit:
     purged_assemblies = FASTA_PURGE_RETAINED_HAPLOTYPE.out.purged_assemblies
     purging_output = ch_purging_output
-    versions = ch_versions
-
 }
