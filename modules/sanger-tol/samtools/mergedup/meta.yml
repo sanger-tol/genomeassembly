@@ -40,10 +40,15 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test', single_end:false ]
-    - input:
+    - input_files:
         type: file
         description: BAM/CRAM/SAM files
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - index_files:
+        type: file
+        description: BAM/CRAM/SAM index
+        pattern: "*.{bai,csi,crai}"
         ontologies: []
   - - meta2:
         type: map

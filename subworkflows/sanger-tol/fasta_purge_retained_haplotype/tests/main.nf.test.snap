@@ -2,117 +2,6 @@
     "Undibacterium unclassified - hap1/hap2 - hifi": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
-                        "test.fa:md5,eafafcfcb5718481e1c24211b6113b8d"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        [
-                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
-                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
-                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
-                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
-                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
-                        ]
-                    ]
-                ],
-                "12": [
-                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
-                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
-                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
-                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
-                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
-                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d"
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
-                    ]
-                ],
                 "primary_reads_paf": [
                     [
                         {
@@ -149,7 +38,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
+                        "test.dups.bed.gz:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "purgedups_calcuts_cutoffs": [
@@ -181,7 +70,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
+                        "test.purge_dups.log"
                     ]
                 ],
                 "purgedups_pbcstat_basecov": [
@@ -215,137 +104,18 @@
                         },
                         "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
-                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
-                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
-                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
-                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
-                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-10T10:31:59.906658"
+        "timestamp": "2026-03-04T16:09:10.670263"
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
-                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        [
-                            "HiFi.reads.fasta.0.test.paf.gz:md5,a51417fd1485538cf606b8a874ed61d7",
-                            "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
-                            "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
-                            "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
-                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
-                        ]
-                    ]
-                ],
-                "12": [
-                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
-                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
-                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
-                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
-                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
-                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d"
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.split.fasta.gz:md5,14faca8fa7a42a8e2025e7cd95e45533"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.stat:md5,c0694afd413c040d5e01b73480309690"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.PB.base.cov:md5,91fb77c5c3b53732f20971dddfe5266e"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.cutoffs:md5,55bec77aafd69f98fb078832b96709bd"
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.calcuts.log:md5,b2b43a250c9a73fb82fa07b2cd2dfc41"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.png:md5,4a49e9f2645c0375c54d1be6759765fd"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
-                    ]
-                ],
                 "primary_reads_paf": [
                     [
                         {
@@ -382,7 +152,7 @@
                         {
                             "id": "test"
                         },
-                        "test.dups.bed:md5,1a05359a5687ed23c44889b1a919c5c6"
+                        "test.dups.bed.gz:md5,1a05359a5687ed23c44889b1a919c5c6"
                     ]
                 ],
                 "purgedups_calcuts_cutoffs": [
@@ -414,7 +184,7 @@
                         {
                             "id": "test"
                         },
-                        "test.purge_dups.log:md5,02a78fc3b03eeca5209c6ee8488e49c0"
+                        "test.purge_dups.log"
                     ]
                 ],
                 "purgedups_pbcstat_basecov": [
@@ -448,21 +218,13 @@
                         },
                         "test.paf:md5,23041dbef85279ee83e1822cc56f96a5"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1c00afbfdf7400eefdadeff3484ff5a8",
-                    "versions.yml:md5,6538edf27c63c29d6942c5b0a1c31c3c",
-                    "versions.yml:md5,65f957bbaf722197435a5107c6c6b128",
-                    "versions.yml:md5,77c810fac8a6f2edaaf050d96f063d99",
-                    "versions.yml:md5,a68e25631af50931cf951142081c8bd7",
-                    "versions.yml:md5,bceaceffe8da91afbb66e351b6a9678d"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-10T10:33:25.814243"
+        "timestamp": "2026-03-04T16:10:34.296729"
     }
 }

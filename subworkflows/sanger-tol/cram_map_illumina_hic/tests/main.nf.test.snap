@@ -26,11 +26,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:43:38.748216",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:43:38.748216"
+        }
     },
     "meles meles - bwamem2": {
         "content": [
@@ -59,11 +59,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:39:34.946622",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:39:34.946622"
+        }
     },
     "meles meles - minimap2": {
         "content": [
@@ -92,11 +92,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:42:47.872589",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:42:47.872589"
+        }
     },
     "meles meles - zymo - bwamem2 - multiple samples - double files": {
         "content": [
@@ -143,11 +143,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:41:09.214803",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:41:09.214803"
+        }
     },
     "meles meles - multiple read groups - bwamem2": {
         "content": [
@@ -176,11 +176,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:45:13.292929",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:45:13.292929"
+        }
     },
     "meles meles - bwamem2 - multiple samples - meta mismatch": {
         "content": [
@@ -231,10 +231,10 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-10T10:42:06.647189",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T10:42:06.647189"
+        }
     }
 }

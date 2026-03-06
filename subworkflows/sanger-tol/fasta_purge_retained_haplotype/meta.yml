@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "fasta_purge_retained_haplotype"
 description: |
   Purge retained haplotypic duplications from an assembly using purge_dups. If an alternate assembly
@@ -97,7 +97,7 @@ output:
         Channel containing the BED file describing regions to purge
 
         Structure: [ val(meta), path(bed) ]
-      pattern: "*.bed"
+      pattern: "*.bed.gz"
   - purgedups_log:
       type: file
       description: |
@@ -105,12 +105,6 @@ output:
 
         Structure: [ val(meta), path(log) ]
       pattern: "*.log"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
   - "@ksenia-krasheninnikova"

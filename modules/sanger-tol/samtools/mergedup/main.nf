@@ -8,8 +8,8 @@ process SAMTOOLS_MERGEDUP {
         'community.wave.seqera.io/library/htslib_samtools:1.23--cde2c40a51d6f752' }"
 
     input:
-    tuple val(meta) , path(input)
-    tuple val(meta2), path(fasta), path(fai),  path(gzi)
+    tuple val(meta) , path(input_files, stageAs: "?/*"), path(index_files, stageAs: "?/*")
+    tuple val(meta2), path(fasta), path(fai), path(gzi)
 
     output:
     tuple val(meta), path("*.bam")      , emit: bam,  optional: true
@@ -32,9 +32,11 @@ process SAMTOOLS_MERGEDUP {
                     "bam"
     """
     samtools merge \\
+        --threads ${task.cpus-1} \\
         ${args} \\
         - \\
-        ${input} |\\
+        ${reference} \\
+        ${input_files} |\\
     samtools markdup \\
         -T ${prefix} \\
         -f ${prefix}.metrics \\
