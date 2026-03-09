@@ -46,6 +46,7 @@ def stringifyMap(Map m) {
 }
 
 process GENERATE_SPECIFICATION_INDEX {
+    executor 'local'
     tag { "${spec.id}" }
 
     input:
