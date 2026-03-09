@@ -14,27 +14,27 @@ workflow BUILD_KMER_DATABASES {
     //
     ch_fastk_status = ch_data
         .branch { meta, reads, fastk ->
-            has_fastk: fastk
-            no_fastk: true
+            skip_fastk: fastk || !(meta.platform in ["pacbio_hifi", "oxford_nanopore"])
+            build_fastk: true
                 return [ meta, reads ]
         }
 
     //
     // Module: Generate FastK databases for all read sets without one
     //
-    FASTK_FASTK(ch_fastk_status.no_fastk)
+    FASTK_FASTK(ch_fastk_status.build_fastk)
 
     //
     // Logic: Mix the FastK outputs back with the existing data
     //
-    ch_data_with_fastk = ch_fastk_status.no_fastk
+    ch_data_with_fastk = ch_fastk_status.build_fastk
         .combine(FASTK_FASTK.out.hist, by: 0)
         .combine(FASTK_FASTK.out.ktab, by: 0)
         .map { meta, reads, hist, ktab ->
             def meta_new = meta + [kmer_size: val_kmer_size]
             [ meta_new, reads, [hist, ktab] ]
         }
-        .mix(ch_fastk_status.has_fastk)
+        .mix(ch_fastk_status.skip_fastk)
 
     //
     // Logic: Fiter the input datasets to get those that are being used as maternal
@@ -140,8 +140,8 @@ workflow BUILD_KMER_DATABASES {
         .map { meta, reads_list, fastk, yakdb ->
             def out_meta = meta + [
                 reads: reads_list.sort { f -> f.getName() },
-                fk_hist: fastk[0],
-                fk_ktab: fastk[1],
+                fk_hist: fastk[0] ?: [],
+                fk_ktab: fastk[1] ?: [],
                 yak: yakdb,
                 haptab: []
             ]
