@@ -179,6 +179,15 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
 
 ## Additional setup procedures
 
+### CRAM files for Hi-C and Illumina input data
+
+Hi-C and Illumina input data must be provided in unaligned CRAM format. If you have reads in FASTQ format, you can convert these to CRAM with
+the following command:
+
+```bash
+samtools import -@8 -r ID:{prefix} -r CN:{hic-kit} -r PU:{prefix} -r SM:{sample_name} {prefix}_R1.fastq.gz {prefix}_R2.fastq.gz -o {prefix}.cram
+```
+
 ### Longranger (polishing)
 
 Longranger is a proprietary software product from 10X Genomics.
