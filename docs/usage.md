@@ -15,7 +15,7 @@ The pipeline requires two input files to run: a genomic data file and an assembl
 The genomic data input file describes the sequencing datasets available for assembly. Each entry in the array describes a dataset, including the sample identifier and the sequencing platform. The following fields are required:
 
 | Field      | Required | Description                                                                                                                           |
-|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------|
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`       | Yes      | Sample identifier for the dataset.                                                                                                    |
 | `platform` | Yes      | Sequencing platform. One of: `pacbio_clr`, `pacbio_hifi`, `oxford_nanopore`, `illumina`, `illumina_hic`, `illumina_10x`               |
 | `reads`    | Yes      | Array of file paths to sequencing reads in FASTA, FASTQ, or CRAM format. The required file format depends on the sequencing platform. |
@@ -24,7 +24,7 @@ The genomic data input file describes the sequencing datasets available for asse
 The filetype of the input reads depends on the sequencing platform:
 
 | Platform          | Allowed File Extensions                      |
-|-------------------|----------------------------------------------|
+| ----------------- | -------------------------------------------- |
 | `pacbio_hifi`     | `.fna`, `.fa`, `.fasta` (optionally gzipped) |
 | `oxford_nanopore` | `.fq`, `.fastq` (optionally gzipped)         |
 | `illumina_hic`    | `.cram`                                      |
@@ -34,7 +34,7 @@ The filetype of the input reads depends on the sequencing platform:
 It is also possible to provide pre-computed FastK databases if desired, to skip computation by the pipeline. To to this, the FastK input requires all the following sub-fields:
 
 | Field       | Description                                                        |
-|-------------|--------------------------------------------------------------------|
+| ----------- | ------------------------------------------------------------------ |
 | `hist`      | Path to the FastK histogram `.hist` file                           |
 | `ktab`      | Array of paths to FastK ktab files, including hidden files         |
 | `kmer_size` | Integer kmer size used to generate the FastK database (minimum: 5) |
@@ -46,48 +46,32 @@ It is also possible to provide pre-computed FastK databases if desired, to skip 
   {
     "id": "sample1",
     "platform": "pacbio_hifi",
-    "reads": [
-      "/path/to/hifi_reads1.fq.gz",
-      "/path/to/hifi_reads2.fq.gz"
-    ]
+    "reads": ["/path/to/hifi_reads1.fq.gz", "/path/to/hifi_reads2.fq.gz"]
   },
   {
     "id": "sample1",
     "platform": "illumina_hic",
-    "reads": [
-      "/path/to/hic_reads_R1.fq.gz",
-      "/path/to/hic_reads_R2.fq.gz"
-    ]
+    "reads": ["/path/to/hic_reads_R1.fq.gz", "/path/to/hic_reads_R2.fq.gz"]
   },
   {
     "id": "sample1",
     "platform": "illumina_10x",
-    "reads": [
-      "/path/to/10x_reads_R1.fq.gz",
-      "/path/to/10x_reads_R2.fq.gz"
-    ],
+    "reads": ["/path/to/10x_reads_R1.fq.gz", "/path/to/10x_reads_R2.fq.gz"],
     "fastk": {
       "hist": "/path/to/fastk/sample.hist",
-      "ktab": [
-        "/path/to/fastk/sample.ktab",
-        "/path/to/fastk/.sample.ktab.1"
-      ],
+      "ktab": ["/path/to/fastk/sample.ktab", "/path/to/fastk/.sample.ktab.1"],
       "kmer_size": 31
     }
   },
   {
     "id": "maternal_sample",
     "platform": "illumina",
-    "reads": [
-      "/path/to/maternal_reads.fq.gz"
-    ]
+    "reads": ["/path/to/maternal_reads.fq.gz"]
   },
   {
     "id": "paternal_sample",
     "platform": "illumina",
-    "reads": [
-      "/path/to/paternal_reads.fq.gz"
-    ]
+    "reads": ["/path/to/paternal_reads.fq.gz"]
   }
 ]
 ```
@@ -99,7 +83,7 @@ options to enable or disable specific pipeline stages, and parameters to tune th
 can be in either YAML or JSON format. The following fields are mandatory for all specifications:
 
 | Parameter            | Description                                                  |
-|----------------------|--------------------------------------------------------------|
+| -------------------- | ------------------------------------------------------------ |
 | `id`                 | Unique identifier for the assembly.                          |
 | `assembler`          | Which assembler to use: `hifiasm`, `mitohifi`, or `oatk`     |
 | `long_read_dataset`  | Dataset name from the genomic data file supplying long reads |
@@ -110,7 +94,7 @@ can be in either YAML or JSON format. The following fields are mandatory for all
 These options can be used if the `assembler` field is set to "hifiasm".
 
 | Parameter                       |            | Description                                                                                                                              |
-|---------------------------------|------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `ultralong_dataset`             | -          | Sample identifier from which to find ultra-long reads for Hifiasm assembly. Must have an `oxford_nanopore` platform entry.               |
 | `hic_dataset`                   | -          | Sample identifier from which to find Hi-C reads for phased Hifiasm assembly and scaffolding. Must have an `illumina_hic` platform entry. |
 | `polishing_dataset`             | -          | Sample identifier from which to find 10X reads for polishing. Must have an `illumina_10x` platform entry.                                |
@@ -142,7 +126,7 @@ These options can be used if the `assembler` field is set to "hifiasm".
 The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi".
 
 | Parameter                    | Default | Description                                                           |
-|------------------------------|---------|-----------------------------------------------------------------------|
+| ---------------------------- | ------- | --------------------------------------------------------------------- |
 | `mitohifi_reference_species` | -       | Binomial name of taxon for reference mitochondrial genome. (Required) |
 | `mitohifi_mito_genetic_code` | -       | Mitochondrial genetic code for gene prediction. (Required)            |
 | `mitohifi_arguments`         | -       | Extra arguments for MitoHiFi in reads mode                            |
@@ -152,7 +136,7 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
 The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required.
 
 | Parameter              | Default | Description                                                                    |
-|------------------------|---------|--------------------------------------------------------------------------------|
+| ---------------------- | ------- | ------------------------------------------------------------------------------ |
 | `oatk_kmer_size`       | `1000`  | Kmer size for oatk                                                             |
 | `oatk_coverage_cutoff` | -       | Coverage cutoff for oatk. Auto-calculated as `(5 x coverage)` if not provided. |
 | `oatk_arguments`       | -       | Additional arguments for oatk (excluding -k and -c)                            |
