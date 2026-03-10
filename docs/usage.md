@@ -51,7 +51,7 @@ It is also possible to provide pre-computed FastK databases if desired, to skip 
   {
     "id": "sample1",
     "platform": "illumina_hic",
-    "reads": ["/path/to/hic_reads_R1.fq.gz", "/path/to/hic_reads_R2.fq.gz"]
+    "reads": ["/path/to/hic_reads1.cram", "/path/to/hic_reads2.cram"]
   },
   {
     "id": "sample1",
