@@ -23,13 +23,13 @@ The genomic data input file describes the sequencing datasets available for asse
 
 The filetype of the input reads depends on the sequencing platform:
 
-| Platform          | Allowed File Extensions                      |
-| ----------------- | -------------------------------------------- |
-| `pacbio_hifi`     | `.fna`, `.fa`, `.fasta` (optionally gzipped) |
-| `oxford_nanopore` | `.fq`, `.fastq` (optionally gzipped)         |
-| `illumina_hic`    | `.cram`                                      |
-| `illumina_10x`    | `.fq`, `.fastq` (optionally gzipped)         |
-| `illumina`        | `.cram`                                      |
+| Platform          | Allowed File Extensions                                       |
+| ----------------- | ------------------------------------------------------------- |
+| `pacbio_hifi`     | `.fna`, `.fa`, `.fasta`, `.fq`, `.fastq` (optionally gzipped) |
+| `oxford_nanopore` | `.fq`, `.fastq` (optionally gzipped)                          |
+| `illumina_hic`    | `.cram`                                                       |
+| `illumina_10x`    | `.fq`, `.fastq` (optionally gzipped)                          |
+| `illumina`        | `.cram`                                                       |
 
 It is also possible to provide pre-computed FastK databases if desired, to skip computation by the pipeline. These databases are only used
 for the long read platforms, `pacbio_hifi` or `oxford_nanopore`. To include them, the `fastk` field should be specificed with
