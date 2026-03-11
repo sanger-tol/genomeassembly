@@ -75,7 +75,6 @@ the purged assemblies and other associated output will be available in the `purg
   - `*.log`: purge_dups log file.
   - `index.json`: Index file summarizing the data and parameter inputs for the stage, as well as the software versions for all tool used.
 
-
 </details>
 
 ### Polishing
