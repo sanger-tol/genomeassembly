@@ -12,8 +12,8 @@ For each assembly, index JSON files are also created that describe the data and 
 
 ## FastK Databases
 
-If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases for long read data typesare provided, 
-the pipeline will generate them. These databases are organized by sample ID, platform, and kmer size. 
+If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases for long read data typesare provided,
+the pipeline will generate them. These databases are organized by sample ID, platform, and kmer size.
 
 <details markdown="1">
 <summary>Output files</summary>
