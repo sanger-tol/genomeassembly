@@ -2,87 +2,205 @@
 
 ## Introduction
 
-## Samplesheet input
+## Input files
 
-You will need to create a samplesheet with information about the data you would like to assemble before running the pipeline. Use this parameter to specify its location. It has to be a YAML file, following the specification in the [Full samplesheet](#full-samplesheet) section below.
+The pipeline requires two input files to run: a genomic data file and an assembly specifications file. These are provided using the `--genomic_data` and `--assembly_specs` parameters respectively, and can be in either JSON or YAML format.
 
 ```
---input '[path to samplesheet file]'
+--genomic_data '[path to genomic data file]' --assembly_specs '[path to assembly specs file]'
 ```
 
-### Full samplesheet
+### Genomic data input
 
-The input data for the pipeline is described in [YAML format](https://yaml.org/). It is a human readable file which contains information
-about location paths for the raw data (HiFi, 10X, HiC) used for the genome assembly. It can also contain meta information such as HiC restriction motifs,
-BUSCO lineage, mitochondrial code etc.
+The genomic data input file describes the sequencing datasets available for assembly. Each entry in the array describes a dataset, including the sample identifier and the sequencing platform. The following fields are required:
 
-Briefly, the YAML describes three main subsections. The first is `metadata`, which described metadata about the target species, including a sample ID, the species binomial, and the mitochondrial genetic code. The second is `sequencing_data`, which describes the locations of the sequencing data to use for assembly. This has four sections (`long_reads`, `hic`, `illumina_10x`, `trio`), of which the only required section is `long_reads`. Any specified section **must** have a `reads` section, and the `long_reads` and `hic` sections also have a required `platform` and `hic_motif` section, respectively. All sections can optionally have a FastK database specified in the `fastk` section. Finally, there is a `databases` section which specifies which BUSCO and `oatk` databases to use.
+| Field      | Required | Description                                                                                                                           |
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`       | Yes      | Sample identifier for the dataset.                                                                                                    |
+| `platform` | Yes      | Sequencing platform. One of: `pacbio_hifi`, `oxford_nanopore`, `illumina`, `illumina_hic`, `illumina_10x`                             |
+| `reads`    | Yes      | Array of file paths to sequencing reads in FASTA, FASTQ, or CRAM format. The required file format depends on the sequencing platform. |
+| `fastk`    | No       | Pre-computed FastK database (see below)                                                                                               |
 
-An list of all the possible fields is given below, with their contents described as comments. Optional fields are tagged with `(optional)`:
+The filetype of the input reads depends on the sequencing platform:
+
+| Platform          | Allowed File Extensions                                       |
+| ----------------- | ------------------------------------------------------------- |
+| `pacbio_hifi`     | `.fna`, `.fa`, `.fasta`, `.fq`, `.fastq` (optionally gzipped) |
+| `oxford_nanopore` | `.fq`, `.fastq` (optionally gzipped)                          |
+| `illumina_hic`    | `.cram`                                                       |
+| `illumina_10x`    | `.fq`, `.fastq` (optionally gzipped)                          |
+| `illumina`        | `.cram`                                                       |
+
+It is also possible to provide pre-computed FastK databases if desired, to skip computation by the pipeline. These databases are only used
+for the long read platforms, `pacbio_hifi` or `oxford_nanopore`. To include them, the `fastk` field should be specificed with
+all the following sub-fields:
+
+| Field       | Description                                                |
+| ----------- | ---------------------------------------------------------- |
+| `hist`      | Path to the FastK histogram `.hist` file                   |
+| `ktab`      | Array of paths to FastK ktab files, including hidden files |
+| `kmer_size` | Integer kmer size used to generate the FastK database      |
+
+#### Example genomic data file
+
+```json
+[
+  {
+    "id": "daBelPere1",
+    "platform": "pacbio_hifi",
+    "reads": ["/path/to/reads1.fa.gz", "/path/to/reads2.fa.gz"],
+    "fastk": {
+      "hist": "/path/to/fastk/sample.hist",
+      "ktab": ["/path/to/fastk/sample.ktab", "/path/to/fastk/.sample.ktab.1"],
+      "kmer_size": 31
+    }
+  },
+  {
+    "id": "daBelPere1",
+    "platform": "illumina_hic",
+    "reads": ["/path/to/reads1.cram", "/path/to/reads2.cram"]
+  },
+  {
+    "id": "daBelPere1",
+    "platform": "illumina_10x",
+    "reads": ["/path/to/reads_R1.fq.gz", "/path/to/reads_R2.fq.gz"]
+  },
+  {
+    "id": "daBelPere2",
+    "platform": "illumina",
+    "reads": ["/path/to/reads.cram"]
+  },
+  {
+    "id": "daBelPere3",
+    "platform": "illumina",
+    "reads": ["/path/to/reads.cram"]
+  }
+]
+```
+
+### Assembly specification input
+
+The assembly specifications file defines what assemblies to produce, including the required datasets,
+options to enable or disable specific pipeline stages, and parameters to tune the various pipeline tools. It
+can be in either YAML or JSON format. The following fields are mandatory for all specifications:
+
+| Parameter            | Description                                                  |
+| -------------------- | ------------------------------------------------------------ |
+| `id`                 | Unique identifier for the assembly.                          |
+| `assembler`          | Which assembler to use: `hifiasm`, `mitohifi`, or `oatk`     |
+| `long_read_dataset`  | Dataset name from the genomic data file supplying long reads |
+| `long_read_platform` | Platform for long reads: `pacbio_hifi` or `oxford_nanopore`  |
+
+Additionally, there are a number of steps in the pipeline which require knowledge of the genome coverage in
+a dataset in order to correctly set default parameters. The genome coverage is by default automatically estimated
+using GenomeScope2, but if you know the coverage in your sample, you can override this estimation by including the
+`long_read_1n_coverage` field.
+
+#### Hifiasm assembly options
+
+These options can be used if the `assembler` field is set to "hifiasm".
+
+| Parameter                       |            | Description                                                                                                                              |
+| ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `ultralong_dataset`             | -          | Sample identifier from which to find ultra-long reads for Hifiasm assembly. Must have an `oxford_nanopore` platform entry.               |
+| `hic_dataset`                   | -          | Sample identifier from which to find Hi-C reads for phased Hifiasm assembly and scaffolding. Must have an `illumina_hic` platform entry. |
+| `polishing_dataset`             | -          | Sample identifier from which to find 10X reads for polishing. Must have an `illumina_10x` platform entry.                                |
+| `maternal_dataset`              | -          | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
+| `maternal_platform`             | -          | Platform for maternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
+| `paternal_dataset`              | -          | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
+| `paternal_platform`             | -          | Platform for paternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
+| `long_read_1n_coverage`         | -          | Haploid/1n coverage of the target genome in the long read dataset.                                                                       |
+| `phased_assembly`               | `false`    | Produce a phased Hifiasm assembly with Hi-C data. Requires `hic_dataset`.                                                                |
+| `trio_assembly`                 | `false`    | Produce a trio-binned Hifiasm assembly. Requires `maternal_dataset` and `paternal_dataset`.                                              |
+| `purge`                         | `false`    | Purge retained haplotypic duplications using the purge_dups pipeline.                                                                    |
+| `polish`                        | `false`    | Polish the assembly using Illumina 10X data, longranger and FreeBayes.                                                                   |
+| `scaffold`                      | `true`     | Map Hi-C reads and scaffold the assembly using YaHS.                                                                                     |
+| `find_mito`                     | `true`     | Enable mitochondrial genome assembly/search with Mitohifi.                                                                               |
+| `find_plastid`                  | `false`    | Enable plastid genome assembly/search with Mitohifi.                                                                                     |
+| `hifiasm_bin_arguments`         | -          | Additional command-line arguments for Hifiasm overlap graph generation (e.g., error correction options).                                 |
+| `hifiasm_arguments`             | -          | Additional command-line arguments for Hifiasm to produce an assembly.                                                                    |
+| `purging_cutoffs`               | -          | Comma-separated coverage cutoffs for purging (e.g., `"5,20,100"`). Automatically calculated from the coverage if not supplied.           |
+| `purge_middle`                  | `false`    | Purge haplotypic duplications from within contigs, not just at the ends.                                                                 |
+| `yahs_arguments`                | -          | Additional command-line arguments for YaHS.                                                                                              |
+| `busco_lineage`                 | `auto_euk` | BUSCO lineage for completeness assessment (e.g., `metazoa_odb12`).                                                                       |
+| `mitohifi_reference_species`    | -          | Binomial name of taxon for reference mitochondrial genome. Required if `find_mito` or `find_plastid` are set.                            |
+| `mitohifi_mito_genetic_code`    | -          | Mitochondrial genetic code for gene prediction. Required if `find_mito` or `find_plastid` are set.                                       |
+| `mitohifi_plastid_genetic_code` | 11         | Plastid genetic code for gene prediction. Required if `find_mito` or `find_plastid` are set.                                             |
+| `mitohifi_arguments`            | -          | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
+
+#### MitoHiFi options
+
+The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi".
+
+| Parameter                    | Default | Description                                                           |
+| ---------------------------- | ------- | --------------------------------------------------------------------- |
+| `mitohifi_reference_species` | -       | Binomial name of taxon for reference mitochondrial genome. (Required) |
+| `mitohifi_mito_genetic_code` | -       | Mitochondrial genetic code for gene prediction. (Required)            |
+| `mitohifi_arguments`         | -       | Additional command-line arguments for MitoHiFi in reads mode.         |
+
+#### Oatk options
+
+The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required - these should be paths to the `.fam` file created by [OatkDB](https://github.com/c-zhou/OatkDB), with the rest of the `.h3f`, `.h3i`, and `.h3m` and `.h3p` files present in the same location.
+
+| Parameter              | Default | Description                                                                    |
+| ---------------------- | ------- | ------------------------------------------------------------------------------ |
+| `oatk_kmer_size`       | `1000`  | Kmer size for oatk                                                             |
+| `oatk_coverage_cutoff` | -       | Coverage cutoff for oatk. Auto-calculated as `(5 x coverage)` if not provided. |
+| `oatk_arguments`       | -       | Additional command-line arguments for oatk.                                    |
+| `oatk_mito_hmm`        | -       | Path to oatk mitochondrial HMM file (`.fam` format)                            |
+| `oatk_plastid_hmm`     | -       | Path to oatk plastid HMM file (`.fam` format)                                  |
+
+#### Example assembly specifications file
 
 ```yaml
-metadata:
-  id: sampleID # str: unique identifier for the sample
-  species: Bellis perennis # str: binomial name of species being assembled
-  mitochondrial_code: 1 # int: mitochondrial genetic code (https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
-sequencing_data:
-  long_reads: # mandatory - information about location and platform of long reads
-    platform: "pacbio" # str: "PacBio" or "ONT"
-    reads: # List of str: Paths to long-read read files in FASTA or FASTQ format
-      - /path/to/reads1.fa.gz
-      - /path/to/reads2.fa.gz
-    fastk: # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-      basename: basename # str: Basename of the FastK database in the directory
-      kmer_size: 31 # int: Kmer size used to generate the FastK database
-    coverage: 25 # (optional): int: haploid coverage of the genome to assemble.
-  hic: # (optional): if not specified, no scaffolding will be run.
-    reads: # List of str: Paths to Hi-C read files in CRAM format
-      - /path/to/reads1.cram
-      - /path/to/reads2.cram
-    hic_motif: # List of str: Cutting motifs of enzymes used in Hi-C library preparation
-      - GATC
-      - GANTC
-      - CTNAG
-      - TTAA
-    fastk: # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the Hi-C reads
-      basename: basename # str: Basename of the FastK database in the directory
-      kmer_size: 31 # int: Kmer size used to generate the FastK database
-  illumina_10x: # (optional): if not specified, no polishing can be run.
-    reads: # List of str: Paths to Illumina 10X read files in Fastq format
-      - /path/to/fastq1.fq.gz
-      - /path/to/fastq2.fq.gz
-    fastk: # (optional): if specified, all sub-fields must be present.
-      directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-      basename: basename # str: Basename of the FastK database in the directory
-      kmer_size: 31 # int: Kmer size used to generate the FastK database
-  trio: # (optional) - if specified, both maternal and paternal must be specified
-    maternal:
-      reads: # List of str: Paths to Illumina WGS read files in Fastq format
-        - /path/to/fastq1.fq.gz
-        - /path/to/fastq2.fq.gz
-      fastk: # (optional): if specified, all sub-fields must be present.
-        directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-        basename: basename # str: Basename of the FastK database in the directory
-        kmer_size: 31 # int: Kmer size used to generate the FastK database
-    paternal:
-      reads: # List of str: Paths to Illumina WGS read files in Fastq format
-        - /path/to/fastq1.fq.gz
-        - /path/to/fastq2.fq.gz
-      fastk: # (optional): if specified, all sub-fields must be present.
-        directory: /path/to/fk/dir # str: path to directory containing FastK .ktab and .hist files for the long reads
-        basename: basename # str: Basename of the FastK database in the directory
-        kmer_size: 31 # int: Kmer size used to generate the FastK database
-databases:
-  busco:
-    lineage: bacteria_odb10 # str: BUSCO lineage name to use for QC
-  oatk:
-    mito_hmm: /path/to/.hmm # str: Path to oatk HMM database
-    plastid_hmm: /path/to/.hmm # str: Path to oatk HMM database
+- id: daBelPere1.hifiasm.phased
+  assembler: hifiasm
+  long_read_dataset: daBelPere1
+  long_read_platform: pacbio_hifi
+  hic_dataset: daBelPere1
+  long_read_1n_coverage: 30
+  scaffold: true
+  phased_assembly: true
+  purge: false
+  find_mito: true
+  mitohifi_reference_species: Bellis perennis
+  mitohifi_mito_genetic_code: 1
+  busco_lineage: eudicots_odb10
+- id: daBelPere1.hifiasm.trio
+  assembler: hifiasm
+  long_read_dataset: daBelPere1
+  long_read_platform: pacbio_hifi
+  hic_dataset: daBelPere1
+  trio_assembly: true
+  maternal_dataset: daBelPere2
+  maternal_platform: illumina
+  paternal_dataset: daBelPere3
+  paternal_platform: illumina
+  scaffold: true
+  find_mito: false
+- id: daBelPere1.mitohifi
+  assembler: "mitohifi"
+  long_read_dataset: daBelPere1
+  long_read_platform: pacbio_hifi
+  mitohifi_reference_species: Bellis perennis
+  mitohifi_mito_genetic_code: 1
+- id: daBelPere1.oatk
+  assembler: oatk
+  long_read_dataset: daBelPere1
+  long_read_platform: pacbio_hifi
+  oatk_mito_hmm: /path/to/mito.fam
 ```
 
 ## Additional setup procedures
+
+### CRAM files for Hi-C and Illumina input data
+
+Hi-C and Illumina input data must currently be provided in unaligned CRAM format. If you have reads in FASTQ format, you can convert these to CRAM with
+the following command:
+
+```bash
+samtools import -@8 -r ID:{prefix} -r CN:{hic-kit} -r PU:{prefix} -r SM:{sample_name} {prefix}_R1.fastq.gz {prefix}_R2.fastq.gz -o {prefix}.cram
+```
 
 ### Longranger (polishing)
 
@@ -123,7 +241,7 @@ NCBI_API_KEY as follows:
 The typical command for running the pipeline is as follows:
 
 ```console
-nextflow run sanger-tol/genomeassembly --input assets/dataset.yaml --outdir <OUTDIR> -profile docker
+nextflow run sanger-tol/genomeassembly --genomic_data assets/genomic_data.json --assembly_specs assets/assembly_specs.json --outdir <OUTDIR> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -153,7 +271,8 @@ nextflow run sanger-tol/genomeassembly -profile docker -params-file params.yaml
 with:
 
 ```yaml title="params.yaml"
-input: './samplesheet.csv'
+genomic_data: './genomic_data.json'
+assembly_specs: './assembly_specs.json'
 outdir: './results/'
 <...>
 ```

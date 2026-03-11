@@ -40,7 +40,7 @@ def specToAssemblyDir(spec) {
     def stage = spec.stage
 
     if(spec.assembler == "hifiasm") {
-        if (stage == "assembly") { return "raw" }
+        if (stage == "hifiasm_assembly") { return "raw" }
         if (stage == "purging") { return "purging" }
         if (stage == "polishing") { return "polishing" }
         if (stage == "scaffolding") { return "scaffolding" }

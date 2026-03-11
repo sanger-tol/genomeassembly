@@ -45,7 +45,8 @@ Now, you can run the pipeline using:
 ```bash
 nextflow run sanger-tol/genomeassembly \
    -profile <docker/singularity/.../institute> \
-   --input input.yaml \
+   --genomic_data genomic_data.yaml \
+   --assembly_specs assembly_specs.yaml \
    --outdir <OUTDIR>
 ```
 

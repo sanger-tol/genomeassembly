@@ -28,7 +28,7 @@
                 "items": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.(f(astq|q|n?a(sta)?)(\\.gz)?|cram)$",
+                    "pattern": "^\\S+\\.((fastq|fq|fasta|fna|fa)(\\.gz)?|cram)$",
                     "exists": true
                 },
                 "uniqueItems": true
