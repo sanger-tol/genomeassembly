@@ -12,11 +12,8 @@ For each assembly, index JSON files are also created that describe the data and 
 
 ## FastK Databases
 
-If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases are provided, the pipeline will generate them. These databases
-are organized by sample ID, platform, and kmer size. FastK databases will be generated for the input long reads.
-
-If no coverage value is provided for the long reads, then [GenomeScope 2.0](https://github.com/tbenavi1/genomescope2.0) is run to estimate
-the coverage of the genome prior to assembly.
+If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases for long read data typesare provided, 
+the pipeline will generate them. These databases are organized by sample ID, platform, and kmer size. 
 
 <details markdown="1">
 <summary>Output files</summary>
