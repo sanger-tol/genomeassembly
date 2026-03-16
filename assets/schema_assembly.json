@@ -43,14 +43,14 @@
                 "type": "string",
                 "description": "A dataset name from the input dataset sheet supplying ultralong reads for assembly.",
                 "pattern": "^\\S+$",
-                "meta": "ultralong_read_dataset"
+                "meta": "ultralong_dataset"
             },
             "ultralong_platform": {
                 "type": "string",
                 "enum": ["oxford_nanopore"],
                 "description": "Use reads from this sequencing platform as the ultralong reads.",
                 "pattern": "^\\S+$",
-                "meta": "ultralong_read_platform"
+                "meta": "ultralong_platform"
             },
             "hic_dataset": {
                 "type": "string",

@@ -61,7 +61,7 @@ process HIFIASM {
     }
 
     // Set up ultralong reads input
-    def ultralong = ul_reads ? "--ul ${ul_reads_sorted}" : ""
+    def ultralong = ul_reads ? "--ul <(cat ${ul_reads_sorted})" : ""
 
     // Configure log input so that logs are always written to a new file
     def copy_previous_log = previous_log ? "cat log/* > ${prefix}.log" : ""
