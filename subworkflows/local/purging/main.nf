@@ -9,8 +9,6 @@ workflow PURGING {
     val_fastx_reads_per_chunk // int
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Logic: join all the assemblies with the purging specifications and
     // data, filter for those assemblies which are to be purged, then

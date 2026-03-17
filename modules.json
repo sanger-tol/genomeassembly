@@ -168,7 +168,7 @@
                     },
                     "purgedups/purgedups": {
                         "branch": "master",
-                        "git_sha": "8c00bb05e6973eb4f1a083e894e04e712f59b707",
+                        "git_sha": "2a1a741dde08a550093174f6fd75762920f9313d",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/splitfa": {
