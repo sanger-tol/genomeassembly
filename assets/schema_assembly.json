@@ -139,7 +139,7 @@
             "find_mito": {
                 "type": "boolean",
                 "description": "Enable mitochondrial genome assembly/search.",
-                "default": true,
+                "default": false,
                 "meta": "find_mito"
             },
             "find_plastid": {
