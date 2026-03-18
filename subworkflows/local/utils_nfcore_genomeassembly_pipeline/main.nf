@@ -153,6 +153,16 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [polish: false]
             }
 
+            if(spec.find_mito && !(spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code)) {
+                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for mitochondria but no reference species or genetic code is set. This stage will be skipped.")
+                spec = spec + [find_mito: false]
+            }
+
+            if(spec.find_plastid && !(spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code)) {
+                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for plastids but no reference species or genetic code is set. This stage will be skipped.")
+                spec = spec + [find_plastid: false]
+            }
+
             // If assembling with oatk, locate and check the existence of all HMM files
             if(spec.assembler == "oatk") {
                 def mito_hmm_list = spec.oatk_mito_hmm ? createHmmFilesList(spec.oatk_mito_hmm) : []
