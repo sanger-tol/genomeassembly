@@ -98,12 +98,12 @@ workflow HIFIASM_ASSEMBLY {
             // hap1/hap2 files - instead we get only p_ctg and a_ctg files, if
             // we don't run in phased or trio mode.
             if(!(asms.find { asm -> asm.name =~ pri } && asms.find { asm -> asm.name =~ alt })) {
-                pri = /^[^.]+\.p_ctg\.fa$/
-                alt = /a_ctg.fa$/
+                pri = /^.+\.p_ctg\.fa$/
+                alt = /^.+\.a_ctg\.fa$/
             }
 
             return [
-                [spec, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt}]
+                [spec, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt }]
             ]
         }
 
