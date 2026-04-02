@@ -37,29 +37,33 @@ workflow OATK_ASSEMBLY {
     //
     // Logic: combine all oatk outputs into a single map for ease of publishing
     //
-    ch_oatk_outputs = channel.empty()
-        .mix(
-            OATK.out.mito_fasta,
-            OATK.out.mito_bed,
-            OATK.out.mito_gfa,
-            OATK.out.annot_mito_txt,
-            OATK.out.pltd_fasta,
-            OATK.out.pltd_bed,
-            OATK.out.pltd_gfa,
-            OATK.out.annot_pltd_txt,
-            OATK.out.initial_gfa,
-            OATK.out.final_gfa,
-            OATK.out.log
-        )
-        .groupTuple(by: 0)
-        .join(
-            BANDAGE_IMAGE.out.png.groupTuple(by: 0)
-        )
-        .map { spec, oatk_outputs, images ->
+    ch_oatk_outputs = OATK.out.mito_fasta
+        .join(OATK.out.mito_bed)
+        .join(OATK.out.mito_gfa)
+        .join(OATK.out.annot_mito_txt)
+        .join(OATK.out.pltd_fasta)
+        .join(OATK.out.pltd_bed)
+        .join(OATK.out.pltd_gfa)
+        .join(OATK.out.annot_pltd_txt)
+        .join(OATK.out.initial_gfa)
+        .join(OATK.out.final_gfa)
+        .join(OATK.out.log)
+        .join(BANDAGE_IMAGE.out.png.groupTuple(by: 0))
+        .map { spec, mito_fa, mito_bed, mito_gfa, mito_annot, pltd_fa, pltd_bed, pltd_gfa, pltd_annot, init_gfa, final_gfa, log, images ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     oatk: [
-                        oatk: oatk_outputs,
+                        mito_fasta: mito_fa,
+                        pltd_fasta: pltd_fa,
+                        mito_bed: mito_bed,
+                        pltd_bed: pltd_bed,
+                        mito_gfa: mito_gfa,
+                        pltd_gfa: pltd_gfa,
+                        mito_annot: mito_annot,
+                        pltd_annot: pltd_annot,
+                        initial_gfa: init_gfa,
+                        final_gfa: final_gfa,
+                        oatk_log: log,
                         bandage_plots: images
                     ]
                 ]
