@@ -38,7 +38,8 @@
                     "busco/busco": {
                         "branch": "master",
                         "git_sha": "e097fc9052999b636f7fb6e37eb474fc089108e4",
-                        "installed_by": ["genome_statistics"]
+                        "installed_by": ["genome_statistics"],
+                        "patch": "modules/nf-core/busco/busco/busco-busco.diff"
                     },
                     "bwamem2/index": {
                         "branch": "master",
