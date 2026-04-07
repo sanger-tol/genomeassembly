@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#110](https://github.com/sanger-tol/genomeassembly/issues/110) Fixed issue with minimap2 mapping settings not being correctly applied at the index building stage (reported by @muffato, fixed by @prototaxites)
 - [#115](https://github.com/sanger-tol/genomeassembly/pull/115) Pipeline now conforms to Nextflow strict syntax (by @prototaxites)
+- [#130](https://github.com/sanger-tol/genomeassembly/pull/130) - Fixed issue with BUSCO where bbtools sometimes ran out of memory, causing BUSCO failure (by @prototaxites)
 
 ### Dependencies
 
