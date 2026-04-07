@@ -37,7 +37,7 @@ workflow OATK_ASSEMBLY {
     //
     // Logic: combine all oatk outputs into a single map for ease of publishing
     //
-    ch_mito_outputs = OATK.out.log
+    ch_oatk_outputs = OATK.out.log
         .join(OATK.out.mito_fasta, remainder: true)
         .join(OATK.out.mito_bed, remainder: true)
         .join(OATK.out.mito_gfa, remainder: true)
