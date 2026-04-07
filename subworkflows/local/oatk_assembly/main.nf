@@ -37,19 +37,19 @@ workflow OATK_ASSEMBLY {
     //
     // Logic: combine all oatk outputs into a single map for ease of publishing
     //
-    ch_oatk_outputs = OATK.out.mito_fasta
-        .join(OATK.out.mito_bed)
-        .join(OATK.out.mito_gfa)
-        .join(OATK.out.annot_mito_txt)
-        .join(OATK.out.pltd_fasta)
-        .join(OATK.out.pltd_bed)
-        .join(OATK.out.pltd_gfa)
-        .join(OATK.out.annot_pltd_txt)
-        .join(OATK.out.initial_gfa)
-        .join(OATK.out.final_gfa)
-        .join(OATK.out.log)
-        .join(BANDAGE_IMAGE.out.png.groupTuple(by: 0))
-        .map { spec, mito_fa, mito_bed, mito_gfa, mito_annot, pltd_fa, pltd_bed, pltd_gfa, pltd_annot, init_gfa, final_gfa, log, images ->
+    ch_oatk_outputs = OATK.out.log
+        .join(OATK.out.mito_fasta, remainder: true)
+        .join(OATK.out.mito_bed, remainder: true)
+        .join(OATK.out.mito_gfa, remainder: true)
+        .join(OATK.out.annot_mito_txt, remainder: true)
+        .join(OATK.out.pltd_fasta, remainder: true)
+        .join(OATK.out.pltd_bed, remainder: true)
+        .join(OATK.out.pltd_gfa, remainder: true)
+        .join(OATK.out.annot_pltd_txt, remainder: true)
+        .join(OATK.out.initial_gfa, remainder: true)
+        .join(OATK.out.final_gfa, remainder: true)
+        .join(BANDAGE_IMAGE.out.png.groupTuple(by: 0), remainder: true)
+        .map { spec, log, mito_fa, mito_bed, mito_gfa, mito_annot, pltd_fa, pltd_bed, pltd_gfa, pltd_annot, init_gfa, final_gfa, images ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     oatk: [
