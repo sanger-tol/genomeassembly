@@ -59,10 +59,9 @@ process BUSCO_BUSCO {
     ]
     def clean_cmd = clean_intermediates ? "rm -fr ${intermediate_files.join(' ')}" : ''
 
-    def bbtools_memory_limit = task.memory * 0.25
-    def bbtools_memory = bbtools_memory_limit > 120.Mb ?
-        "${bbtools_memory_limit.toGiga()}g" :
-        "120m"
+    def bbtools_memory_preferred = task.memory * 0.25
+    def bbtools_memory_minimum = 120.Mb
+    def bbtools_memory = bbtools_memory_preferred > bbtools_memory_minimum ? "${bbtools_memory_preferred.toGiga()}g" : "${bbtools_memory_minimum.toMega()}m"
     """
     export BUSCO_BBTOOLS_MEMORY=${bbtools_memory}
 
