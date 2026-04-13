@@ -11,6 +11,7 @@ nextflow_pipeline {
                 genomic_data = "${projectDir}/assets/local_tests/icAdaBipu1_genomic.yaml"
                 assembly_specs = "${projectDir}/assets/local_tests/icAdaBipu1_spec.yaml"
                 outdir = "$outputDir"
+				save_fastk_databases = true
             }
         }
 
