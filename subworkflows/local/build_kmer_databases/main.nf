@@ -14,7 +14,7 @@ workflow BUILD_KMER_DATABASES {
     //
     ch_fastk_status = ch_data
         .branch { meta, reads, fastk ->
-            skip_fastk: fastk || !(meta.platform in ["pacbio_hifi", "oxford_nanopore"])
+            skip_fastk: fastk
             build_fastk: true
                 return [ meta, reads ]
         }
@@ -46,7 +46,6 @@ workflow BUILD_KMER_DATABASES {
             .every { dataset -> spec[dataset] }
         }
         .flatMap { spec ->
-            spec = spec[0]
             return [
                 [
                     dataset: spec.maternal_dataset,
@@ -86,7 +85,7 @@ workflow BUILD_KMER_DATABASES {
             .every { dataset -> spec[dataset] }
         }
         // This combines all the datasets into a list of datasets that we can map through
-        .combine(ch_data_with_fastk.map { data -> [data] }.collect())
+        .combine(ch_data_with_fastk.map { meta, _reads, fastk -> [meta + [ktab: fastk.get(1)]] }.collect().map { data -> [data] })
         .map { spec, datasets ->
             def out_meta = spec.subMap([
                 "long_read_dataset",
@@ -98,15 +97,15 @@ workflow BUILD_KMER_DATABASES {
             ])
 
             // Extract the required FastK ktabs
-            def mat = datasets.find { meta, _reads, _fastk ->
-                meta.id == spec.maternal_dataset && meta.platform == spec.maternal_platform
-            }.get(2).get(1)
-            def pat = datasets.find { meta, _reads, _fastk ->
-                meta.id == spec.paternal_dataset && meta.platform == spec.paternal_platform
-            }.get(2).get(1)
-            def child = datasets.find { meta, _reads, _fastk ->
-                meta.id == spec.long_read_dataset && meta.platform == spec.long_read_platform
-            }.get(2).get(1)
+            def mat = datasets.find { dataset ->
+                dataset.id == spec.maternal_dataset && dataset.platform == spec.maternal_platform
+            }.ktab
+            def pat = datasets.find { dataset ->
+                dataset.id == spec.paternal_dataset && dataset.platform == spec.paternal_platform
+            }.ktab
+            def child = datasets.find { dataset ->
+                dataset.id == spec.long_read_dataset && dataset.platform == spec.long_read_platform
+            }.ktab
 
             [out_meta, mat, pat, child]
         }
@@ -128,8 +127,6 @@ workflow BUILD_KMER_DATABASES {
         .map { meta, mat, pat ->
             return meta + [mat_haptab: mat, pat_haptab: pat]
         }
-        .collect()
-        .map { map -> [map] }
 
     //
     // Logic: now that all data is pre-processed, move everything into the meta map so that each

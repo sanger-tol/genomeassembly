@@ -52,7 +52,7 @@ workflow PREPARE_INPUTS {
     ch_specs_with_coverage = ch_specs
         .combine(ch_coverage)
         .filter { spec, cov_meta, _cov ->
-            cov_meta.id == spec.long_read_dataset
+            cov_meta.id == spec.long_read_dataset && cov_meta.platform == spec.long_read_platform
         }
         .map { spec, _cov_meta, cov ->
             if(!(spec.long_read_1n_coverage || cov)){
@@ -85,7 +85,7 @@ workflow PREPARE_INPUTS {
     //
     ch_out_assembly_specs = ch_specs_with_coverage
         .combine(BUILD_KMER_DATABASES.out.data.collect().map { datasets -> [datasets] })
-        .combine(BUILD_KMER_DATABASES.out.merqury_trio_haptabs.collect().map { datasets -> [datasets] }.ifEmpty([[]]) )
+        .combine(BUILD_KMER_DATABASES.out.merqury_trio_haptabs.collect().map { datasets -> [datasets] }.ifEmpty([[]]))
         .map { spec, data, haptabs ->
             if(spec.assembler == "hifiasm") {
                 return stageHifiasmSpec(spec, data, haptabs)
@@ -97,6 +97,7 @@ workflow PREPARE_INPUTS {
                 return stageMitohifiSpec(spec, data, haptabs)
             }
         }
+
 
     emit:
     specs    = ch_out_assembly_specs

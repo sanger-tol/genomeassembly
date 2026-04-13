@@ -230,14 +230,14 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
     }
 
     // Add maternal and paternal haptabs to the dataset
-    if(merquryHaptabs && ["maternal", "paternal"] in usedDataTypes) {
+    if(merquryHaptabs && usedDataTypes.containsAll(["maternal", "paternal"])) {
         def haptabs = merquryHaptabs.find { data ->
-            data.long_read_dataset == outputDataMap.long_read_dataset &&
-            data.long_read_platform == outputDataMap.long_read_platform &&
-            data.maternal_dataset == outputDataMap.maternal_dataset &&
-            data.maternal_platform == outputDataMap.maternal_platform &&
-            data.paternal_dataset == outputDataMap.paternal_dataset &&
-            data.paternal_platform == outputDataMap.paternal_platform
+            data.long_read_dataset == spec.long_read_dataset &&
+            data.long_read_platform == spec.long_read_platform &&
+            data.maternal_dataset == spec.maternal_dataset &&
+            data.maternal_platform == spec.maternal_platform &&
+            data.paternal_dataset == spec.paternal_dataset &&
+            data.paternal_platform == spec.paternal_platform
         }
 
         outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs.mat_haptab]

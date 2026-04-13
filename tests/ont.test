@@ -4,12 +4,12 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only") {
+    test("dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search") {
 
         when {
             params {
-                genomic_data = "${projectDir}/assets/local_tests/icAdaBipu1_genomic.yaml"
-                assembly_specs = "${projectDir}/assets/local_tests/icAdaBipu1_spec.yaml"
+                genomic_data = "${projectDir}/assets/local_tests/dhQueRobu3_genomic.yaml"
+                assembly_specs = "${projectDir}/assets/local_tests/dhQueRobu3_spec.yaml"
                 outdir = "$outputDir"
             }
         }

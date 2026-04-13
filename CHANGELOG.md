@@ -14,12 +14,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - For organellar assemblies, available assemblers are oatk (mitochondrial and plastid genomes) and mitohifi (mitochondrial genomes) and use the same staging logic, although they presently only have a single stage. These are also de-duplicated prior to running.
   - [#124](https://github.com/sanger-tol/genomeassembly/pull/124) Update the documentation to reflect the new input types.
 - [#119](https://github.com/sanger-tol/genomeassembly/pull/119) Add index fixes to the outputs for each assembly, an overall index describing the data, params and tool versions used, and one for each stage within an assembly, describing the same elements but only those used thus far (by @prototaxites)
+- [?]() Add comprehensive local testing with nf-test with new test datasets. Three new test datasets are available
+  - icAdaBipu1, the two-spotted ladybird, for testing pri/alt assembly and phased assembly
+  - aBomVar4/1/2, the yellow-bellied toad, for testing trio assembly
+  - dhQueRobu3, the pedunculate oak, for testing ONT assembly as well as Pacbio+UL ONT assembly, and plastid assembly
 
 ### Fixed
 
 - [#110](https://github.com/sanger-tol/genomeassembly/issues/110) Fixed issue with minimap2 mapping settings not being correctly applied at the index building stage (reported by @muffato, fixed by @prototaxites)
 - [#115](https://github.com/sanger-tol/genomeassembly/pull/115) Pipeline now conforms to Nextflow strict syntax (by @prototaxites)
 - [#130](https://github.com/sanger-tol/genomeassembly/pull/130) - Fixed issue with BUSCO where bbtools sometimes ran out of memory, causing BUSCO failure (by @prototaxites)
+- []() Fix issues with trio assembly causing pipeline failures due to lack of testing.
 
 ### Dependencies
 
