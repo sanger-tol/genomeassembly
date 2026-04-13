@@ -12,7 +12,7 @@
   hifiasm_arguments: "--primary"
   mitohifi_reference_species: "Adalia bipunctata"
   mitohifi_mito_genetic_code: 5
-  busco_lineage: insecta_odb12
+  busco_lineage: eukaryota_odb12
 - id: icAdaBipu1.phased
   assembler: "hifiasm"
   long_read_dataset: icAdaBipu1
@@ -22,7 +22,7 @@
   find_mito: false
   find_plastid: false
   hifiasm_bin_arguments: "-f0"
-  busco_lineage: insecta_odb12
+  busco_lineage: eukaryota_odb12
 - id: icAdaBipu1.oatk
   assembler: "oatk"
   long_read_dataset: icAdaBipu1
