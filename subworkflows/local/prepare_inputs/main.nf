@@ -98,7 +98,6 @@ workflow PREPARE_INPUTS {
             }
         }
 
-
     emit:
     specs    = ch_out_assembly_specs
     datasets = BUILD_KMER_DATABASES.out.data
