@@ -262,7 +262,7 @@
                                 "properties": { "find_plastid": { "const": true } }
                             },
                             "then": {
-                                "required": ["mitohifi_reference_species", "mitohifi_plastid_genetic_code"]
+                                "required": ["mitohifi_reference_species"]
                             }
                         }
                     },
