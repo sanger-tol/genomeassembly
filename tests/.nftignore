@@ -1,10 +1,36 @@
+# generic
 .DS_Store
-pipeline_info/*.{html,json,txt,yml}
+pipeline_info/*.{html,json,txt,yml} 
 **/*.log
-**/contigs_stats.tsv
+
+# oatk
+**/*annot_mito.txt
+**/*annot_pltd.txt
+
+# merquryfk
 **/*.png
-**/*.mcool
-**/busco.*/*-busco/*
+**/*.qv
+**/*/completeness.stats
+
+# mapping
 **/*.bam
 **/*.bam.csi
+
+# busco
+**/busco.*/*-busco/*
+**/*batch_summary.txt
+**/*short_summary*.json
+**/*short_summary*.txt
+
+# contact maps
+**/*.pretext
+**/*.mcool
+
+# mitohifi
+**/*.bin
+**/contigs_stats.tsv
+**/circularization_check.blast.xml
+**/*.{nin,nhr,nsq}
+
+# index files
 **/index.json
