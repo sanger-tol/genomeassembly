@@ -1015,7 +1015,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-04-14T10:10:05.993728729",
+        "timestamp": "2026-04-14T11:36:25.528310418",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
