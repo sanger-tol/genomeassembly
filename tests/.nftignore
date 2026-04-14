@@ -27,10 +27,8 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.mcool
 
 # mitohifi
-**/*.bin
-**/contigs_stats.tsv
-**/circularization_check.blast.xml
-**/*.{nin,nhr,nsq}
+**/mito/*
+**/plastid/*
 
 # index files
 **/index.json
