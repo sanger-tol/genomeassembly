@@ -513,11 +513,11 @@
                 "ptg000001l.annotation_mtDNA_contig_genes_AA.fasta:md5,4fe360c818e79554eb7fcf3ce9439527",
                 "ptg000001l.annotation_mtDNA_contig_genes_NT.fasta:md5,8cb9c493ffcf38a182ccf9abcdda6c84",
                 "ptg000001l.annotation_mtDNA_contig.mitfi:md5,a3ffea42b4371fa938c81ac0939f4b81",
-                "circularization_check.blast.xml:md5,a4d10da5b2c7a523e411befb3fd9ba6c",
+                "circularization_check.blast.xml:md5,8fb30ee1c86b293327a0edd7faa18e0c",
                 "contig_id_database.fasta:md5,97045b0f16de0ec10cbd078b71034114",
                 "ptg000001l.annotation_blast_out.txt:md5,00851f6e11e89962d3353e18d0ad1eda",
                 "ptg000001l.annotation_link.scafSeq.nhr:md5,a76ca6ad86f62833353f2906d48df048",
-                "ptg000001l.annotation_link.scafSeq.nin:md5,37c1f9b7a736be28df386093447591ca",
+                "ptg000001l.annotation_link.scafSeq.nin:md5,e28b5a2d852e902cf5657f31cb10ae6f",
                 "ptg000001l.annotation_link.scafSeq.nsq:md5,3bbb8f4b73f5683b49fad89eb99939ef",
                 "ptg000001l.annotation_mtDNA_contig_raw.gff:md5,6cbd2b1aeb57780d2615e539ebb92cc7",
                 "ptg000001l.annotation_mtDNA_contig_ref.blast.xml:md5,e26105b5e557279e9a3585421eb80bed",
@@ -558,7 +558,7 @@
                 "gbk.HiFiMapped.bam.filtered.assembled.a_ctg.gfa:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gbk.HiFiMapped.bam.filtered.assembled.a_ctg.lowQ.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gbk.HiFiMapped.bam.filtered.assembled.a_ctg.noseq.gfa:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gbk.HiFiMapped.bam.filtered.assembled.ec.bin:md5,3939b8f38f5e44eefe3737280ba84feb",
+                "gbk.HiFiMapped.bam.filtered.assembled.ec.bin:md5,c675187bc7fbf1920b10bbbbc5c38182",
                 "gbk.HiFiMapped.bam.filtered.assembled.ovlp.reverse.bin:md5,9ee2fa7bc31b123ab8ac15c6d22a3236",
                 "gbk.HiFiMapped.bam.filtered.assembled.ovlp.source.bin:md5,4a13cca41732b4d4b3cd935abb10d957",
                 "gbk.HiFiMapped.bam.filtered.assembled.p_ctg.fa:md5,87d001ea358863f888005fe205a3a359",
@@ -632,7 +632,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,ff4dfc15b164603e6916f7375d9b5b72"
             ]
         ],
-        "timestamp": "2026-04-14T15:10:38.148942055",
+        "timestamp": "2026-04-14T16:39:30.747743027",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
