@@ -10,7 +10,7 @@ pipeline_info/*.{html,json,txt,yml}
 # merquryfk
 **/*.png
 **/*.qv
-**/*/completeness.stats
+**/*.completeness.stats
 
 # mapping
 **/*.bam
