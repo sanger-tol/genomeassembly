@@ -6,11 +6,17 @@ nextflow_pipeline {
 
     test("dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search") {
 
+        setup {
+            println "\n\n"
+            curlAndExtract("https://tolit.cog.sanger.ac.uk/test-data/resources/busco/eukaryota_busco_odb12.tar.gz", "${launchDir}/")
+        }
+
         when {
             params {
                 genomic_data = "${projectDir}/assets/local_tests/dhQueRobu3_genomic.yaml"
                 assembly_specs = "${projectDir}/assets/local_tests/dhQueRobu3_spec.yaml"
                 outdir = "$outputDir"
+                busco_lineage_directory = "${launchDir}/busco/"
             }
         }
 

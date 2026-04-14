@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#130](https://github.com/sanger-tol/genomeassembly/pull/130) Fixed issue with BUSCO where bbtools sometimes ran out of memory, causing BUSCO failure (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issues with trio assembly causing pipeline failures due to lack of testing (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issue where MITOHIFI_FINDMITOREFERENCE didn't pull down chloroplast references (by @prototaxites)
+- [#132](https://github.com/sanger-tol/genomeassembly/pull/132) `--busco_lineage_directory` correctly converted to a path (by @prototaxites)
 
 ### Dependencies
 

@@ -111,7 +111,7 @@ workflow {
         params.hic_aligner,
         params.hic_mapping_cram_chunk_size,
         params.scaffolding_cool_bin_size,
-        params.busco_lineage_directory,
+        file(params.busco_lineage_directory, checkIfExists: true),
     )
 
     //
