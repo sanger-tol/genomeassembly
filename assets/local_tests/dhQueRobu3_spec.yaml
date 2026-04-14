@@ -9,7 +9,6 @@
   find_mito: false
   find_plastid: true
   mitohifi_reference_species: "Quercus robur"
-  mitohifi_mito_genetic_code: 1
   hifiasm_bin_arguments: "-f0"
   busco_lineage: eukaryota_odb12
 - id: dhQueRobu3.ont
