@@ -29,7 +29,7 @@ nextflow_pipeline {
                 ignore: [
                     'pipeline_info/*.{html,json,txt}',
                     '**/{mito,plastid}/**/',
-                    '**/*.mitohifi/**/'
+                    '**/{mito,plastid,*.mitohifi}/{contigs_circularization,contigs_filtering,potential_contigs,reads_mapping_and_assembly}/**'
                 ]
             )
             // stable_content: All files in ${params.outdir}/ with stable content
