@@ -811,11 +811,6 @@
                 "asm_hap2_r01_break.agp:md5,ebc885175adab7e12d4ae912f884a3b2",
                 "asm_hap2_r02_break.agp:md5,fb2067a06b6a3c8129d9d09354e68931",
                 "asm_hap2_scaffolds_final.agp:md5,1b855e18438e1b9b2275d56756df341d",
-                "contigs_stats.tsv:md5,3a91082c433802bcb208a0572d97e42d",
-                "final_mitogenome.fasta:md5,9ac014bd8be19867fc1eb28a285d5e49",
-                "final_mitogenome.gb:md5,395db81b0e769abb2da955702e43fc1b",
-                "fixed_header_contigs.fasta:md5,6729777d34ac48f833cba27512cc8f9e",
-                "shared_genes.tsv:md5,6a4a73e2394e4b1708d8749175062010",
                 "asm.hap.fa.gz:md5,be81a92d5c2d075787e3589840ce655a",
                 "asm.htigs.all.fa.assembly_summary:md5,dae07ed5be4b1fb13c1c60cdb77d1a77",
                 "asm.htigs.all.fa.gz:md5,b4c61c43cf0e53caa622ed77d1e84ab1",
@@ -896,7 +891,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-04-15T10:16:10.444759977",
+        "timestamp": "2026-04-15T12:52:59.386504856",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

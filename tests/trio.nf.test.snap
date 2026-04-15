@@ -387,11 +387,6 @@
                 "pipeline_info/genomeassembly_software_versions.yml"
             ],
             [
-                "all_potential_contigs.fa:md5,26fba12a2fe9501021b289a1805d7ca5",
-                "contigs_stats.tsv:md5,7c43e09e2adda39c85e2ad50251e59c7",
-                "final_mitogenome.fasta:md5,b0a96dd15ae247ec79bc48d8e1083a02",
-                "final_mitogenome.gb:md5,1ab40139f2979985e9d8482cc8d189e3",
-                "shared_genes.tsv:md5,5836094df8df1e95924f9bd0b7dfbec0",
                 "asm.dip.hap1.p_ctg.fa.assembly_summary:md5,88554cab555c66fb64c56ff9a3b2af10",
                 "asm.dip.hap1.p_ctg.fa.gz:md5,c7d81b14e83ab42f80496f347df03047",
                 "asm.dip.hap1.p_ctg.fa.stats:md5,b6a26e7c48b1ce08a25ec711deab3cd6",
@@ -450,7 +445,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,ff4dfc15b164603e6916f7375d9b5b72"
             ]
         ],
-        "timestamp": "2026-04-15T11:44:07.769895963",
+        "timestamp": "2026-04-15T13:31:27.600687036",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

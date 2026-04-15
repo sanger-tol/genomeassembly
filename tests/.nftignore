@@ -27,8 +27,8 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.mcool
 
 # mitohifi
-**/{mito,plastid}/**/**
-*.mitohifi/**/**
+**/{mito,plastid}/**
+*.mitohifi/**
 
 # index files
 **/index.json
