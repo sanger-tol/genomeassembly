@@ -93,7 +93,7 @@ def checkDataExists(spec, datasets) {
 
     platform_key.each { platform ->
         if(spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform } ) {
-            error("Assembly specification error [${spec.id}]: There is no ${platform.platform} dataset called '${spec[platform.name]}' does not exist!")
+            error("Assembly specification error [${spec.id}]: There is no ${platform.platform} dataset called '${spec[platform.name]}'!")
         }
     }
 }

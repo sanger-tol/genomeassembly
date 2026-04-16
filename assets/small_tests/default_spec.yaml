@@ -3,14 +3,16 @@
   long_read_dataset: icAdaBipu1
   long_read_platform: "pacbio_hifi"
   hic_dataset: icAdaBipu1
+  polishing_dataset: icAdaBipu1
   purge: true
+  polish: false
   find_mito: true
   find_plastid: false
   hifiasm_bin_arguments: "-f0"
   hifiasm_arguments: "--primary"
   mitohifi_reference_species: "Adalia bipunctata"
   mitohifi_mito_genetic_code: 5
-  busco_lineage: bacteria_odb12
+  busco_lineage: eukaryota_odb12
 - id: icAdaBipu1.phased
   assembler: "hifiasm"
   long_read_dataset: icAdaBipu1
@@ -20,7 +22,7 @@
   find_mito: false
   find_plastid: false
   hifiasm_bin_arguments: "-f0"
-  busco_lineage: bacteria_odb12
+  busco_lineage: eukaryota_odb12
 - id: icAdaBipu1.oatk
   assembler: "oatk"
   long_read_dataset: icAdaBipu1
@@ -28,9 +30,3 @@
   oatk_kmer_size: 1001
   oatk_coverage_cutoff: 5
   oatk_mito_hmm: https://github.com/c-zhou/OatkDB/raw/main/v20230921/insecta_mito.fam
-- id: icAdaBipu1.mitohifi
-  assembler: "mitohifi"
-  long_read_dataset: icAdaBipu1
-  long_read_platform: "pacbio_hifi"
-  mitohifi_reference_species: "Adalia bipunctata"
-  mitohifi_mito_genetic_code: 5

@@ -1,0 +1,19 @@
+- id: aBomVar4.trio
+  assembler: "hifiasm"
+  long_read_dataset: aBomVar4
+  long_read_platform: "pacbio_hifi"
+  maternal_dataset: aBomVar1
+  maternal_platform: illumina
+  paternal_dataset: aBomVar2
+  paternal_platform: illumina
+  hic_dataset: aBomVar4
+  trio_assembly: true
+  hifiasm_bin_arguments: "-f0"
+  hifiasm_arguments: ""
+  busco_lineage: eukaryota_odb12
+- id: aBomVar4.mitohifi
+  assembler: "mitohifi"
+  long_read_dataset: aBomVar4
+  long_read_platform: "pacbio_hifi"
+  mitohifi_reference_species: "Bombina variegata"
+  mitohifi_mito_genetic_code: 5

@@ -26,7 +26,7 @@
   oatk_mito_hmm: https://raw.githubusercontent.com/c-zhou/OatkDB/refs/heads/main/v20230921/dikarya_mito.fam
 - id: gsMetZobe1s.mitohifi
   assembler: "mitohifi"
-  long_read_dataset: baUndUnlc1
+  long_read_dataset: gsMetZobe1
   long_read_platform: "pacbio_hifi"
   mitohifi_reference_species: "Metschnikowia zobellii"
   mitohifi_mito_genetic_code: 4
