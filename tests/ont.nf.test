@@ -13,8 +13,8 @@ nextflow_pipeline {
 
         when {
             params {
-                genomic_data = "${projectDir}/assets/local_tests/dhQueRobu3_genomic.yaml"
-                assembly_specs = "${projectDir}/assets/local_tests/dhQueRobu3_spec.yaml"
+                genomic_data = "${projectDir}/assets/small_tests/dhQueRobu3_genomic.yaml"
+                assembly_specs = "${projectDir}/assets/small_tests/ont_spec.yaml"
                 outdir = "$outputDir"
                 busco_lineage_directory = "${launchDir}/busco/"
             }
