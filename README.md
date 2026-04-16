@@ -16,7 +16,7 @@
 
 **sanger-tol/genomeassembly** is a bioinformatics pipeline for de-novo genome assembly from long read data (PacBio HiFi or ONT), long-range Hi-C data, and optionally Illumina WGS and Illumina 10X linked reads. It is capable of producing primary/alternative assembles, Hi-C phased assemblies using Hi-C data, and trio-binned assemblies using data from parental sequencing.
 
-![sanger-tol/genomeassembly metro map](docs/images/genomeassembly_light_animated.svg)
+![sanger-tol/genomeassembly metro map](docs/images/genomeassembly_animated.svg)
 
 ## Pipeline summary
 
