@@ -5,6 +5,7 @@
 %%metro line: i10x_reads | 10X reads | #EB7AEB
 %%metro line: assemblies | Assembly | #24B064
 %%metro file: input_long_reads | FASTX
+%%metro file: input_long_reads_organelle | FASTX
 %%metro file: input_hic_reads | CRAM
 %%metro file: input_10x_reads | FASTQ
 %%metro grid: raw_asm | 0, 0, 2
@@ -12,6 +13,7 @@
 %%metro grid: polishing | 2, 0, 2
 %%metro grid: scaffolding | 3, 0, 4
 %%metro grid: genome_statistics | 4, 0, 4
+%%metro grid: organellar_assembly | 1, 4, 2
 %%metro line_order: span
 %%metro compact_offsets: true
 %%metro legend: bl
@@ -26,6 +28,7 @@ graph LR
         input_long_reads -->|long_reads| hifiasm
         input_hic_reads -->|hic_reads| hifiasm
     end
+
     subgraph purging [Purging]
         %%metro entry: left | assemblies,long_reads
         %%metro exit: right | assemblies
@@ -33,6 +36,7 @@ graph LR
         purge_dups[purge_dups]
         purging_minimap2 -->|assemblies,long_reads| purge_dups
     end
+
     subgraph polishing [Polishing]
         %%metro entry: left | assemblies
         %%metro exit: right | assemblies
@@ -42,6 +46,7 @@ graph LR
         input_10x_reads -->|i10x_reads| longranger
         longranger -->|i10x_reads,assemblies| freebayes
     end
+
     subgraph scaffolding [Scaffolding]
         %%metro entry: left | assemblies
         %%metro entry: bottom | hic_reads
@@ -58,6 +63,7 @@ graph LR
         yahs -->|assemblies,hic_reads| juicer
         yahs -->|assemblies,hic_reads| cooler
     end
+
     subgraph genome_statistics [Genome QC]
         %%metro entry: left | assemblies
         asmstats[asmstats]
@@ -67,6 +73,16 @@ graph LR
         asmstats -->|assemblies| gfastats
         asmstats -->|assemblies| busco
         asmstats -->|assemblies| merquryfk
+    end
+
+    subgraph organellar_assembly [Organellar assembly]
+        %%metro entry: left | assemblies, long_reads
+        input_long_reads_organelle[ ]
+        mitohifi[MitoHiFi]
+        oatk[oatk]
+
+        input_long_reads_organelle -->|long_reads| mitohifi
+        input_long_reads_organelle -->|long_reads| oatk
     end
 
     %% Inter-section edges
@@ -85,3 +101,4 @@ graph LR
     purge_dups -->|assemblies| asmstats
     freebayes -->|assemblies| asmstats
     yahs -->|assemblies| asmstats
+    hifiasm -->|assemblies| mitohifi
