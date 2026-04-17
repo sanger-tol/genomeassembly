@@ -14,18 +14,17 @@
 
 ## Introduction
 
-**sanger-tol/genomeassembly** is a bioinformatics pipeline for de-novo genome assembly from long read data (PacBio HiFi or ONT), long-range Hi-C data, and optionally Illumina WGS and Illumina 10X linked reads. It is capable of producing primary/alternative assembles, Hi-C phased assemblies using Hi-C data, and trio-binned assemblies using Illumina WGS data from parental sequencing.
+**sanger-tol/genomeassembly** is a bioinformatics pipeline for de-novo genome assembly from long read data (PacBio HiFi or ONT), long-range Hi-C data, and optionally Illumina WGS and Illumina 10X linked reads. It is capable of producing primary/alternative assembles, Hi-C phased assemblies using Hi-C data, and trio-binned assemblies using data from parental sequencing.
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
-
-On release, automated continuous integration tests run the pipeline on a full-sized dataset on the LSF infrastructure. This ensures that the pipeline runs on LSF, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_metro_map_light_animated.svg">
+  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_metro_map_light_animated.svg">
+</picture>
 
 ## Pipeline summary
 
-1. If FastK databases and coverage information information are not provided, the pipeline first builds these
-   and estimates the genome coverage using [genomescope2](https://github.com/tbenavi1/genomescope2.0).
-2. Assembles the provided long reads using [hifiasm](https://hifiasm.readthedocs.io), optionally producing hic-phased
-   or trio-binned assemblies.
+1. If FastK databases and coverage information information are not provided, the pipeline first builds these and estimates the genome coverage using [genomescope2](https://github.com/tbenavi1/genomescope2.0).
+2. Assembles the provided long reads using [hifiasm](https://hifiasm.readthedocs.io), optionally producing hic-phased or trio-binned assemblies.
 3. (optional) Purges retained haplotigs from the assembly using [purge_dups](https://github.com/dfguan/purge_dups).
 4. (optional) Polishes the combined assembly using Illumina 10X reads with [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes)
 5. Maps Hi-C reads to each assembly using [bwamem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/).
@@ -38,7 +37,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-Currently, it is advised to run the pipeline with docker or singularity as some modules do not have a conda env associated with them.
+Currently, it is advised to run the pipeline with Docker or Singularity, as `purge_dups` and `mitohifi` do not support running with Conda.
 
 Now, you can run the pipeline using:
 
