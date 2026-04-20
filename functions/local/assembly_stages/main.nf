@@ -321,7 +321,13 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
         ],
         mitohifi_mito: [
             data: [],
-            params: ["mitohifi_reference_species", "mitohifi_mito_genetic_code", "mitohifi_arguments"],
+            params: [
+                "mitohifi_reference_species",
+                "mitohifi_mito_reference_fa",
+                "mitohifi_mito_reference_gb",
+                "mitohifi_mito_genetic_code",
+                "mitohifi_arguments"
+            ],
             enabled: spec.find_mito,
             depends: "hifiasm_assembly",
             extraParams: [mode: "contigs", organelle: "mito"],
@@ -329,7 +335,13 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
         ],
         mitohifi_plastid: [
             data: [],
-            params: ["mitohifi_reference_species", "mitohifi_plastid_genetic_code", "mitohifi_arguments"],
+            params: [
+                "mitohifi_reference_species",
+                "mitohifi_plastid_reference_fa",
+                "mitohifi_plastid_reference_gb",
+                "mitohifi_plastid_genetic_code",
+                "mitohifi_arguments"
+            ],
             enabled: spec.find_plastid,
             depends: "hifiasm_assembly",
             extraParams: [mode: "contigs", organelle: "plastid"],
@@ -404,6 +416,8 @@ def stageMitohifiSpec(spec, dataList, haptabList) {
             data: ["long_read"],
             params: [
                 "mitohifi_reference_species",
+                "mitohifi_mito_reference_fa",
+                "mitohifi_mito_reference_gb",
                 "mitohifi_mito_genetic_code",
                 "mitohifi_arguments"
             ],

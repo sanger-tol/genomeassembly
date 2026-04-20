@@ -16,6 +16,7 @@ workflow MITOHIFI_ASSEMBLY {
         // reference mito and plastid genomes for reference-based organelle assembly
         //
         ch_species_to_download = ch_mitohifi_specs
+            .filter { spec -> spec.params.mitohifi_reference_species }
             .map { spec ->
                 [spec.params.subMap(["mitohifi_reference_species", "organelle"]), spec.params.mitohifi_reference_species]
             }
@@ -24,7 +25,9 @@ workflow MITOHIFI_ASSEMBLY {
         //
         // Module: Download reference organelle assembly
         //
-        MITOHIFI_FINDMITOREFERENCE(ch_species_to_download)
+        ch_mitohifi_references = MITOHIFI_FINDMITOREFERENCE(ch_species_to_download).reference
+            .map { meta, ref_fa, ref_gb -> meta + [ref_fa: ref_fa, ref_gb: ref_gb] }
+            .ifEmpty([organelle: null, mitohifi_reference_species: null, ref_fa: null, ref_gb: null])
 
         //
         // Logic: Separate out the two types of mitohifi input to allow safe joining
@@ -36,44 +39,54 @@ workflow MITOHIFI_ASSEMBLY {
                 assembly_input: spec.params.mode == "contigs"
             }
 
-        // Stage the mitohifi assembly input. We need to match the assemblies
-        // to the spec by matching the spec hash to the assembly hash
+        //
+        // Logic: Stage the mitohifi assembly input. For contigs mode, we need to match
+        // the assemblies to the spec by matching the spec hash to the assembly hash.
+        //
+        // For the reads, we just need to pull the reads out into a new tuple entry.
+        //
         ch_mitohifi_asm_input = ch_mitohifi_specs_split.assembly_input
             .combine(ch_assemblies)
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
-            .filter { spec, asm_meta, _asm1, _asm2, ref_meta, _ref_fa, _ref_gb ->
-                def hash_match = spec.prevID == asm_meta.id
-                def species_match = spec.params.mitohifi_reference_species == ref_meta.mitohifi_reference_species
-                def organelle_match = spec.params.organelle == ref_meta.organelle
-
-                hash_match && species_match && organelle_match
-            }
-            .map { spec, _asm_meta, asm1, asm2, _ref_meta, ref_fa, ref_gb ->
-                def params_out = spec.params + [
-                    mitohifi_reference_fa: ref_fa,
-                    mitohifi_reference_gb: ref_gb,
-                ]
-                return [spec + params_out, [asm1, asm2], ref_fa, ref_gb]
-            }
+            .filter { spec, asm_meta, _asm1, _asm2 -> spec.prevID == asm_meta.id }
+            .map { spec, _asm_meta, asm1, asm2 -> [spec, [asm1, asm2]] }
 
         ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.reference)
-            .filter { spec, ref_meta, _ref_fa, _ref_gb ->
-                def species_match = spec.params.mitohifi_reference_species == ref_meta.mitohifi_reference_species
-                def organelle_match = spec.params.organelle == ref_meta.organelle
+            .map { spec -> [spec, spec.data.long_read.reads] }
 
-                species_match && organelle_match
-            }
-            .map { spec, _ref_meta, ref_fa, ref_gb ->
-                def params_out = spec.params + [
+        //
+        // Logic: Set up the reference files for mitohifi. Combine with a collected list of
+        // all downloaded references, and if the ref_fa and ref_gb parts are not set, then
+        // find the requisite species/organelle reference.
+        //
+        // Also drops the original keys and replaces them with a more generic keyset.
+        //
+        ch_mitohifi_input = ch_mitohifi_asm_input.mix(ch_mitohifi_reads_input)
+            .combine(ch_mitohifi_references.collect().map { refs -> [refs] })
+            .map { spec, input, references ->
+                def organelle = spec.params.organelle
+
+                def required_reference = references.find { ref ->
+                    ref.organelle == organelle && spec.params.mitohifi_reference_species == ref.mitohifi_reference_species
+                }
+
+                def ref_fa = spec.params["mitohifi_${organelle}_reference_fa"] ?: required_reference.ref_fa
+                def ref_gb = spec.params["mitohifi_${organelle}_reference_gb"] ?: required_reference.ref_gb
+
+                // remove old keys
+                def keysToRemove = [
+                    "mitohifi_mito_reference_fa",
+                    "mitohifi_mito_reference_gb",
+                    "mitohifi_plastid_reference_fa",
+                    "mitohifi_plastid_reference_gb"
+                ]
+
+                def params_out = (spec.params - spec.params.subMap(keysToRemove)) + [
                     mitohifi_reference_fa: ref_fa,
                     mitohifi_reference_gb: ref_gb,
                 ]
-                return [spec + params_out, spec.data.long_read.reads, ref_fa, ref_gb]
+
+                return [spec + [params: params_out], input, ref_fa, ref_gb]
             }
-
-
-        ch_mitohifi_input = ch_mitohifi_asm_input.mix(ch_mitohifi_reads_input)
             .multiMap { spec, input, ref_fa, ref_gb ->
                 def genetic_code = spec.params.organelle == "mito"
                     ? spec.params.mitohifi_mito_genetic_code
@@ -120,8 +133,8 @@ workflow MITOHIFI_ASSEMBLY {
                 return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                     output: [
                         mitohifi: [
-                            mitohifi_reference_fa: spec.params.mitohifi_reference_fa,
-                            mitohifi_reference_gb: spec.params.mitohifi_reference_gb,
+                            mitohifi_reference_fa: spec.params.mitohifi_reference_species ? spec.params.mitohifi_reference_fa : null,
+                            mitohifi_reference_gb: spec.params.mitohifi_reference_species ? spec.params.mitohifi_reference_gb : null,
                             mitohifi_files: valid_publish_files
                         ]
                     ]

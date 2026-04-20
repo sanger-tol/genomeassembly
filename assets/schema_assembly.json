@@ -190,10 +190,30 @@
                 "description": "Binomial name of a taxon to use to find a reference mitochondrial genome.",
                 "meta": "mitohifi_reference_species"
             },
+            "mitohifi_mito_reference_fa": {
+                "type": "string",
+                "description": "Reference FASTA file of a mitochondrial genome to use for reference-based mitochondrial genome assembly.",
+                "meta": "mitohifi_mito_reference_fa"
+            },
+            "mitohifi_mito_reference_gb": {
+                "type": "string",
+                "description": "Reference GenBank annotation file of a mitochondrial genome to use for reference-based mitochondrial genome assembly.",
+                "meta": "mitohifi_mito_reference_gb"
+            },
             "mitohifi_mito_genetic_code": {
                 "type": "integer",
                 "description": "Mitochondrial genetic code to use during gene prediction.",
                 "meta": "mitohifi_mito_genetic_code"
+            },
+            "mitohifi_plastid_reference_fa": {
+                "type": "string",
+                "description": "Reference FASTA file of a plastid genome to use for reference-based plastid genome assembly.",
+                "meta": "mitohifi_plastid_reference_fa"
+            },
+            "mitohifi_plastid_reference_gb": {
+                "type": "string",
+                "description": "Reference GenBank annotation file of a plastid genome to use for reference-based plastid genome assembly.",
+                "meta": "mitohifi_plastid_reference_gb"
             },
             "mitohifi_plastid_genetic_code": {
                 "type": "integer",
@@ -254,16 +274,32 @@
                                 "properties": { "find_mito": { "const": true } }
                             },
                             "then": {
-                                "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                                "oneOf": [
+                                    {
+                                        "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                                    },
+                                    {
+                                        "required": [
+                                            "mitohifi_mito_reference_fa",
+                                            "mitohifi_mito_reference_gb",
+                                            "mitohifi_mito_genetic_code"
+                                        ]
+                                    }
+                                ]
                             }
                         },
                         "find_plastid": {
                             "if": {
                                 "properties": { "find_plastid": { "const": true } }
                             },
-                            "then": {
-                                "required": ["mitohifi_reference_species"]
-                            }
+                            "oneOf": [
+                                {
+                                    "required": ["mitohifi_reference_species"]
+                                },
+                                {
+                                    "required": ["mitohifi_plastid_reference_fa", "mitohifi_plastid_reference_gb"]
+                                }
+                            ]
                         }
                     },
                     "dependentRequired": {
@@ -284,7 +320,18 @@
                     "properties": { "assembler": { "const": "mitohifi" } }
                 },
                 "then": {
-                    "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                    "oneOf": [
+                        {
+                            "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                        },
+                        {
+                            "required": [
+                                "mitohifi_mito_reference_fa",
+                                "mitohifi_mito_reference_gb",
+                                "mitohifi_mito_genetic_code"
+                            ]
+                        }
+                    ]
                 }
             }
         }

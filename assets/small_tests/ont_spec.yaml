@@ -8,7 +8,8 @@
   phased_assembly: true
   find_mito: false
   find_plastid: true
-  mitohifi_reference_species: "Quercus robur"
+  mitohifi_plastid_reference_fa: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/NC_046388.1.subset.fasta
+  mitohifi_plastid_reference_gb: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/NC_046388.1.subset.gb
   hifiasm_bin_arguments: "-f0"
   busco_lineage: eukaryota_odb12
 - id: dhQueRobu3.ont

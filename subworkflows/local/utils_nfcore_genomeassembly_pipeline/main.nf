@@ -153,13 +153,13 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [polish: false]
             }
 
-            if(spec.find_mito && !(spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code)) {
-                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for mitochondria but no reference species or genetic code is set. This stage will be skipped.")
+            if(spec.find_mito && !(spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code) && !(spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb)) {
+                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for mitochondria but neither reference species/genetic code nor reference files are provided. This stage will be skipped.")
                 spec = spec + [find_mito: false]
             }
 
-            if(spec.find_plastid && !(spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code)) {
-                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for plastids but no reference species or genetic code is set. This stage will be skipped.")
+            if(spec.find_plastid && !(spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code) && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
+                log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for plastids but neither reference species/genetic code nor reference files are provided. This stage will be skipped.")
                 spec = spec + [find_plastid: false]
             }
 
