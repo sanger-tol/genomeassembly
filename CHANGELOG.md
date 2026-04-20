@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - aBomVar4/1/2, the yellow-bellied toad, for testing trio assembly
   - dhQueRobu3, the pedunculate oak, for testing ONT assembly as well as Pacbio+UL ONT assembly, and plastid assembly
 - [#139](https://github.com/sanger-tol/genomeassembly/pull/139) Add a pipeline logo and metro map! (by @prototaxites)
+- [#140](https://github.com/sanger-tol/genomeassembly/pull/140) Use the new secrets functionality of the `nf-core/setupnextflow` GitHub action in CI (by @prototaxites)
 
 ### Fixed
 
