@@ -16,7 +16,7 @@ workflow MITOHIFI_ASSEMBLY {
         // reference mito and plastid genomes for reference-based organelle assembly
         //
         ch_species_to_download = ch_mitohifi_specs
-            .filter { spec -> spec.params.mitohifi_reference_species }
+            .filter { spec -> spec.params?.download_mito_reference || spec.params?.download_plastid_reference }
             .map { spec ->
                 [spec.params.subMap(["mitohifi_reference_species", "organelle"]), spec.params.mitohifi_reference_species]
             }
@@ -114,6 +114,7 @@ workflow MITOHIFI_ASSEMBLY {
         //
         ch_mitohifi_output = MITOHIFI_MITOHIFI.out.all_files
             .map { spec, mitohifi_files ->
+                def downloaded_reference = spec.params.download_mito_reference || spec.params.download_plastid_reference
 
                 // The potential contigs directory contains symlinks which cannot be published.
                 // Loop through all contents and discard these.
@@ -133,8 +134,8 @@ workflow MITOHIFI_ASSEMBLY {
                 return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                     output: [
                         mitohifi: [
-                            mitohifi_reference_fa: spec.params.mitohifi_reference_species ? spec.params.mitohifi_reference_fa : null,
-                            mitohifi_reference_gb: spec.params.mitohifi_reference_species ? spec.params.mitohifi_reference_gb : null,
+                            mitohifi_reference_fa: downloaded_reference ? spec.params.mitohifi_reference_fa : null,
+                            mitohifi_reference_gb: downloaded_reference ? spec.params.mitohifi_reference_gb : null,
                             mitohifi_files: valid_publish_files
                         ]
                     ]

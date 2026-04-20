@@ -165,16 +165,21 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [find_plastid: false]
             }
 
-            // Turn off reference species if we have ref_fa and ref_gb for mito
-            if(spec.find_mito && spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code && spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb && !spec.find_plastid) {
-                log.warn("Assembly specification warning [${spec.id}]: Reference FASTA/GB provided for MitoHiFi mitochondrial search - setting mitohifi_reference_species to null.")
-                spec = spec + [mitohifi_reference_species: null]
+            // Initialise organellar reference download flags to false
+            spec = spec + [download_mito_reference: false, download_plastid_reference: false]
+
+            // Explicitly mark to download mito if required
+            if(spec.find_mito && spec.mitohifi_reference_species && !(spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb)) {
+                spec = spec + [download_mito_reference: true]
             }
 
-            // Turn off reference species if we have ref_fa and ref_gb for plastid
-            if(spec.find_plastid && spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code && spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb && !spec.find_mito) {
-                log.warn("Assembly specification warning [${spec.id}]: Reference FASTA/GB provided for MitoHiFi plastid search - setting mitohifi_reference_species to null.")
-                spec = spec + [mitohifi_reference_species: null]
+            if(spec.assembler == "mitohifi" && spec.mitohifi_reference_species && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
+                spec = spec + [download_mito_reference: true]
+            }
+
+            // Explicitly mark to download plastid if required
+            if(spec.find_plastid && spec.mitohifi_reference_species && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
+                spec = spec + [download_plastid_reference: true]
             }
 
             // If assembling with oatk, locate and check the existence of all HMM files
