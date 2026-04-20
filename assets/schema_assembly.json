@@ -217,7 +217,7 @@
             },
             "mitohifi_plastid_genetic_code": {
                 "type": "integer",
-                "description": "Mitochondrial genetic code to use during gene prediction.",
+                "description": "Plastid genetic code to use during gene prediction.",
                 "meta": "mitohifi_plastid_genetic_code",
                 "default": 11
             },
