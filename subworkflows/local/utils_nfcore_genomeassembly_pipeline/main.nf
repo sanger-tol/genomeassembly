@@ -153,14 +153,28 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [polish: false]
             }
 
+            // Disable find_mito if we have no way of getting a reference
             if(spec.find_mito && !(spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code) && !(spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb)) {
                 log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for mitochondria but neither reference species/genetic code nor reference files are provided. This stage will be skipped.")
                 spec = spec + [find_mito: false]
             }
 
+            // Disable find_plastid if we have no way of getting a reference
             if(spec.find_plastid && !(spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code) && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
                 log.warn("Assembly specification warning [${spec.id}]: Mitohifi search enabled for plastids but neither reference species/genetic code nor reference files are provided. This stage will be skipped.")
                 spec = spec + [find_plastid: false]
+            }
+
+            // Turn off reference species if we have ref_fa and ref_gb for mito
+            if(spec.find_mito && spec.mitohifi_reference_species && spec.mitohifi_mito_genetic_code && spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb && !spec.find_plastid) {
+                log.warn("Assembly specification warning [${spec.id}]: Reference FASTA/GB provided for MitoHiFi mitochondrial search - setting mitohifi_reference_species to null.")
+                spec = spec + [mitohifi_reference_species: null]
+            }
+
+            // Turn off reference species if we have ref_fa and ref_gb for plastid
+            if(spec.find_plastid && spec.mitohifi_reference_species && spec.mitohifi_plastid_genetic_code && spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb && !spec.find_mito) {
+                log.warn("Assembly specification warning [${spec.id}]: Reference FASTA/GB provided for MitoHiFi plastid search - setting mitohifi_reference_species to null.")
+                spec = spec + [mitohifi_reference_species: null]
             }
 
             // If assembling with oatk, locate and check the existence of all HMM files
