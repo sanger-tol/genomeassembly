@@ -292,14 +292,16 @@
                             "if": {
                                 "properties": { "find_plastid": { "const": true } }
                             },
-                            "oneOf": [
-                                {
-                                    "required": ["mitohifi_reference_species"]
-                                },
-                                {
-                                    "required": ["mitohifi_plastid_reference_fa", "mitohifi_plastid_reference_gb"]
-                                }
-                            ]
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["mitohifi_reference_species"]
+                                    },
+                                    {
+                                        "required": ["mitohifi_plastid_reference_fa", "mitohifi_plastid_reference_gb"]
+                                    }
+                                ]
+                            }
                         }
                     },
                     "dependentRequired": {

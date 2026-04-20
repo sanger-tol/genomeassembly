@@ -132,7 +132,7 @@ These options can be used if the `assembler` field is set to "hifiasm".
 | `mitohifi_plastid_genetic_code` | 11         | Plastid genetic code for gene prediction.                                                                                                |
 | `mitohifi_arguments`            | -          | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
 
-> **Note:** To run reference-based mitochrondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_refererence_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
+> **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 
 #### MitoHiFi options
 
@@ -146,7 +146,7 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
 | `mitohifi_mito_genetic_code` | -       | Mitochondrial genetic code for gene prediction. (Required)                                     |
 | `mitohifi_arguments`         | -       | Additional command-line arguments for MitoHiFi in reads mode.                                  |
 
-> **Note:** To run reference-based mitochrondrial genome assembly with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_mito_refererence_{fa,gb}` must be specified along with `mitohifi_mito_genetic_code`.
+> **Note:** To run reference-based mitochondrial genome assembly with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_mito_reference_{fa,gb}` must be specified along with `mitohifi_mito_genetic_code`.
 
 #### Oatk options
 
