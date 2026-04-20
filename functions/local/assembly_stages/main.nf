@@ -322,7 +322,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
         mitohifi_mito: [
             data: [],
             params: [
-                "download_mito",
+                "download_mito_reference",
                 "mitohifi_reference_species",
                 "mitohifi_mito_reference_fa",
                 "mitohifi_mito_reference_gb",
@@ -337,7 +337,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
         mitohifi_plastid: [
             data: [],
             params: [
-                "download_plastid",
+                "download_plastid_reference",
                 "mitohifi_reference_species",
                 "mitohifi_plastid_reference_fa",
                 "mitohifi_plastid_reference_gb",
@@ -417,7 +417,7 @@ def stageMitohifiSpec(spec, dataList, haptabList) {
         mitohifi: [
             data: ["long_read"],
             params: [
-                "download_mito",
+                "download_mito_reference",
                 "mitohifi_reference_species",
                 "mitohifi_mito_reference_fa",
                 "mitohifi_mito_reference_gb",
