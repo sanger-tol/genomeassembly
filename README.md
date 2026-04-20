@@ -1,5 +1,10 @@
 # sanger-tol/genomeassembly
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_logo_dark.svg">
+  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_logo_light.svg">
+</picture>
+
 [![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/sanger-tol/genomeassembly)
 [![GitHub Actions CI Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/nf-test.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/nf-test.yml)
 [![GitHub Actions Linting Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.10391851-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.10391851)
@@ -17,7 +22,7 @@
 **sanger-tol/genomeassembly** is a bioinformatics pipeline for de-novo genome assembly from long read data (PacBio HiFi or ONT), long-range Hi-C data, and optionally Illumina WGS and Illumina 10X linked reads. It is capable of producing primary/alternative assembles, Hi-C phased assemblies using Hi-C data, and trio-binned assemblies using data from parental sequencing.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_metro_map_light_animated.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_metro_map_dark_animated.svg">
   <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_metro_map_light_animated.svg">
 </picture>
 
