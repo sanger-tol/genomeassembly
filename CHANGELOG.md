@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - icAdaBipu1, the two-spotted ladybird, for testing pri/alt assembly and phased assembly
   - aBomVar4/1/2, the yellow-bellied toad, for testing trio assembly
   - dhQueRobu3, the pedunculate oak, for testing ONT assembly as well as Pacbio+UL ONT assembly, and plastid assembly
+- [#139](https://github.com/sanger-tol/genomeassembly/pull/139) Add a pipeline logo and metro map! (by @prototaxites)
 
 ### Fixed
 
