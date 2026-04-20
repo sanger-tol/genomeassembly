@@ -1,8 +1,8 @@
 # sanger-tol/genomeassembly
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_logo_light.svg">
-  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_logo_dark.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_logo_dark.svg">
+  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_logo_light.svg">
 </picture>
 
 [![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/sanger-tol/genomeassembly)
