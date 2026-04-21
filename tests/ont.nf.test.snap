@@ -1,7 +1,7 @@
 {
     "dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search": {
         "content": [
-            157,
+            156,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -69,9 +69,6 @@
                     "R": "4.3.3",
                     "fastk": 1.2,
                     "merquryfk": 1.2
-                },
-                "MITOHIFI_FINDMITOREFERENCE": {
-                    "mitohifi": "3.2.3"
                 },
                 "MITOHIFI_MITOHIFI": {
                     "mitohifi": "3.2.3"
@@ -738,7 +735,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,a1d9fb5c9495434c2f5946fa5447d083"
             ]
         ],
-        "timestamp": "2026-04-15T13:24:25.387297932",
+        "timestamp": "2026-04-21T09:55:27.207851964",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

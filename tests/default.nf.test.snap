@@ -1,7 +1,7 @@
 {
     "icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only": {
         "content": [
-            172,
+            171,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -89,9 +89,6 @@
                 },
                 "MINIMAP2_INDEX": {
                     "minimap2": "2.29-r1283"
-                },
-                "MITOHIFI_FINDMITOREFERENCE": {
-                    "mitohifi": "3.2.3"
                 },
                 "MITOHIFI_MITOHIFI": {
                     "mitohifi": "3.2.3"
@@ -891,7 +888,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-04-15T12:52:59.386504856",
+        "timestamp": "2026-04-21T09:22:18.558047716",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

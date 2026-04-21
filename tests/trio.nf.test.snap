@@ -144,6 +144,7 @@
                 "aBomVar4.mitohifi/mitohifi.log",
                 "aBomVar4.mitohifi/potential_contigs",
                 "aBomVar4.mitohifi/reads_mapping_and_assembly",
+                "aBomVar4.mitohifi/ref",
                 "aBomVar4.mitohifi/shared_genes.tsv",
                 "aBomVar4.trio",
                 "aBomVar4.trio/index.json",
@@ -445,7 +446,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,ff4dfc15b164603e6916f7375d9b5b72"
             ]
         ],
-        "timestamp": "2026-04-15T13:31:27.600687036",
+        "timestamp": "2026-04-21T10:01:32.359488614",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
