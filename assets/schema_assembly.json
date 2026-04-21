@@ -224,7 +224,7 @@
             "mitohifi_arguments": {
                 "type": "string",
                 "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
-                "meta": "mitohifi_reads_arguments",
+                "meta": "mitohifi_arguments",
                 "default": ""
             },
             "oatk_kmer_size": {

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#140](https://github.com/sanger-tol/genomeassembly/pull/140) Use the new secrets functionality of the `nf-core/setupnextflow` GitHub action in CI (by @prototaxites)
 - [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Allow specification of user-provided reference files for MitoHiFi (by @prototaxites)
   - adds the following specification YAML entries: `mitohifi_mito_reference_fa`, `mitohifi_mito_reference_gb`, `mitohifi_plastid_reference_fa`, `mitohifi_plastid_reference_gb`
+- [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Fix issue with `mitohifi_arguments` not being correctly applied (by @prototaxites)
 
 ### Fixed
 
