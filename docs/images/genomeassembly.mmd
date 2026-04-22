@@ -5,7 +5,6 @@
 %%metro line: i10x_reads | 10X reads | #EB7AEB
 %%metro line: assemblies | Assembly | #24B064
 %%metro file: input_long_reads | FASTX
-%%metro file: input_long_reads_organelle | FASTX
 %%metro file: input_hic_reads | CRAM
 %%metro file: input_10x_reads | FASTQ
 %%metro grid: raw_asm | 0, 0, 2
@@ -79,12 +78,11 @@ graph LR
 
     subgraph organellar_assembly [Organellar assembly]
         %%metro entry: left | assemblies, long_reads
-        input_long_reads_organelle[ ]
         mitohifi[MitoHiFi]
         oatk[oatk]
 
-        input_long_reads_organelle -->|long_reads| mitohifi
-        input_long_reads_organelle -->|long_reads| oatk
+        input_long_reads -->|long_reads| mitohifi
+        input_long_reads -->|long_reads| oatk
     end
 
     %% Inter-section edges
@@ -104,3 +102,5 @@ graph LR
     freebayes -->|assemblies| asmstats
     yahs -->|assemblies| asmstats
     hifiasm -->|assemblies| mitohifi
+    input_long_reads -> |long_reads| mitohifi
+    input_long_reads -> |long_reads| oatk

@@ -123,20 +123,30 @@ These options can be used if the `assembler` field is set to "hifiasm".
 | `purge_middle`                  | `false`    | Purge haplotypic duplications from within contigs, not just at the ends.                                                                 |
 | `yahs_arguments`                | -          | Additional command-line arguments for YaHS.                                                                                              |
 | `busco_lineage`                 | `auto_euk` | BUSCO lineage for completeness assessment (e.g., `metazoa_odb12`).                                                                       |
-| `mitohifi_reference_species`    | -          | Binomial name of taxon for reference mitochondrial genome. Required if `find_mito` or `find_plastid` are set.                            |
-| `mitohifi_mito_genetic_code`    | -          | Mitochondrial genetic code for gene prediction. Required if `find_mito` or `find_plastid` are set.                                       |
-| `mitohifi_plastid_genetic_code` | 11         | Plastid genetic code for gene prediction. Required if `find_mito` or `find_plastid` are set.                                             |
+| `mitohifi_reference_species`    | -          | Binomial name of taxon for reference mitochondrial genome.                                                                               |
+| `mitohifi_mito_reference_fa`    | -          | Reference FASTA file to use for reference-based mitochondrial genome assembly with MitoHifi.                                             |
+| `mitohifi_mito_reference_gb`    | -          | Reference GenBank file to use for reference-based mitochondrial genome assembly with MitoHifi.                                           |
+| `mitohifi_mito_genetic_code`    | -          | Mitochondrial genetic code for gene prediction.                                                                                          |
+| `mitohifi_plastid_reference_fa` | -          | Reference FASTA file to use for reference-based plastid genome assembly with MitoHifi.                                                   |
+| `mitohifi_plastid_reference_gb` | -          | Reference GenBank file to use for reference-based plastid genome assembly with MitoHifi.                                                 |
+| `mitohifi_plastid_genetic_code` | 11         | Plastid genetic code for gene prediction.                                                                                                |
 | `mitohifi_arguments`            | -          | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
+
+> **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 
 #### MitoHiFi options
 
 The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi".
 
-| Parameter                    | Default | Description                                                           |
-| ---------------------------- | ------- | --------------------------------------------------------------------- |
-| `mitohifi_reference_species` | -       | Binomial name of taxon for reference mitochondrial genome. (Required) |
-| `mitohifi_mito_genetic_code` | -       | Mitochondrial genetic code for gene prediction. (Required)            |
-| `mitohifi_arguments`         | -       | Additional command-line arguments for MitoHiFi in reads mode.         |
+| Parameter                    | Default | Description                                                                                    |
+| ---------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `mitohifi_reference_species` | -       | Binomial name of taxon for reference mitochondrial genome. (Required)                          |
+| `mitohifi_mito_reference_fa` | -       | Reference FASTA file to use for reference-based mitochondrial genome assembly with MitoHifi.   |
+| `mitohifi_mito_reference_gb` | -       | Reference GenBank file to use for reference-based mitochondrial genome assembly with MitoHifi. |
+| `mitohifi_mito_genetic_code` | -       | Mitochondrial genetic code for gene prediction. (Required)                                     |
+| `mitohifi_arguments`         | -       | Additional command-line arguments for MitoHiFi in reads mode.                                  |
+
+> **Note:** To run reference-based mitochondrial genome assembly with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_mito_reference_{fa,gb}` must be specified along with `mitohifi_mito_genetic_code`.
 
 #### Oatk options
 

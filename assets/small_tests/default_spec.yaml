@@ -10,7 +10,8 @@
   find_plastid: false
   hifiasm_bin_arguments: "-f0"
   hifiasm_arguments: "--primary"
-  mitohifi_reference_species: "Adalia bipunctata"
+  mitohifi_mito_reference_fa: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.fasta
+  mitohifi_mito_reference_gb: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.gb
   mitohifi_mito_genetic_code: 5
   busco_lineage: eukaryota_odb12
 - id: icAdaBipu1.phased

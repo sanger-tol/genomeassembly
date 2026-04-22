@@ -16,7 +16,7 @@ repos:
               modules/(?!local/).*|
               subworkflows/(?!local/).*|
               .*\.drawio$|
-              .*\.snap$
+              .*\.snap$|
           )$
       - id: end-of-file-fixer
         exclude: |
@@ -25,5 +25,6 @@ repos:
               modules/(?!local/).*|
               subworkflows/(?!local/).*|
               .*\.drawio$|
-              .*\.snap$
+              .*\.snap$|
+              .*\.svg$
           )$
