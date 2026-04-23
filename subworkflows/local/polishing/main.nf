@@ -1,8 +1,7 @@
-include { FASTA_10X_POLISHING_LONGRANGER_FREEBAYES } from '../../../subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes'
+include { SEQKIT_GREP as SEPARATE_HAPLOTYPES          } from '../../../modules/nf-core/seqkit/grep'
+include { TABIX_BGZIP as BGZIP_POLISHED               } from '../../../modules/nf-core/tabix/bgzip'
 
-include { CAT_CAT as CONCATENATE_ASSEMBLIES        } from '../../../modules/nf-core/cat/cat'
-include { SEQKIT_GREP as SEPARATE_HAPLOTYPES       } from '../../../modules/nf-core/seqkit/grep'
-include { TABIX_BGZIP as BGZIP_POLISHED            } from '../../../modules/nf-core/tabix/bgzip'
+include { FASTA_10X_POLISHING_LONGRANGER_FREEBAYES    } from '../../../subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes'
 
 workflow POLISHING {
     take:
