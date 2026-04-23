@@ -86,7 +86,7 @@ workflow MITOHIFI_ASSEMBLY {
                 ]
 
                 return [spec + [params: params_out], input, ref_fa, ref_gb]
-            }.view()
+            }
             .multiMap { spec, input, ref_fa, ref_gb ->
                 def genetic_code = spec.params.organelle == "mito"
                     ? spec.params.mitohifi_mito_genetic_code
