@@ -14,7 +14,7 @@ process LONGRANGER_ALIGN {
     tuple val(meta), path("${prefix}/outs/possorted_bam.bam")    , emit: bam
     tuple val(meta), path("${prefix}/outs/possorted_bam.bam.bai"), emit: bai
     tuple val(meta), path("${prefix}/outs/summary.csv")          , emit: csv
-    path("versions.yml")                                         , emit: versions
+    tuple val("${task.process}"), val('longranger'), eval('longranger align --version | sed "1!d;s/.*(\\(.*\\)).*/\\1/"'), emit: versions_longranger, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,11 +30,6 @@ process LONGRANGER_ALIGN {
         --reference=${reference} \\
         ${local_setup} \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        longranger: \$(longranger align --version | grep longranger | sed 's/.*(//' | sed 's/).*//')
-    END_VERSIONS
     """
 
     stub:
@@ -44,10 +39,5 @@ process LONGRANGER_ALIGN {
     touch ${prefix}/outs/possorted_bam.bam
     touch ${prefix}/outs/possorted_bam.bam.bai
     touch ${prefix}/outs/summary.csv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        longranger: \$(longranger align --version | grep longranger | sed 's/.*(//' | sed 's/).*//')
-    END_VERSIONS
     """
 }

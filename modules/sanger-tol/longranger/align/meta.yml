@@ -13,14 +13,15 @@ keywords:
   - align
 tools:
   - longranger:
-      description: Long Ranger is a set of analysis pipelines that processes Chromium
-        sequencing output to align reads and call and phase SNPs, indels, and structural
-        variants.
+      description: Long Ranger is a set of analysis pipelines that processes
+        Chromium sequencing output to align reads and call and phase SNPs, indels,
+        and structural variants.
       homepage: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
       documentation: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
       tool_dev_url: https://github.com/10XGenomics/longranger
       doi: no DOI available
-      licence: ["https://support.10xgenomics.com/genome-exome/software/downloads/latest"]
+      licence:
+        - "https://support.10xgenomics.com/genome-exome/software/downloads/latest"
       identifier: ""
 input:
   - - meta:
@@ -33,7 +34,8 @@ input:
         description: Illumina 10X Fastq files
         pattern: "*.fastq.gz"
         ontologies:
-          - edam: http://edamontology.org/format_1930 # FASTQ format
+          - edam: http://edamontology.org/format_1930
+          - edam: http://edamontology.org/format_3989
   - - meta2:
         type: map
         description: |
@@ -54,7 +56,7 @@ output:
           type: file
           description: Sorted BAM file of 10X reads mapped to the reference
           ontologies:
-            - edam: http://edamontology.org/format_2572 # BAM
+            - edam: http://edamontology.org/format_2572
   bai:
     - - meta:
           type: map
@@ -65,7 +67,7 @@ output:
           type: file
           description: BAM file index
           ontologies:
-            - edam: http://edamontology.org/format_3327 # BAI
+            - edam: http://edamontology.org/format_3327
   csv:
     - - meta:
           type: map
@@ -76,14 +78,28 @@ output:
           type: file
           description: Summary CSV describing Longranger process
           ontologies:
-            - edam: http://edamontology.org/format_3752 # CSV
+            - edam: http://edamontology.org/format_3752
+  versions_longranger:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - longranger:
+          type: string
+          description: The name of the tool
+      - longranger align --version | sed "1!d;s/.*(\(.*\)).*/\1/":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - longranger:
+          type: string
+          description: The name of the tool
+      - longranger align --version | sed "1!d;s/.*(\(.*\)).*/\1/":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@ksenia-krasheninnikova"
   - "@prototaxites"

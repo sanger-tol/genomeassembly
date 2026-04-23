@@ -69,7 +69,7 @@ nextflow_process {
                     bam(process.out.bam.get(0).get(1)).getStatistics(),
                     file(process.out.bai.get(0).get(1)).getName(),
                     process.out.csv,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions")}
                 ).match() }
             )
         }

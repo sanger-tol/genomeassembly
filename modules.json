@@ -12,27 +12,27 @@
                     },
                     "bcftools/consensus": {
                         "branch": "master",
-                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
+                        "git_sha": "4b21e2cd1a9ea70e22b502cb45ee147410824760",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "bcftools/index": {
                         "branch": "master",
-                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
+                        "git_sha": "4b21e2cd1a9ea70e22b502cb45ee147410824760",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "bcftools/norm": {
                         "branch": "master",
-                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
+                        "git_sha": "4b21e2cd1a9ea70e22b502cb45ee147410824760",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
+                        "git_sha": "4b21e2cd1a9ea70e22b502cb45ee147410824760",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "bcftools/view": {
                         "branch": "master",
-                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
+                        "git_sha": "4b21e2cd1a9ea70e22b502cb45ee147410824760",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "busco/busco": {
@@ -44,11 +44,6 @@
                         "branch": "master",
                         "git_sha": "5dd46a36fca68d6ad1a6b22ec47adc8c6863717d",
                         "installed_by": ["cram_map_illumina_hic"]
-                    },
-                    "cat/cat": {
-                        "branch": "master",
-                        "git_sha": "7ed72ef972290b93d0bdd7c60ff00a693250f77a",
-                        "installed_by": ["fasta_10x_polishing_longranger_freebayes", "fasta_purge_retained_haplotype"]
                     },
                     "cooler/cload": {
                         "branch": "master",
@@ -70,9 +65,14 @@
                         "git_sha": "3bed0255027a76609032ebc321465c94207ef8ed",
                         "installed_by": ["modules"]
                     },
+                    "find/concatenate": {
+                        "branch": "master",
+                        "git_sha": "8d8ab5d337f91c136f0bf78ec137e0599a2024ce",
+                        "installed_by": ["fasta_10x_polishing_longranger_freebayes", "fasta_purge_retained_haplotype"]
+                    },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "gatk4/mergevcfs": {
@@ -148,32 +148,32 @@
                     },
                     "purgedups/calcuts": {
                         "branch": "master",
-                        "git_sha": "b6911f6da8a549b0f044e9fb07a60eb2a954fd00",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/getseqs": {
                         "branch": "master",
-                        "git_sha": "b8a610052d125039739a7a7fa9e2bd9526e33818",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/histplot": {
                         "branch": "master",
-                        "git_sha": "b8a610052d125039739a7a7fa9e2bd9526e33818",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/pbcstat": {
                         "branch": "master",
-                        "git_sha": "b8a610052d125039739a7a7fa9e2bd9526e33818",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/purgedups": {
                         "branch": "master",
-                        "git_sha": "2a1a741dde08a550093174f6fd75762920f9313d",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/splitfa": {
                         "branch": "master",
-                        "git_sha": "b6911f6da8a549b0f044e9fb07a60eb2a954fd00",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "samtools/faidx": {
@@ -217,7 +217,7 @@
                     },
                     "seqkit/grep": {
                         "branch": "master",
-                        "git_sha": "149a22b7f9447e73f1f0c34de2e239fdd63af393",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "tabix/bgzip": {
@@ -307,12 +307,12 @@
                     },
                     "longranger/align": {
                         "branch": "main",
-                        "git_sha": "ba362129a9fb5dec1f83ec03555a3f7551b1e822",
+                        "git_sha": "685e3c19378a2eb46a1723c6f55f10a543cfc29e",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "longranger/mkref": {
                         "branch": "main",
-                        "git_sha": "ba362129a9fb5dec1f83ec03555a3f7551b1e822",
+                        "git_sha": "685e3c19378a2eb46a1723c6f55f10a543cfc29e",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
                     "samtools/mergedup": {
@@ -346,7 +346,7 @@
                     },
                     "fasta_10x_polishing_longranger_freebayes": {
                         "branch": "main",
-                        "git_sha": "685e3c19378a2eb46a1723c6f55f10a543cfc29e",
+                        "git_sha": "5797ab17453869db92a9d19640852255759c472e",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_bam_scaffolding_yahs": {
@@ -356,7 +356,7 @@
                     },
                     "fasta_purge_retained_haplotype": {
                         "branch": "main",
-                        "git_sha": "c1f4b51961bc421cb88e679405d19bc38e39c7c7",
+                        "git_sha": "5797ab17453869db92a9d19640852255759c472e",
                         "installed_by": ["subworkflows"]
                     },
                     "fastx_map_long_reads": {
