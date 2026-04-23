@@ -22,7 +22,7 @@
                             "id": "test"
                         },
                         "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
-                        "test.fa:md5,eafafcfcb5718481e1c24211b6113b8d"
+                        "test.fa:md5,107b9c11bc4ac1f2e5c70dfe735944fd"
                     ]
                 ],
                 "purged_haplotigs": [
@@ -107,11 +107,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-04-22T11:23:21.190777",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-04T16:09:10.670263"
+        }
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
@@ -221,10 +221,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-03-04T16:10:34.296729",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-04T16:10:34.296729"
+        }
     }
 }

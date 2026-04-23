@@ -17,3 +17,4 @@
   long_read_platform: "pacbio_hifi"
   mitohifi_reference_species: "Bombina variegata"
   mitohifi_mito_genetic_code: 5
+  mitohifi_arguments: "-a plant"

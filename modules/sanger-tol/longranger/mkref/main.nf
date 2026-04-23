@@ -11,7 +11,7 @@ process LONGRANGER_MKREF {
 
     output:
     tuple val(meta), path("refdata-*"), emit: reference
-    path "versions.yml"               , emit: versions
+	tuple val("${task.process}"), val('longranger'), eval("longranger align --version | sed '1!d;s/.*(\\(.*\\)).*/\\1/'"), emit: versions_longranger, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,11 +22,6 @@ process LONGRANGER_MKREF {
     }
     """
     longranger mkref ${assembly}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        longranger: \$(longranger mkref --version | grep longranger | sed 's/.*(//' | sed 's/).*//')
-    END_VERSIONS
     """
 
     stub:
@@ -49,10 +44,5 @@ process LONGRANGER_MKREF {
     touch refdata-${prefix}/fasta/genome.fa.sa
 
     touch refdata-${prefix}/genome
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        longranger: \$(longranger mkref --version | grep longranger | sed 's/.*(//' | sed 's/).*//')
-    END_VERSIONS
     """
 }

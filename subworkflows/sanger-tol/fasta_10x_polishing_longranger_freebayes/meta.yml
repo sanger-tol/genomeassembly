@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/modules/master/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "fasta_10x_polishing_longranger_freebayes"
 description: Align 10X data using Longranger and FreeBayes to a genome assembly and polish
 keywords:
@@ -20,7 +20,7 @@ components:
       git_remote: https://github.com/nf-core/modules.git
   - bcftools/view:
       git_remote: https://github.com/nf-core/modules.git
-  - cat/cat:
+  - find/concatenate:
       git_remote: https://github.com/nf-core/modules.git
   - freebayes:
       git_remote: https://github.com/nf-core/modules.git

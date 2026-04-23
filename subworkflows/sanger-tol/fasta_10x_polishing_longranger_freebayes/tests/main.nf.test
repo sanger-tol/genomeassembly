@@ -14,7 +14,7 @@ nextflow_workflow {
     tag "subworkflows/../../modules/nf-core/bcftools/norm"
     tag "subworkflows/../../modules/nf-core/bcftools/sort"
     tag "subworkflows/../../modules/nf-core/bcftools/index"
-    tag "subworkflows/../../modules/nf-core/cat/cat"
+    tag "subworkflows/../../modules/nf-core/find/concatenate"
     tag "subworkflows/../../modules/nf-core/freebayes"
     tag "subworkflows/../../modules/nf-core/gatk4/mergevcfs"
     tag "subworkflows/../../modules/nf-core/samtools/faidx"
@@ -33,7 +33,7 @@ nextflow_workflow {
                 'bcftools/norm',
                 'bcftools/sort',
                 'bcftools/index',
-                'cat/cat',
+                'find/concatenate',
                 'freebayes',
                 'gatk4/mergevcfs',
                 'samtools/faidx',

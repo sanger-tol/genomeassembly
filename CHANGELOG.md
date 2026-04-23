@@ -38,11 +38,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Module                  | Tool            | Old version | New version       |
 | ----------------------- | --------------- | ----------- | ----------------- |
 | bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
-| bcftools/consensus      | bcftools        | 1.21        | 1.22              |
-| bcftools/index          | bcftools        | 1.21        | 1.22              |
-| bcftools/norm           | bcftools        | 1.21        | 1.22              |
-| bcftools/sort           | bcftools        | 1.21        | 1.22              |
-| bcftools/view           | bcftools        | 1.21        | 1.22              |
+| bcftools/consensus      | bcftools        | 1.21        | 1.23.1            |
+| bcftools/index          | bcftools        | 1.21        | 1.23.1            |
+| bcftools/norm           | bcftools        | 1.21        | 1.23.1            |
+| bcftools/sort           | bcftools        | 1.21        | 1.23.1            |
+| bcftools/view           | bcftools        | 1.21        | 1.23.1            |
 | bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
 | cat/cat                 | pigz            | 2.3.4       | 2.8               |
 | fastk/fastk             | fastk           | 1.1.0       | 1.2               |

@@ -11,7 +11,7 @@ keywords:
   - duplication
 components:
   - fastx_map_long_reads
-  - cat/cat:
+  - find/concatenate:
       git_remote: https://github.com/nf-core/modules.git
   - minimap2/align:
       git_remote: https://github.com/nf-core/modules.git
@@ -32,9 +32,10 @@ input:
       type: file
       description: |
         Input assemblies for purging in FASTA format. The second FASTA may be an empty list.
+        Must be uncompressed.
 
         Structure: [ val(meta), [ path(fasta) , path(fasta) ] ] or [ val(meta), [ path(fasta) , [] ] ] ]
-      pattern: "*.{fasta,fasta.gz}"
+      pattern: "*.{fasta,fa}"
   - ch_long_reads:
       type: file
       description: |

@@ -30,6 +30,8 @@
                     "bwamem2": "2.2.1"
                 },
                 "CONCATENATE_HAPLOTYPES": {
+                    "coreutils": 9.4,
+                    "find": "4.6.0",
                     "pigz": 2.8
                 },
                 "COOLER_CLOAD": {
@@ -53,7 +55,7 @@
                 },
                 "FASTXALIGN_MINIMAP2ALIGN": {
                     "minimap2": "2.30-r1287",
-                    "samtools": 1.23,
+                    "samtools": "1.23.1",
                     "slice_fasta.py": "1.0.0"
                 },
                 "FASTXALIGN_PYFASTXINDEX": {
@@ -810,7 +812,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,1b855e18438e1b9b2275d56756df341d",
                 "asm.hap.fa.gz:md5,be81a92d5c2d075787e3589840ce655a",
                 "asm.htigs.all.fa.assembly_summary:md5,dae07ed5be4b1fb13c1c60cdb77d1a77",
-                "asm.htigs.all.fa.gz:md5,b4c61c43cf0e53caa622ed77d1e84ab1",
+                "asm.htigs.all.fa.gz:md5,0cb2bfd3cd695ff2b418920493cbf49b",
                 "asm.htigs.all.fa.stats:md5,979acda05255197f84a3791327f56869",
                 "asm.purged.fa.assembly_summary:md5,767c4eb55b411b238634e84d725fb6a9",
                 "asm.purged.fa.gz:md5,8f11b53970a57ced5c4e725c575a8d3f",
@@ -870,25 +872,25 @@
                 "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
                 "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
                 "asm_hap1.hic:md5,dea918fd8273c97f2b8adfd5f8576f98",
-                "asm_hap2.hic:md5,183fda29d5d51211dbd9a6e2943a9633",
+                "asm_hap2.hic:md5,06fb543ad9a602ea813f29c4517187b0",
                 "asm_hap1.flagstat:md5,3bc3ff9ae08e2651ad01c7411ae43ece",
                 "asm_hap1.idxstats:md5,291ddbd9a1bfe3a2746be043123572c4",
                 "asm_hap1.stats:md5,5f35bfe3e0f41a0b4420ea8d5253a2e5",
-                "asm_hap2.flagstat:md5,a5d0a2b5c1e8e6d24ea626c0cd3512ed",
-                "asm_hap2.idxstats:md5,f7a20733e9ea6bbc2cd62e38b08ac8b8",
-                "asm_hap2.stats:md5,5ad93764644e8800e667398801283561",
+                "asm_hap2.flagstat:md5,173d5133d016a8796e3eeb7bdc8176ce",
+                "asm_hap2.idxstats:md5,2988e61826d942bb6c2ca6e8384edf10",
+                "asm_hap2.stats:md5,d34b5486e4830e85a3e67f446c12fbfa",
                 "asm_hap1.bin:md5,55bbedc76d2b2601ae561932a9eef065",
                 "asm_hap1_inital_break_01.agp:md5,94abc4ede3674d029b8531d093afe7cc",
                 "asm_hap1_inital_break_02.agp:md5,94abc4ede3674d029b8531d093afe7cc",
                 "asm_hap1_r01_break.agp:md5,8e3ea4fe0722c3b9e0077776e1549dcd",
                 "asm_hap1_scaffolds_final.agp:md5,7587d1d71f7161b3c7d1654c2c5dcaf6",
-                "asm_hap2.bin:md5,cab3d9f1bf7de6e9ace56a60c3661f6f",
-                "asm_hap2_inital_break_01.agp:md5,85a331b5c30bc06e08d45931038e4977",
-                "asm_hap2_inital_break_02.agp:md5,85a331b5c30bc06e08d45931038e4977",
+                "asm_hap2.bin:md5,f48aad29533bdf2d4245db9034775da9",
+                "asm_hap2_inital_break_01.agp:md5,c936a2285197d2b7fd7c4d8dc638a21b",
+                "asm_hap2_inital_break_02.agp:md5,c936a2285197d2b7fd7c4d8dc638a21b",
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-04-21T09:22:18.558047716",
+        "timestamp": "2026-04-23T11:10:08.553347871",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

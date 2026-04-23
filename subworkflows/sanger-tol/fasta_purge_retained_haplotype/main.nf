@@ -3,16 +3,16 @@ Adapted from
 https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8396857a8ee418bf86188fc59/subworkflows/purge_dups/main.nf
 */
 
-include { CAT_CAT as CONCATENATE_HAPLOTYPES         } from '../../../modules/nf-core/cat/cat'
-include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY } from '../../../modules/nf-core/minimap2/align'
-include { PURGEDUPS_CALCUTS                         } from '../../../modules/nf-core/purgedups/calcuts'
-include { PURGEDUPS_GETSEQS                         } from '../../../modules/nf-core/purgedups/getseqs'
-include { PURGEDUPS_HISTPLOT                        } from '../../../modules/nf-core/purgedups/histplot'
-include { PURGEDUPS_PBCSTAT                         } from '../../../modules/nf-core/purgedups/pbcstat'
-include { PURGEDUPS_PURGEDUPS                       } from '../../../modules/nf-core/purgedups/purgedups'
-include { PURGEDUPS_SPLITFA                         } from '../../../modules/nf-core/purgedups/splitfa'
+include { FIND_CONCATENATE as CONCATENATE_HAPLOTYPES } from '../../../modules/nf-core/find/concatenate'
+include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY  } from '../../../modules/nf-core/minimap2/align'
+include { PURGEDUPS_CALCUTS                          } from '../../../modules/nf-core/purgedups/calcuts'
+include { PURGEDUPS_GETSEQS                          } from '../../../modules/nf-core/purgedups/getseqs'
+include { PURGEDUPS_HISTPLOT                         } from '../../../modules/nf-core/purgedups/histplot'
+include { PURGEDUPS_PBCSTAT                          } from '../../../modules/nf-core/purgedups/pbcstat'
+include { PURGEDUPS_PURGEDUPS                        } from '../../../modules/nf-core/purgedups/purgedups'
+include { PURGEDUPS_SPLITFA                          } from '../../../modules/nf-core/purgedups/splitfa'
 
-include { FASTX_MAP_LONG_READS                      } from '../fastx_map_long_reads/main'
+include { FASTX_MAP_LONG_READS                       } from '../fastx_map_long_reads/main'
 
 workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
 
@@ -22,6 +22,16 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     val_fastx_reads_per_chunk // integer: number of reads per chunk to map
 
     main:
+    //
+    // Logic: validate that input assemblies are unzipped
+    //
+    ch_assemblies
+        .subscribe { meta, hap1, hap2 ->
+            if (hap1.getExtension() == "gz" || (hap2 && hap2.getExtension() == "gz")) {
+                error("Error: Input assemblies to FASTA_PURGE_RETAINED_HAPLOTYPE must be unzipped!")
+            }
+        }
+
     //
     // Logic: split assemblies into primary and alternate
     //
