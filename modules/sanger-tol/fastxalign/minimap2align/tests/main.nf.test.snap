@@ -24,7 +24,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "versions_slice_fasta": [
@@ -72,7 +72,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "4": [
@@ -109,7 +109,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "versions_slice_fasta": [
@@ -152,7 +152,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "versions_slice_fasta": [
@@ -195,7 +195,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "4": [
@@ -227,7 +227,7 @@
                     [
                         "FASTXALIGN_MINIMAP2ALIGN",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "versions_slice_fasta": [

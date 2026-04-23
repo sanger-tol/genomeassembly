@@ -292,7 +292,7 @@
                     },
                     "fastxalign/minimap2align": {
                         "branch": "main",
-                        "git_sha": "2e28234fb0e2970767dab28310c7eb553ad40081",
+                        "git_sha": "e0b4ad39c6b1a04a3d5cdf56b119a40aa56c416d",
                         "installed_by": ["fastx_map_long_reads"]
                     },
                     "fastxalign/pyfastxindex": {
