@@ -87,10 +87,10 @@
                     "merquryfk": 1.2
                 },
                 "MINIMAP2_ALIGN_ASSEMBLY": {
-                    "minimap2": "2.29-r1283"
+                    "minimap2": "2.30-r1287"
                 },
                 "MINIMAP2_INDEX": {
-                    "minimap2": "2.29-r1283"
+                    "minimap2": "2.30-r1287"
                 },
                 "MITOHIFI_MITOHIFI": {
                     "mitohifi": "3.2.3"
