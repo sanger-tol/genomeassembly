@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issues with trio assembly causing pipeline failures due to lack of testing (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issue where MITOHIFI_FINDMITOREFERENCE didn't pull down chloroplast references (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) `--busco_lineage_directory` correctly converted to a path (by @prototaxites)
+- [#147](https://github.com/sanger-tol/genomeassembly/pull/147) Correctly apply `params.minimap2_ont_map_mode` parameter (reported by @amytims, fixed by @prototaxites)
 
 ### Dependencies
 
