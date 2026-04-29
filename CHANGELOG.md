@@ -110,7 +110,10 @@ The full changelog is as follows:
 General:
 
 - Genericise file output prefixies to `asm` or `asm.{hap}` (by @prototaxites)
-- Update nf-core template to 3.5.1 (by @prototaxites).
+- Update nf-core template to 4.0.1 (by @prototaxites).
+  - Note that this update removes the existing Teams and Slack notification functionality. If
+    you were using this functionality, please configure the
+    [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
 
 Overhaul pipeline input YAML structure (by @prototaxites):
 
