@@ -27,6 +27,7 @@ lint:
     - docs/README.md
     - LICENSE
     - .gitattributes
+    - .github/ISSUE_TEMPLATE/config.yml
   multiqc_config: false
   nextflow_config:
     - manifest.name
