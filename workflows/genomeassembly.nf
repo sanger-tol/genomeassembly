@@ -32,6 +32,7 @@ workflow GENOMEASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    outdir
 
     main:
     ch_versions = channel.empty()
@@ -88,10 +89,10 @@ workflow GENOMEASSEMBLY {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name:  'genomeassembly_software_'  + 'versions.yml',
             sort: true,
             newLine: true

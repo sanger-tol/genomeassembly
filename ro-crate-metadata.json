@@ -93,7 +93,7 @@
             },
             "conformsTo": [
                 {
-                    "@id": "https://w3id.org/ro/crate/1.1"
+                    "@id": "https://w3id.org/ro/crate/1.2"
                 },
                 {
                     "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
@@ -102,11 +102,7 @@
         },
         {
             "@id": "main.nf",
-            "@type": [
-                "File",
-                "SoftwareSourceCode",
-                "ComputationalWorkflow"
-            ],
+            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
             "author": [
                 {
                     "@id": "https://orcid.org/0000-0002-0604-2047"
@@ -132,23 +128,14 @@
             "dateCreated": "",
             "dateModified": "2026-02-02T13:15:05Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-            "keywords": [
-                "nextflow",
-                "nf-core",
-                "genome-assembly",
-                "genomics"
-            ],
-            "license": [
-                "MIT"
-            ],
+            "keywords": ["nextflow", "nf-core", "genome-assembly", "genomics"],
+            "license": ["MIT"],
             "maintainer": [
                 {
                     "@id": "https://orcid.org/0000-0002-7175-0533"
                 }
             ],
-            "name": [
-                "sanger-tol/genomeassembly"
-            ],
+            "name": ["sanger-tol/genomeassembly"],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
@@ -159,9 +146,7 @@
                 "https://github.com/sanger-tol/genomeassembly",
                 "https://pipelines.tol.sanger.ac.uk//genomeassembly/dev/"
             ],
-            "version": [
-                "1.0.0dev"
-            ]
+            "version": ["1.0.0dev"]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -173,7 +158,7 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=25.04.0"
+            "version": "!>=25.10.4"
         },
         {
             "@id": "assets/",
@@ -294,7 +279,7 @@
             "url": "https://github.com/ksenia-krasheninnikova"
         },
         {
-            "@id": "https://orcid.org/0000-0002-7175-0533",
+            "@id": "#b1339e49-9f50-4ba8-aa99-5cf8d2b99407",
             "@type": "Person",
             "affiliation": "Wellcome Sanger Institute",
             "email": "jd42@sanger.ac.uk",

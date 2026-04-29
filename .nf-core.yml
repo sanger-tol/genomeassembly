@@ -1,27 +1,4 @@
 lint:
-  files_unchanged:
-    - .github/CONTRIBUTING.md
-    - assets/sendmail_template.txt
-    - .prettierignore
-    - CODE_OF_CONDUCT.md
-    - assets/nf-core-genomeassembly_logo_light.png
-    - docs/images/nf-core-genomeassembly_logo_light.png
-    - docs/images/nf-core-genomeassembly_logo_dark.png
-    - .github/ISSUE_TEMPLATE/bug_report.yml
-    - .github/PULL_REQUEST_TEMPLATE.md
-    - assets/email_template.txt
-    - docs/README.md
-    - LICENSE
-    - .gitattributes
-  multiqc_config: false
-  nextflow_config:
-    - manifest.name
-    - manifest.homePage
-    - validation.help.beforeText
-    - validation.help.afterText
-    - validation.summary.beforeText
-    - validation.summary.afterText
-    - params.input
   files_exist:
     - conf/igenomes.config
     - conf/igenomes_ignored.config
@@ -36,7 +13,31 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-nf_core_version: 3.5.2
+  files_unchanged:
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
+    - .prettierignore
+    - CODE_OF_CONDUCT.md
+    - assets/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_light.png
+    - docs/images/nf-core-genomeassembly_logo_dark.png
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - assets/email_template.txt
+    - docs/README.md
+    - LICENSE
+    - .gitattributes
+    - .github/ISSUE_TEMPLATE/config.yml
+  multiqc_config: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - validation.help.beforeText
+    - validation.help.afterText
+    - validation.summary.beforeText
+    - validation.summary.afterText
+    - params.input
+nf_core_version: 4.0.1
 repository_type: pipeline
 template:
   org: sanger-tol
