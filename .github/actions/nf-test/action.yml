@@ -23,6 +23,8 @@ runs:
       uses: nf-core/setup-nextflow@b4ec1bc7c16a94435159de94a05253542fddf6ef # v3
       with:
         version: "${{ env.NXF_VERSION }}"
+        secrets: |
+          NCBI_API_KEY=${{ env.NCBI_API_KEY }}
 
     - name: Set up Python
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
@@ -62,7 +64,7 @@ runs:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
       run: |
         nf-test test \
-          --profile=+${{ inputs.profile }} \
+          --profile=+${{ inputs.profile }},+github \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --ci \
           --changed-since HEAD^ \

@@ -1,0 +1,109 @@
+{
+    "meles meles": {
+        "content": [
+            "12bbc3437515580a7dcc3c0d677c225a",
+            {
+                "versions_bwamem2": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "bwamem2",
+                        "2.2.1"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:26:45.992327"
+    },
+    "meles meles - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "bwamem2",
+                        "2.2.1"
+                    ]
+                ],
+                "2": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_bwamem2": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "bwamem2",
+                        "2.2.1"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:27:17.465643"
+    },
+    "meles meles - no readgroup lines": {
+        "content": [
+            "12bbc3437515580a7dcc3c0d677c225a",
+            {
+                "versions_bwamem2": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "bwamem2",
+                        "2.2.1"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_BWAMEM2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:27:04.818428"
+    }
+}

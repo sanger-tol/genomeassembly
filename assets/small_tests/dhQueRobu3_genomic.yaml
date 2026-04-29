@@ -1,0 +1,12 @@
+- id: dhQueRobu3
+  platform: pacbio_hifi
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Quercus_robur/genomic_data/pacbio/dhQueRobu3.m84047_241122_124546_s2.ccs.bc2064.trim.subsampled.fasta.gz
+- id: dhQueRobu3
+  platform: oxford_nanopore
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Quercus_robur/genomic_data/ont/dhQueRobu3.ont.subsampled.fastq.gz
+- id: dhQueRobu3
+  platform: illumina_hic
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Quercus_robur/genomic_data/hic-arima2/dhQueRobu3.35874_8_3.subsampled.cram

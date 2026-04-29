@@ -1,8 +1,13 @@
 # sanger-tol/genomeassembly
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_logo_dark.svg">
+  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_logo_light.svg">
+</picture>
+
 [![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/sanger-tol/genomeassembly)
 [![GitHub Actions CI Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/nf-test.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/genomeassembly/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.10391851-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.10391851)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
@@ -14,47 +19,38 @@
 
 ## Introduction
 
-**sanger-tol/genomeassembly** is a bioinformatics pipeline that ...
+**sanger-tol/genomeassembly** is a bioinformatics pipeline for de-novo genome assembly from long read data (PacBio HiFi or ONT), long-range Hi-C data, and optionally Illumina WGS and Illumina 10X linked reads. It is capable of producing primary/alternative assembles, Hi-C phased assemblies using Hi-C data, and trio-binned assemblies using data from parental sequencing.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/sanger-tol-genomeassembly_metro_map_dark_animated.svg">
+  <img alt="sanger-tol/genomeassembly" src="docs/images/sanger-tol-genomeassembly_metro_map_light_animated.svg">
+</picture>
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/community/brand/workflow-schematics#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+## Pipeline summary
+
+1. If FastK databases and coverage information information are not provided, the pipeline first builds these and estimates the genome coverage using [genomescope2](https://github.com/tbenavi1/genomescope2.0).
+2. Assembles the provided long reads using [hifiasm](https://hifiasm.readthedocs.io), optionally producing hic-phased or trio-binned assemblies.
+3. (optional) Purges retained haplotigs from the assembly using [purge_dups](https://github.com/dfguan/purge_dups).
+4. (optional) Polishes the combined assembly using Illumina 10X reads with [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes)
+5. Maps Hi-C reads to each assembly using [bwamem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/).
+6. Scaffolds each assembly using long-range Hi-C interactions using [YaHS](https://github.com/c-zhou/yahs).
+7. Produces numerical statistics for each assembly at each stage of the pipeline using [GFASTATS](https://github.com/vgl-hub/gfastats) (assembly statiscics), [BUSCO](https://busco.ezlab.org/) (single-copy ortholog statistics), and [MERQURY.FK](https://github.com/thegenemyers/MERQURY.FK) (QV and kmer-completeness).
+8. Assembles organelles using de-novo assembly [oatk](https://github.com/c-zhou/oatk) and reference-based assembly [MitoHiFi](https://github.com/marcelauliano/MitoHiFi).
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv`:
-
-```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+Currently, it is advised to run the pipeline with Docker or Singularity, as `purge_dups` and `mitohifi` do not support running with Conda.
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run sanger-tol/genomeassembly \
    -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
+   --genomic_data genomic_data.yaml \
+   --assembly_specs assembly_specs.yaml \
    --outdir <OUTDIR>
 ```
 
@@ -63,11 +59,21 @@ nextflow run sanger-tol/genomeassembly \
 
 ## Credits
 
-sanger-tol/genomeassembly was originally written by Ksenia Krashennikova.
+sanger-tol/genomeassembly was originally written by Ksenia Krashennikova and Jim Downie.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+@priyanka-surana for the code review, very helpful coding suggestions, and assistance with pushing this pipeline forward through development.
+
+@mcshane and @c-zhou for the design and implementation of the original pipelines for purging (@mcshane), polishing (@mcshane) and scaffolding (@c-zhou).
+
+TreeVal team Damon-Lee Pointon (@DLBPointon), Yumi Sims (@yumisims) and William Eagles (@weaglesBio) for implementation of the hic-mapping pipeline.
+
+@muffato for help with nf-core integration, dealing with infrastructure and troubleshooting, for the code reviews and valuable suggestions at the different stages of the pipeline development.
+
+@gq1 for the code review, valuable suggestions to the code improvement and contributions to the full test setup.
+
+@mahesh-panchal for nextflow implementation of the purging pipeline, code review and valuable suggestions to the nf-core modules implementation.
 
 ## Contributions and Support
 
@@ -75,10 +81,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use sanger-tol/genomeassembly for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+If you use sanger-tol/genomeassembly for your analysis, please cite it using the following doi: [10.5281/zenodo.10391851](https://zenodo.org/records/10391852).
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
