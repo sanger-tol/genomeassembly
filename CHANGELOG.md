@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issue where MITOHIFI_FINDMITOREFERENCE didn't pull down chloroplast references (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) `--busco_lineage_directory` correctly converted to a path (by @prototaxites)
 - [#147](https://github.com/sanger-tol/genomeassembly/pull/147) Correctly apply `params.minimap2_ont_map_mode` parameter (reported by @amytims, fixed by @prototaxites)
+- [#149](https://github.com/sanger-tol/genomeassembly/pull/149) Update nf-core template to 4.0.1 (by @prototaxites).
+  - Note that this update removes the existing Teams and Slack notification functionality. If
+    you were using this functionality, please configure the
+    [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
 
 ### Dependencies
 
@@ -110,10 +114,7 @@ The full changelog is as follows:
 General:
 
 - Genericise file output prefixies to `asm` or `asm.{hap}` (by @prototaxites)
-- Update nf-core template to 4.0.1 (by @prototaxites).
-  - Note that this update removes the existing Teams and Slack notification functionality. If
-    you were using this functionality, please configure the
-    [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
+- Update nf-core template to 3.5.1 (by @prototaxites).
 
 Overhaul pipeline input YAML structure (by @prototaxites):
 
