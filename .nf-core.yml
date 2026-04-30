@@ -27,6 +27,7 @@ lint:
     - docs/README.md
     - LICENSE
     - .gitattributes
+    - .github/ISSUE_TEMPLATE/config.yml
   multiqc_config: false
   nextflow_config:
     - manifest.name
@@ -36,7 +37,7 @@ lint:
     - validation.summary.beforeText
     - validation.summary.afterText
     - params.input
-nf_core_version: 4.0.1
+nf_core_version: 4.0.2
 repository_type: pipeline
 template:
   author: Ksenia Krashennikova
