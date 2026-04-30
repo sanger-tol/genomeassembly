@@ -14,7 +14,7 @@ workflow BUILD_KMER_DATABASES {
     //
     ch_fastk_status = ch_data
         .branch { meta, reads, fastk ->
-            skip_fastk: fastk || meta.platform == "illumina_hic"
+            skip_fastk: fastk
             build_fastk: true
                 return [ meta, reads ]
         }
