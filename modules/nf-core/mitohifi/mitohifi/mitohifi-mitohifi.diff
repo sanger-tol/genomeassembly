@@ -1,0 +1,17 @@
+Changes in component 'nf-core/mitohifi/mitohifi'
+'modules/nf-core/mitohifi/mitohifi/meta.yml' is unchanged
+Changes in 'mitohifi/mitohifi/main.nf':
+--- modules/nf-core/mitohifi/mitohifi/main.nf
++++ modules/nf-core/mitohifi/mitohifi/main.nf
+@@ -12,6 +12,7 @@
+     val mito_code
+ 
+     output:
++    tuple val(meta), path("*")                              , emit: all_files
+     tuple val(meta), path("final_mitogenome.fasta")         , emit: fasta
+     tuple val(meta), path("contigs_stats.tsv")              , emit: stats
+     tuple val(meta), path("final_mitogenome.gb")            , emit: gb                         , optional: true
+
+'modules/nf-core/mitohifi/mitohifi/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/mitohifi/mitohifi/tests/main.nf.test' is unchanged
+************************************************************

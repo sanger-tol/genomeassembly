@@ -1,0 +1,14 @@
+- id: icAdaBipu1
+  platform: pacbio_hifi
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/genomic_data/pacbio/fastq/icAdaBipu1.m64089_201014_162931.ccs.bc1021_BAK8B_OA--bc1021_BAK8B_OA.trim.subsampled.fastq.gz
+- id: icAdaBipu1
+  platform: illumina_hic
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/genomic_data/hic-arima2/icAdaBipu1.35150_2_1.subsampled.cram
+- id: icAdaBipu1
+  platform: illumina_10x
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/genomic_data/10x/fastq/icAdaBipu1_S1_L35281_2_R1_001.fastq.gz
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/genomic_data/10x/fastq/icAdaBipu1_S1_L35281_2_R2_001.fastq.gz
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/genomic_data/10x/fastq/icAdaBipu1_S1_L35281_2_I1_001.fastq.gz

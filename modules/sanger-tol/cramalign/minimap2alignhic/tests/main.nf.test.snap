@@ -1,0 +1,165 @@
+{
+    "meles meles": {
+        "content": [
+            "3196a1997c55d543d773a1af0595fa6d",
+            {
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T15:22:49.448607"
+    },
+    "meles meles - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "3": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "4": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:47:03.804302"
+    },
+    "meles meles - no readgroup lines": {
+        "content": [
+            "3196a1997c55d543d773a1af0595fa6d",
+            {
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T15:23:01.032824"
+    }
+}
