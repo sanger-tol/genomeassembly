@@ -148,32 +148,32 @@
                     },
                     "purgedups/calcuts": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/getseqs": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/histplot": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/pbcstat": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/purgedups": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "purgedups/splitfa": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
                     "samtools/faidx": {
@@ -356,7 +356,7 @@
                     },
                     "fasta_purge_retained_haplotype": {
                         "branch": "main",
-                        "git_sha": "5797ab17453869db92a9d19640852255759c472e",
+                        "git_sha": "7e1b7541ba323e987f3b14e577d4506f2ca77a0a",
                         "installed_by": ["subworkflows"]
                     },
                     "fastx_map_long_reads": {

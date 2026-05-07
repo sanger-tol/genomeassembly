@@ -12,7 +12,7 @@
                             "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
                             "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
                             "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
-                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,514f267ecfc8e922739f5daa38e3877b"
                         ]
                     ]
                 ],
@@ -107,11 +107,11 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-22T11:23:21.190777",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-04-23T11:05:43.177431863"
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
@@ -126,7 +126,7 @@
                             "HiFi.reads.fasta.1.test.paf.gz:md5,f08303d59230867b86f0f400bd77f890",
                             "HiFi.reads.fasta.2.test.paf.gz:md5,3ca7be64ad73aef5e6409c01350f997b",
                             "HiFi.reads.fasta.3.test.paf.gz:md5,a675c19e913c0a6358aacc1dcdaf423b",
-                            "HiFi.reads.fasta.4.test.paf.gz:md5,079e7fe688d10496d80d26f9ca614756"
+                            "HiFi.reads.fasta.4.test.paf.gz:md5,514f267ecfc8e922739f5daa38e3877b"
                         ]
                     ]
                 ],
@@ -221,10 +221,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-03-04T16:10:34.296729",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-04-23T11:08:00.854164486"
     }
 }
