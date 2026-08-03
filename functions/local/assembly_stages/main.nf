@@ -118,7 +118,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         // Concatenate the data and params values to hash and generate it
         def hashContent = [
             [spec.assembler] +
-            stageData +
+            stageData.collect { type -> "${dataMap[type].id}" } +
             stageParams.collect { k, v -> "${k}=${v}" }
         ].join("&")
 
