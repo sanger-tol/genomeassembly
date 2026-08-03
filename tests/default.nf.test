@@ -17,6 +17,7 @@ nextflow_pipeline {
                 assembly_specs = "${projectDir}/assets/small_tests/default_spec.yaml"
                 outdir = "$outputDir"
 				save_fastk_databases = true
+				save_genomescope_outputs = true
 				busco_lineage_directory = "${launchDir}/busco/"
             }
        }

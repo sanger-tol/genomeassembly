@@ -100,6 +100,7 @@ workflow GENOMEASSEMBLY {
 
     emit:
     datasets         = PREPARE_INPUTS.out.datasets
+    genomescope2     = PREPARE_INPUTS.out.genomescope2
     hifiasm          = NUCLEAR_ASSEMBLY.out.hifiasm
     purging          = NUCLEAR_ASSEMBLY.out.purging
     polishing        = NUCLEAR_ASSEMBLY.out.polishing

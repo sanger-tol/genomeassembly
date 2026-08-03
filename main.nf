@@ -63,6 +63,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
 
     emit:
     datasets         = GENOMEASSEMBLY.out.datasets
+    genomescope2     = GENOMEASSEMBLY.out.genomescope2
     hifiasm          = GENOMEASSEMBLY.out.hifiasm
     purging          = GENOMEASSEMBLY.out.purging
     polishing        = GENOMEASSEMBLY.out.polishing
@@ -130,6 +131,7 @@ workflow {
 
     publish:
     datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets
+    genomescope2     = SANGERTOL_GENOMEASSEMBLY.out.genomescope2
     hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
     purging          = SANGERTOL_GENOMEASSEMBLY.out.purging
     polishing        = SANGERTOL_GENOMEASSEMBLY.out.polishing
@@ -149,6 +151,20 @@ output {
             dataset.fk_ktab >> "fastk/${dataset.id}/${dataset.platform}/k${params.kmer_size}/"
         }
         enabled params.save_fastk_databases
+    }
+    genomescope2 {
+        path { model ->
+            model.linear_plot_png >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.transformed_linear_plot_png >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.log_plot_png >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.transformed_log_plot_png >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.model >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.summary >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.lookup_table >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.fitted_histogram_png >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+            model.json_report >> "fastk/${model.id}/${model.platform}/k${model.kmer_size}/"
+        }
+        enabled params.save_genomescope2_outputs
     }
     hifiasm {
         path { spec ->

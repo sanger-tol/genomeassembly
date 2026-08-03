@@ -3,6 +3,9 @@
 pipeline_info/*.{html,json,txt,yml}
 **/*.log
 
+# fastk
+**/fastk/**
+
 # oatk
 **/*annot_mito.txt
 **/*annot_pltd.txt
