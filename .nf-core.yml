@@ -37,7 +37,7 @@ lint:
     - validation.summary.beforeText
     - validation.summary.afterText
     - params.input
-nf_core_version: 4.0.3
+nf_core_version: 4.1.0
 repository_type: pipeline
 template:
   author: Ksenia Krashennikova
