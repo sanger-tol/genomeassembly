@@ -1,0 +1,60 @@
+{
+    "Undibacterium_unclassified - 10x": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test.hap1.fa:md5,d76ac8e0dd6565b8ea8032fbc0c55423",
+                        "test.hap2.fa:md5,69e16ea33c28129e6175d30e04cff89c"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.consensus.fa:md5,cb573a3883d09d99ebf7677378b74167"
+                ]
+            ],
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 21,
+                    "meanReadLength": 135,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 55,
+                    "readCount": 760,
+                    "duplicateReadCount": 456,
+                    "sorted": false
+                }
+            ],
+            [
+                "possorted_bam.bam.bai"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "summary.csv:md5,152e8b370a89f9182f7c5373745581ee"
+                ]
+            ],
+            [
+                "VcfFile [chromosomes=[h1tg000004l], sampleCount=1, variantCount=64, phased=false, phasedAutodetect=false]"
+            ],
+            [
+                "test.merged.vcf.gz.tbi"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-02-11T12:54:46.837451289"
+    }
+}

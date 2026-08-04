@@ -1,0 +1,248 @@
+{
+    "Undibacterium_unclassified - fasta - bam out - filter": {
+        "content": [
+            {
+                "maxReadLength": 26308,
+                "minReadLength": 1368,
+                "meanReadLength": 8157,
+                "maxQuality": 60,
+                "minQuality": 20,
+                "meanQuality": 59,
+                "readCount": 428,
+                "duplicateReadCount": 0,
+                "sorted": false
+            },
+            {
+                "versions_minimap2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "versions_slice_fasta": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T16:40:48.934235"
+    },
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.paf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ],
+                "3": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "4": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.paf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "versions_slice_fasta": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T16:41:04.114202"
+    },
+    "Undibacterium_unclassified - fasta - bam out - no filter": {
+        "content": [
+            {
+                "maxReadLength": 26308,
+                "minReadLength": 1368,
+                "meanReadLength": 8121,
+                "maxQuality": 60,
+                "minQuality": 0,
+                "meanQuality": 50,
+                "readCount": 501,
+                "duplicateReadCount": 0,
+                "sorted": false
+            },
+            {
+                "versions_minimap2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "versions_slice_fasta": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T16:40:40.802654"
+    },
+    "Undibacterium_unclassified - fasta - paf out": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.paf.gz:md5,b01d63d1ea02e5fdc42259091cb50898"
+                    ]
+                ],
+                "2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ],
+                "3": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "4": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "bam": [
+                    
+                ],
+                "paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "HiFi.reads.fasta.0.test.paf.gz:md5,b01d63d1ea02e5fdc42259091cb50898"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "versions_slice_fasta": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T16:40:57.327797"
+    }
+}

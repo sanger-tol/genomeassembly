@@ -1,0 +1,32 @@
+- id: gfLaeSulp1.pri
+  assembler: "hifiasm"
+  long_read_dataset: gfLaeSulp1
+  long_read_platform: "pacbio_hifi"
+  hic_dataset: gfLaeSulp1
+  purge: true
+  find_mito: true
+  hifiasm_arguments: "--primary"
+  mitohifi_reference_species: "Laetiporus sulphureus"
+  mitohifi_mito_genetic_code: 4
+  busco_lineage: dikarya_odb12
+- id: gfLaeSulp1.phased
+  assembler: "hifiasm"
+  long_read_dataset: gfLaeSulp1
+  long_read_platform: "pacbio_hifi"
+  hic_dataset: gfLaeSulp1
+  phased_assembly: true
+  find_mito: false
+  busco_lineage: dikarya_odb12
+- id: gfLaeSulp1.oatk
+  assembler: "oatk"
+  long_read_dataset: gfLaeSulp1
+  long_read_platform: "pacbio_hifi"
+  oatk_kmer_size: 1001
+  oatk_coverage_cutoff: 50
+  oatk_mito_hmm: https://raw.githubusercontent.com/c-zhou/OatkDB/refs/heads/main/v20230921/dikarya_mito.fam
+- id: gfLaeSulp1.mitohifi
+  assembler: "mitohifi"
+  long_read_dataset: baUndUnlc1
+  long_read_platform: "pacbio_hifi"
+  mitohifi_reference_species: "Laetiporus sulphureus"
+  mitohifi_mito_genetic_code: 4

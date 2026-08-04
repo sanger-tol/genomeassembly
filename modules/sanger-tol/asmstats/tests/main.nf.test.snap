@@ -1,0 +1,112 @@
+{
+    "meles meles - fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "GCA_922984935.2.subset.fasta.gz.stats:md5,4f692268fb5b50290af7454a32744055"
+                    ]
+                ],
+                "1": [
+                    [
+                        "ASMSTATS",
+                        "asmstats",
+                        "1.0.0"
+                    ]
+                ],
+                "2": [
+                    [
+                        "ASMSTATS",
+                        "seqtk",
+                        "1.5-r133"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "GCA_922984935.2.subset.fasta.gz.stats:md5,4f692268fb5b50290af7454a32744055"
+                    ]
+                ],
+                "versions_asmstats": [
+                    [
+                        "ASMSTATS",
+                        "asmstats",
+                        "1.0.0"
+                    ]
+                ],
+                "versions_seqtk": [
+                    [
+                        "ASMSTATS",
+                        "seqtk",
+                        "1.5-r133"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:05:58.29405"
+    },
+    "meles meles - fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "ASMSTATS",
+                        "asmstats",
+                        "1.0.0"
+                    ]
+                ],
+                "2": [
+                    [
+                        "ASMSTATS",
+                        "seqtk",
+                        "1.5-r133"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_asmstats": [
+                    [
+                        "ASMSTATS",
+                        "asmstats",
+                        "1.0.0"
+                    ]
+                ],
+                "versions_seqtk": [
+                    [
+                        "ASMSTATS",
+                        "seqtk",
+                        "1.5-r133"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-15T14:06:03.172424"
+    }
+}

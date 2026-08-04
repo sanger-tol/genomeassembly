@@ -1,0 +1,50 @@
+{
+    "Meles meles - bam - paternal": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_scaffolds_final.fa:md5,7fa274cfb5ecd15ea517bbb84f7ac55f"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_scaffolds_final.agp:md5,c45367a1fbf9b80f4c3208e12e230758"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.bin:md5,00812a61ba6f5829bbf9ec32ec08c986"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_inital_break_01.agp:md5,c45367a1fbf9b80f4c3208e12e230758"
+                ]
+            ],
+            [
+
+            ],
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool",
+            "test.hic"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:39:56.166521"
+    }
+}
