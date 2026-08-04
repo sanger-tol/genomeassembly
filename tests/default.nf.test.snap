@@ -745,9 +745,6 @@
                 ".icAdaBipu1.pacbio_hifi.k31.ktab.4:md5,172ee53d8cb63175b4f047892aa40e21",
                 "icAdaBipu1.pacbio_hifi.k31.hist:md5,18065e7ade2c21abf14db6619b2be29e",
                 "icAdaBipu1.pacbio_hifi.k31.ktab:md5,30c1fe5554d83df56a7a4972efb6a329",
-                "icAdaBipu1.pacbio_hifi.k31_model.txt:md5,af1a12fc5676ab48807af2bcd1e31344",
-                "icAdaBipu1.pacbio_hifi.k31_report.json:md5,338d27679c3fee60a827e33878356931",
-                "icAdaBipu1.pacbio_hifi.k31_summary.txt:md5,0695e73225811f141abcbfdc964c8bd9",
                 "asm.k1001_c5.mito.ctg.bed:md5,72f08b6ad03b195b4d861bf3928bfacd",
                 "asm.k1001_c5.mito.ctg.fasta:md5,7f25b0d05017f9d57139044529f12d35",
                 "asm.k1001_c5.mito.gfa:md5,307f579f45bb2a05f753e7686746f98a",
@@ -900,7 +897,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-08-03T15:00:51.408",
+        "timestamp": "2026-08-03T17:31:16.377591",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
