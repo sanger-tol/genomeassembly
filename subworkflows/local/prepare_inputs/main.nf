@@ -43,6 +43,29 @@ workflow PREPARE_INPUTS {
             return [meta, Math.round(output.kcov) ?: null]
         }
 
+    ch_genomescope2_outputs = GENOMESCOPE2.out.linear_plot_png
+        .join(GENOMESCOPE2.out.transformed_linear_plot_png, by: 0)
+        .join(GENOMESCOPE2.out.log_plot_png, by: 0)
+        .join(GENOMESCOPE2.out.transformed_log_plot_png, by: 0)
+        .join(GENOMESCOPE2.out.model, by: 0)
+        .join(GENOMESCOPE2.out.summary, by: 0)
+        .join(GENOMESCOPE2.out.lookup_table, by: 0, remainder: true)
+        .join(GENOMESCOPE2.out.fitted_histogram_png, by: 0, remainder: true)
+        .join(GENOMESCOPE2.out.json_report, by: 0, remainder: true)
+        .map { meta, linear_plot_png, transformed_linear_plot_png, log_plot_png, transformed_log_plot_png, model, summary, lookup_table, fitted_histogram_png, json_report ->
+            meta + [
+                linear_plot_png: linear_plot_png,
+                transformed_linear_plot_png: transformed_linear_plot_png,
+                log_plot_png: log_plot_png,
+                transformed_log_plot_png: transformed_log_plot_png,
+                model: model,
+                summary: summary,
+                lookup_table: lookup_table,
+                fitted_histogram_png: fitted_histogram_png,
+                json_report: json_report
+            ]
+        }
+
     //
     // Logic: attach the Genomescope2-calculated coverage to each spec, then either use
     // the provided coverage if provided, otherwise the estimated coverage
@@ -99,6 +122,7 @@ workflow PREPARE_INPUTS {
         }
 
     emit:
-    specs    = ch_out_assembly_specs
-    datasets = BUILD_KMER_DATABASES.out.data
+    specs        = ch_out_assembly_specs
+    datasets     = BUILD_KMER_DATABASES.out.data
+    genomescope2 = ch_genomescope2_outputs
 }

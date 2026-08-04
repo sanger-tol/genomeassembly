@@ -3,6 +3,11 @@
 pipeline_info/*.{html,json,txt,yml}
 **/*.log
 
+# genomescope2
+fastk/**/*.png
+fastk/**/*.txt
+fastk/**/*.json
+
 # oatk
 **/*annot_mito.txt
 **/*annot_pltd.txt

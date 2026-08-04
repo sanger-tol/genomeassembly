@@ -189,6 +189,13 @@
                 "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.4",
                 "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.hist",
                 "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.ktab",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_linear_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_log_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_model.txt",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_report.json",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_summary.txt",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_linear_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_log_plot.png",
                 "icAdaBipu1.oatk",
                 "icAdaBipu1.oatk/asm.k1001_c5.annot_mito.txt",
                 "icAdaBipu1.oatk/asm.k1001_c5.log",
@@ -890,7 +897,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-04-29T15:43:17.783783",
+        "timestamp": "2026-08-03T17:31:16.377591",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

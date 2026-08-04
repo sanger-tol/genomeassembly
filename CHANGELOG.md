@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Allow specification of user-provided reference files for MitoHiFi (by @prototaxites)
   - adds the following specification YAML entries: `mitohifi_mito_reference_fa`, `mitohifi_mito_reference_gb`, `mitohifi_plastid_reference_fa`, `mitohifi_plastid_reference_gb`
 - [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Fix issue with `mitohifi_arguments` not being correctly applied (by @prototaxites)
+- [#160](https://github.com/sanger-tol/genomeassembly/pull/160) Add `--save_genomescope2_outputs` parameter flag to save the model outputs from GenomeScope2. It is disabled by default (by @prototaxites)
 
 ### Fixed
 
