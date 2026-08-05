@@ -1,7 +1,7 @@
 {
     "icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only": {
         "content": [
-            171,
+            170,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -173,14 +173,6 @@
                 "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.4",
                 "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.hist",
                 "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.ktab",
-                "fastk/icAdaBipu1/illumina_hic",
-                "fastk/icAdaBipu1/illumina_hic/k31",
-                "fastk/icAdaBipu1/illumina_hic/k31/.icAdaBipu1.illumina_hic.k31.ktab.1",
-                "fastk/icAdaBipu1/illumina_hic/k31/.icAdaBipu1.illumina_hic.k31.ktab.2",
-                "fastk/icAdaBipu1/illumina_hic/k31/.icAdaBipu1.illumina_hic.k31.ktab.3",
-                "fastk/icAdaBipu1/illumina_hic/k31/.icAdaBipu1.illumina_hic.k31.ktab.4",
-                "fastk/icAdaBipu1/illumina_hic/k31/icAdaBipu1.illumina_hic.k31.hist",
-                "fastk/icAdaBipu1/illumina_hic/k31/icAdaBipu1.illumina_hic.k31.ktab",
                 "fastk/icAdaBipu1/pacbio_hifi",
                 "fastk/icAdaBipu1/pacbio_hifi/k31",
                 "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.1",
@@ -733,12 +725,6 @@
                 ".icAdaBipu1.illumina_10x.k31.ktab.4:md5,24ab5876a4a301cd7c682ad8377511a1",
                 "icAdaBipu1.illumina_10x.k31.hist:md5,5cb17394d63e062f004d6220e07a7506",
                 "icAdaBipu1.illumina_10x.k31.ktab:md5,520961969164ca32746e04a623efc8a0",
-                ".icAdaBipu1.illumina_hic.k31.ktab.1:md5,d875ccdc8b24ae81d938c8a35be6a7ad",
-                ".icAdaBipu1.illumina_hic.k31.ktab.2:md5,f0cf5a04b8de8d02e96c90a186970c7a",
-                ".icAdaBipu1.illumina_hic.k31.ktab.3:md5,aad1e1ca04d160c64335cf4d05d0e3be",
-                ".icAdaBipu1.illumina_hic.k31.ktab.4:md5,fe62802d55ea596451861e9851aeeda9",
-                "icAdaBipu1.illumina_hic.k31.hist:md5,fca488ae2c36af64f0dab3f52216ca10",
-                "icAdaBipu1.illumina_hic.k31.ktab:md5,7bb9b8b52e3606f22945c086b2c163d6",
                 ".icAdaBipu1.pacbio_hifi.k31.ktab.1:md5,57e324160514ee2703c8b97e6f19f85a",
                 ".icAdaBipu1.pacbio_hifi.k31.ktab.2:md5,5cfc60d2017c5a17f1dd8e00da607b26",
                 ".icAdaBipu1.pacbio_hifi.k31.ktab.3:md5,45218a16c3bf76cf761dda725fb0d4c6",
