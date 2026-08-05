@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
 - [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Add `--opt-out-run-stats` to BUSCO call when running with a local BUSCO mirror to ensure complete offline capacity (bug reported by @cjfields, fix by @prototaxites)
 - [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Fix issue in hashing process where the data type name was hashed instead of the dataset name, resulting in clashing hashes (reported by @amakunin and @TannerMyers, fix by @prototaxites)
+- [#163](https://github.com/sanger-tol/genomeassembly/pull/163) - FastK databases now only built for long read genomic datasets (by @prototaxites)
 
 ### Dependencies
 

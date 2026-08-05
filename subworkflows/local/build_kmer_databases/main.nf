@@ -14,9 +14,10 @@ workflow BUILD_KMER_DATABASES {
     //
     ch_fastk_status = ch_data
         .branch { meta, reads, fastk ->
-            skip_fastk: fastk
+            skip_fastk: fastk || !(meta.platform in ["pacbio_hifi", "oxford_nanopore"])
+                return [meta, reads, fastk ?: [[],[]]]
             build_fastk: true
-                return [ meta, reads ]
+                return [meta, reads]
         }
 
     //
