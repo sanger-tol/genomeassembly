@@ -130,7 +130,8 @@ workflow {
     )
 
     publish:
-    datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets
+    // We need to filter datasets this as empty lists [] currently foul outputs
+    datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets.filter { dataset -> dataset.fk_ktab }
     genomescope2     = SANGERTOL_GENOMEASSEMBLY.out.genomescope2
     hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
     purging          = SANGERTOL_GENOMEASSEMBLY.out.purging
