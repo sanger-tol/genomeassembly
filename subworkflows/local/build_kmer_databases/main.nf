@@ -16,7 +16,7 @@ workflow BUILD_KMER_DATABASES {
         .branch { meta, reads, fastk ->
             // We will never build a FastK for a Hi-C dataset, but other data types
             // may be used as trio inputs so we have to allow them
-            skip_fastk: fastk || meta.platform != "illumina_hic"
+            skip_fastk: fastk || meta.platform == "illumina_hic"
                 return [meta, reads, fastk ?: [[],[]]]
             build_fastk: true
                 return [meta, reads]
