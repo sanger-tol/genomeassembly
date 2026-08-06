@@ -11,6 +11,9 @@ workflow SCAFFOLDING {
     val_hic_aligner                 // "bwamem2" or "minimap2"
     val_hic_mapping_cram_chunk_size // int > 1
     val_cool_bin                    // int > 1
+    val_build_pretext_map
+    val_build_juicer_map
+    val_build_cooler_map
 
     main:
     //
@@ -61,9 +64,9 @@ workflow SCAFFOLDING {
     FASTA_BAM_SCAFFOLDING_YAHS(
         ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2),
         CRAM_MAP_ILLUMINA_HIC.out.bam,
-        true,
-        true,
-        true,
+        val_build_pretext_map,
+        val_build_cooler_map,
+        val_build_juicer_map,
         val_cool_bin
     )
 
