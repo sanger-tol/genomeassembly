@@ -32,6 +32,9 @@ workflow GENOMEASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    val_build_pretext_map
+    val_build_juicer_map
+    val_build_cooler_map
     outdir
 
     main:
@@ -58,7 +61,10 @@ workflow GENOMEASSEMBLY {
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,
-        val_busco_lineage_directory
+        val_busco_lineage_directory,
+        val_build_pretext_map,
+        val_build_juicer_map,
+        val_build_cooler_map,
     )
     ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
 

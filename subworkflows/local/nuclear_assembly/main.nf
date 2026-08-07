@@ -20,6 +20,9 @@ workflow NUCLEAR_ASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    val_build_pretext_map
+    val_build_juicer_map
+    val_build_cooler_map
 
     main:
     ch_versions = channel.empty()
@@ -70,7 +73,10 @@ workflow NUCLEAR_ASSEMBLY {
         ch_assemblies,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
-        val_scaffolding_cool_bin_size
+        val_scaffolding_cool_bin_size,
+        val_build_pretext_map,
+        val_build_juicer_map,
+        val_build_cooler_map,
     )
     ch_assemblies = ch_assemblies.mix(SCAFFOLDING.out.scaffolded_assemblies)
 

@@ -123,6 +123,21 @@
                     "default": 10,
                     "description": "Minimum MapQ score for a Hi-C read to be retained for scaffolding."
                 },
+                "build_pretext_map": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Build a Pretext representation of the Hi-C contact map."
+                },
+                "build_juicer_map": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Build a Hi-C contact map for visualisation with Juicer."
+                },
+                "build_cooler_map": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Build a Hi-C contact map for visualisation with Cooler."
+                },
                 "scaffolding_cool_bin_size": {
                     "type": "integer",
                     "default": 1000,

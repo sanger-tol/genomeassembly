@@ -41,6 +41,9 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    val_build_pretext_map
+    val_build_juicer_map
+    val_build_cooler_map
     outdir
 
     main:
@@ -58,6 +61,9 @@ workflow SANGERTOL_GENOMEASSEMBLY {
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,
         val_busco_lineage_directory,
+        val_build_pretext_map,
+        val_build_juicer_map,
+        val_build_cooler_map,
         outdir
     )
 
@@ -115,6 +121,9 @@ workflow {
         params.hic_mapping_cram_chunk_size,
         params.scaffolding_cool_bin_size,
         params.busco_lineage_directory ? file(params.busco_lineage_directory, checkIfExists: true) : null,
+        params.build_pretext_map,
+        params.build_juicer_map,
+        params.build_cooler_map,
         params.outdir
     )
 
