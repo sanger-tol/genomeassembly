@@ -251,7 +251,7 @@ output {
             spec.output.statistics.busco >> [
                 "${spec.name}",
                 "${specToAssemblyDir(spec)}",
-                "busco.${spec.params.busco_lineage}/"
+                "busco.${params.busco_lineage}/"
             ].join("/")
         }
     }
