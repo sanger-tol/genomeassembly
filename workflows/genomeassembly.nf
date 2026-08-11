@@ -32,6 +32,7 @@ workflow GENOMEASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    val_busco_lineage
     val_build_pretext_map
     val_build_juicer_map
     val_build_cooler_map
@@ -62,6 +63,7 @@ workflow GENOMEASSEMBLY {
         val_hic_mapping_cram_chunk_size,
         val_scaffolding_cool_bin_size,
         val_busco_lineage_directory,
+        val_busco_lineage,
         val_build_pretext_map,
         val_build_juicer_map,
         val_build_cooler_map,

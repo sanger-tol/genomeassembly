@@ -156,8 +156,14 @@
                     "description": "Path to a local directory containing pre-downloade BUSCO lineages.",
                     "help_text": "Lineage datasets can be downloaded using `busco --download`.",
                     "format": "directory-path"
+                },
+                "busco_lineage": {
+                    "type": "string",
+                    "default": "auto_euk",
+                    "description": "Name of the BUSCO lineage to use for assembly QC. Defaults to \"auto_euk\" which will automatically try to choose the most appropriate eukaryotic BUSCO lineage."
                 }
-            }
+            },
+            "required": ["busco_lineage"]
         },
         "organelle_assembly_options": {
             "title": "Organelle assembly options",

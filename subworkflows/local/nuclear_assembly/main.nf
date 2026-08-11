@@ -20,6 +20,7 @@ workflow NUCLEAR_ASSEMBLY {
     val_hic_mapping_cram_chunk_size
     val_scaffolding_cool_bin_size
     val_busco_lineage_directory
+    val_busco_lineage
     val_build_pretext_map
     val_build_juicer_map
     val_build_cooler_map
@@ -87,7 +88,7 @@ workflow NUCLEAR_ASSEMBLY {
         .multiMap { spec, hap1, hap2 ->
             assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
             fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
-            busco_lineage: [spec, spec.params.busco_lineage]
+            busco_lineage: [spec, val_busco_lineage]
         }
 
     GENOME_STATISTICS(
