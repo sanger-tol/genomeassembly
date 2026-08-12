@@ -133,8 +133,7 @@
                     "mitohifi/mitohifi": {
                         "branch": "master",
                         "git_sha": "5909fc046b4b2062e4b4173808aacd2424e0866a",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/mitohifi/mitohifi/mitohifi-mitohifi.diff"
+                        "installed_by": ["modules"]
                     },
                     "oatk": {
                         "branch": "master",
