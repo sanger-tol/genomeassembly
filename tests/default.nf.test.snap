@@ -1,18 +1,57 @@
 {
     "icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only": {
         "content": [
-            0,
+            11,
             {
-                
+                "Workflow": {
+                    "sanger-tol/genomeassembly": "v1.0.0dev"
+                }
             },
             [
-                "pipeline_info"
+                "fastk",
+                "fastk/icAdaBipu1",
+                "fastk/icAdaBipu1/illumina_10x",
+                "fastk/icAdaBipu1/illumina_10x/k31",
+                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.1",
+                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.2",
+                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.3",
+                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.4",
+                "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.hist",
+                "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.ktab",
+                "fastk/icAdaBipu1/pacbio_hifi",
+                "fastk/icAdaBipu1/pacbio_hifi/k31",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.1",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.2",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.3",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.4",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.hist",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.ktab",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_linear_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_log_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_model.txt",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_report.json",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_summary.txt",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_linear_plot.png",
+                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_log_plot.png",
+                "pipeline_info",
+                "pipeline_info/genomeassembly_software_versions.yml"
             ],
             [
-                
+                ".icAdaBipu1.illumina_10x.k31.ktab.1:md5,66e731259e52b68c3c7f06f9c4031c3d",
+                ".icAdaBipu1.illumina_10x.k31.ktab.2:md5,ab315cb5a8e32927c8c206844b6b171b",
+                ".icAdaBipu1.illumina_10x.k31.ktab.3:md5,9a998013378ac4a5946f8110d8e30f86",
+                ".icAdaBipu1.illumina_10x.k31.ktab.4:md5,24ab5876a4a301cd7c682ad8377511a1",
+                "icAdaBipu1.illumina_10x.k31.hist:md5,5cb17394d63e062f004d6220e07a7506",
+                "icAdaBipu1.illumina_10x.k31.ktab:md5,520961969164ca32746e04a623efc8a0",
+                ".icAdaBipu1.pacbio_hifi.k31.ktab.1:md5,57e324160514ee2703c8b97e6f19f85a",
+                ".icAdaBipu1.pacbio_hifi.k31.ktab.2:md5,5cfc60d2017c5a17f1dd8e00da607b26",
+                ".icAdaBipu1.pacbio_hifi.k31.ktab.3:md5,45218a16c3bf76cf761dda725fb0d4c6",
+                ".icAdaBipu1.pacbio_hifi.k31.ktab.4:md5,172ee53d8cb63175b4f047892aa40e21",
+                "icAdaBipu1.pacbio_hifi.k31.hist:md5,18065e7ade2c21abf14db6619b2be29e",
+                "icAdaBipu1.pacbio_hifi.k31.ktab:md5,30c1fe5554d83df56a7a4972efb6a329"
             ]
         ],
-        "timestamp": "2026-08-12T11:52:29.779333",
+        "timestamp": "2026-08-12T12:48:48.88336",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
