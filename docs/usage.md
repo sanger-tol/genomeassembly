@@ -100,37 +100,36 @@ using GenomeScope2, but if you know the coverage in your sample, you can overrid
 
 These options can be used if the `assembler` field is set to "hifiasm".
 
-| Parameter                       |            | Description                                                                                                                              |
-| ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `ultralong_dataset`             | -          | Sample identifier from which to find ultra-long reads for Hifiasm assembly. Must have an `oxford_nanopore` platform entry.               |
-| `hic_dataset`                   | -          | Sample identifier from which to find Hi-C reads for phased Hifiasm assembly and scaffolding. Must have an `illumina_hic` platform entry. |
-| `polishing_dataset`             | -          | Sample identifier from which to find 10X reads for polishing. Must have an `illumina_10x` platform entry.                                |
-| `maternal_dataset`              | -          | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
-| `maternal_platform`             | -          | Platform for maternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
-| `paternal_dataset`              | -          | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
-| `paternal_platform`             | -          | Platform for paternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
-| `long_read_1n_coverage`         | -          | Haploid/1n coverage of the target genome in the long read dataset.                                                                       |
-| `phased_assembly`               | `false`    | Produce a phased Hifiasm assembly with Hi-C data. Requires `hic_dataset`.                                                                |
-| `trio_assembly`                 | `false`    | Produce a trio-binned Hifiasm assembly. Requires `maternal_dataset` and `paternal_dataset`.                                              |
-| `purge`                         | `false`    | Purge retained haplotypic duplications using the purge_dups pipeline.                                                                    |
-| `polish`                        | `false`    | Polish the assembly using Illumina 10X data, longranger and FreeBayes.                                                                   |
-| `scaffold`                      | `true`     | Map Hi-C reads and scaffold the assembly using YaHS.                                                                                     |
-| `find_mito`                     | `true`     | Enable mitochondrial genome assembly/search with Mitohifi.                                                                               |
-| `find_plastid`                  | `false`    | Enable plastid genome assembly/search with Mitohifi.                                                                                     |
-| `hifiasm_bin_arguments`         | -          | Additional command-line arguments for Hifiasm overlap graph generation (e.g., error correction options).                                 |
-| `hifiasm_arguments`             | -          | Additional command-line arguments for Hifiasm to produce an assembly.                                                                    |
-| `purging_cutoffs`               | -          | Comma-separated coverage cutoffs for purging (e.g., `"5,20,100"`). Automatically calculated from the coverage if not supplied.           |
-| `purge_middle`                  | `false`    | Purge haplotypic duplications from within contigs, not just at the ends.                                                                 |
-| `yahs_arguments`                | -          | Additional command-line arguments for YaHS.                                                                                              |
-| `busco_lineage`                 | `auto_euk` | BUSCO lineage for completeness assessment (e.g., `metazoa_odb12`).                                                                       |
-| `mitohifi_reference_species`    | -          | Binomial name of taxon for reference mitochondrial genome.                                                                               |
-| `mitohifi_mito_reference_fa`    | -          | Reference FASTA file to use for reference-based mitochondrial genome assembly with MitoHifi.                                             |
-| `mitohifi_mito_reference_gb`    | -          | Reference GenBank file to use for reference-based mitochondrial genome assembly with MitoHifi.                                           |
-| `mitohifi_mito_genetic_code`    | -          | Mitochondrial genetic code for gene prediction.                                                                                          |
-| `mitohifi_plastid_reference_fa` | -          | Reference FASTA file to use for reference-based plastid genome assembly with MitoHifi.                                                   |
-| `mitohifi_plastid_reference_gb` | -          | Reference GenBank file to use for reference-based plastid genome assembly with MitoHifi.                                                 |
-| `mitohifi_plastid_genetic_code` | 11         | Plastid genetic code for gene prediction.                                                                                                |
-| `mitohifi_arguments`            | -          | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
+| Parameter                       |         | Description                                                                                                                              |
+| ------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `ultralong_dataset`             | -       | Sample identifier from which to find ultra-long reads for Hifiasm assembly. Must have an `oxford_nanopore` platform entry.               |
+| `hic_dataset`                   | -       | Sample identifier from which to find Hi-C reads for phased Hifiasm assembly and scaffolding. Must have an `illumina_hic` platform entry. |
+| `polishing_dataset`             | -       | Sample identifier from which to find 10X reads for polishing. Must have an `illumina_10x` platform entry.                                |
+| `maternal_dataset`              | -       | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
+| `maternal_platform`             | -       | Platform for maternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
+| `paternal_dataset`              | -       | Sample identifier from which to find maternal reads for trio assembly.                                                                   |
+| `paternal_platform`             | -       | Platform for paternal reads: `illumina`, `illumina_10x`, `pacbio_hifi`, or `oxford_nanopore`.                                            |
+| `long_read_1n_coverage`         | -       | Haploid/1n coverage of the target genome in the long read dataset.                                                                       |
+| `phased_assembly`               | `false` | Produce a phased Hifiasm assembly with Hi-C data. Requires `hic_dataset`.                                                                |
+| `trio_assembly`                 | `false` | Produce a trio-binned Hifiasm assembly. Requires `maternal_dataset` and `paternal_dataset`.                                              |
+| `purge`                         | `false` | Purge retained haplotypic duplications using the purge_dups pipeline.                                                                    |
+| `polish`                        | `false` | Polish the assembly using Illumina 10X data, longranger and FreeBayes.                                                                   |
+| `scaffold`                      | `true`  | Map Hi-C reads and scaffold the assembly using YaHS.                                                                                     |
+| `find_mito`                     | `true`  | Enable mitochondrial genome assembly/search with Mitohifi.                                                                               |
+| `find_plastid`                  | `false` | Enable plastid genome assembly/search with Mitohifi.                                                                                     |
+| `hifiasm_bin_arguments`         | -       | Additional command-line arguments for Hifiasm overlap graph generation (e.g., error correction options).                                 |
+| `hifiasm_arguments`             | -       | Additional command-line arguments for Hifiasm to produce an assembly.                                                                    |
+| `purging_cutoffs`               | -       | Comma-separated coverage cutoffs for purging (e.g., `"5,20,100"`). Automatically calculated from the coverage if not supplied.           |
+| `purge_middle`                  | `false` | Purge haplotypic duplications from within contigs, not just at the ends.                                                                 |
+| `yahs_arguments`                | -       | Additional command-line arguments for YaHS.                                                                                              |
+| `mitohifi_reference_species`    | -       | Binomial name of taxon for reference mitochondrial genome.                                                                               |
+| `mitohifi_mito_reference_fa`    | -       | Reference FASTA file to use for reference-based mitochondrial genome assembly with MitoHifi.                                             |
+| `mitohifi_mito_reference_gb`    | -       | Reference GenBank file to use for reference-based mitochondrial genome assembly with MitoHifi.                                           |
+| `mitohifi_mito_genetic_code`    | -       | Mitochondrial genetic code for gene prediction.                                                                                          |
+| `mitohifi_plastid_reference_fa` | -       | Reference FASTA file to use for reference-based plastid genome assembly with MitoHifi.                                                   |
+| `mitohifi_plastid_reference_gb` | -       | Reference GenBank file to use for reference-based plastid genome assembly with MitoHifi.                                                 |
+| `mitohifi_plastid_genetic_code` | 11      | Plastid genetic code for gene prediction.                                                                                                |
+| `mitohifi_arguments`            | -       | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
 
 > **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 

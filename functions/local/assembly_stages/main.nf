@@ -276,7 +276,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
     def STAGE_CONFIG = [
         base: [
             data: ["long_read"],
-            params: ["assembler", "hifiasm_bin_arguments", "coverage", "busco_lineage"],
+            params: ["assembler", "hifiasm_bin_arguments", "coverage"],
             enabled: true,
             depends: null,
             extraParams: null,

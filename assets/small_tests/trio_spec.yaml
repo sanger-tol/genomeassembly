@@ -10,7 +10,6 @@
   trio_assembly: true
   hifiasm_bin_arguments: "-f0"
   hifiasm_arguments: ""
-  busco_lineage: eukaryota_odb12
 - id: aBomVar4.mitohifi
   assembler: "mitohifi"
   long_read_dataset: aBomVar4

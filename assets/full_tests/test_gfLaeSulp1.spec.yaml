@@ -8,7 +8,6 @@
   hifiasm_arguments: "--primary"
   mitohifi_reference_species: "Laetiporus sulphureus"
   mitohifi_mito_genetic_code: 4
-  busco_lineage: dikarya_odb12
 - id: gfLaeSulp1.phased
   assembler: "hifiasm"
   long_read_dataset: gfLaeSulp1
@@ -16,7 +15,6 @@
   hic_dataset: gfLaeSulp1
   phased_assembly: true
   find_mito: false
-  busco_lineage: dikarya_odb12
 - id: gfLaeSulp1.oatk
   assembler: "oatk"
   long_read_dataset: gfLaeSulp1

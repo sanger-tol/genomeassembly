@@ -179,12 +179,6 @@
                 "meta": "yahs_arguments",
                 "default": ""
             },
-            "busco_lineage": {
-                "type": "string",
-                "description": "Lineage name to use for genome completeness assessment using BUSCO, e.g. metazoa_odb12",
-                "meta": "busco_lineage",
-                "default": "auto_euk"
-            },
             "mitohifi_reference_species": {
                 "type": "string",
                 "description": "Binomial name of a taxon to use to find a reference mitochondrial genome.",
