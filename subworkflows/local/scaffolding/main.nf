@@ -65,6 +65,7 @@ workflow SCAFFOLDING {
         ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2),
         CRAM_MAP_ILLUMINA_HIC.out.bam,
         val_build_pretext_map,
+        val_build_pretext_map,
         val_build_cooler_map,
         val_build_juicer_map,
         val_cool_bin

@@ -37,16 +37,17 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test' ],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
                 ])
-                input[1] = Channel.of([
+                input[1] = channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
                 ])
                 input[2] = 200
                 input[3] = false
+                input[4] = channel.empty()
                 """
             }
         }
@@ -67,24 +68,52 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
-                ])
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
-                ])
+                input[0] = channel.of(
+                    [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test1' ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
+                    ]
+                )
+                input[1] = channel.of(
+                    [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    ],
+                    [
+                        [ id:'test1' ], // meta map
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    ]
+                )
                 input[2] = 200
                 input[3] = true
+                input[4] = channel.of([[ id:'test' ], ['@PG\tID:pseudo_tool\tPN:test_program\tVN:1.0']])
                 """
             }
         }
         then {
+            def strip_absolute_path_lines = { text ->
+                def lines = text?.getClass()?.isArray()
+                    ? text.toList()
+                    : (text instanceof Collection ? text : (text?.toString()?.readLines() ?: []))
+                lines
+                    .collect { line ->
+                        def normalized = line.toString()
+                            .replaceAll(/\bUR:\/(?:[^\/\s]+\/)*([^\/\s]+)/, 'UR:$1')
+                        if (normalized.startsWith('@PG\t')) {
+                            normalized = normalized.replaceAll(/(ID|PP):([^\t]+)-[0-9A-F]{8}\b/, '$1:$2-HASH')
+                        }
+                        normalized
+                    }
+            }
             assert workflow.success
             assertAll(
                 { assert snapshot(
                     workflow.out.bam.collect { bam(it.get(1)).getStatistics() },
+                    workflow.out.bam.collect { meta, f -> [(new File(f.toString()).getName()): strip_absolute_path_lines(bam(f.toString()).getHeader())] }.collectEntries { it }.sort(),
                     workflow.out.bam_index.collect { file(it.get(1)).getName() },
                 ).match() }
             )
@@ -100,7 +129,7 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of(
+                input[0] = channel.of(
                     [
                         [ id:'test' ],
                         file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.unscaffolded.fa.gz', checkIfExists: true),
@@ -110,7 +139,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
                     ]
                 )
-                input[1] = Channel.of(
+                input[1] = channel.of(
                     [
                         [ id:'test' ], // meta map
                         file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
@@ -125,6 +154,7 @@ nextflow_workflow {
                 )
                 input[2] = 1000
                 input[3] = true
+                input[4] =  channel.empty()
                 """
             }
         }

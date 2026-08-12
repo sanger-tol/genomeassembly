@@ -11,6 +11,7 @@ workflow FASTX_MAP_LONG_READS {
     ch_fasta                  // Channel [meta, fasta] OR [meta, [fasta1, fasta2, ..., fasta_n]]
     val_reads_per_fasta_chunk // integer: Number of reads per FASTA chunk for mapping
     val_output_bam            // boolean: if true output alignments in BAM format
+    ch_pg_lines               // optional: Channel [meta, pg_lines] @PG lines to add to header of BAM outputs
 
     main:
     //
@@ -67,20 +68,26 @@ workflow FASTX_MAP_LONG_READS {
     //
     // Module: Map slices of each FASTA file to the reference
     //
-    ch_fasta_with_slices = ch_fastx_chunks
+    // Resolve optional PG lines once on unique meta IDs, then fan out over all FASTX chunks.
+    ch_pg_full = ch_assemblies
+        .join(ch_pg_lines, by: 0, remainder: true)
+        .map { meta, _asm, pglines -> [ meta, pglines ?: [] ] }
+
+    ch_fasta_with_slices_added_pg = ch_fastx_chunks
         .combine(ch_assemblies, by: 0)
         .combine(MINIMAP2_INDEX.out.index, by: 0)
         .transpose()
-        .multiMap { meta, fasta, fxi, chunkn, slices, asm, index ->
-            fastx:     [ meta, fasta, fxi ]
+        .combine(ch_pg_full, by: 0)
+        .multiMap { meta, fasta, fxi, chunkn, slices, asm, index, pglines ->
+            fastx:     [ meta, fasta, fxi, pglines ]
             reference: [ meta, index, asm ]
             slices:    [ chunkn, slices ]
         }
 
     FASTXALIGN_MINIMAP2ALIGN(
-        ch_fasta_with_slices.fastx,
-        ch_fasta_with_slices.reference,
-        ch_fasta_with_slices.slices,
+        ch_fasta_with_slices_added_pg.fastx,
+        ch_fasta_with_slices_added_pg.reference,
+        ch_fasta_with_slices_added_pg.slices,
         val_output_bam
     )
 

@@ -21,7 +21,12 @@ process CRAMALIGN_BWAMEM2ALIGNHIC {
     task.ext.when == null || task.ext.when
 
     script:
-    def args1 = task.ext.args1 ?: ''
+    // WARNING: This module includes insert_cram_pg_header as a module binary in
+    // ${moduleDir}/resources/usr/bin/insert_cram_pg_header. To use this module, you will
+    // either have to copy this file to ${projectDir}/bin or set the option
+    // nextflow.enable.moduleBinaries = true
+    // in your nextflow.config file.
+    def args  = task.ext.args  ?: ''
     def args2 = task.ext.args2 ?: '-t' // copy RG, BC and QT tags to the FASTQ header line
     def args3 = task.ext.args3 ?: ''
     def args4 = task.ext.args4 ?: ''
@@ -31,9 +36,7 @@ process CRAMALIGN_BWAMEM2ALIGNHIC {
     // Prepare read group arguments if rglines are found, else, empty string
     def rg_arg = rglines ? '-C ' + rglines.collect { line ->
             // Add SM when not present to avoid errors from downstream tool (e.g. variant callers)
-            def l = line.contains("SM:") ? line
-                : meta.sample ? "${line}\tSM:${meta.sample}"
-                : "${line}\tSM:${meta.id}"
+            def l = line.contains("SM:") ? line : "${line}\tSM:${meta.id}"
             "-H '${l.replaceAll("\t", "\\\\t")}'"
         }.join(' ')
         : ''
@@ -41,12 +44,17 @@ process CRAMALIGN_BWAMEM2ALIGNHIC {
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
 
-    samtools cat ${args1} -r "#:${range[0]}-${range[1]}" ${cram} |\\
+    samtools view -H ${cram} | grep ^@PG > ${prefix}_cram_pg.tmp
+
+    samtools cat ${args} -r "#:${range[0]}-${range[1]}" ${cram} |\\
         samtools fastq ${args2} - |\\
         bwa-mem2 mem ${args3} -t ${task.cpus} \${INDEX} ${rg_arg} - |\\
+        insert_cram_pg_header.awk -v pgfile="${prefix}_cram_pg.tmp" |\\
         samtools fixmate ${args4} - - |\\
         samtools view -h ${args5} |\\
-        samtools sort ${args6} -@${task.cpus} -T ${prefix}_tmp -o ${prefix}.bam -
+        samtools sort ${args6} -@${task.cpus} -T ${prefix}_tmp -o ${prefix}.bam
+
+    rm ${prefix}_cram_pg.tmp
     """
 
     stub:
