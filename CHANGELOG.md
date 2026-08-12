@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | genomescope2            | genomescope2    | 2.0         | 2.1.0             |
 | gfastats                | gfastats        | 1.3.10      | 1.3.11            |
 | gunzip                  | gzip            | <unknown>   | <removed, unused> |
+| htslib/bgziptabix       | bgzip           | -           | 1.2.4             |
 | merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
 | merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
 | pretextmap              | samtools        | 1.17        | 1.23              |
@@ -81,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | samtools/splitheader    | samtools        | 1.22.1      | 1.24              |
 | samtools/stats          | samtools        | 1.22.1      | 1.24              |
 | seqkit/grep             | seqkit          | 2.9.0       | 2.13.0            |
+| tabix/bgzip             | bgzip           | 1.21.0      | -                 |
 | yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
 
 ### Deprecated

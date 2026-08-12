@@ -1,8 +1,8 @@
-include { CRAM_MAP_ILLUMINA_HIC           } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
-include { BAM_STATS_SAMTOOLS              } from '../../../subworkflows/nf-core/bam_stats_samtools'
-include { FASTA_BAM_SCAFFOLDING_YAHS      } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs'
+include { CRAM_MAP_ILLUMINA_HIC                 } from '../../../subworkflows/sanger-tol/cram_map_illumina_hic'
+include { BAM_STATS_SAMTOOLS                    } from '../../../subworkflows/nf-core/bam_stats_samtools'
+include { FASTA_BAM_SCAFFOLDING_YAHS            } from '../../../subworkflows/sanger-tol/fasta_bam_scaffolding_yahs'
 
-include { TABIX_BGZIP as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/tabix/bgzip'
+include { HTSLIB_BGZIPTABIX as BGZIP_SCAFFOLDED } from '../../../modules/nf-core/htslib/bgziptabix'
 
 workflow SCAFFOLDING {
     take:
@@ -74,7 +74,12 @@ workflow SCAFFOLDING {
     //
     // Module: bgzip all scaffolded assembly fasta
     //
-    BGZIP_SCAFFOLDED(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta)
+    BGZIP_SCAFFOLDED(
+        FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.map { meta, fasta -> [meta, fasta, [], []] },
+        "compress",
+        false,
+        "fa"
+    )
 
     //
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
