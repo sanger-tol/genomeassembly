@@ -50,7 +50,7 @@ workflow SCAFFOLDING {
         .combine(ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2), by: 0)
         .multiMap { meta, bam, bai, asm ->
             bam: [ meta, bam, bai ]
-            asm: [ meta, asm ]
+            asm: [ meta, asm, [] ]
         }
 
     BAM_STATS_SAMTOOLS(
