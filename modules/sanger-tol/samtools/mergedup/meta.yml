@@ -95,27 +95,16 @@ output:
           description: Sorted and duplicate marked CRAM file
           pattern: "*.cram"
           ontologies: []
-  csi:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.csi":
+      - "*.{csi,crai}":
           type: file
-          description: Sorted and duplicate marked BAM index file
-          pattern: "*.csi"
-          ontologies: []
-  crai:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.crai":
-          type: file
-          description: Sorted and duplicate marked CRAM index file
-          pattern: "*.crai"
+          description: Index file for the sorted and duplicate marked BAM
+          pattern: "*.{csi,crai}"
           ontologies: []
   metrics:
     - - meta:

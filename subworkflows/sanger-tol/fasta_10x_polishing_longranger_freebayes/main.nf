@@ -125,7 +125,7 @@ workflow FASTA_10X_POLISHING_LONGRANGER_FREEBAYES {
     //
     // Logic: Refactor and combine VCF channels for further processing
     //
-    ch_bcftools_view_input = FREEBAYES.out.vcf.combine(BCFTOOLS_INDEX_FB.out.tbi, by: 0)
+    ch_bcftools_view_input = FREEBAYES.out.vcf.combine(BCFTOOLS_INDEX_FB.out.index, by: 0)
 
     //
     // Module: Filer Freebayes results
@@ -178,7 +178,7 @@ workflow FASTA_10X_POLISHING_LONGRANGER_FREEBAYES {
     //
     ch_bcftools_consensus_input = ch_assemblies_with_index
         .combine(BCFTOOLS_NORM.out.vcf      , by: 0)
-        .combine(BCFTOOLS_INDEX_NORM.out.tbi, by: 0)
+        .combine(BCFTOOLS_INDEX_NORM.out.index, by: 0)
         .map { meta, fasta, _fai, vcf, tbi ->
             [meta, vcf, tbi, fasta, []]
         }
@@ -198,6 +198,7 @@ workflow FASTA_10X_POLISHING_LONGRANGER_FREEBAYES {
 
     SEPARATE_HAPLOTYPES(
         ch_polished_assemblies_to_separate,
+        [],
         []
     )
 

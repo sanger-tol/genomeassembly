@@ -3,7 +3,7 @@ process FREEBAYES {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/freebayes:1.3.10--hbefcdb2_0'
         : 'quay.io/biocontainers/freebayes:1.3.10--hbefcdb2_0'}"
 
@@ -47,6 +47,6 @@ process FREEBAYES {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo | gzip > ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.vcf.gz
     """
 }

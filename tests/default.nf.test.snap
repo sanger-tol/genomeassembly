@@ -15,16 +15,19 @@
                     "samtools": 1.23
                 },
                 "BGZIP_HIFIASM": {
-                    "tabix": 1.21
+                    "htslib": 1.24,
+                    "xz": "5.8.3"
                 },
                 "BGZIP_PURGED": {
-                    "tabix": 1.21
+                    "htslib": 1.24,
+                    "xz": "5.8.3"
                 },
                 "BGZIP_SCAFFOLDED": {
-                    "tabix": 1.21
+                    "htslib": 1.24,
+                    "xz": "5.8.3"
                 },
                 "BUSCO_BUSCO": {
-                    "busco": "6.0.0"
+                    "busco": "6.1.0"
                 },
                 "BWAMEM2_INDEX": {
                     "bwamem2": "2.2.1"
@@ -62,7 +65,7 @@
                     "slice_fasta.py": "1.0.0"
                 },
                 "GAWK_PROCESS_PAIRS_FILE": {
-                    "gawk": "5.3.0"
+                    "gawk": "5.3.1"
                 },
                 "GENOMESCOPE2": {
                     "genomescope2": 2.0
@@ -99,11 +102,11 @@
                     "oatk": 1.0
                 },
                 "PRETEXTMAP": {
-                    "PretextMap": "0.2.3",
+                    "PretextMap": "0.2.4",
                     "samtools": 1.23
                 },
                 "PRETEXTSNAPSHOT": {
-                    "PretextSnapshot": "0.0.5"
+                    "PretextSnapshot": "0.0.7"
                 },
                 "PURGEDUPS_CALCUTS": {
                     "purge_dups": "1.2.6"
@@ -124,31 +127,31 @@
                     "purge_dups": "1.2.6"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FAIDX_CONTIGS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FAIDX_SCAFFOLDS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_MERGEDUP": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SPLITHEADER": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.24
                 },
                 "Workflow": {
                     "sanger-tol/genomeassembly": "v1.0.0dev"
@@ -255,8 +258,6 @@
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap1.p_ctg.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap1.p_ctg.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap1.p_ctg.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap1.p_ctg.fa/tmp",
-                "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap1.p_ctg.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/logs",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/logs/bbtools_err.log",
@@ -276,8 +277,6 @@
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/tmp",
-                "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/asm.hic.hap2.p_ctg.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/batch_summary.txt",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/asm-busco/logs",
                 "icAdaBipu1.phased/raw/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm.hic.hap1.p_ctg.fa.json",
@@ -330,8 +329,6 @@
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/tmp",
-                "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/logs",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/logs/bbtools_err.log",
@@ -351,8 +348,6 @@
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/tmp",
-                "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/batch_summary.txt",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/asm-busco/logs",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap1_scaffolds_final.fa.json",
@@ -457,8 +452,6 @@
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.htigs.all.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.htigs.all.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.htigs.all.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.htigs.all.fa/tmp",
-                "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.htigs.all.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/logs",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/logs/bbtools_err.log",
@@ -478,8 +471,6 @@
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/tmp",
-                "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/asm.purged.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/batch_summary.txt",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/asm-busco/logs",
                 "icAdaBipu1.pri/purging/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm.htigs.all.fa.json",
@@ -563,8 +554,6 @@
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.a_ctg.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.a_ctg.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.a_ctg.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.a_ctg.fa/tmp",
-                "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.a_ctg.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/logs",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/logs/bbtools_err.log",
@@ -584,8 +573,6 @@
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/tmp",
-                "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/asm.p_ctg.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/batch_summary.txt",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/asm-busco/logs",
                 "icAdaBipu1.pri/raw/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm.a_ctg.fa.json",
@@ -638,8 +625,6 @@
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/tmp",
-                "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap1_scaffolds_final.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/logs",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/logs/bbtools_err.log",
@@ -659,8 +644,6 @@
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/missing_busco_list.tsv",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/short_summary.json",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/run_eukaryota_odb12/short_summary.txt",
-                "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/tmp",
-                "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/asm_hap2_scaffolds_final.fa/tmp/refseq_db.faa",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/batch_summary.txt",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/asm-busco/logs",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap1_scaffolds_final.fa.json",
@@ -765,32 +748,28 @@
                 "asm.hic.r_utg.lowQ.bed.gz:md5,12288c3a4575e076eae34320cffc93fa",
                 "asm.hic.r_utg.noseq.fa.gz:md5,1e09dc03769e1b8f20adf99a5a4348f1",
                 "asm.hic.r_utg.noseq.gfa.gz:md5,fddd85d87b7a0d8ce04efbce7c2a6f71",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm_hap1_scaffolds_final.fa.assembly_summary:md5,6ba5f1c6854391c583ef7adc83ec6a77",
                 "asm_hap1_scaffolds_final.fa.gz:md5,0bd6c650cee565d25854bff4880d6f70",
                 "asm_hap1_scaffolds_final.fa.stats:md5,8583eb639fc220c0eb793c133de03a0a",
                 "asm_hap2_scaffolds_final.fa.assembly_summary:md5,66bb6c61c2c69e796acdccdc6dc99f84",
                 "asm_hap2_scaffolds_final.fa.gz:md5,f55bd2e3deb73b6138435bb3149480b3",
                 "asm_hap2_scaffolds_final.fa.stats:md5,6969bcdaf4d7082f06670a1d7d131624",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm_hap1.hic:md5,183093e06305b4497a64a6e61d06b96b",
                 "asm_hap2.hic:md5,e43e437eaa3ddc80f8eaece11b984262",
                 "asm_hap1.flagstat:md5,35b38248e17520143bd8f375565bdaf1",
                 "asm_hap1.idxstats:md5,00eb7b34fa91ca264ecffe0db010e8d9",
-                "asm_hap1.stats:md5,6c6cffa26ce34e2787ba68c28043fbe2",
+                "asm_hap1.stats:md5,05cdd347af6046d6490af55dcf38c671",
                 "asm_hap2.flagstat:md5,3f1d9809931b6c3a776d1ed3168c9b50",
                 "asm_hap2.idxstats:md5,3a5bda6179118dcbcc0ad05e90f461a8",
-                "asm_hap2.stats:md5,1680554d6310ae626e472ff68c43c20f",
+                "asm_hap2.stats:md5,768569a39e2dc18b60a58ed17540fa9f",
                 "asm_hap1.bin:md5,5674e7386a79c18d458e1c3d3f87a445",
                 "asm_hap1_inital_break_01.agp:md5,cbddf5b0bb257d9ec543ddd4c45e242b",
                 "asm_hap1_inital_break_02.agp:md5,cbddf5b0bb257d9ec543ddd4c45e242b",
@@ -810,12 +789,10 @@
                 "asm.purged.fa.assembly_summary:md5,767c4eb55b411b238634e84d725fb6a9",
                 "asm.purged.fa.gz:md5,8f11b53970a57ced5c4e725c575a8d3f",
                 "asm.purged.fa.stats:md5,b2872d4765ef03d652a434e162c2d7d4",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm.PB.base.cov:md5,d3bf4aedeb722a4acc7fe43490f67e98",
                 "asm.PB.stat:md5,45bda636365091c14eb51f05f174dd9d",
                 "asm.cutoffs:md5,2309f2c470aca9ac259b2c0dea18c503",
@@ -846,32 +823,28 @@
                 "asm.r_utg.lowQ.bed.gz:md5,12288c3a4575e076eae34320cffc93fa",
                 "asm.r_utg.noseq.fa.gz:md5,1e09dc03769e1b8f20adf99a5a4348f1",
                 "asm.r_utg.noseq.gfa.gz:md5,fddd85d87b7a0d8ce04efbce7c2a6f71",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm_hap1_scaffolds_final.fa.assembly_summary:md5,e21d18d7359cd3896b93158e94b43e27",
                 "asm_hap1_scaffolds_final.fa.gz:md5,3ba8f6368de3a3d88992069b78728bb9",
                 "asm_hap1_scaffolds_final.fa.stats:md5,9917513d8e12bb5058a2da881b499852",
                 "asm_hap2_scaffolds_final.fa.assembly_summary:md5,48813a5bf4066a229084415d21793f96",
                 "asm_hap2_scaffolds_final.fa.gz:md5,4bbc1a85828a1828252f8020900640d0",
                 "asm_hap2_scaffolds_final.fa.stats:md5,9326409dcd34b9c7aecec5f14da76090",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
-                "full_table.tsv:md5,e0fd31c49063bd08ff8035e15e77b1de",
-                "missing_busco_list.tsv:md5,acdeace2ccfe585ce655a8ab5e4d4764",
-                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
+                "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
+                "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm_hap1.hic:md5,dea918fd8273c97f2b8adfd5f8576f98",
                 "asm_hap2.hic:md5,06fb543ad9a602ea813f29c4517187b0",
                 "asm_hap1.flagstat:md5,3bc3ff9ae08e2651ad01c7411ae43ece",
                 "asm_hap1.idxstats:md5,291ddbd9a1bfe3a2746be043123572c4",
-                "asm_hap1.stats:md5,5f35bfe3e0f41a0b4420ea8d5253a2e5",
+                "asm_hap1.stats:md5,7dca8d8413befa131bdae697c90e81e6",
                 "asm_hap2.flagstat:md5,173d5133d016a8796e3eeb7bdc8176ce",
                 "asm_hap2.idxstats:md5,2988e61826d942bb6c2ca6e8384edf10",
-                "asm_hap2.stats:md5,d34b5486e4830e85a3e67f446c12fbfa",
+                "asm_hap2.stats:md5,4293b80fa4d9f11c59dc0e335bc668bd",
                 "asm_hap1.bin:md5,55bbedc76d2b2601ae561932a9eef065",
                 "asm_hap1_inital_break_01.agp:md5,94abc4ede3674d029b8531d093afe7cc",
                 "asm_hap1_inital_break_02.agp:md5,94abc4ede3674d029b8531d093afe7cc",
@@ -883,7 +856,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-08-03T17:31:16.377591",
+        "timestamp": "2026-08-12T13:17:45.146702193",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

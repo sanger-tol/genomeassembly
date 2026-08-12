@@ -1,6 +1,6 @@
-include { TABIX_BGZIP as BGZIP_POLISHED               } from '../../../modules/nf-core/tabix/bgzip'
+include { FASTA_10X_POLISHING_LONGRANGER_FREEBAYES } from '../../../subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes'
 
-include { FASTA_10X_POLISHING_LONGRANGER_FREEBAYES    } from '../../../subworkflows/sanger-tol/fasta_10x_polishing_longranger_freebayes'
+include { HTSLIB_BGZIPTABIX as BGZIP_POLISHED      } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow POLISHING {
     take:
@@ -47,8 +47,14 @@ workflow POLISHING {
                 [ key, fasta ]
             }
             .transpose()
+            .map { meta, fasta -> [ meta, fasta, [], [] ] }
 
-        BGZIP_POLISHED(ch_bgzip_input)
+        BGZIP_POLISHED(
+            ch_bgzip_input,
+            "compress",
+            false,
+            "fa"
+        )
 
         //
         // Logic: combine all polishing outputs into a single map for ease of publishing

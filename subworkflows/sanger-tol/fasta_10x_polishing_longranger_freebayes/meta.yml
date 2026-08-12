@@ -56,12 +56,6 @@ output:
       description: Merged VCF of variants called by Freebayes across the combined assembly
   - merged_vcf_tbi:
       description: Index for VCF
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

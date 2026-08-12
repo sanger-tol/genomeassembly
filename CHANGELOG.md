@@ -54,14 +54,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | bcftools/sort           | bcftools        | 1.21        | 1.23.1            |
 | bcftools/view           | bcftools        | 1.21        | 1.23.1            |
 | bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
+| busco/busco             | busco           | 6.0.0       | 6.1.0             |
 | cat/cat                 | pigz            | 2.3.4       | 2.8               |
 | fastk/fastk             | fastk           | 1.1.0       | 1.2               |
 | fastk/histex            | fastk           | 1.1.0       | 1.2               |
 | freebayes               | freebayes       | 1.3.6       | 1.3.10            |
-| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
+| gawk                    | gawk            | 5.3.0       | 5.3.1             |
 | gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
 | gfastats                | gfastats        | 1.3.10      | 1.3.11            |
 | gunzip                  | gzip            | <unknown>   | <removed, unused> |
+| htslib/bgziptabix       | bgzip           | -           | 1.2.4             |
 | merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
 | merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
 | pretextmap              | samtools        | 1.17        | 1.23              |
@@ -70,7 +73,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
 | fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
 | fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
-| samtools/mergedup       | samtools        | 1.22.1      | 1.23              |
+| samtools/faidx          | samtools        | 1.22.1      | 1.24              |
+| samtools/flagstat       | samtools        | 1.22.1      | 1.24              |
+| samtools/idxstats       | samtools        | 1.22.1      | 1.24              |
+| samtools/index          | samtools        | 1.22.1      | 1.24              |
+| samtools/merge          | samtools        | 1.22.1      | 1.24              |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1            |
+| samtools/splitheader    | samtools        | 1.22.1      | 1.24              |
+| samtools/stats          | samtools        | 1.22.1      | 1.24              |
+| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0            |
+| tabix/bgzip             | bgzip           | 1.21.0      | -                 |
 | yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
 
 ### Deprecated

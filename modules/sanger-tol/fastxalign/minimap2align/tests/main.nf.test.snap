@@ -1,4 +1,65 @@
 {
+    "Undibacterium_unclassified - fasta - bam out - with pg_lines": {
+        "content": [
+            {
+                "maxReadLength": 26308,
+                "minReadLength": 1368,
+                "meanReadLength": 8121,
+                "maxQuality": 60,
+                "minQuality": 0,
+                "meanQuality": 50,
+                "readCount": 501,
+                "duplicateReadCount": 0,
+                "sorted": false
+            },
+            {
+                "HiFi.reads.fasta.0.test.bam": [
+                    "@HD\tVN:1.6\tSO:coordinate",
+                    "@SQ\tSN:h1tg000001l\tLN:30632",
+                    "@SQ\tSN:h1tg000002l\tLN:111278",
+                    "@SQ\tSN:h1tg000003l\tLN:24990",
+                    "@SQ\tSN:h1tg000004l\tLN:225717",
+                    "@SQ\tSN:h1tg000005l\tLN:38137",
+                    "@SQ\tSN:h1tg000006l\tLN:142438",
+                    "@SQ\tSN:h1tg000007l\tLN:16661",
+                    "@SQ\tSN:h1tg000008l\tLN:47817",
+                    "@SQ\tSN:h1tg000009l\tLN:148002",
+                    "@SQ\tSN:h1tg000010l\tLN:23205",
+                    "@PG\tID:samtools\tPN:samtools\tVN:1.21\tCL:samtools view -F 0x200 -o filtered.cram input.cram",
+                    "@PG\tID:minimap2\tPN:minimap2\tVN:2.30-r1287\tCL:minimap2 -t2 -x map-hifi -a baUndUnlc1.hic.hap1.p_ctg.fa.gz -\tPP:samtools",
+                    "@PG\tID:samtools.1\tPN:samtools\tPP:minimap2\tVN:1.23.1\tCL:samtools sort -@ 1 -o HiFi.reads.fasta.0.test.bam -T HiFi.reads.fasta.0.test_sort_tmp --write-index -l1 -"
+                ]
+            },
+            {
+                "versions_minimap2": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "samtools",
+                        "1.23.1"
+                    ]
+                ],
+                "versions_slice_fasta": [
+                    [
+                        "FASTXALIGN_MINIMAP2ALIGN",
+                        "slice_fasta.py",
+                        "1.0.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-24T10:53:13.136276794",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
     "Undibacterium_unclassified - fasta - bam out - filter": {
         "content": [
             {
@@ -36,11 +97,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-07-24T10:52:21.709416102",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T16:40:48.934235"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "sarscov2 - bam - stub": {
         "content": [
@@ -121,11 +182,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-07-24T10:52:57.078099119",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T16:41:04.114202"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "Undibacterium_unclassified - fasta - bam out - no filter": {
         "content": [
@@ -164,11 +225,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-07-24T10:52:02.160291376",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T16:40:40.802654"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "Undibacterium_unclassified - fasta - paf out": {
         "content": [
@@ -239,10 +300,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-07-24T10:52:43.521130446",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T16:40:57.327797"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

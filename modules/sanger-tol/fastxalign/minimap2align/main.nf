@@ -8,7 +8,7 @@ process FASTXALIGN_MINIMAP2ALIGN {
         'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_pruned:05af6ab781364616' }"
 
     input:
-    tuple val(meta),  path(fastx), path(fxi)
+    tuple val(meta),  path(fastx), path(fxi), val(pg_lines)
     tuple val(meta2), path(index), path(reference)
     tuple val(chunkn), val(range)
     val bam_format
@@ -29,17 +29,26 @@ process FASTXALIGN_MINIMAP2ALIGN {
     // either have to copy this file to ${projectDir}/bin or set the option
     // nextflow.enable.moduleBinaries = true
     // in your nextflow.config file.
-    def args       = task.ext.args  ?: ''
+    // WARNING: This module includes insert_cram_pg_header as a module binary in
+    // ${moduleDir}/resources/usr/bin/insert_cram_pg_header. To use this module, you will
+    // either have to copy this file to ${projectDir}/bin or set the option
+    // nextflow.enable.moduleBinaries = true
+    // in your nextflow.config file.
+    def args        = task.ext.args  ?: ''
     def args2       = task.ext.args2  ?: ''
     def args3       = task.ext.args3  ?: ''
     def prefix      = task.ext.prefix ?: "${fastx}.${chunkn}.${meta.id}"
     def post_filter = args2 ? "samtools view -h ${args2} - |" : ''
     def sort_bam    = "samtools sort -@ ${task.cpus > 1 ? task.cpus - 1 : 1} -o ${prefix}.bam -T ${prefix}_sort_tmp ${args3} -"
-    def bam_output  = bam_format      ? "-a | ${post_filter} ${sort_bam}" : "| bgzip -@ ${task.cpus} > ${prefix}.paf.gz"
+    def pg_part     = pg_lines ? "insert_cram_pg_header.awk -v pgfile=\"${prefix}_pg_lines.tmp\" | " : ''
+    def bam_output  = bam_format ? "-a | ${pg_part}${post_filter} ${sort_bam}" : "| bgzip -@ ${task.cpus} > ${prefix}.paf.gz"
+    def pg_setup    = pg_lines ? "printf '%b\\n' ${pg_lines.collect { line -> "'${line}'" }.join(' ')} > ${prefix}_pg_lines.tmp" : ''
     """
+    ${pg_setup}
     slice_fasta.py slice ${fastx} ${range[0]} ${range[1]} | \\
         minimap2 -t${task.cpus} ${args} ${index} - \\
         ${bam_output}
+
     """
 
     stub:

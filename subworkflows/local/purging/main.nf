@@ -1,6 +1,6 @@
-include { FASTA_PURGE_RETAINED_HAPLOTYPE } from '../../../subworkflows/sanger-tol/fasta_purge_retained_haplotype/main'
+include { FASTA_PURGE_RETAINED_HAPLOTYPE    } from '../../../subworkflows/sanger-tol/fasta_purge_retained_haplotype/main'
 
-include { TABIX_BGZIP as BGZIP_PURGED    } from '../../../modules/nf-core/tabix/bgzip/main'
+include { HTSLIB_BGZIPTABIX as BGZIP_PURGED } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow PURGING {
     take:
@@ -42,8 +42,14 @@ workflow PURGING {
             [ key, fasta ]
         }
         .transpose()
+        .map { meta, fasta -> [meta, fasta, [], []] }
 
-    BGZIP_PURGED(ch_bgzip_input)
+    BGZIP_PURGED(
+        ch_bgzip_input,
+        "compress",
+        false,
+        "fa"
+    )
 
     //
     // Logic: combine all purging outputs into a single map for ease of publishing

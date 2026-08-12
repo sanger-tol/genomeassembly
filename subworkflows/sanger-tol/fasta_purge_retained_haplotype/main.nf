@@ -48,7 +48,8 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         ch_assemblies_split.primary,
         ch_long_reads,
         val_fastx_reads_per_chunk,
-        false
+        false,
+        channel.empty()
     )
 
     //

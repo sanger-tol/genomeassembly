@@ -1,6 +1,6 @@
-include { HIFIASM                      } from '../../../modules/sanger-tol/hifiasm'
-include { HIFIASM as HIFIASM_BIN       } from '../../../modules/sanger-tol/hifiasm'
-include { TABIX_BGZIP as BGZIP_HIFIASM } from '../../../modules/nf-core/tabix/bgzip'
+include { HIFIASM                            } from '../../../modules/sanger-tol/hifiasm'
+include { HIFIASM as HIFIASM_BIN             } from '../../../modules/sanger-tol/hifiasm'
+include { HTSLIB_BGZIPTABIX as BGZIP_HIFIASM } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow HIFIASM_ASSEMBLY {
     take:
@@ -61,8 +61,14 @@ workflow HIFIASM_ASSEMBLY {
             [key, fasta]
         }
         .transpose()
+        .map { meta, fasta -> [meta, fasta, [], []] }
 
-    BGZIP_HIFIASM(ch_bgzip_input)
+    BGZIP_HIFIASM(
+        ch_bgzip_input,
+        "compress",
+        false,
+        "fa"
+    )
 
     //
     // Logic: combine all hifiasm outputs into a single map for ease of publishing
