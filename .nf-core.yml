@@ -37,6 +37,7 @@ lint:
     - validation.summary.beforeText
     - validation.summary.afterText
     - params.input
+  included_configs: false
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:
