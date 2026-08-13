@@ -6,8 +6,6 @@
   purge: true
   find_mito: true
   hifiasm_arguments: "--primary"
-  mitohifi_reference_species: "Metschnikowia zobellii"
-  mitohifi_mito_genetic_code: 4
 - id: gsMetZobe1.phased
   assembler: "hifiasm"
   long_read_dataset: gsMetZobe1
