@@ -35,10 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issue where MITOHIFI_FINDMITOREFERENCE didn't pull down chloroplast references (by @prototaxites)
 - [#132](https://github.com/sanger-tol/genomeassembly/pull/132) `--busco_lineage_directory` correctly converted to a path (by @prototaxites)
 - [#147](https://github.com/sanger-tol/genomeassembly/pull/147) Correctly apply `params.minimap2_ont_map_mode` parameter (reported by @amytims, fixed by @prototaxites)
-- [#149](https://github.com/sanger-tol/genomeassembly/pull/151) Update nf-core template to 4.0.2 (by @prototaxites).
-  - Note that this update removes the existing Teams and Slack notification functionality. If
-    you were using this functionality, please configure the
-    [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
+- [#162](https://github.com/sanger-tol/genomeassembly/pull/162) Update nf-core template to 4.1.0 (by @prototaxites).
+  - Note that this update removes the existing Teams and Slack notification functionality. If you were using this functionality, please configure the [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
 - [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Add `--opt-out-run-stats` to BUSCO call when running with a local BUSCO mirror to ensure complete offline capacity (bug reported by @cjfields, fix by @prototaxites)
 - [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Fix issue in hashing process where the data type name was hashed instead of the dataset name, resulting in clashing hashes (reported by @amakunin and @TannerMyers, fix by @prototaxites)
 - [#163](https://github.com/sanger-tol/genomeassembly/pull/163) - FastK databases no longer built for Hi-C datasets (by @prototaxites)
