@@ -60,8 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
 | genomescope2            | genomescope2    | 2.0         | 2.1.0             |
 | gfastats                | gfastats        | 1.3.10      | 1.3.11            |
-| gunzip                  | gzip            | <unknown>   | <removed, unused> |
-| htslib/bgziptabix       | bgzip           | -           | 1.2.4             |
+| htslib/bgziptabix       | bgzip           | -           | 1.24              |
 | merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
 | merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
 | pretextmap              | samtools        | 1.17        | 1.23              |
@@ -86,27 +85,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 A lot of parameters have been deprecated, and replaced with fields in the assembly specification samplesheet.
 
-| Parameter                            | Replacement                                  |
-| ------------------------------------ | -------------------------------------------- |
-| `--input`                            | `--genomic_data`, `--assembly_specs`         |
-| `--enable_hic_phasing`               | `phased_assembly` in assembly spec           |
-| `--enable_trio_binning`              | `trio_assembly` in assembly spec             |
-| `--hifiasm_error_correction_options` | `hifiasm_bin_arguments` in assembly spec     |
-| `--hifiasm_assembly_options`         | `hifiasm_arguments` in assembly spec         |
-| `--purging_assemblytypes`            | `purge: true` in assembly spec               |
-| `--purging_purge_middle`             | `purge_middle: true` in assembly spec        |
-| `--purging_cutoffs`                  | `purging_cutoffs` in assembly spec           |
-| `--enable_organelle_assembly`        | `assembler: <oatk,mitohifi> in assembly spec |
-| `--mitohifi_reads_args`              | `mitohifi_arguments` in assembly spec        |
-| `--mitohifi_contigs_args`            | `mitohifi_arguments` in assembly spec        |
-| `--oatk_kmer_size`                   | `oatk_kmer_size` in assembly spec            |
-| `--oatk_coverage`                    | `oatk_coverage_cutoff` in assembly spec      |
-| `--enable_polishing`                 | `polish: true` in assembly spec              |
-| `--polishing_assemblytypes`          | `polish: true` in assembly spec              |
-| `--enable_scaffolding`               | `scaffold: true` in assembly spec            |
-| `--yahs_break_contigs`               | `yahs_arguments` in assembly spec            |
-| `--yahs_resolutions`                 | `yahs_arguments` in assembly spec            |
-| `--yahs_min_contig_length`           | `yahs_arguments` in assembly spec            |
+| Parameter                            | Replacement                                   |
+| ------------------------------------ | --------------------------------------------- |
+| `--input`                            | `--genomic_data`, `--assembly_specs`          |
+| `--enable_hic_phasing`               | `phased_assembly` in assembly spec            |
+| `--enable_trio_binning`              | `trio_assembly` in assembly spec              |
+| `--hifiasm_error_correction_options` | `hifiasm_bin_arguments` in assembly spec      |
+| `--hifiasm_assembly_options`         | `hifiasm_arguments` in assembly spec          |
+| `--purging_assemblytypes`            | `purge: true` in assembly spec                |
+| `--purging_purge_middle`             | `purge_middle: true` in assembly spec         |
+| `--purging_cutoffs`                  | `purging_cutoffs` in assembly spec            |
+| `--enable_organelle_assembly`        | `assembler: <oatk,mitohifi>` in assembly spec |
+| `--mitohifi_reads_args`              | `mitohifi_arguments` in assembly spec         |
+| `--mitohifi_contigs_args`            | `mitohifi_arguments` in assembly spec         |
+| `--oatk_kmer_size`                   | `oatk_kmer_size` in assembly spec             |
+| `--oatk_coverage`                    | `oatk_coverage_cutoff` in assembly spec       |
+| `--enable_polishing`                 | `polish: true` in assembly spec               |
+| `--polishing_assemblytypes`          | `polish: true` in assembly spec               |
+| `--enable_scaffolding`               | `scaffold: true` in assembly spec             |
+| `--yahs_break_contigs`               | `yahs_arguments` in assembly spec             |
+| `--yahs_resolutions`                 | `yahs_arguments` in assembly spec             |
+| `--yahs_min_contig_length`           | `yahs_arguments` in assembly spec             |
 
 ## v0.50.0 - Threadtail - [2025-12-16]
 
