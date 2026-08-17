@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0 - Crimson Goregutter - [2026-08-17]
 
+This is the first stable release of sanger-tol/genomeassembly. This pipeline is now equivalent with the workflows currently used in the Tree of Life Assembly process, and should produce an entirely equivalent assembly given the same input data. Note that at time of release this pipeline is not yet used in production in Tree of Life.
+
+The input schema has been re-designed to allow for a flexible but repeatable specification of a genome assembly from raw data, and the pipeline is tooled to reduce redundant computation where differently specified assemblies share steps, allowing for comparison of multiple genome assemblies where desired.
+
+Future releases will add explicit support for polyploid genome assembly, including both assembly with >2 haplotypes, and polyploid aware phased scaffolding, as well as homology-based scaffolding of haplotypes against the primary haplotype with RagTag. These features will be added as the processes are developed within the Tree of Life programme.
+
+The full changelog is as follows:
+
 ### Added
 
 - [#109](https://github.com/sanger-tol/genomeassembly/pull/109) Split the pipeline inputs into two separate samplesheets (by @prototaxites).
@@ -109,16 +117,11 @@ A lot of parameters have been deprecated, and replaced with fields in the assemb
 
 ## v0.50.0 - Threadtail - [2025-12-16]
 
-This is an interrim development release, tagging all the major changes to the pipeline since the last release, and
-is likely the final release before the release of version 1.0.
+This is an interrim development release, tagging all the major changes to the pipeline since the last release, and is likely the final release before the release of version 1.0.
 
-In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer
-Nextflow standards, while trying to maintain general compatibility with the interface of the previous version, where possible.
-However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written.
+In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer Nextflow standards, while trying to maintain general compatibility with the interface of the previous version, where possible. However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written.
 
-The full 1.0 release will encompass further changes, particularly another overhaul of the input schema such that the data
-input schema is separated from the assembly input schema, allowing multiple assemblies to be parameterised simultaneously
-using specific data resources.
+The full 1.0 release will encompass further changes, particularly another overhaul of the input schema such that the data input schema is separated from the assembly input schema, allowing multiple assemblies to be parameterised simultaneously using specific data resources.
 
 The full changelog is as follows:
 
