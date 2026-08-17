@@ -35,8 +35,8 @@ The pipeline is designed to be very flexible and nearly all stages of the pipeli
 3. (optional) Purges retained haplotigs from the assembly using [purge_dups](https://github.com/dfguan/purge_dups).
 4. (optional) Polishes the combined assembly using Illumina 10X reads with [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes). This feature is retained for re-production of old ToL assemblies and is not well-tested.
 5. (optional) Maps Hi-C reads to each assembly using [bwamem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/), and scaffolds them using these long-range Hi-C interactions with [YaHS](https://github.com/c-zhou/yahs).
-7. Produces numerical statistics for each assembly at each stage of the pipeline using [GFASTATS](https://github.com/vgl-hub/gfastats) (assembly statiscics), [BUSCO](https://busco.ezlab.org/) (single-copy ortholog statistics), and [MERQURY.FK](https://github.com/thegenemyers/MERQURY.FK) (QV and kmer-completeness).
-8. (optional) Assembles organellar genomes (mitochondrion and chloroplast) using the de-novo assembler [oatk](https://github.com/c-zhou/oatk), and the reference-based assembler [MitoHiFi](https://github.com/marcelauliano/MitoHiFi).
+6. Produces numerical statistics for each assembly at each stage of the pipeline using [GFASTATS](https://github.com/vgl-hub/gfastats) (assembly statiscics), [BUSCO](https://busco.ezlab.org/) (single-copy ortholog statistics), and [MERQURY.FK](https://github.com/thegenemyers/MERQURY.FK) (QV and kmer-completeness).
+7. (optional) Assembles organellar genomes (mitochondrion and chloroplast) using the de-novo assembler [oatk](https://github.com/c-zhou/oatk), and the reference-based assembler [MitoHiFi](https://github.com/marcelauliano/MitoHiFi).
 
 ## Usage
 
