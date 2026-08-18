@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "fastx_map_long_reads"
 description: |
   Map reads from a FASTx file to a reference in chunks, outputting the alignments in BAM or PAF format.
@@ -51,12 +51,6 @@ output:
         Channel containing PAF files
         Structure: [ val(meta), path(paf) ]
       pattern: "*.paf"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "pairs_create_contact_maps"
 description: Build contact maps from pairs files using PretextMap, Juicertools, and Cooler
 keywords:
@@ -33,9 +33,19 @@ input:
 
         Structure: [ val(meta), path(sizes) ]
       pattern: "*.{sizes,tsv}"
+  - ch_pretext_snapshot_order_file:
+      type: file
+      description: |
+        Input custom order file - a txt file of new line separated chromosome names.
+
+        Structure: [ val(meta), path(order) ]
+      pattern: "*.{txt}"
   - val_build_pretext:
       type: boolean
       description: Build a PretextMap contact map
+  - val_create_pretext_snapshot:
+      type: boolean
+      description: Create a snapshot of the PretextMap contact map
   - val_build_cooler:
       type: boolean
       description: Build a Cooler contact map
@@ -70,12 +80,6 @@ output:
         Contact map in Juicer format
         Structure: [ val(meta), path(hic) ]
       pattern: "*.hic"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

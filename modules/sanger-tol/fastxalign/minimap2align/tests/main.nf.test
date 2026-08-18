@@ -17,7 +17,7 @@ nextflow_process {
             script "../../pyfastxindex/main.nf"
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id: "test" ],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true)
                 ])
@@ -38,8 +38,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
-                input[1] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi, [] ] }
+                input[1] = channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     []
@@ -58,7 +58,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     bam(process.out.bam.get(0).get(1)).getStatistics(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )
@@ -77,8 +77,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
-                input[1] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi, [] ] }
+                input[1] = channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     []
@@ -97,7 +97,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     bam(process.out.bam.get(0).get(1)).getStatistics(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )
@@ -116,8 +116,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
-                input[1] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi, [] ] }
+                input[1] = channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     []
@@ -154,8 +154,8 @@ nextflow_process {
 
             process {
                 """
-                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi ] }
-                input[1] = Channel.of([
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [ meta, fasta, fxi, [] ] }
+                input[1] = channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     []
@@ -176,6 +176,59 @@ nextflow_process {
             )
         }
 
+    }
+
+    test("Undibacterium_unclassified - fasta - bam out - with pg_lines") {
+
+        when {
+
+            params {
+                minimap2_args      = "-x map-hifi"
+                samtools_view_args = ""
+                samtools_sort_args = "--write-index -l1"
+            }
+
+            process {
+                """
+                input[0] = FASTXALIGN_PYFASTXINDEX.out.index.map { meta, fasta, fxi, n_reads -> [
+                    meta, fasta, fxi,
+                    ['@PG\\\\tID:samtools\\\\tPN:samtools\\\\tVN:1.21\\\\tCL:samtools view -F 0x200 -o filtered.cram input.cram']
+                ] }
+                input[1] = channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                    []
+                ])
+                input[2] = channel.of([
+                    0,
+                    [0, 500],
+                ])
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            def strip_absolute_path_lines = { text ->
+                def lines = text?.getClass()?.isArray()
+                    ? text.toList()
+                    : (text instanceof Collection ? text : (text?.toString()?.readLines() ?: []))
+                lines
+                    .collect { line ->
+                        line.toString()
+                            .replaceAll(/\bUR:\/(?:[^\/\s]+\/)*([^\/\s]+)/, 'UR:$1')
+                    }
+            }
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    bam(process.out.bam.get(0).get(1)).getStatistics(),
+                    process.out.bam.collect { meta, f -> [(new File(f.toString()).getName()): strip_absolute_path_lines(bam(f.toString()).getHeader())] }.collectEntries { it }.sort(),
+                    process.out.findAll { key, val -> key.startsWith("versions")}
+                    ).match()
+                }
+            )
+        }
     }
 
 }

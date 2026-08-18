@@ -33,7 +33,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ],
                 "reference": [
                     [
@@ -65,16 +69,20 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-03T16:15:43.575281665"
+        "timestamp": "2026-02-11T14:58:45.856250008"
     },
     "undibacterium unclassified - stub": {
         "content": [
@@ -110,7 +118,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ],
                 "reference": [
                     [
@@ -142,15 +154,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,24bd8f4ee059041a932b4d70bbcfb43a"
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-03T16:16:14.053862305"
+        "timestamp": "2026-02-11T14:58:59.958299122"
     }
 }

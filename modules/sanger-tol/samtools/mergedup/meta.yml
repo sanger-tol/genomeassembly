@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "samtools_mergedup"
-description: Merge multiple fixmated, sorted SAM/BAM/CRAM and then mark duplicates
+description: Merge multiple fixmated, sorted SAM/BAM/CRAM and then mark
+  duplicates
 keywords:
   - merge
   - markduplicates
@@ -18,7 +19,8 @@ tools:
       homepage: http://www.htslib.org/
       documentation: http://www.htslib.org/doc/samtools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:samtools
   - samtools_markdup:
       description: |
@@ -28,7 +30,8 @@ tools:
       homepage: http://www.htslib.org/
       documentation: http://www.htslib.org/doc/samtools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       args_id: "$args2"
       identifier: biotools:samtools
 input:
@@ -37,10 +40,15 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test', single_end:false ]
-    - input:
+    - input_files:
         type: file
         description: BAM/CRAM/SAM files
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - index_files:
+        type: file
+        description: BAM/CRAM/SAM index
+        pattern: "*.{bai,csi,crai}"
         ontologies: []
   - - meta2:
         type: map
@@ -52,25 +60,16 @@ input:
         description: Reference genome file
         pattern: "*.{fasta,fa,fna}"
         ontologies: []
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - fai:
         type: file
-        description: Index of the reference file the CRAM was created with (optional)
+        description: Index of the reference file the CRAM was created with
+          (optional)
         pattern: "*.fai"
         ontologies: []
-  - - meta4:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - gzi:
         type: file
-        description: Index of the compressed reference file the CRAM was created with
-          (optional)
+        description: Index of the compressed reference file the CRAM was created
+          with (optional)
         pattern: "*.gzi"
         ontologies: []
 output:
@@ -96,27 +95,16 @@ output:
           description: Sorted and duplicate marked CRAM file
           pattern: "*.cram"
           ontologies: []
-  csi:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.csi":
+      - "*.{csi,crai}":
           type: file
-          description: Sorted and duplicate marked BAM index file
-          pattern: "*.csi"
-          ontologies: []
-  crai:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.crai":
-          type: file
-          description: Sorted and duplicate marked CRAM index file
-          pattern: "*.crai"
+          description: Index file for the sorted and duplicate marked BAM
+          pattern: "*.{csi,crai}"
           ontologies: []
   metrics:
     - - meta:
@@ -129,13 +117,27 @@ output:
           description: Duplicate metrics file
           pattern: "*.metrics"
           ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

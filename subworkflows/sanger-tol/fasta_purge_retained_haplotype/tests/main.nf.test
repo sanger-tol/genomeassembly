@@ -15,7 +15,7 @@ nextflow_workflow {
     tag "subworkflows/../../modules/nf-core/purgedups/histplot"
     tag "subworkflows/../../modules/nf-core/purgedups/purgedups"
     tag "subworkflows/../../modules/nf-core/purgedups/calcuts"
-    tag "subworkflows/../../modules/nf-core/cat/cat"
+    tag "subworkflows/../../modules/nf-core/find/concatenate"
 
     config "./nextflow.config"
 
@@ -24,7 +24,7 @@ nextflow_workflow {
         nfcoreInstall(
             "${launchDir}/library/",
             [
-                "cat/cat",
+                "find/concatenate",
                 "minimap2/align",
                 "minimap2/index",
                 "samtools/index",
@@ -58,8 +58,8 @@ nextflow_workflow {
                 input[0] = Channel.of(
                     [
                         [ id: 'test' ], // meta map
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap2.p_ctg.fa.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap2.p_ctg.fa', checkIfExists: true),
                     ]
                 )
                 input[1] = Channel.of(
@@ -76,9 +76,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert snapshot(
-                    workflow.out
-                ).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ["purgedups_log"])).match() }
             )
         }
 
@@ -104,7 +102,7 @@ nextflow_workflow {
                 input[0] = Channel.of(
                     [
                         [ id: 'test' ], // meta map
-                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.bp.hap1.p_ctg.fa', checkIfExists: true),
                         [],
                     ]
                 )
@@ -122,9 +120,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert snapshot(
-                    workflow.out
-                ).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ["purgedups_log"])).match() }
             )
         }
 

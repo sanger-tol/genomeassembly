@@ -211,7 +211,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f"
+                    [
+                        "CRAMALIGN_GENCRAMCHUNKS",
+                        "cramchunks",
+                        "1.1.0"
+                    ]
                 ],
                 "cram_slices": [
                     [
@@ -421,15 +425,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,be4d3d855b43aa0e9e99f54298de977f"
+                "versions_cramchunks": [
+                    [
+                        "CRAMALIGN_GENCRAMCHUNKS",
+                        "cramchunks",
+                        "1.1.0"
+                    ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-11T13:39:33.663991"
+        "timestamp": "2026-02-09T16:07:03.896003"
     }
 }

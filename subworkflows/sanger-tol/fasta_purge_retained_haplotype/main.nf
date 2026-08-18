@@ -3,16 +3,16 @@ Adapted from
 https://github.com/NBISweden/Earth-Biogenome-Project-pilot/blob/5ec2002638055bb8396857a8ee418bf86188fc59/subworkflows/purge_dups/main.nf
 */
 
-include { CAT_CAT as CONCATENATE_HAPLOTYPES         } from '../../../modules/nf-core/cat/cat'
-include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY } from '../../../modules/nf-core/minimap2/align'
-include { PURGEDUPS_CALCUTS                         } from '../../../modules/nf-core/purgedups/calcuts'
-include { PURGEDUPS_GETSEQS                         } from '../../../modules/nf-core/purgedups/getseqs'
-include { PURGEDUPS_HISTPLOT                        } from '../../../modules/nf-core/purgedups/histplot'
-include { PURGEDUPS_PBCSTAT                         } from '../../../modules/nf-core/purgedups/pbcstat'
-include { PURGEDUPS_PURGEDUPS                       } from '../../../modules/nf-core/purgedups/purgedups'
-include { PURGEDUPS_SPLITFA                         } from '../../../modules/nf-core/purgedups/splitfa'
+include { FIND_CONCATENATE as CONCATENATE_HAPLOTYPES } from '../../../modules/nf-core/find/concatenate'
+include { MINIMAP2_ALIGN as MINIMAP2_ALIGN_ASSEMBLY  } from '../../../modules/nf-core/minimap2/align'
+include { PURGEDUPS_CALCUTS                          } from '../../../modules/nf-core/purgedups/calcuts'
+include { PURGEDUPS_GETSEQS                          } from '../../../modules/nf-core/purgedups/getseqs'
+include { PURGEDUPS_HISTPLOT                         } from '../../../modules/nf-core/purgedups/histplot'
+include { PURGEDUPS_PBCSTAT                          } from '../../../modules/nf-core/purgedups/pbcstat'
+include { PURGEDUPS_PURGEDUPS                        } from '../../../modules/nf-core/purgedups/purgedups'
+include { PURGEDUPS_SPLITFA                          } from '../../../modules/nf-core/purgedups/splitfa'
 
-include { FASTX_MAP_LONG_READS                      } from '../fastx_map_long_reads/main'
+include { FASTX_MAP_LONG_READS                       } from '../fastx_map_long_reads/main'
 
 workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
 
@@ -22,7 +22,15 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     val_fastx_reads_per_chunk // integer: number of reads per chunk to map
 
     main:
-    ch_versions = Channel.empty()
+    //
+    // Logic: validate that input assemblies are unzipped
+    //
+    ch_assemblies
+        .subscribe { _meta, hap1, hap2 ->
+            if (hap1.getExtension() == "gz" || (hap2 && hap2.getExtension() == "gz")) {
+                error("Error: Input assemblies to FASTA_PURGE_RETAINED_HAPLOTYPE must be unzipped!")
+            }
+        }
 
     //
     // Logic: split assemblies into primary and alternate
@@ -40,21 +48,19 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         ch_assemblies_split.primary,
         ch_long_reads,
         val_fastx_reads_per_chunk,
-        false
+        false,
+        channel.empty()
     )
-    ch_versions = ch_versions.mix(FASTX_MAP_LONG_READS.out.versions)
 
     //
     // Module: Create read depth histogram
     //
     PURGEDUPS_PBCSTAT(FASTX_MAP_LONG_READS.out.paf)
-    ch_versions = ch_versions.mix(PURGEDUPS_PBCSTAT.out.versions)
 
     //
     // Module: Generate cutoffs based on histogram and kmer coverage
     //
     PURGEDUPS_CALCUTS(PURGEDUPS_PBCSTAT.out.stat)
-    ch_versions = ch_versions.mix(PURGEDUPS_CALCUTS.out.versions)
 
     //
     // Module: Plot purge_dups histogram with cutoffs
@@ -63,13 +69,11 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         .combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
 
     PURGEDUPS_HISTPLOT(ch_purgedups_histplot_input)
-    ch_versions = ch_versions.mix(PURGEDUPS_HISTPLOT.out.versions)
 
     //
     // Module: Split assembly
     //
     PURGEDUPS_SPLITFA(ch_assemblies_split.primary)
-    ch_versions = ch_versions.mix(PURGEDUPS_SPLITFA.out.versions)
 
     //
     // MODULE: PEFORM SELF ALIGNMENT
@@ -82,7 +86,6 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         false,     // cigar in paf file
         false      // cigar in bam file
     )
-    ch_versions = ch_versions.mix(MINIMAP2_ALIGN_ASSEMBLY.out.versions)
 
     //
     // Module: Purge haplotigs from primary assembly
@@ -92,7 +95,6 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         .combine(MINIMAP2_ALIGN_ASSEMBLY.out.paf, by: 0)
 
     PURGEDUPS_PURGEDUPS(ch_purgedups_input)
-    ch_versions = ch_versions.mix(PURGEDUPS_PURGEDUPS.out.versions)
 
     //
     // Module: Generate the primary and alternative contigs
@@ -101,7 +103,6 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         .combine(PURGEDUPS_PURGEDUPS.out.bed, by: 0)
 
     PURGEDUPS_GETSEQS(ch_getseqs_input)
-    ch_versions = ch_versions.mix(PURGEDUPS_GETSEQS.out.versions)
 
     //
     // Module: join the alternate assembly to the purged haplotigs
@@ -124,7 +125,6 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //         into the alternate assembly
     //
     CONCATENATE_HAPLOTYPES(ch_alt_split.concatenate)
-    ch_versions = ch_versions.mix(CONCATENATE_HAPLOTYPES.out.versions)
 
     //
     // Logic: mix the concatenated alts and as-is alts back together
@@ -144,5 +144,4 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     purgedups_bed              = PURGEDUPS_PURGEDUPS.out.bed
     purgedups_log              = PURGEDUPS_PURGEDUPS.out.log
     primary_reads_paf          = FASTX_MAP_LONG_READS.out.paf
-    versions                   = ch_versions
 }

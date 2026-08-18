@@ -7,16 +7,16 @@ include { PRETEXTSNAPSHOT                            } from '../../../modules/nf
 
 workflow PAIRS_CREATE_CONTACT_MAPS {
     take:
-    ch_pairs          // [meta, pairs]
-    ch_chrom_sizes    // [meta, sizes]
-    val_build_pretext // bool: build pretext map
-    val_build_cooler  // bool: build cooler
-    val_build_juicer  // bool: build juicer
-    val_cool_bin      // val: cooler cload parameter
+    ch_pairs                        // [meta, pairs]
+    ch_chrom_sizes                  // [meta, sizes]
+    ch_pretext_snapshot_order_file  // [meta, order]
+    val_build_pretext               // bool: build pretext map
+    val_create_pretext_snapshot     // bool: build snapshot
+    val_build_cooler                // bool: build cooler
+    val_build_juicer                // bool: build juicer
+    val_cool_bin                    // val: cooler cload parameter
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Module: Build PretextMap
     //
@@ -24,13 +24,21 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         ch_pairs.filter { val_build_pretext }, // Pairs file
         [[], [], []]
     )
-    ch_versions = ch_versions.mix(PRETEXTMAP.out.versions)
 
     //
     // Module: Make a PNG of the PretextMap for fast viz
     //
-    PRETEXTSNAPSHOT(PRETEXTMAP.out.pretext)
-    ch_versions = ch_versions.mix(PRETEXTSNAPSHOT.out.versions)
+    ch_snapshot_input = PRETEXTMAP.out.pretext
+        .join(ch_pretext_snapshot_order_file, remainder: true, by: 0)
+        .map { meta, pretext, order ->
+            tuple(meta, pretext, order ?: [])
+        }
+        .filter { _meta, pretext, _order ->  val_create_pretext_snapshot && pretext }
+
+
+    PRETEXTSNAPSHOT(
+        ch_snapshot_input
+    )
 
     //
     // Module: Generate a multi-resolution cooler file by coarsening
@@ -49,13 +57,11 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         "pairs",
         val_cool_bin
     )
-    ch_versions = ch_versions.mix(COOLER_CLOAD.out.versions)
 
     //
     // Module: Zoom cool to mcool
     //
     COOLER_ZOOMIFY(COOLER_CLOAD.out.cool)
-    ch_versions = ch_versions.mix(COOLER_ZOOMIFY.out.versions)
 
     //
     // Module: process .pairs file to remove the chromsize lines as juicer_pre
@@ -74,7 +80,6 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         ch_pairs_remove_chromsizes_awk,
         false
     )
-    ch_versions = ch_versions.mix(GAWK_PROCESS_PAIRS_FILE.out.versions)
 
     //
     // Module: Generate juicer .hic map
@@ -90,12 +95,10 @@ workflow PAIRS_CREATE_CONTACT_MAPS {
         ch_juicertools_pre_input.pairs,
         ch_juicertools_pre_input.sizes
     )
-    ch_versions = ch_versions.mix(JUICERTOOLS_PRE.out.versions)
 
     emit:
     pretext     = PRETEXTMAP.out.pretext
     pretext_png = PRETEXTSNAPSHOT.out.image
     cool        = COOLER_ZOOMIFY.out.mcool
     hic         = JUICERTOOLS_PRE.out.hic
-    versions    = ch_versions
 }

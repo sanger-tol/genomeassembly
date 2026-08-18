@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/refs/heads/main/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "genome_statistics"
 description: |
   Evaluate a number of standard metrics for a genome assembly, including
@@ -25,36 +25,23 @@ input:
 
         Structure: [ val(meta), path(asm1), path(asm2) ]
       pattern: "*.{fa,fa.gz}"
-  - ch_reads_fastk:
+  - ch_fastk:
       type: file
       description: |
         A channel containing FastK databases built from reads to compare the assemblies
-        against in MerquryFK.
+        against in MerquryFK, and optionally with maternal and paternal FastK haptaps from
+        MerquryFK's hapmaker tool.
 
-        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
+        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs), path(mat_ktabs), path(pat_ktabs) ]
       pattern: "*.{.hist,.ktab}"
-  - ch_mat_fastk:
-      type: file
-      description: |
-        A channel containing a FastK database from MerquryFk/hapmaper containing maternal
-        kmers.
-
-        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
-      pattern: "*.{.hist,.ktab}"
-  - ch_pat_fastk:
-      type: file
-      description: |
-        A channel containing a FastK database from MerquryFk/hapmaper containing paternal
-        kmers.
-
-        Structure: [ val(meta), path(fastk_hist), path(fastk_ktabs) ]
-      pattern: "*.{.hist,.ktab}"
-  - val_busco_lineage:
+  - ch_busco_lineage:
       type: string
       description: |
         The BUSCO lineage to use when assessing genome completeness with BUSCO.
         Either the name of a lineage (e.g. "lepidoptera_odb12") or one of
         "auto", "auto_euk", "auto_prok" to enable automatic lineage selection.
+
+        Structure: [ val(meta), string: busco_lineage ]
   - val_busco_lineage_directory:
       type: file
       description: |
@@ -109,12 +96,6 @@ output:
 
         Structure: [ val(meta), path(image) ]
       pattern: "*.{png,pdf}"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@prototaxites"
 maintainers:

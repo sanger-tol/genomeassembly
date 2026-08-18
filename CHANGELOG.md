@@ -3,18 +3,125 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0 - Crimson Goregutter - [2026-08-17]
+
+This is the first stable release of sanger-tol/genomeassembly. This pipeline is now equivalent with the workflows currently used in the Tree of Life Assembly process, and should produce an entirely equivalent assembly given the same input data. Note that at time of release this pipeline is not yet used in production in Tree of Life.
+
+The input schema has been re-designed to allow for a flexible but repeatable specification of a genome assembly from raw data, and the pipeline is tooled to reduce redundant computation where differently specified assemblies share steps, allowing for comparison of multiple genome assemblies where desired.
+
+Future releases will add explicit support for polyploid genome assembly, including both assembly with >2 haplotypes, and polyploid aware phased scaffolding, as well as homology-based scaffolding of haplotypes against the primary haplotype with RagTag. These features will be added as the processes are developed within the Tree of Life programme.
+
+The full changelog is as follows:
+
+### Added
+
+- [#109](https://github.com/sanger-tol/genomeassembly/pull/109) Split the pipeline inputs into two separate samplesheets (by @prototaxites).
+  - `--genomic_data` describes the specific datasets available to produce an assembly, including the sample name, sequencing platform, path to the sequencing data, and optional paths to FastK databases built from the reads.
+  - `--assembly_specs` describes the assemblies to build as a function of the provided datasets, including parameters for assembly at different stages, and the choice of genome assembler (currently hifiasm for nuclear genome assembly, or oatk and mitohifi for organellar genome assembly) .
+  - For nuclear assemblies, each assembly is split into stages (overlap graph construction, raw assembly, purging, polishing, and scaffolding). The inputs for each stage (including raw data, previous assembly, and params) are hashed and deduplicated, so that when assemblies share the same stage the computation is only executed once. Thus, two identical assembly specifications in the input sheet would only result in one set of genome assemblies being processed, but published twice, and two assemblies that differ only in scaffolding parameters would result in a single computation running until branching into two at the scaffolding stage.
+  - For organellar assemblies, available assemblers are oatk (mitochondrial and plastid genomes) and mitohifi (mitochondrial genomes) and use the same staging logic, although they presently only have a single stage. These are also de-duplicated prior to running.
+  - [#124](https://github.com/sanger-tol/genomeassembly/pull/124) Update the documentation to reflect the new input types.
+- [#119](https://github.com/sanger-tol/genomeassembly/pull/119) Add index fixes to the outputs for each assembly, an overall index describing the data, params and tool versions used, and one for each stage within an assembly, describing the same elements but only those used thus far (by @prototaxites)
+- [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Add comprehensive local testing with nf-test with new test datasets. Three new test datasets are available (by @prototaxites)
+  - icAdaBipu1, the two-spotted ladybird, for testing pri/alt assembly and phased assembly
+  - aBomVar4/1/2, the yellow-bellied toad, for testing trio assembly
+  - dhQueRobu3, the pedunculate oak, for testing ONT assembly as well as Pacbio+UL ONT assembly, and plastid assembly
+- [#139](https://github.com/sanger-tol/genomeassembly/pull/139) Add a pipeline logo and metro map! (by @prototaxites)
+- [#140](https://github.com/sanger-tol/genomeassembly/pull/140) Use the new secrets functionality of the `nf-core/setupnextflow` GitHub action in CI (by @prototaxites)
+- [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Allow specification of user-provided reference files for MitoHiFi (by @prototaxites)
+  - adds the following specification YAML entries: `mitohifi_mito_reference_fa`, `mitohifi_mito_reference_gb`, `mitohifi_plastid_reference_fa`, `mitohifi_plastid_reference_gb`
+- [#141](https://github.com/sanger-tol/genomeassembly/pull/141) Fix issue with `mitohifi_arguments` not being correctly applied (by @prototaxites)
+- [#160](https://github.com/sanger-tol/genomeassembly/pull/160) Add `--save_genomescope2_outputs` parameter flag to save the model outputs from GenomeScope2. It is disabled by default (by @prototaxites)
+- [#164](https://github.com/sanger-tol/genomeassembly/pull/164) Add the parameters `--build_pretext_map`, `--build_cooler_map`, `--build_juicer_map` to control which contact maps are built (by @prototaxites)
+
+### Fixed
+
+- [#110](https://github.com/sanger-tol/genomeassembly/issues/110) Fixed issue with minimap2 mapping settings not being correctly applied at the index building stage (reported by @muffato, fixed by @prototaxites)
+- [#115](https://github.com/sanger-tol/genomeassembly/pull/115) Pipeline now conforms to Nextflow strict syntax (by @prototaxites)
+- [#130](https://github.com/sanger-tol/genomeassembly/pull/130) Fixed issue with BUSCO where bbtools sometimes ran out of memory, causing BUSCO failure (by @prototaxites)
+- [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issues with trio assembly causing pipeline failures due to lack of testing (by @prototaxites)
+- [#132](https://github.com/sanger-tol/genomeassembly/pull/132) Fix issue where MITOHIFI_FINDMITOREFERENCE didn't pull down chloroplast references (by @prototaxites)
+- [#132](https://github.com/sanger-tol/genomeassembly/pull/132) `--busco_lineage_directory` correctly converted to a path (by @prototaxites)
+- [#147](https://github.com/sanger-tol/genomeassembly/pull/147) Correctly apply `params.minimap2_ont_map_mode` parameter (reported by @amytims, fixed by @prototaxites)
+- [#162](https://github.com/sanger-tol/genomeassembly/pull/162) Update nf-core template to 4.1.0 (by @prototaxites).
+  - Note that this update removes the existing Teams and Slack notification functionality. If you were using this functionality, please configure the [nf-slack](https://github.com/seqeralabs/nf-slack) or [nf-teams](https://github.com/nvnieuwk/nf-teams) Nextflow plugins.
+- [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Add `--opt-out-run-stats` to BUSCO call when running with a local BUSCO mirror to ensure complete offline capacity (bug reported by @cjfields, fix by @prototaxites)
+- [#159](https://github.com/sanger-tol/genomeassembly/pull/159) - Fix issue in hashing process where the data type name was hashed instead of the dataset name, resulting in clashing hashes (reported by @amakunin and @TannerMyers, fix by @prototaxites)
+- [#163](https://github.com/sanger-tol/genomeassembly/pull/163) - FastK databases no longer built for Hi-C datasets (by @prototaxites)
+
+### Dependencies
+
+| Module                  | Tool            | Old version | New version       |
+| ----------------------- | --------------- | ----------- | ----------------- |
+| bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
+| bcftools/consensus      | bcftools        | 1.21        | 1.23.1            |
+| bcftools/index          | bcftools        | 1.21        | 1.23.1            |
+| bcftools/norm           | bcftools        | 1.21        | 1.23.1            |
+| bcftools/sort           | bcftools        | 1.21        | 1.23.1            |
+| bcftools/view           | bcftools        | 1.21        | 1.23.1            |
+| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
+| busco/busco             | busco           | 6.0.0       | 6.1.0             |
+| fastk/fastk             | fastk           | 1.1.0       | 1.2               |
+| fastk/histex            | fastk           | 1.1.0       | 1.2               |
+| freebayes               | freebayes       | 1.3.6       | 1.3.10            |
+| gawk                    | gawk            | 5.3.0       | 5.3.1             |
+| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
+| gfastats                | gfastats        | 1.3.10      | 1.3.11            |
+| htslib/bgziptabix       | bgzip           | -           | 1.24              |
+| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
+| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
+| pretextmap              | samtools        | 1.17        | 1.23              |
+| pretextmap              | pretextmap      | 0.1.9       | 0.2.3             |
+| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5             |
+| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
+| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
+| samtools/faidx          | samtools        | 1.22.1      | 1.24              |
+| samtools/flagstat       | samtools        | 1.22.1      | 1.24              |
+| samtools/idxstats       | samtools        | 1.22.1      | 1.24              |
+| samtools/index          | samtools        | 1.22.1      | 1.24              |
+| samtools/merge          | samtools        | 1.22.1      | 1.24              |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1            |
+| samtools/splitheader    | samtools        | 1.22.1      | 1.24              |
+| samtools/stats          | samtools        | 1.22.1      | 1.24              |
+| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0            |
+| tabix/bgzip             | bgzip           | 1.21.0      | -                 |
+| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
+
+### Deprecated
+
+A lot of parameters have been deprecated, and replaced with fields in the assembly specification samplesheet.
+
+| Parameter                            | Replacement                                   |
+| ------------------------------------ | --------------------------------------------- |
+| `--input`                            | `--genomic_data`, `--assembly_specs`          |
+| `--enable_hic_phasing`               | `phased_assembly` in assembly spec            |
+| `--enable_trio_binning`              | `trio_assembly` in assembly spec              |
+| `--hifiasm_error_correction_options` | `hifiasm_bin_arguments` in assembly spec      |
+| `--hifiasm_assembly_options`         | `hifiasm_arguments` in assembly spec          |
+| `--purging_assemblytypes`            | `purge: true` in assembly spec                |
+| `--purging_purge_middle`             | `purge_middle: true` in assembly spec         |
+| `--purging_cutoffs`                  | `purging_cutoffs` in assembly spec            |
+| `--enable_organelle_assembly`        | `assembler: <oatk,mitohifi>` in assembly spec |
+| `--mitohifi_reads_args`              | `mitohifi_arguments` in assembly spec         |
+| `--mitohifi_contigs_args`            | `mitohifi_arguments` in assembly spec         |
+| `--oatk_kmer_size`                   | `oatk_kmer_size` in assembly spec             |
+| `--oatk_coverage`                    | `oatk_coverage_cutoff` in assembly spec       |
+| `--enable_polishing`                 | `polish: true` in assembly spec               |
+| `--polishing_assemblytypes`          | `polish: true` in assembly spec               |
+| `--enable_scaffolding`               | `scaffold: true` in assembly spec             |
+| `--yahs_break_contigs`               | `yahs_arguments` in assembly spec             |
+| `--yahs_resolutions`                 | `yahs_arguments` in assembly spec             |
+| `--yahs_min_contig_length`           | `yahs_arguments` in assembly spec             |
+
 ## v0.50.0 - Threadtail - [2025-12-16]
 
-This is an interrim development release, tagging all the major changes to the pipeline since the last release, and
-is likely the final release before the release of version 1.0.
+This is an interrim development release, tagging all the major changes to the pipeline since the last release, and is likely the final release before the release of version 1.0.
 
-In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer
-Nextflow standards, while trying to maintain general compatibility with the interface of the previous version, where possible.
-However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written.
+In this release, the main codebase of the pipeline has been heavily overhauled to be more stable, and to meet newer Nextflow standards, while trying to maintain general compatibility with the interface of the previous version, where possible. However, note that the input YAML format has been changed heavily, so old YAML input files will need to be re-written.
 
-The full 1.0 release will encompass further changes, particularly another overhaul of the input schema such that the data
-input schema is separated from the assembly input schema, allowing multiple assemblies to be parameterised simultaneously
-using specific data resources.
+The full 1.0 release will encompass further changes, particularly another overhaul of the input schema such that the data input schema is separated from the assembly input schema, allowing multiple assemblies to be parameterised simultaneously using specific data resources.
 
 The full changelog is as follows:
 

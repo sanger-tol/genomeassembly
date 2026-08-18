@@ -21,15 +21,21 @@
                     "summary.csv:md5,4000ecce0ea8045900e4cbca672978e2"
                 ]
             ],
-            [
-                "versions.yml:md5,186ec9fcdb274b3818386375b6621178"
-            ]
+            {
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_ALIGN",
+                        "longranger",
+                        "2.2.2"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-06T09:33:02.269416272"
+        "timestamp": "2026-02-11T15:13:41.60691362"
     },
     "undibacterium unclassified - stub": {
         "content": [
@@ -59,7 +65,11 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,186ec9fcdb274b3818386375b6621178"
+                    [
+                        "LONGRANGER_ALIGN",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ],
                 "bai": [
                     [
@@ -85,15 +95,19 @@
                         "summary.csv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,186ec9fcdb274b3818386375b6621178"
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_ALIGN",
+                        "longranger",
+                        "2.2.2"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-06T10:54:45.506397294"
+        "timestamp": "2026-02-11T15:14:18.343351268"
     }
 }

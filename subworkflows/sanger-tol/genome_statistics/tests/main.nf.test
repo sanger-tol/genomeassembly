@@ -34,23 +34,21 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id: "test"],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
                 ])
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = []
+                input[1] = channel.empty()
+                input[2] = channel.empty()
+                input[3] = []
                 """
             }
         }
 
         then {
             assertAll(
-                { assert workflow.success               },
+                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -81,16 +79,14 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id: "test"],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
                 ])
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = "bacteria_odb12"
-                input[5] = []
+                input[1] = channel.empty()
+                input[2] = channel.of([[id: "test"], "bacteria_odb12"])
+                input[3] = []
                 """
             }
         }
@@ -98,23 +94,23 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.busco_summary_txt
-                    .collect { meta, txt -> path(txt).text.contains("Complete BUSCOs") }
+                { assert workflow.out.busco_summary_txt.get(0).get(1)
+                    .collect { txt -> path(txt).text.contains("Complete BUSCOs") }
                     .every()
                 },
-                { assert workflow.out.busco_summary_json
-                    .collect { meta, json -> path(json).text.contains("one_line_summary") }
+                { assert workflow.out.busco_summary_json.get(0).get(1)
+                    .collect { json -> path(json).text.contains("one_line_summary") }
                     .every()
                 },
                 { assert snapshot(
-                    workflow.out.asmstats,
-                    workflow.out.gfastats,
-                    workflow.out.merqury_qv,
-                    workflow.out.merqury_completeness,
-                    workflow.out.merqury_phased_stats,
-                    workflow.out.merqury_images.collect { meta, image -> [meta, file(image).name] },
-                    workflow.out.versions
-                    ).match()
+                    sanitizeOutput(workflow.out, unstableKeys:[
+                        "busco",
+                        "busco_batch_summary",
+                        "busco_summary_txt",
+                        "busco_summary_json",
+                        "busco_log",
+                        "busco_directory"
+                    ])).match()
                 }
             )
         }
@@ -163,16 +159,15 @@ nextflow_workflow {
 
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id: "test"],
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
                 ])
                 input[1] = FASTK_FASTK.out.hist.join(FASTK_FASTK.out.ktab)
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = "bacteria_odb12"
-                input[5] = []
+                    .map { meta, hist, ktab -> [ meta, hist, ktab, [], [] ] }
+                input[2] = channel.of([[id: "test"], "bacteria_odb12"])
+                input[3] = []
                 """
             }
         }
@@ -180,23 +175,25 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.busco_summary_txt
-                    .collect { meta, txt -> path(txt).text.contains("Complete BUSCOs") }
+                { assert workflow.out.busco_summary_txt.get(0).get(1)
+                    .collect { txt -> path(txt).text.contains("Complete BUSCOs") }
                     .every()
                 },
-                { assert workflow.out.busco_summary_json
-                    .collect { meta, json -> path(json).text.contains("one_line_summary") }
+                { assert workflow.out.busco_summary_json.get(0).get(1)
+                    .collect { json -> path(json).text.contains("one_line_summary") }
                     .every()
                 },
-                { assert snapshot(
-                    workflow.out.asmstats,
-                    workflow.out.gfastats,
-                    workflow.out.merqury_qv,
-                    workflow.out.merqury_completeness,
-                    workflow.out.merqury_phased_stats,
-                    workflow.out.merqury_images.collect { meta, image -> [meta, file(image).name] },
-                    workflow.out.versions
-                    ).match()
+                { assert snapshot(sanitizeOutput(workflow.out,
+                    unstableKeys:[
+                        "busco",
+                        "busco_batch_summary",
+                        "busco_summary_txt",
+                        "busco_summary_json",
+                        "busco_log",
+                        "busco_directory",
+                        "merqury",
+                        "merqury_images"
+                    ])).match()
                 }
             )
         }

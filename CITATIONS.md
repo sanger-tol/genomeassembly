@@ -10,58 +10,72 @@
 
 ## Pipeline tools
 
-- [Hifiasm](https://hifiasm.readthedocs.io/en/latest/)
+- [Bandage](https://github.com/rrwick/Bandage)
 
-  > Cheng, H., Concepcion, G.T., Feng, X. et al. Haplotype-resolved de novo assembly using phased assembly graphs with hifiasm. Nat Methods 18, 170–175 (2021). doi:
-  > https://doi.org/10.1038/s41592-020-01056-5
-
-- [purge_dups](https://pubmed.ncbi.nlm.nih.gov/31971576/)
-
-  > Guan D, McCarthy SA, Wood J, Howe K, Wang Y, Durbin R. Identifying and removing haplotypic duplication in primary genome assemblies. Bioinformatics. 2020 May 1;36(9):2896-2898. doi: https://doi.org/10.1093/bioinformatics/btaa025. PMID: 31971576; PMCID: PMC7203741.
-
-- [Longranger](https://github.com/10XGenomics/longranger)
-
-- [Freebayes](https://arxiv.org/abs/1207.3907)
-
-  > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
-
-- [bwa-mem2](https://ieeexplore.ieee.org/document/8820962)
-
-  > Vasimuddin Md, Sanchit Misra, Heng Li, Srinivas Aluru. Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems. IEEE Parallel and Distributed Processing Symposium (IPDPS), 2019. doi: https://doi.org/10.1109/IPDPS.2019.00041
-
-- [YaHS](https://academic.oup.com/bioinformatics/article/39/1/btac808/6917071)
-
-  > Chenxi Zhou and others, YaHS: yet another Hi-C scaffolding tool, Bioinformatics, Volume 39, Issue 1, January 2023, btac808, doi: https://doi.org/10.1093/bioinformatics/btac808
-
-- [Minimap2](https://pubmed.ncbi.nlm.nih.gov/34623391/)
-
-  > Li H. New strategies to improve minimap2 alignment accuracy. Bioinformatics. 2021 Oct 8;37(23):4572–4. doi: https://doi.org/10.1093/bioinformatics/btab705. Epub ahead of print. PMID: 34623391; PMCID: PMC8652018.
-
-- [Samtools](https://pubmed.ncbi.nlm.nih.gov/33590861/)
-
-  > Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: https://doi.org/10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.
+  > Wick, R.R., Schultz, M.B., Zobel, J., Holt, K.E., 2015. Bandage: interactive visualization of de novo genome assemblies. Bioinformatics 31, 3350–3352. https://doi.org/10.1093/bioinformatics/btv383
 
 - [Bcftools](https://samtools.github.io/bcftools/bcftools.html)
 
   > Danecek P, Bonfield JK, et al. Twelve years of SAMtools and BCFtools. Gigascience (2021) 10(2):giab008 link
-
-- [GATK4](https://gatk.broadinstitute.org/hc/en-us)
-
-  > Van der Auwera GA & O'Connor BD. (2020). Genomics in the Cloud: Using Docker, GATK, and WDL in Terra (1st Edition). O'Reilly Media.
 
 - [Bedtools](https://bedtools.readthedocs.io/en/latest/)
 
   > Quinlan AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics. 2010 Mar 15;26(6):841-2. doi:
   > https://doi.org/10.1093/bioinformatics/btq033. Epub 2010 Jan 28. PMID: 20110278; PMCID: PMC2832824.
 
+- [BUSCO](https://busco.ezlab.org)
+
+  > Mosè Manni, Matthew R Berkeley, Mathieu Seppey, Felipe A Simão, Evgeny M Zdobnov, BUSCO Update: Novel and Streamlined Workflows along with Broader and Deeper Phylogenetic Coverage for Scoring of Eukaryotic, Prokaryotic, and Viral Genomes. Molecular Biology and Evolution, Volume 38, Issue 10, October 2021, Pages 4647–4654
+
+- [bwa-mem2](https://ieeexplore.ieee.org/document/8820962)
+
+  > Vasimuddin Md, Sanchit Misra, Heng Li, Srinivas Aluru. Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems. IEEE Parallel and Distributed Processing Symposium (IPDPS), 2019. doi: https://doi.org/10.1109/IPDPS.2019.00041
+
+- [Cooler](https://github.com/open2c/cooler)
+
+  > Abdennur N, Mirny LA. Cooler: scalable storage for Hi-C data and other genomically labeled arrays. Bioinformatics. 2020 Jan 1;36(1):311-316. doi: https://doi.org/10.1093/bioinformatics/btz540. PMID: 31290943; PMCID: PMC8205516.
+
+- [FastK](https://github.com/thegenemyers/FASTK)
+
+  > Jr, E.W.M., 2026. thegenemyers/FASTK. https://github.com/thegenemyers/FASTK
+
+- [Freebayes](https://arxiv.org/abs/1207.3907)
+
+  > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
+
+- [GATK4](https://gatk.broadinstitute.org/hc/en-us)
+
+  > Van der Auwera GA & O'Connor BD. (2020). Genomics in the Cloud: Using Docker, GATK, and WDL in Terra (1st Edition). O'Reilly Media.
+
+- [Genomescope2](https://github.com/tbenavi1/genomescope2.0)
+
+  > Ranallo-Benavidez, T.R., Jaron, K.S., Schatz, M.C., 2020. GenomeScope 2.0 and Smudgeplot for reference-free profiling of polyploid genomes. Nat Commun 11, 1432. https://doi.org/10.1038/s41467-020-14998-3
+
+- [GFASTATS](https://github.com/vgl-hub/gfastats)
+
+  > Giulio Formenti and others, Gfastats: conversion, evaluation and manipulation of genome sequences using assembly graphs, Bioinformatics, Volume 38, Issue 17, September 2022, Pages 4214–4216, doi: https://doi.org/10.1093/bioinformatics/btac460
+
+- [Hifiasm](https://hifiasm.readthedocs.io/en/latest/)
+
+  > Cheng, H., Concepcion, G.T., Feng, X. et al. Haplotype-resolved de novo assembly using phased assembly graphs with hifiasm. Nat Methods 18, 170–175 (2021). doi:
+  > https://doi.org/10.1038/s41592-020-01056-5
+
 - [Juicer](https://github.com/aidenlab/juicer)
 
   > Durand NC, Shamim MS, Machol I, Rao SS, Huntley MH, Lander ES, Aiden EL. Juicer Provides a One-Click System for Analyzing Loop-Resolution Hi-C Experiments. Cell Syst. 2016 Jul;3(1):95-8. doi: https://doi.org/10.1016/j.cels.2016.07.002. PMID: 27467249; PMCID: PMC5846465.
 
-- [PretextMap](https://github.com/wtsi-hpag/PretextMap)
+- [Longranger](https://github.com/10XGenomics/longranger)
 
-- [Cooler](https://github.com/open2c/cooler)
-  > Abdennur N, Mirny LA. Cooler: scalable storage for Hi-C data and other genomically labeled arrays. Bioinformatics. 2020 Jan 1;36(1):311-316. doi: https://doi.org/10.1093/bioinformatics/btz540. PMID: 31290943; PMCID: PMC8205516.
+  > 10XGenomics/longranger, 2025. https://github.com/10XGenomics/longranger
+
+- [MerquryFK](https://github.com/thegenemyers/MERQURY.FK)
+
+  > Jr, E.W.M., 2026. thegenemyers/MERQURY.FK. https://github.com/thegenemyers/MERQURY.FK
+
+- [Minimap2](https://pubmed.ncbi.nlm.nih.gov/34623391/)
+
+  > Li H. New strategies to improve minimap2 alignment accuracy. Bioinformatics. 2021 Oct 8;37(23):4572–4. doi: https://doi.org/10.1093/bioinformatics/btab705. Epub ahead of print. PMID: 34623391; PMCID: PMC8652018.
+
 - [MitoHiFi](https://github.com/marcelauliano/MitoHiFi)
 
   > MitoHiFi: a python pipeline for mitochondrial genome assembly from PacBio High Fidelity reads Marcela Uliano-Silva, João Gabriel R. N. Ferreira, Ksenia Krasheninnikova, Darwin Tree of Life Consortium, Giulio Formenti, Linelle Abueg, James Torrance, Eugene W. Myers, Richard Durbin, Mark Blaxter, Shane A. McCarthy bioRxiv 2022.12.23.521667; doi: https://doi.org/10.1101/2022.12.23.521667
@@ -74,14 +88,33 @@
 
   > M. Bernt, A. Donath, F. Jühling, F. Externbrink, C. Florentz, G. Fritzsch, J. Pütz, M. Middendorf, P. F. Stadler MITOS: Improved de novo Metazoan Mitochondrial Genome Annotation Molecular Phylogenetics and Evolution 2013, 69(2):313-319.
 
-- [MerquryFK](https://github.com/thegenemyers/MERQURY.FK)
+- [oatk](https://github.com/c-zhou/oatk)
 
-- [BUSCO](https://busco.ezlab.org)
+  > Zhou, C., Brown, M., Blaxter, M., McCarthy, S.A., Durbin, R., Darwin Tree of Life Project Consortium, 2025. Oatk: a de novo assembly tool for complex plant organelle genomes. Genome Biol 26, 235. https://doi.org/10.1186/s13059-025-03676-6
 
-  > Mosè Manni, Matthew R Berkeley, Mathieu Seppey, Felipe A Simão, Evgeny M Zdobnov, BUSCO Update: Novel and Streamlined Workflows along with Broader and Deeper Phylogenetic Coverage for Scoring of Eukaryotic, Prokaryotic, and Viral Genomes. Molecular Biology and Evolution, Volume 38, Issue 10, October 2021, Pages 4647–4654
+- [PretextMap](https://github.com/wtsi-hpag/PretextMap)
 
-- [GFASTATS](https://github.com/vgl-hub/gfastats)
-  > Giulio Formenti and others, Gfastats: conversion, evaluation and manipulation of genome sequences using assembly graphs, Bioinformatics, Volume 38, Issue 17, September 2022, Pages 4214–4216, doi: https://doi.org/10.1093/bioinformatics/btac460
+  > sanger-tol/PretextMap, 2026. https://github.com/sanger-tol/PretextMap
+
+- [purge_dups](https://pubmed.ncbi.nlm.nih.gov/31971576/)
+
+  > Guan D, McCarthy SA, Wood J, Howe K, Wang Y, Durbin R. Identifying and removing haplotypic duplication in primary genome assemblies. Bioinformatics. 2020 May 1;36(9):2896-2898. doi: https://doi.org/10.1093/bioinformatics/btaa025. PMID: 31971576; PMCID: PMC7203741.
+
+- [Samtools](https://pubmed.ncbi.nlm.nih.gov/33590861/)
+
+  > Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: https://doi.org/10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.
+
+- [Seqkit](https://bioinf.shenwei.me/seqkit/)
+
+  > Shen, W., Sipos, B., Zhao, L., 2024. SeqKit2: A Swiss army knife for sequence and alignment processing. iMeta 3, e191. https://doi.org/10.1002/imt2.191
+
+- [YaHS](https://academic.oup.com/bioinformatics/article/39/1/btac808/6917071)
+
+  > Chenxi Zhou and others, YaHS: yet another Hi-C scaffolding tool, Bioinformatics, Volume 39, Issue 1, January 2023, btac808, doi: https://doi.org/10.1093/bioinformatics/btac808
+
+- [Yak](https://github.com/lh3/yak)
+
+  > Li, H., 2026. lh3/yak. https://github.com/lh3/yak
 
 ## Software packaging/containerisation tools
 

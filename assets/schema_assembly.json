@@ -1,0 +1,335 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/test/test/master/assets/schema_input.json",
+    "title": "Test schema for samplesheets",
+    "description": "Schema for the file provided with params.data_input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Unique identifier for an assembly.",
+                "errorMessage": "Unique identifier for an assembly must be provided and contain no spaces.",
+                "pattern": "^\\S+$",
+                "meta": "id"
+            },
+            "assembler": {
+                "type": "string",
+                "description": "Which assembler to use - one of hifiasm, mitohifi or oatk",
+                "enum": ["hifiasm", "mitohifi", "oatk"],
+                "meta": "assembler"
+            },
+            "long_read_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying long reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "long_read_dataset"
+            },
+            "long_read_platform": {
+                "type": "string",
+                "enum": ["pacbio_hifi", "oxford_nanopore"],
+                "description": "Use reads from this sequencing platform as the long reads.",
+                "pattern": "^\\S+$",
+                "meta": "long_read_platform"
+            },
+            "long_read_1n_coverage": {
+                "type": "integer",
+                "description": "Haploid/1n coverage of the target genome in the long read dataset.",
+                "minumum": "1",
+                "meta": "long_read_1n_coverage"
+            },
+            "ultralong_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying ultralong reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "ultralong_dataset"
+            },
+            "ultralong_platform": {
+                "type": "string",
+                "enum": ["oxford_nanopore"],
+                "description": "Use reads from this sequencing platform as the ultralong reads.",
+                "pattern": "^\\S+$",
+                "meta": "ultralong_platform"
+            },
+            "hic_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying Hi-C reads for assembly.",
+                "pattern": "^\\S+$",
+                "meta": "hic_dataset"
+            },
+            "hic_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the Hi-C reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina_hic"],
+                "default": "illumina_hic",
+                "meta": "hic_platform"
+            },
+            "polishing_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads for polishing.",
+                "pattern": "^\\S+$",
+                "meta": "polishing_dataset"
+            },
+            "polishing_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the polishing reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina_10x"],
+                "default": "illumina_10x",
+                "meta": "polishing_platform"
+            },
+            "maternal_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads from the maternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "maternal_dataset"
+            },
+            "maternal_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the maternal reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina", "illumina_10x", "pacbio_hifi", "oxford_nanopore"],
+                "meta": "maternal_platform"
+            },
+            "paternal_dataset": {
+                "type": "string",
+                "description": "A dataset name from the input dataset sheet supplying reads from the paternal genome for trio assembly.",
+                "pattern": "^\\S+$",
+                "meta": "paternal_dataset"
+            },
+            "paternal_platform": {
+                "type": "string",
+                "description": "The sequencing platform to use for the paternal reads",
+                "pattern": "^\\S+$",
+                "enum": ["illumina", "illumina_10x", "pacbio_hifi", "oxford_nanopore"],
+                "meta": "paternal_platform"
+            },
+            "phased_assembly": {
+                "type": "boolean",
+                "description": "Produce a phased Hifiasm assembly with Hi-C data.",
+                "default": false,
+                "meta": "phased_assembly"
+            },
+            "trio_assembly": {
+                "type": "boolean",
+                "description": "Produce a trio-binned Hifiasm assembly with Hi-C data.",
+                "default": false,
+                "meta": "trio_assembly"
+            },
+            "purge": {
+                "type": "boolean",
+                "description": "Purge retained haplotype from this assembly using purge_dups.",
+                "default": false,
+                "meta": "purge"
+            },
+            "polish": {
+                "type": "boolean",
+                "description": "Polish the assembly using Illumina 10X data.",
+                "default": false,
+                "meta": "polish"
+            },
+            "scaffold": {
+                "type": "boolean",
+                "description": "Map Illumina Hi-C reads to the assembly and scaffold.",
+                "default": true,
+                "meta": "scaffold"
+            },
+            "find_mito": {
+                "type": "boolean",
+                "description": "Enable mitochondrial genome assembly/search.",
+                "default": false,
+                "meta": "find_mito"
+            },
+            "find_plastid": {
+                "type": "boolean",
+                "description": "Enable plastid genome assembly.",
+                "default": false,
+                "meta": "find_plastid"
+            },
+            "hifiasm_bin_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to Hifiasm that are included at the time of bin file generation. This typically would include the error correction options.",
+                "meta": "hifiasm_bin_arguments",
+                "default": ""
+            },
+            "hifiasm_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to Hifiasm when processing bin files. The options from hifiasm_bin_arguments are already included at this stage and do not need to be re-specified.",
+                "meta": "hifiasm_arguments",
+                "default": ""
+            },
+            "purging_cutoffs": {
+                "type": "string",
+                "description": "Cutoffs for purging haplotypic duplications. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
+                "pattern": "\\d+,\\d+,\\d+",
+                "meta": "purging_cutoffs",
+                "default": ""
+            },
+            "purge_middle": {
+                "type": "boolean",
+                "description": "If purging is enabled, purge retained haplotypic duplications from within contigs.",
+                "default": false,
+                "meta": "purge_middle"
+            },
+            "yahs_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to YaHS",
+                "meta": "yahs_arguments",
+                "default": ""
+            },
+            "mitohifi_reference_species": {
+                "type": "string",
+                "description": "Binomial name of a taxon to use to find a reference mitochondrial genome.",
+                "meta": "mitohifi_reference_species"
+            },
+            "mitohifi_mito_reference_fa": {
+                "type": "string",
+                "description": "Reference FASTA file of a mitochondrial genome to use for reference-based mitochondrial genome assembly.",
+                "meta": "mitohifi_mito_reference_fa"
+            },
+            "mitohifi_mito_reference_gb": {
+                "type": "string",
+                "description": "Reference GenBank annotation file of a mitochondrial genome to use for reference-based mitochondrial genome assembly.",
+                "meta": "mitohifi_mito_reference_gb"
+            },
+            "mitohifi_mito_genetic_code": {
+                "type": "integer",
+                "description": "Mitochondrial genetic code to use during gene prediction.",
+                "meta": "mitohifi_mito_genetic_code"
+            },
+            "mitohifi_plastid_reference_fa": {
+                "type": "string",
+                "description": "Reference FASTA file of a plastid genome to use for reference-based plastid genome assembly.",
+                "meta": "mitohifi_plastid_reference_fa"
+            },
+            "mitohifi_plastid_reference_gb": {
+                "type": "string",
+                "description": "Reference GenBank annotation file of a plastid genome to use for reference-based plastid genome assembly.",
+                "meta": "mitohifi_plastid_reference_gb"
+            },
+            "mitohifi_plastid_genetic_code": {
+                "type": "integer",
+                "description": "Plastid genetic code to use during gene prediction.",
+                "meta": "mitohifi_plastid_genetic_code",
+                "default": 11
+            },
+            "mitohifi_arguments": {
+                "type": "string",
+                "description": "Extra command-line arguments to supply to MitoHiFi in reads mode.",
+                "meta": "mitohifi_arguments",
+                "default": ""
+            },
+            "oatk_kmer_size": {
+                "type": "integer",
+                "description": "Kmer size for oatk.",
+                "default": 1000,
+                "meta": "oatk_kmer_size"
+            },
+            "oatk_coverage_cutoff": {
+                "type": "integer",
+                "description": "Coverage cutoff for oatk.",
+                "meta": "oatk_coverage_cutoff"
+            },
+            "oatk_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments for oatk, excluding -k and -c.",
+                "meta": "oatk_arguments",
+                "default": ""
+            },
+            "oatk_mito_hmm": {
+                "type": "string",
+                "description": "Path to base oatk mitochondrial HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files from hmmpress.",
+                "format": "file-path",
+                "pattern": "^\\S+\\.fam$",
+                "exists": true,
+                "meta": "oatk_mito_hmm"
+            },
+            "oatk_plastid_hmm": {
+                "type": "string",
+                "description": "Path to base oatk plastid HMM file. Must be co-located with the required .{h3f,h3i,h3m,h3p} files from hmmpress.",
+                "format": "file-path",
+                "pattern": "^\\S+\\.fam$",
+                "exists": true,
+                "meta": "oatk_plastid_hmm"
+            }
+        },
+        "required": ["id", "assembler", "long_read_dataset", "long_read_platform"],
+        "dependentSchemas": {
+            "hifiasm": {
+                "if": {
+                    "properties": { "assembler": { "const": "hifiasm" } }
+                },
+                "then": {
+                    "dependentSchemas": {
+                        "find_mito": {
+                            "if": {
+                                "properties": { "find_mito": { "const": true } }
+                            },
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                                    },
+                                    {
+                                        "required": [
+                                            "mitohifi_mito_reference_fa",
+                                            "mitohifi_mito_reference_gb",
+                                            "mitohifi_mito_genetic_code"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "find_plastid": {
+                            "if": {
+                                "properties": { "find_plastid": { "const": true } }
+                            },
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["mitohifi_reference_species"]
+                                    },
+                                    {
+                                        "required": ["mitohifi_plastid_reference_fa", "mitohifi_plastid_reference_gb"]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "dependentRequired": {
+                        "phased_assembly": ["hic_dataset"],
+                        "trio_assembly": [
+                            "maternal_dataset",
+                            "maternal_platform",
+                            "paternal_dataset",
+                            "paternal_platform"
+                        ],
+                        "scaffold": ["hic_dataset"],
+                        "polish": ["polishing_dataset"]
+                    }
+                }
+            },
+            "mitohifi": {
+                "if": {
+                    "properties": { "assembler": { "const": "mitohifi" } }
+                },
+                "then": {
+                    "oneOf": [
+                        {
+                            "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                        },
+                        {
+                            "required": [
+                                "mitohifi_mito_reference_fa",
+                                "mitohifi_mito_reference_gb",
+                                "mitohifi_mito_genetic_code"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

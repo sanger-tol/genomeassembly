@@ -77,10 +77,12 @@ nextflow_workflow {
                 """
                 input[0] = YAHS_MAKEPAIRSFILE.out.pairs
                 input[1] = GAWK.out.output
-                input[2] = true
+                input[2] = channel.empty()
                 input[3] = true
                 input[4] = true
-                input[5] = 500
+                input[5] = true
+                input[6] = true
+                input[7] = 500
                 """
             }
         }
@@ -93,7 +95,6 @@ nextflow_workflow {
                     file(workflow.out.pretext_png.get(0).get(1)).getName(),
                     file(workflow.out.cool.get(0).get(1)).getName(),
                     file(workflow.out.hic.get(0).get(1)).getName(),
-                    workflow.out.versions,
                 ).match() }
             )
         }
@@ -118,10 +119,12 @@ nextflow_workflow {
                 """
                 input[0] = YAHS_MAKEPAIRSFILE.out.pairs
                 input[1] = GAWK.out.output
-                input[2] = false
-                input[3] = true
+                input[2] = channel.empty()
+                input[3] = false
                 input[4] = true
-                input[5] = 500
+                input[5] = true
+                input[6] = true
+                input[7] = 500
                 """
             }
         }
@@ -132,7 +135,6 @@ nextflow_workflow {
                 { assert snapshot(
                     file(workflow.out.cool.get(0).get(1)).getName(),
                     file(workflow.out.hic.get(0).get(1)).getName(),
-                    workflow.out.versions,
                 ).match() }
             )
         }
@@ -157,10 +159,12 @@ nextflow_workflow {
                 """
                 input[0] = YAHS_MAKEPAIRSFILE.out.pairs
                 input[1] = GAWK.out.output
-                input[2] = true
-                input[3] = false
+                input[2] = channel.empty()
+                input[3] = true
                 input[4] = true
-                input[5] = 500
+                input[5] = false
+                input[6] = true
+                input[7] = 500
                 """
             }
         }
@@ -172,7 +176,6 @@ nextflow_workflow {
                     file(workflow.out.pretext.get(0).get(1)).getName(),
                     file(workflow.out.pretext_png.get(0).get(1)).getName(),
                     file(workflow.out.hic.get(0).get(1)).getName(),
-                    workflow.out.versions,
                 ).match() }
             )
         }
@@ -197,10 +200,12 @@ nextflow_workflow {
                 """
                 input[0] = YAHS_MAKEPAIRSFILE.out.pairs
                 input[1] = GAWK.out.output
-                input[2] = true
+                input[2] = channel.empty()
                 input[3] = true
-                input[4] = false
-                input[5] = 500
+                input[4] = true
+                input[5] = true
+                input[6] = false
+                input[7] = 500
                 """
             }
         }
@@ -212,7 +217,88 @@ nextflow_workflow {
                     file(workflow.out.pretext.get(0).get(1)).getName(),
                     file(workflow.out.pretext_png.get(0).get(1)).getName(),
                     file(workflow.out.cool.get(0).get(1)).getName(),
-                    workflow.out.versions,
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - custom ordered snapshot") {
+
+        when {
+
+            params {
+                cooler_cload_args = "-0 -c1 2 -p1 3 -c2 4 -p2 5"
+                juicertools_args = "-r 20000"
+                pretextsnapshot_args = ""
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/assembly/draft/baUndUnlc1.custom_order.txt', checkIfExists: true)
+                ])
+                input[3] = true
+                input[4] = true
+                input[5] = false
+                input[6] = false
+                input[7] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.pretext.get(0).get(1)).getName(),
+                    file(workflow.out.pretext_png.get(0).get(1)).getName()
+                ).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/nf-core")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pairs - hap2 - no snapshot") {
+
+        when {
+
+            params {
+                cooler_cload_args = '-0 -c1 2 -p1 3 -c2 4 -p2 5'
+                juicertools_args = "-r 20000"
+                pretextsnapshot_args = '--sequences \"=full\"'
+            }
+
+            workflow {
+                """
+                input[0] = YAHS_MAKEPAIRSFILE.out.pairs
+                input[1] = GAWK.out.output
+                input[2] = channel.empty()
+                input[3] = true
+                input[4] = false
+                input[5] = false
+                input[6] = false
+                input[7] = 500
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    file(workflow.out.pretext.get(0).get(1)).getName()
                 ).match() }
             )
         }

@@ -9,15 +9,12 @@ process CRAMALIGN_GENCRAMCHUNKS {
 
     output:
     tuple val(meta), val(cram), val(crai), val(chunkn), val(slices), emit: cram_slices
-    path("versions.yml")                                           , emit: versions
+    tuple val("${task.process}"), val('cramchunks'), val('1.1.0'), emit: versions_cramchunks, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     exec:
-    // Note: Manually bump version number when updating module
-    def VERSION = "1.1.0"
-
     def n_slices = file(crai).countLines(decompress: true)
     def size     = cram_bin_size
     def n_bins   = Math.ceil(n_slices / size).toInteger()
@@ -28,9 +25,4 @@ process CRAMALIGN_GENCRAMCHUNKS {
 
         return [ lower, upper - 1 ]
     }
-
-    file("${task.workDir}/versions.yml").text = """\
-        CRAMALIGN_GENCRAMCHUNKS:
-            cramalign_gencramchunks: ${VERSION}
-        """.stripIndent()
 }

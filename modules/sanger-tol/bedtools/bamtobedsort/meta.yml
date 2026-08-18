@@ -17,7 +17,8 @@ tools:
       homepage: http://www.htslib.org/
       documentation: http://www.htslib.org/doc/samtools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:samtools
   - bedtools:
       description: |
@@ -25,7 +26,8 @@ tools:
       homepage: https://github.com/arq5x/bedtools2
       documentation: https://bedtools.readthedocs.io/en/latest/
       doi: 10.1093/bioinformatics/btr539
-      licence: ["GPL v2.0"]
+      licence:
+        - "GPL v2.0"
       identifier: "biotools:bedtools"
 input:
   - - meta:
@@ -53,13 +55,46 @@ output:
             Sorted BED file generated from the input BAM.
           ontologies:
             - edam: http://edamontology.org/format_3003
+  versions_bedtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - bedtools --version | sed -e "s/bedtools v//g":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - bedtools --version | sed -e "s/bedtools v//g":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

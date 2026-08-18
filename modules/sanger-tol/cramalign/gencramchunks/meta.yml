@@ -24,13 +24,13 @@ input:
         description: Sorted BAM/CRAM/SAM file
         pattern: "*.cram"
         ontologies:
-          - edam: "http://edamontology.org/format_3462" # CRAM
+          - edam: "http://edamontology.org/format_3462"
     - crai:
         type: file
         description: Cram index file
         pattern: "*.crai"
         ontologies:
-          - edam: "http://edamontology.org/format_3475" # TSV
+          - edam: "http://edamontology.org/format_3475"
   - cram_bin_size:
       type: integer
       description: Number of CRAM slices in each CRAM chunk
@@ -46,25 +46,40 @@ output:
           description: Input CRAM file
           pattern: "*.cram"
           ontologies:
-            - edam: "http://edamontology.org/format_3462" # CRAM
+            - edam: "http://edamontology.org/format_3462"
       - crai:
           type: file
           description: Input CRAM index
           pattern: "*.crai"
           ontologies:
-            - edam: "http://edamontology.org/format_3475" # TSV
+            - edam: "http://edamontology.org/format_3475"
       - chunkn:
           type: list
           description: List containing CRAM chunk indexes
       - slices:
           type: list
           description: List containing the start and end slices of the CRAM chunk
+  versions_cramchunks:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cramchunks:
+          type: string
+          description: The name of the tool
+      - 1.1.0:
+          type: string
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cramchunks:
+          type: string
+          description: The name of the tool
+      - 1.1.0:
+          type: string
+          description: The expression to obtain the version of the tool
 authors:
   - "@prototaxites"
 maintainers:

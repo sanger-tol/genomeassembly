@@ -2,15 +2,69 @@
     "meles meles": {
         "content": [
             "3196a1997c55d543d773a1af0595fa6d",
-            [
-                "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
-            ]
+            {
+                "35528_2%231_subset.cram.1.test.bam": [
+                    "@HD\tVN:1.6\tSO:coordinate",
+                    "@SQ\tSN:OV277441.1\tLN:7999920",
+                    "@RG\tID:35528_2#1\tDT:2020-11-17T00:00:00+0000\tPU:201117_A00948_0206_AHGML2DSXY_2#1\tLB:33637906\tPG:SCS\tSM:SAMEA5962964\tCN:SC\tPL:ILLUMINA\tDS:ERP116890: Sequencing and assembly of genomes from British species for the Darwin Tree of Life Project. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/",
+                    "@PG\tID:SCS\tVN:1.7.0\tPN:NovaSeq Control Software\tDS:Controlling software on instrument",
+                    "@PG\tID:basecalling\tPP:SCS\tVN:Unknown\tPN:Unknown\tDS:Basecalling Package",
+                    "@PG\tID:bambi\tPP:basecalling\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi i2b --intensity-dir=/lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities --basecalls-dir=/lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BaseCalls --lane=2 --platform-unit=201117_A00948_0206_AHGML2DSXY_2 --read-group-id=35528_2 --study-name=\"ERP116890: Sequencing and assembly of genomes from British species for the Darwin Tree of Life Project. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/ \" --sample-alias=SAMEA5962964,mCerEla1 --threads=8 --output-file=- --compression-level=0\tPN:bambi\tDS:Convert Illumina BCL to BAM or SAM file",
+                    "@PG\tID:bambi.1\tPN:bambi\tPP:bambi\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi decode --metrics-file /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/35528_2.bam.tag_decode.metrics --barcode-file /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/metadata_cache_35528/lane_2.taglist --compression-level 0 -",
+                    "@PG\tID:bamcollate2\tPN:bamcollate2\tCL:/software/pkgg/biobambam2/2.0.79/bin/bamcollate2 collate=2 level=0\tPP:bambi.1\tVN:2.0.79",
+                    "@PG\tID:minimap2\tPN:minimap2\tCL:minimap2 -ax sr --MD -t 3 -Y -F 1200 -K 100000000 /lustre/scratch121/npg_repository/references/PhiX/Sanger-SNPs/all/minimap2/phix_unsnipped_short_no_N.fa.mmi /tmp/wr_cwd/0/e/8/dce75fe12433429e1b439b8872bc7693328371/tmp/s0uOqe6xfG/alnphix_bamtofastq_out\tPP:bamcollate2\tVN:2.10-r761",
+                    "@PG\tID:samtools\tPN:samtools\tCL:/software/pkgg/samtools/1.11.0/bin/samtools view --threads 3 -u -F 0x900 -\tPP:minimap2\tVN:1.11",
+                    "@PG\tID:bam12auxmerge\tPN:bam12auxmerge\tCL:/software/pkgg/biobambam2/2.0.79/bin/bam12auxmerge level=0 rankstrip=1 ranksplit=1 zztoname=0 clipreinsert=1 /tmp/wr_cwd/0/e/8/dce75fe12433429e1b439b8872bc7693328371/tmp/ac_8ARdDJl/tee_collated:td1_out\tPP:samtools\tVN:2.0.79",
+                    "@PG\tID:samtools.1\tPN:samtools\tPP:bam12auxmerge\tVN:1.11\tCL:/software/pkgg/samtools/1.11.0/bin/samtools split --threads 4 --output-fmt cram,no_ref=1 -f /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/%!.cram -",
+                    "@PG\tID:samtools.2\tPN:samtools\tPP:samtools.1\tVN:1.11\tCL:/software/pkgg/samtools/1.11.0/bin/samtools merge -n -O BAM -l 0 --input-fmt-option no_ref=1 - /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/35528_2#1.cram",
+                    "@PG\tID:spf\tPN:spatial_filter\tPP:samtools.2\tDS:A program to apply a spatial filter\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi spatial_filter -a --compression-level 0 -f -l /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/archive/lane2/plex1/35528_2#1.spatial_filter.stats -F /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/35528_2.spatial_filter --rg 35528_2#1 -",
+                    "@PG\tID:bambi.2\tPN:bambi\tPP:spf\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi select --compression-level 0 --input /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/9RE_mnwwls/ssfqc_tee_ssfqc:straight_through1_out --output /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/b6x1p8j3v_/alignment_filter:phix_bam_out_out -n /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/IuuBniSlRB/alignment_filter:target_bam_out_out -m 35528_2#1_bam_alignment_filter_metrics.json\tDS:Split alignments into different files",
+                    "@PG\tID:scramble\tPN:scramble\tPP:bambi.2\tVN:1.14.9\tCL:/software/pkgg/io_lib/1.14.9/bin/scramble -t 5 -7 -I bam -O cram -x ",
+                    "@PG\tID:samtools.3\tPN:samtools\tPP:scramble\tVN:1.15\tCL:/usr/local/bin/samtools view -h /lustre/scratch124/tol/projects/darwin/data/mammals/Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2#1.cram",
+                    "@PG\tID:samtools.4\tPN:samtools\tPP:samtools.3\tVN:1.15\tCL:/usr/local/bin/samtools view -C -T /lustre/scratch124/tol/projects/darwin/data/mammals/Meles_meles/assembly/release/mMelMel3.2_paternal_haplotype/insdc/GCA_922984935.2.fasta.gz test.sam",
+                    "@PG\tID:samtools.5\tPN:samtools\tPP:samtools.4\tVN:1.22.1\tCL:samtools view -H 35528_2%231_subset.cram",
+                    "@PG\tID:minimap2.1\tPN:minimap2\tVN:2.30-r1287\tCL:minimap2 -t2 -ax sr -y -R @RG\\tID:35528_2#1\\tDT:2020-11-17T00:00:00+0000\\tPU:201117_A00948_0206_AHGML2DSXY_2#1\\tLB:33637906\\tPG:SCS\\tSM:SAMEA5962964\\tCN:SC\\tPL:ILLUMINA\\tDS:ERP116890: Sequencing and assembly of genomes from British species for the Darwin Tree of Life Project. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/ GCA_922984935.2.subset.fasta.mmi -\tPP:samtools.5",
+                    "@PG\tID:samtools.6\tPN:samtools\tPP:minimap2.1\tVN:1.22.1\tCL:samtools fixmate -mpu - -",
+                    "@PG\tID:samtools.7\tPN:samtools\tPP:samtools.6\tVN:1.22.1\tCL:samtools view -h -q 0 -F 0x904",
+                    "@PG\tID:samtools.8\tPN:samtools\tPP:samtools.7\tVN:1.22.1\tCL:samtools sort --write-index -l1 -@2 -T 35528_2%231_subset.cram.1.test_tmp -o 35528_2%231_subset.cram.1.test.bam -"
+                ]
+            },
+            {
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
         ],
+        "timestamp": "2026-07-17T15:35:59.2445434",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-10-03T10:01:40.570586"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "meles meles - stub": {
         "content": [
@@ -24,7 +78,32 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "3": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "4": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ],
                 "bam": [
                     [
@@ -34,28 +113,106 @@
                         "35528_2%231_subset.cram.1.test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ]
             }
         ],
+        "timestamp": "2026-01-15T14:47:03.804302",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-10-03T10:02:01.084375"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        }
     },
     "meles meles - no readgroup lines": {
         "content": [
             "3196a1997c55d543d773a1af0595fa6d",
-            [
-                "versions.yml:md5,4358a5662c297d24c192b3e2c8fbbc41"
-            ]
+            {
+                "35528_2%231_subset.cram.1.test.bam": [
+                    "@HD\tVN:1.6\tSO:coordinate",
+                    "@SQ\tSN:OV277441.1\tLN:7999920",
+                    "@PG\tID:SCS\tVN:1.7.0\tPN:NovaSeq Control Software\tDS:Controlling software on instrument",
+                    "@PG\tID:basecalling\tPP:SCS\tVN:Unknown\tPN:Unknown\tDS:Basecalling Package",
+                    "@PG\tID:bambi\tPP:basecalling\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi i2b --intensity-dir=/lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities --basecalls-dir=/lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BaseCalls --lane=2 --platform-unit=201117_A00948_0206_AHGML2DSXY_2 --read-group-id=35528_2 --study-name=\"ERP116890: Sequencing and assembly of genomes from British species for the Darwin Tree of Life Project. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/ \" --sample-alias=SAMEA5962964,mCerEla1 --threads=8 --output-file=- --compression-level=0\tPN:bambi\tDS:Convert Illumina BCL to BAM or SAM file",
+                    "@PG\tID:bambi.1\tPN:bambi\tPP:bambi\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi decode --metrics-file /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/35528_2.bam.tag_decode.metrics --barcode-file /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/metadata_cache_35528/lane_2.taglist --compression-level 0 -",
+                    "@PG\tID:bamcollate2\tPN:bamcollate2\tCL:/software/pkgg/biobambam2/2.0.79/bin/bamcollate2 collate=2 level=0\tPP:bambi.1\tVN:2.0.79",
+                    "@PG\tID:minimap2\tPN:minimap2\tCL:minimap2 -ax sr --MD -t 3 -Y -F 1200 -K 100000000 /lustre/scratch121/npg_repository/references/PhiX/Sanger-SNPs/all/minimap2/phix_unsnipped_short_no_N.fa.mmi /tmp/wr_cwd/0/e/8/dce75fe12433429e1b439b8872bc7693328371/tmp/s0uOqe6xfG/alnphix_bamtofastq_out\tPP:bamcollate2\tVN:2.10-r761",
+                    "@PG\tID:samtools\tPN:samtools\tCL:/software/pkgg/samtools/1.11.0/bin/samtools view --threads 3 -u -F 0x900 -\tPP:minimap2\tVN:1.11",
+                    "@PG\tID:bam12auxmerge\tPN:bam12auxmerge\tCL:/software/pkgg/biobambam2/2.0.79/bin/bam12auxmerge level=0 rankstrip=1 ranksplit=1 zztoname=0 clipreinsert=1 /tmp/wr_cwd/0/e/8/dce75fe12433429e1b439b8872bc7693328371/tmp/ac_8ARdDJl/tee_collated:td1_out\tPP:samtools\tVN:2.0.79",
+                    "@PG\tID:samtools.1\tPN:samtools\tPP:bam12auxmerge\tVN:1.11\tCL:/software/pkgg/samtools/1.11.0/bin/samtools split --threads 4 --output-fmt cram,no_ref=1 -f /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/%!.cram -",
+                    "@PG\tID:samtools.2\tPN:samtools\tPP:samtools.1\tVN:1.11\tCL:/software/pkgg/samtools/1.11.0/bin/samtools merge -n -O BAM -l 0 --input-fmt-option no_ref=1 - /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/35528_2#1.cram",
+                    "@PG\tID:spf\tPN:spatial_filter\tPP:samtools.2\tDS:A program to apply a spatial filter\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi spatial_filter -a --compression-level 0 -f -l /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/archive/lane2/plex1/35528_2#1.spatial_filter.stats -F /lustre/scratch121/esa-sv-20200210-01/IL_seq_data/analysis/201117_A00948_0206_AHGML2DSXY/Data/Intensities/BAM_basecalls_20201119-090808/no_cal/35528_2.spatial_filter --rg 35528_2#1 -",
+                    "@PG\tID:bambi.2\tPN:bambi\tPP:spf\tVN:0.13.1\tCL:/software/pkgg/bambi/0.13.1/bin/bambi select --compression-level 0 --input /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/9RE_mnwwls/ssfqc_tee_ssfqc:straight_through1_out --output /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/b6x1p8j3v_/alignment_filter:phix_bam_out_out -n /tmp/wr_cwd/5/0/6/86a8369ba62bab2227fd63e2ff1ad119662395/tmp/IuuBniSlRB/alignment_filter:target_bam_out_out -m 35528_2#1_bam_alignment_filter_metrics.json\tDS:Split alignments into different files",
+                    "@PG\tID:scramble\tPN:scramble\tPP:bambi.2\tVN:1.14.9\tCL:/software/pkgg/io_lib/1.14.9/bin/scramble -t 5 -7 -I bam -O cram -x ",
+                    "@PG\tID:samtools.3\tPN:samtools\tPP:scramble\tVN:1.15\tCL:/usr/local/bin/samtools view -h /lustre/scratch124/tol/projects/darwin/data/mammals/Meles_meles/genomic_data/mMelMel3/hic-arima2/35528_2#1.cram",
+                    "@PG\tID:samtools.4\tPN:samtools\tPP:samtools.3\tVN:1.15\tCL:/usr/local/bin/samtools view -C -T /lustre/scratch124/tol/projects/darwin/data/mammals/Meles_meles/assembly/release/mMelMel3.2_paternal_haplotype/insdc/GCA_922984935.2.fasta.gz test.sam",
+                    "@PG\tID:samtools.5\tPN:samtools\tPP:samtools.4\tVN:1.22.1\tCL:samtools view -H 35528_2%231_subset.cram",
+                    "@PG\tID:minimap2.1\tPN:minimap2\tVN:2.30-r1287\tCL:minimap2 -t2 -ax sr GCA_922984935.2.subset.fasta.mmi -\tPP:samtools.5",
+                    "@PG\tID:samtools.6\tPN:samtools\tPP:minimap2.1\tVN:1.22.1\tCL:samtools fixmate -mpu - -",
+                    "@PG\tID:samtools.7\tPN:samtools\tPP:samtools.6\tVN:1.22.1\tCL:samtools view -h -q 0 -F 0x904",
+                    "@PG\tID:samtools.8\tPN:samtools\tPP:samtools.7\tVN:1.22.1\tCL:samtools sort --write-index -l1 -@2 -T 35528_2%231_subset.cram.1.test_tmp -o 35528_2%231_subset.cram.1.test.bam -"
+                ]
+            },
+            {
+                "versions_filterfiveend": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "filter_five_end.pl",
+                        "1.0"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "gawk",
+                        "5.3.1"
+                    ]
+                ],
+                "versions_minimap2": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "minimap2",
+                        "2.30-r1287"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "CRAMALIGN_MINIMAP2ALIGNHIC",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
         ],
+        "timestamp": "2026-07-17T15:37:02.657590219",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-25T13:52:10.192186638"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

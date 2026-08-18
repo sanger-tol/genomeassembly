@@ -1,2 +1,39 @@
+# generic
 .DS_Store
 pipeline_info/*.{html,json,txt,yml}
+**/*.log
+
+# genomescope2
+fastk/**/*.png
+fastk/**/*.txt
+fastk/**/*.json
+
+# oatk
+**/*annot_mito.txt
+**/*annot_pltd.txt
+
+# merquryfk
+**/*.png
+**/*.qv
+**/*.completeness.stats
+
+# mapping
+**/*.bam
+**/*.bam.csi
+
+# busco
+**/busco.*/*-busco/*
+**/*batch_summary.txt
+**/*short_summary*.json
+**/*short_summary*.txt
+
+# contact maps
+**/*.pretext
+**/*.mcool
+
+# mitohifi
+**/{mito,plastid}/**
+*.mitohifi/**
+
+# index files
+**/index.json

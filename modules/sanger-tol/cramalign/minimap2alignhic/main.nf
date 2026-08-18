@@ -14,7 +14,10 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('minimap2'), eval('minimap2 --version | sed "s/minimap2 //g"'), emit: versions_minimap2, topic: versions
+    tuple val("${task.process}"), val('gawk'), eval('gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1'), emit: versions_gawk, topic: versions
+    tuple val("${task.process}"), val('filter_five_end.pl'), eval('echo 1.0'), emit: versions_filterfiveend, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools --version | head -1 | sed -e "s/samtools //"'), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,7 +28,7 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
     // either have to copy this file to ${projectDir}/bin or set the option
     // nextflow.enable.moduleBinaries = true
     // in your nextflow.config file.
-    def args1 = task.ext.args1 ?: ''
+    def args  = task.ext.args  ?: ''
     def args2 = task.ext.args2 ?: '-t' // copy RG, BC and QT tags to the FASTQ header line
     def args3 = task.ext.args3 ?: ''
     def args4 = task.ext.args4 ?: ''
@@ -35,16 +38,17 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
     // Prepare read group arguments if rglines are found, else, empty string
     def rg_arg = rglines ? '-y ' + rglines.collect { line ->
             // Add SM when not present to avoid errors from downstream tool (e.g. variant callers)
-            def l = line.contains("SM:") ? line
-                : meta.sample ? "${line}\tSM:${meta.sample}"
-                : "${line}\tSM:${meta.id}"
+            def l = line.contains("SM:") ? line : "${line}\tSM:${meta.id}"
             "-R '${l.replaceAll("\t", "\\\\t")}'"
         }.join(' ')
         : ''
     """
-    samtools cat ${args1} -r "#:${range[0]}-${range[1]}" ${cram} |\\
+    samtools view -H ${cram} | grep ^@PG > ${prefix}_cram_pg.tmp
+
+    samtools cat ${args} -r "#:${range[0]}-${range[1]}" ${cram} |\\
         samtools fastq ${args2} - |\\
         minimap2 -t${task.cpus} ${args3} ${index} ${rg_arg} - |\\
+        insert_cram_pg_header.awk -v pgfile="${prefix}_cram_pg.tmp" |\\
         gawk -F'\t' '
             BEGIN { OFS="\\t" }
             \$1 ~ /^\\@/ { print \$0 }
@@ -60,25 +64,11 @@ process CRAMALIGN_MINIMAP2ALIGNHIC {
         samtools fixmate ${args4} - - |\\
         samtools view -h ${args5} |\\
         samtools sort ${args6} -@${task.cpus} -T ${prefix}_tmp -o ${prefix}.bam -
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-        gawk: \$(gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1)
-    END_VERSIONS
     """
 
     stub:
     def prefix  = task.ext.prefix ?: "${cram}.${chunkn}.${meta.id}"
     """
     touch ${prefix}.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-        gawk: \$(gawk --version | grep -o -E "[0-9]+(\\.[0-9]+)+" | head -n1)
-    END_VERSIONS
     """
 }

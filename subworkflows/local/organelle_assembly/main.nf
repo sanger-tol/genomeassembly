@@ -1,166 +1,71 @@
-include { CAT_CAT as CONCATENATE_ASSEMBLIES              } from '../../../modules/nf-core/cat/cat/main'
-include { CAT_CAT as CONCATENATE_INPUT_READS             } from '../../../modules/nf-core/cat/cat/main'
-include { MITOHIFI_FINDMITOREFERENCE                     } from '../../../modules/nf-core/mitohifi/findmitoreference/main'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_READS   } from '../../../modules/nf-core/mitohifi/mitohifi/main'
-include { MITOHIFI_MITOHIFI as MITOHIFI_MITOHIFI_CONTIGS } from '../../../modules/nf-core/mitohifi/mitohifi/main'
-include { OATK                                           } from '../../../modules/nf-core/oatk/main'
+include { OATK_ASSEMBLY     } from '../../../subworkflows/local/oatk_assembly'
+include { MITOHIFI_ASSEMBLY } from '../../../subworkflows/local/mitohifi_assembly'
 
+include { setupStage        } from '../../../functions/local/assembly_stages'
+
+include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC } from '../../../modules/local/generate_specification_index'
 
 workflow ORGANELLE_ASSEMBLY {
     take:
-    ch_assemblies   // channel: [ val(meta), asm1, asm2  ]
-    ch_long_reads   // channel: [ val(meta), long_reads  ]
-    val_species     // channel: [ val(meta), val(species) ]
-    val_mito_hmm    // list: [ hmm_files ]
-    val_plastid_hmm // list: [ hmm_files ]
+    ch_specs
 
     main:
-    ch_versions                = channel.empty()
-    ch_mitohifi_reads_output   = channel.empty()
-    ch_mitohifi_contigs_output = channel.empty()
+    //
+    // Logic: Set up and deduplicate input stages
+    //
+    ch_stages = ch_specs.flatMap { spec ->
+        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
+    }.unique()
 
     //
-    // Logic: Mitohifi does not support Conda
+    // Subworkflow: assemble organelles with Oatk
     //
-    if(workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() == 0) {
-        //
-        // Module: Download reference organelle assembly
-        //
-        MITOHIFI_FINDMITOREFERENCE(val_species)
-        ch_versions = ch_versions.mix(MITOHIFI_FINDMITOREFERENCE.out.versions)
-
-        //
-        // Module: Assemble mitogenome from reads using MitoHiFi
-        //
-        CONCATENATE_INPUT_READS(ch_long_reads)
-        ch_versions = ch_versions.mix(CONCATENATE_INPUT_READS.out.versions)
-
-        ch_mitohifi_reads_input = CONCATENATE_INPUT_READS.out.file_out
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
-            .multiMap { meta, reads, _meta_fasta, fasta, _meta_gb, gb ->
-                reads: [ meta, reads ]
-                fasta: [ meta, fasta ]
-                gb:    [ meta, gb ]
-                method: "reads"
-                code: meta.mitochondrial_code
-            }
-
-        MITOHIFI_MITOHIFI_READS(
-            ch_mitohifi_reads_input.reads,
-            ch_mitohifi_reads_input.fasta,
-            ch_mitohifi_reads_input.gb,
-            ch_mitohifi_reads_input.method,
-            ch_mitohifi_reads_input.code
-        )
-        ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_READS.out.versions)
-
-        //
-        // Module: Concatenate assembly pairs for Mitohifi
-        //
-        ch_concat_input = ch_assemblies
-            .map { meta, asm1, asm2 -> [ meta, [asm1, asm2] ] }
-
-        CONCATENATE_ASSEMBLIES(ch_concat_input)
-        ch_versions = ch_versions.mix(CONCATENATE_ASSEMBLIES.out.versions)
-
-        //
-        // Module: Identify organelle from assembled contigs with Mitohifi
-        //
-        ch_mitohifi_contigs_input = CONCATENATE_ASSEMBLIES.out.file_out
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.fasta)
-            .combine(MITOHIFI_FINDMITOREFERENCE.out.gb)
-            .multiMap { meta, asm, _meta_fasta, fasta, _meta_gb, gb ->
-                asm:   [ meta, asm ]
-                fasta: [ meta, fasta ]
-                gb:    [ meta, gb ]
-                method: "contigs"
-                code: meta.mitochondrial_code
-            }
-        MITOHIFI_MITOHIFI_CONTIGS(
-            ch_mitohifi_contigs_input.asm,
-            ch_mitohifi_contigs_input.fasta,
-            ch_mitohifi_contigs_input.gb,
-            ch_mitohifi_contigs_input.method,
-            ch_mitohifi_contigs_input.code
-        )
-        ch_versions = ch_versions.mix(MITOHIFI_MITOHIFI_CONTIGS.out.versions)
-
-        //
-        // Logic: Prepare all outputs from Mitohifi for emission
-        //        Do it this way as we will move to a channel publishing structure in future
-        //
-        ch_mitohifi_reads_output = channel.empty()
-            .mix(
-                MITOHIFI_MITOHIFI_READS.out.fasta,
-                MITOHIFI_MITOHIFI_READS.out.stats,
-                MITOHIFI_MITOHIFI_READS.out.gb,
-                MITOHIFI_MITOHIFI_READS.out.gff,
-                MITOHIFI_MITOHIFI_READS.out.all_potential_contigs,
-                MITOHIFI_MITOHIFI_READS.out.contigs_annotations,
-                MITOHIFI_MITOHIFI_READS.out.contigs_circularization,
-                MITOHIFI_MITOHIFI_READS.out.contigs_filtering,
-                MITOHIFI_MITOHIFI_READS.out.coverage_mapping,
-                MITOHIFI_MITOHIFI_READS.out.coverage_plot,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_annotation,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_choice,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_coverage,
-                MITOHIFI_MITOHIFI_READS.out.potential_contigs,
-                MITOHIFI_MITOHIFI_READS.out.reads_mapping_and_assembly,
-                MITOHIFI_MITOHIFI_READS.out.shared_genes,
-            )
-
-        ch_mitohifi_contigs_output = channel.empty()
-            .mix(
-                MITOHIFI_MITOHIFI_READS.out.fasta,
-                MITOHIFI_MITOHIFI_READS.out.stats,
-                MITOHIFI_MITOHIFI_READS.out.gb,
-                MITOHIFI_MITOHIFI_READS.out.gff,
-                MITOHIFI_MITOHIFI_READS.out.all_potential_contigs,
-                MITOHIFI_MITOHIFI_READS.out.contigs_annotations,
-                MITOHIFI_MITOHIFI_READS.out.contigs_circularization,
-                MITOHIFI_MITOHIFI_READS.out.contigs_filtering,
-                MITOHIFI_MITOHIFI_READS.out.coverage_mapping,
-                MITOHIFI_MITOHIFI_READS.out.coverage_plot,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_annotation,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_choice,
-                MITOHIFI_MITOHIFI_READS.out.final_mitogenome_coverage,
-                MITOHIFI_MITOHIFI_READS.out.potential_contigs,
-                MITOHIFI_MITOHIFI_READS.out.reads_mapping_and_assembly,
-                MITOHIFI_MITOHIFI_READS.out.shared_genes,
-            )
-    }
-
-    //
-    // Module: Assemble mito from reads using Oatk
-    //
-    OATK(
-        ch_long_reads,
-        val_mito_hmm,
-        val_plastid_hmm
+    OATK_ASSEMBLY(
+        ch_stages.filter { stage -> stage.stage == "oatk" }
     )
-    ch_versions = ch_versions.mix(OATK.out.versions)
 
-    ch_oatk_output = channel.empty()
-        .mix(
-            OATK.out.mito_fasta,
-            OATK.out.pltd_fasta,
-            OATK.out.mito_bed,
-            OATK.out.pltd_bed,
-            OATK.out.mito_gfa,
-            OATK.out.pltd_gfa,
-            OATK.out.annot_mito_txt,
-            OATK.out.annot_pltd_txt,
-            OATK.out.clean_gfa,
-            OATK.out.final_gfa,
-            OATK.out.initial_gfa,
-            OATK.out.multiplex_gfa,
-            OATK.out.unzip_gfa,
-        )
+    //
+    // Subworkflow: assemble organelles with Mitohifi
+    //
+    MITOHIFI_ASSEMBLY(
+        ch_stages.filter { stage -> stage.stage == "mitohifi" },
+        channel.empty(),
+    )
+
+    //
+    // Module: Generate index files for each stage and the overall stage
+    //
+    ch_versions_to_index = channel.topic("versions")
+        .map { task, tool, version -> [task.split(':').last(), tool, version] }
+        .unique()
+        .groupTuple(by: 0)
+        .map { task, tools, versions ->
+            [(task): [tools, versions].transpose().collectEntries()]
+        }
+        .reduce { a, b -> a + b }
+
+    INDEX_SPEC(
+        ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
+        ch_versions_to_index
+    )
+
+    //
+    // Logic: Re-join stages to their input specifications for publishing
+    //
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
+
+    ch_oatk_output = ch_output_specs
+        .combine(OATK_ASSEMBLY.out.oatk_output)
+        .filter { spec, oatk -> oatk.id in spec.hashes.values() }
+        .map { spec, oatk -> spec + oatk }
+
+    ch_mitohifi_output = ch_output_specs
+        .combine(MITOHIFI_ASSEMBLY.out.mitohifi_assemblies)
+        .filter { spec, mitohifi -> mitohifi.id in spec.hashes.values() }
+        .map { spec, mitohifi -> spec + mitohifi }
 
     emit:
-    mito_mitohifi_reads   = ch_mitohifi_reads_output
-    mito_mitohifi_contigs = ch_mitohifi_contigs_output
-    organelles_oatk       = ch_oatk_output
-    versions              = ch_versions
+    oatk           = ch_oatk_output
+    reads_mitohifi = ch_mitohifi_output
+    spec_indexes   = INDEX_SPEC.out.spec
 }

@@ -47,15 +47,28 @@
                 "test.dip.p_utg.lowQ.bed.gz",
                 "test.dip.r_utg.lowQ.bed.gz"
             ],
-            [
-                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
-            ]
+            {
+                "versions_hifiasm": [
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T16:15:35.350355"
+        "timestamp": "2026-01-14T13:34:17.708593"
     },
     "Undibacterium_unclassified - pacbio hifi - bin files": {
         "content": [
@@ -110,15 +123,28 @@
                 "test.bp.p_utg.lowQ.bed.gz",
                 "test.bp.r_utg.lowQ.bed.gz"
             ],
-            [
-                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
-            ]
+            {
+                "versions_hifiasm": [
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T16:15:17.223656"
+        "timestamp": "2026-01-14T13:34:00.831621"
     },
     "Undibacterium_unclassified - long reads only": {
         "content": [
@@ -183,15 +209,28 @@
                 "test.bp.p_utg.lowQ.bed.gz",
                 "test.bp.r_utg.lowQ.bed.gz"
             ],
-            [
-                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
-            ]
+            {
+                "versions_hifiasm": [
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T16:15:05.16683"
+        "timestamp": "2026-01-14T13:33:49.015556"
     },
     "Undibacterium_unclassified - hi-c cram": {
         "content": [
@@ -246,15 +285,28 @@
                 "test.hic.p_utg.lowQ.bed.gz",
                 "test.hic.r_utg.lowQ.bed.gz"
             ],
-            [
-                "versions.yml:md5,c5d43e7955e682b03e76387513047453"
-            ]
+            {
+                "versions_hifiasm": [
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T16:15:58.920908"
+        "timestamp": "2026-01-14T13:34:43.561351"
     },
     "Undibacterium_unclassified - stub": {
         "content": [
@@ -333,7 +385,18 @@
                     ]
                 ],
                 "7": [
-                    "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "8": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
                 ],
                 "assembly_fasta": [
                     [
@@ -408,8 +471,19 @@
                         "test.ovlp.paf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,c5d43e7955e682b03e76387513047453"
+                "versions_hifiasm": [
+                    [
+                        "HIFIASM",
+                        "hifiasm",
+                        "0.25.0-r726"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "HIFIASM",
+                        "samtools",
+                        "1.23"
+                    ]
                 ]
             }
         ],
@@ -417,6 +491,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-01T15:59:05.3987"
+        "timestamp": "2026-01-14T13:34:48.05805"
     }
 }

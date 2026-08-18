@@ -4,11 +4,11 @@ process FASTXALIGN_MINIMAP2ALIGN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/63/637ecb387eaafe0b1689e3e32c5eda589e016cfd46c482946425181f69f0733e/data' :
-        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_click:bfd8f60cc27aa6d6' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1d/1d2a7e8052a67cf34950489bf99f582eac65a6faffa8eeb3568fc632a55b7976/data' :
+        'community.wave.seqera.io/library/htslib_minimap2_pyfastx_samtools_pruned:05af6ab781364616' }"
 
     input:
-    tuple val(meta),  path(fastx), path(fxi)
+    tuple val(meta),  path(fastx), path(fxi), val(pg_lines)
     tuple val(meta2), path(index), path(reference)
     tuple val(chunkn), val(range)
     val bam_format
@@ -16,7 +16,9 @@ process FASTXALIGN_MINIMAP2ALIGN {
     output:
     tuple val(meta), path("*.bam")   , emit: bam, optional: true
     tuple val(meta), path("*.paf.gz"), emit: paf, optional: true
-    path "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('slice_fasta.py'), eval('slice_fasta.py --version'), emit: versions_slice_fasta, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools version | sed "1!d;s/.* //"'), emit: versions_samtools, topic: versions
+    tuple val("${task.process}"), val('minimap2'), eval('minimap2 --version | sed "s/minimap2 //g"'), emit: versions_minimap2, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,24 +29,26 @@ process FASTXALIGN_MINIMAP2ALIGN {
     // either have to copy this file to ${projectDir}/bin or set the option
     // nextflow.enable.moduleBinaries = true
     // in your nextflow.config file.
-    def args1       = task.ext.args1  ?: ''
+    // WARNING: This module includes insert_cram_pg_header as a module binary in
+    // ${moduleDir}/resources/usr/bin/insert_cram_pg_header. To use this module, you will
+    // either have to copy this file to ${projectDir}/bin or set the option
+    // nextflow.enable.moduleBinaries = true
+    // in your nextflow.config file.
+    def args        = task.ext.args  ?: ''
     def args2       = task.ext.args2  ?: ''
     def args3       = task.ext.args3  ?: ''
     def prefix      = task.ext.prefix ?: "${fastx}.${chunkn}.${meta.id}"
     def post_filter = args2 ? "samtools view -h ${args2} - |" : ''
     def sort_bam    = "samtools sort -@ ${task.cpus > 1 ? task.cpus - 1 : 1} -o ${prefix}.bam -T ${prefix}_sort_tmp ${args3} -"
-    def bam_output  = bam_format      ? "-a | ${post_filter} ${sort_bam}" : "| bgzip -@ ${task.cpus} > ${prefix}.paf.gz"
+    def pg_part     = pg_lines ? "insert_cram_pg_header.awk -v pgfile=\"${prefix}_pg_lines.tmp\" | " : ''
+    def bam_output  = bam_format ? "-a | ${pg_part}${post_filter} ${sort_bam}" : "| bgzip -@ ${task.cpus} > ${prefix}.paf.gz"
+    def pg_setup    = pg_lines ? "printf '%b\\n' ${pg_lines.collect { line -> "'${line}'" }.join(' ')} > ${prefix}_pg_lines.tmp" : ''
     """
+    ${pg_setup}
     slice_fasta.py slice ${fastx} ${range[0]} ${range[1]} | \\
-        minimap2 -t${task.cpus} ${args1} ${index} - \\
+        minimap2 -t${task.cpus} ${args} ${index} - \\
         ${bam_output}
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-    END_VERSIONS
     """
 
     stub:
@@ -52,12 +56,5 @@ process FASTXALIGN_MINIMAP2ALIGN {
     """
     touch ${prefix}.bam
     echo "" | gzip > ${prefix}.paf.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        slice_fasta.py: \$(slice_fasta.py --version)
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' )
-        minimap2: \$(minimap2 --version | sed 's/minimap2 //g')
-    END_VERSIONS
     """
 }

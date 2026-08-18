@@ -64,12 +64,23 @@ nextflow_process {
         }
 
         then {
+            def strip_absolute_path_lines = { text ->
+                def lines = text?.getClass()?.isArray()
+                    ? text.toList()
+                    : (text instanceof Collection ? text : (text?.toString()?.readLines() ?: []))
+                lines
+                    .collect { line ->
+                        line.toString()
+                            .replaceAll(/\bUR:\/(?:[^\/\s]+\/)*([^\/\s]+)/, 'UR:$1')
+                    }
+            }
             assertAll(
                 { assert process.success },
                 {
                     assert snapshot(
                         bam(process.out.bam.get(0).get(1)).getReadsMD5(),
-                        process.out.versions
+                        process.out.bam.collect { meta, f -> [(new File(f.toString()).getName()): strip_absolute_path_lines(bam(f.toString()).getHeader())] }.collectEntries { it }.sort(),
+                        process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )
@@ -115,12 +126,23 @@ nextflow_process {
         }
 
         then {
+            def strip_absolute_path_lines = { text ->
+                def lines = text?.getClass()?.isArray()
+                    ? text.toList()
+                    : (text instanceof Collection ? text : (text?.toString()?.readLines() ?: []))
+                lines
+                    .collect { line ->
+                        line.toString()
+                            .replaceAll(/\bUR:\/(?:[^\/\s]+\/)*([^\/\s]+)/, 'UR:$1')
+                    }
+            }
             assertAll(
                 { assert process.success },
                 {
                     assert snapshot(
                         bam(process.out.bam.get(0).get(1)).getReadsMD5(),
-                        process.out.versions
+                        process.out.bam.collect { meta, f -> [(new File(f.toString()).getName()): strip_absolute_path_lines(bam(f.toString()).getHeader())] }.collectEntries { it }.sort(),
+                        process.out.findAll { key, val -> key.startsWith("versions")}
                     ).match()
                 }
             )
