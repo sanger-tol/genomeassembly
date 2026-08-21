@@ -1,60 +1,13 @@
-/**
- * Converts an item to its string representation.
- *
- * Handles Path objects by converting them to URI strings,
- * and all other types by calling toString().
- *
- * @param item the object to convert (Path or any other type)
- * @return String representation of the item
- */
- def convertString(item) {
-     if (item instanceof Path) {
-         return item.toUriString()
-     } else if (item instanceof List && item.isEmpty()) {
-         return ""
-     } else {
-         return item.toString()
-     }
- }
-
-/**
- * Recursively converts all values in a map to strings.
- *
- * Traverses nested maps and lists, converting all leaf values
- * (including Path objects) to their string representations.
- * Preserves the map structure and key names.
- *
- * @param m the Map to stringify
- * @return a new Map with all values converted to strings
- */
-def stringifyMap(Map m) {
-    m.collectEntries { k, v ->
-        def stringifiedValue = null
-
-        if (v instanceof Map) {
-            stringifiedValue = stringifyMap(v)
-        } else if (v instanceof List) {
-            stringifiedValue = v.isEmpty() ? "" : v.collect { item ->
-               convertString(item)
-            }
-        } else {
-            stringifiedValue = convertString(v)
-        }
-
-        [k, stringifiedValue]
-    }
-}
-
 process GENERATE_SPECIFICATION_INDEX {
     executor 'local'
     tag { "${spec.id}" }
 
     input:
-    val(spec)
-    val(versions)
+    val spec
+    val versions
 
     output:
-    val(out_spec), emit: spec
+    val (out_spec), emit: spec
 
     exec:
     def prefix = task.ext.prefix ?: "${spec.id}"
@@ -63,15 +16,16 @@ process GENERATE_SPECIFICATION_INDEX {
     def json_file = file("${task.workDir}/${prefix}.json")
 
     // Extract the data we want from the map and clean it up
-    def json_spec = spec.subMap(["data", "params", "tools"])
+    def json_spec = [genomeassembly_version: workflow.manifest.version] + spec.subMap(["data", "params", "tools"])
 
     // Replace tools list with tools map
     json_spec.tools = json_spec.tools.collectEntries { stage, tools ->
         if (tools.isEmpty()) {
-            return  // skip this stage
+            return null
         }
 
-        def stageVersions = versions.subMap(tools)
+        def stageVersions = versions
+            .subMap(tools)
             .values()
             .inject([:]) { a, b -> a + b }
         [stage, stageVersions]
@@ -92,4 +46,56 @@ process GENERATE_SPECIFICATION_INDEX {
 
     // Return the spec with an index JSON file field
     out_spec = spec + [index: json_file]
+}
+/**
+ * Converts an item to its string representation.
+ *
+ * Handles Path objects by converting them to URI strings,
+ * and all other types by calling toString().
+ *
+ * @param item the object to convert (Path or any other type)
+ * @return String representation of the item
+ */
+def convertString(item) {
+    if (item instanceof Path) {
+        return item.toUriString()
+    }
+    else if (item instanceof List && item.isEmpty()) {
+        return ""
+    }
+    else {
+        return item.toString()
+    }
+}
+
+/**
+ * Recursively converts all values in a map to strings.
+ *
+ * Traverses nested maps and lists, converting all leaf values
+ * (including Path objects) to their string representations.
+ * Preserves the map structure and key names.
+ *
+ * @param m the Map to stringify
+ * @return a new Map with all values converted to strings
+ */
+def stringifyMap(m: Map) {
+    m.collectEntries { k, v ->
+        def stringifiedValue = null
+
+        if (v instanceof Map) {
+            stringifiedValue = stringifyMap(v)
+        }
+        else if (v instanceof List) {
+            stringifiedValue = v.isEmpty()
+                ? ""
+                : v.collect { item ->
+                    convertString(item)
+                }
+        }
+        else {
+            stringifiedValue = convertString(v)
+        }
+
+        [k, stringifiedValue]
+    }
 }
