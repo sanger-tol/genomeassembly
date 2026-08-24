@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.1 - Crimson Goregutter (patch 1) - [2026-08-17]
+
+This is a minor fix that slightly updates the format of the `index.json` files produced by the pipeline.
+
+### Added
+
+- [#176](https://github.com/sanger-tol/genomeassembly/issues/176) `index.json` files now contain two extra fields: a `genomeassembly_version` field which captures the version of the pipeline used to generate the assembly, and a `genomeassembly_stage` field which captures the name of the assembly stage. The whole-pipeline index file sets this stage field to `pipeline`. (by @prototaxites)
+
 ## v1.0.0 - Crimson Goregutter - [2026-08-17]
 
 This is the first stable release of sanger-tol/genomeassembly. This pipeline is now equivalent with the workflows currently used in the Tree of Life Assembly process, and should produce an entirely equivalent assembly given the same input data. Note that at time of release this pipeline is not yet used in production in Tree of Life.
