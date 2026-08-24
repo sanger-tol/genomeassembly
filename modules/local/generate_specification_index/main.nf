@@ -16,7 +16,8 @@ process GENERATE_SPECIFICATION_INDEX {
     def json_file = file("${task.workDir}/${prefix}.json")
 
     // Extract the data we want from the map and clean it up
-    def json_spec = [genomeassembly_version: workflow.manifest.version] + spec.subMap(["data", "params", "tools"])
+    def genomeassembly_stage = spec.stage ?: "pipeline"
+    def json_spec = [genomeassembly_version: workflow.manifest.version, genomeassembly_stage: genomeassembly_stage] + spec.subMap(["data", "params", "tools"])
 
     // Replace tools list with tools map
     json_spec.tools = json_spec.tools.collectEntries { stage, tools ->
@@ -78,7 +79,7 @@ def convertString(item) {
  * @param m the Map to stringify
  * @return a new Map with all values converted to strings
  */
-def stringifyMap(m: Map) {
+def stringifyMap(m) {
     m.collectEntries { k, v ->
         def stringifiedValue = null
 
