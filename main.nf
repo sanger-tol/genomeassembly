@@ -21,70 +21,6 @@ include { getPlatformShortName    } from './functions/local/publishing'
 include { specToAssemblyDir       } from './functions/local/publishing'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// WORKFLOW: Run main analysis pipeline depending on type of input
-//
-workflow SANGERTOL_GENOMEASSEMBLY {
-
-    take:
-    ch_specs
-    ch_data
-    val_kmer_size
-    val_fastx_reads_per_chunk
-    val_polishing_container_provided
-    val_sequences_per_polishing_chunk
-    val_hic_aligner
-    val_hic_mapping_cram_chunk_size
-    val_scaffolding_cool_bin_size
-    val_busco_lineage_directory
-    val_busco_lineage
-    val_build_pretext_map
-    val_build_juicer_map
-    val_build_cooler_map
-    outdir
-
-    main:
-    //
-    // WORKFLOW: Run pipeline
-    //
-    GENOMEASSEMBLY (
-        ch_specs,
-        ch_data,
-        val_kmer_size,
-        val_fastx_reads_per_chunk,
-        val_polishing_container_provided,
-        val_sequences_per_polishing_chunk,
-        val_hic_aligner,
-        val_hic_mapping_cram_chunk_size,
-        val_scaffolding_cool_bin_size,
-        val_busco_lineage_directory,
-        val_busco_lineage,
-        val_build_pretext_map,
-        val_build_juicer_map,
-        val_build_cooler_map,
-        outdir
-    )
-
-    emit:
-    datasets         = GENOMEASSEMBLY.out.datasets
-    genomescope2     = GENOMEASSEMBLY.out.genomescope2
-    hifiasm          = GENOMEASSEMBLY.out.hifiasm
-    purging          = GENOMEASSEMBLY.out.purging
-    polishing        = GENOMEASSEMBLY.out.polishing
-    scaffolding      = GENOMEASSEMBLY.out.scaffolding
-    contigs_mitohifi = GENOMEASSEMBLY.out.contigs_mitohifi
-    oatk             = GENOMEASSEMBLY.out.oatk
-    reads_mitohifi   = GENOMEASSEMBLY.out.reads_mitohifi
-    statistics       = GENOMEASSEMBLY.out.statistics
-    stage_indexes    = GENOMEASSEMBLY.out.stage_indexes
-    spec_indexes     = GENOMEASSEMBLY.out.spec_indexes
-}
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -95,7 +31,7 @@ workflow {
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
         params.monochrome_logs,
@@ -106,13 +42,13 @@ workflow {
         params.show_hidden,
         params.genomic_data,
         params.assembly_specs,
-        params.polishing_longranger_container_path
+        params.polishing_longranger_container_path,
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    SANGERTOL_GENOMEASSEMBLY (
+    SANGERTOL_GENOMEASSEMBLY(
         PIPELINE_INITIALISATION.out.specs,
         PIPELINE_INITIALISATION.out.data,
         params.kmer_size,
@@ -127,13 +63,13 @@ workflow {
         params.build_pretext_map,
         params.build_juicer_map,
         params.build_cooler_map,
-        params.outdir
+        params.outdir,
     )
 
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
@@ -142,7 +78,6 @@ workflow {
     )
 
     publish:
-    // We need to filter datasets this as empty lists [] currently foul outputs
     datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets.filter { dataset -> dataset.fk_ktab }
     genomescope2     = SANGERTOL_GENOMEASSEMBLY.out.genomescope2
     hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
@@ -214,8 +149,8 @@ output {
     scaffolding {
         path { spec ->
             spec.output.scaffolding.fasta >> "${spec.name}/scaffolding/"
-            spec.output.scaffolding.bam >> "${spec.name}/scaffolding/hic_aln/"
-            spec.output.scaffolding.bai >> "${spec.name}/scaffolding/hic_aln/"
+            spec.output.scaffolding.bam >> (params.save_hic_bam_files ? "${spec.name}/scaffolding/hic_aln/" : null)
+            spec.output.scaffolding.bai >> (params.save_hic_bam_files ? "${spec.name}/scaffolding/hic_aln/" : null)
             spec.output.scaffolding.stats >> "${spec.name}/scaffolding/hic_aln/"
             spec.output.scaffolding.flagstats >> "${spec.name}/scaffolding/hic_aln/"
             spec.output.scaffolding.idxstats >> "${spec.name}/scaffolding/hic_aln/"
@@ -239,20 +174,9 @@ output {
     }
     statistics {
         path { spec ->
-            spec.output.statistics.stats >> [
-                "${spec.name}",
-                "${specToAssemblyDir(spec)}/"
-            ].join("/")
-            spec.output.statistics.merqury >> [
-                "${spec.name}",
-                "${specToAssemblyDir(spec)}",
-                "merqury.${getPlatformShortName(spec.data.long_read.platform)}/"
-            ].join("/")
-            spec.output.statistics.busco >> [
-                "${spec.name}",
-                "${specToAssemblyDir(spec)}",
-                "busco.${params.busco_lineage}/"
-            ].join("/")
+            spec.output.statistics.stats >> ["${spec.name}", "${specToAssemblyDir(spec)}/"].join("/")
+            spec.output.statistics.merqury >> ["${spec.name}", "${specToAssemblyDir(spec)}", "merqury.${getPlatformShortName(spec.data.long_read.platform)}/"].join("/")
+            spec.output.statistics.busco >> ["${spec.name}", "${specToAssemblyDir(spec)}", "busco.${params.busco_lineage}/"].join("/")
         }
     }
     oatk {
@@ -289,9 +213,66 @@ output {
         }
     }
 }
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
+    NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+//
+// WORKFLOW: Run main analysis pipeline depending on type of input
+//
+workflow SANGERTOL_GENOMEASSEMBLY {
+    take:
+    ch_specs
+    ch_data
+    val_kmer_size
+    val_fastx_reads_per_chunk
+    val_polishing_container_provided
+    val_sequences_per_polishing_chunk
+    val_hic_aligner
+    val_hic_mapping_cram_chunk_size
+    val_scaffolding_cool_bin_size
+    val_busco_lineage_directory
+    val_busco_lineage
+    val_build_pretext_map
+    val_build_juicer_map
+    val_build_cooler_map
+    outdir
+
+    main:
+    //
+    // WORKFLOW: Run pipeline
+    //
+    GENOMEASSEMBLY(
+        ch_specs,
+        ch_data,
+        val_kmer_size,
+        val_fastx_reads_per_chunk,
+        val_polishing_container_provided,
+        val_sequences_per_polishing_chunk,
+        val_hic_aligner,
+        val_hic_mapping_cram_chunk_size,
+        val_scaffolding_cool_bin_size,
+        val_busco_lineage_directory,
+        val_busco_lineage,
+        val_build_pretext_map,
+        val_build_juicer_map,
+        val_build_cooler_map,
+        outdir,
+    )
+
+    emit:
+    datasets         = GENOMEASSEMBLY.out.datasets
+    genomescope2     = GENOMEASSEMBLY.out.genomescope2
+    hifiasm          = GENOMEASSEMBLY.out.hifiasm
+    purging          = GENOMEASSEMBLY.out.purging
+    polishing        = GENOMEASSEMBLY.out.polishing
+    scaffolding      = GENOMEASSEMBLY.out.scaffolding
+    contigs_mitohifi = GENOMEASSEMBLY.out.contigs_mitohifi
+    oatk             = GENOMEASSEMBLY.out.oatk
+    reads_mitohifi   = GENOMEASSEMBLY.out.reads_mitohifi
+    statistics       = GENOMEASSEMBLY.out.statistics
+    stage_indexes    = GENOMEASSEMBLY.out.stage_indexes
+    spec_indexes     = GENOMEASSEMBLY.out.spec_indexes
+}
