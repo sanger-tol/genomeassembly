@@ -345,7 +345,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "mitohifi_arguments"
             ],
             enabled: spec.find_plastid,
-            depends: "hifiasm_assembly",
+            depends: "hifiasm",
             extraParams: [mode: "contigs", organelle: "plastid"],
             tools: ["MITOHIFI_MITOHIFI"]
         ],
