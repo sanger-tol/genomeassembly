@@ -274,7 +274,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
  */
 def stageHifiasmSpec(spec, dataList, haptabList) {
     def STAGE_CONFIG = [
-        base: [
+        hifiasm_base: [
             data: ["long_read"],
             params: ["assembler", "hifiasm_bin_arguments", "coverage"],
             enabled: true,
@@ -282,7 +282,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             extraParams: null,
             tools: []
         ],
-        hifiasm_assembly: [
+        hifiasm: [
             data: [
                 "ultralong",
                 "hic",
@@ -348,7 +348,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             depends: "hifiasm_assembly",
             extraParams: [mode: "contigs", organelle: "plastid"],
             tools: ["MITOHIFI_MITOHIFI"]
-        ]
+        ],
     ]
 
     return stageSpec(spec, STAGE_CONFIG, dataList, haptabList)
@@ -414,7 +414,7 @@ def stageOatkSpec(spec, dataList, haptabList) {
  */
 def stageMitohifiSpec(spec, dataList, haptabList) {
     def MITOHIFI_CONFIG = [
-        mitohifi: [
+        mitohifi_mito: [
             data: ["long_read"],
             params: [
                 "download_mito_reference",

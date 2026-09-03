@@ -20,7 +20,6 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_geno
 */
 
 workflow GENOMEASSEMBLY {
-
     take:
     ch_specs
     ch_data
@@ -48,7 +47,7 @@ workflow GENOMEASSEMBLY {
     PREPARE_INPUTS(
         ch_specs,
         ch_data,
-        val_kmer_size
+        val_kmer_size,
     )
 
     //
@@ -74,7 +73,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: assemble organellar genomes
     //
     ORGANELLE_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi"] }
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi_mito"] }
     )
 
     //
@@ -89,9 +88,9 @@ workflow GENOMEASSEMBLY {
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
-        .groupTuple(by:0)
+        .groupTuple(by: 0)
         .map { process, tool_versions ->
             tool_versions.unique().sort()
             "${process}:\n${tool_versions.join('\n')}"
@@ -101,9 +100,9 @@ workflow GENOMEASSEMBLY {
         .mix(topic_versions_string)
         .collectFile(
             storeDir: "${outdir}/pipeline_info",
-            name:  'genomeassembly_software_'  + 'versions.yml',
+            name: 'genomeassembly_software_' + 'versions.yml',
             sort: true,
-            newLine: true
+            newLine: true,
         )
 
     emit:
@@ -121,9 +120,3 @@ workflow GENOMEASSEMBLY {
     spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes.mix(ORGANELLE_ASSEMBLY.out.spec_indexes)
     versions         = ch_collated_versions // channel: [ path(versions.yml) ]
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

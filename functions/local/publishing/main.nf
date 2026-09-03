@@ -14,15 +14,19 @@
  */
 def getPlatformShortName(platform) {
     def shortname = ""
-    if(platform == "pacbio_hifi") {
+    if (platform == "pacbio_hifi") {
         shortname = "ccs"
-    } else if (platform == "oxford_nanopore") {
+    }
+    else if (platform == "oxford_nanopore") {
         shortname = "ont"
-    } else if (platform == "illumina_10x"){
+    }
+    else if (platform == "illumina_10x") {
         shortname = "10x"
-    } else if (platform == "illumina_hic") {
+    }
+    else if (platform == "illumina_hic") {
         shortname == "illumina"
-    } else if (platform == "illumina") {
+    }
+    else if (platform == "illumina") {
         shortname == "illumina"
     }
 
@@ -39,16 +43,30 @@ def getPlatformShortName(platform) {
 def specToAssemblyDir(spec) {
     def stage = spec.stage
 
-    if(spec.assembler == "hifiasm") {
-        if (stage == "hifiasm_assembly") { return "raw" }
-        if (stage == "purging") { return "purging" }
-        if (stage == "polishing") { return "polishing" }
-        if (stage == "scaffolding") { return "scaffolding" }
-        if (stage == "mitohifi_mito") { return "mito" }
-        if (stage == "mitohifi_plastid") { return "plastid" }
-    } else if (spec.assembler == "mitohifi") {
+    if (spec.assembler == "hifiasm") {
+        if (stage == "hifiasm_assembly") {
+            return "hifiasm"
+        }
+        if (stage == "purging") {
+            return "purging"
+        }
+        if (stage == "polishing") {
+            return "polishing"
+        }
+        if (stage == "scaffolding") {
+            return "scaffolding"
+        }
+        if (stage == "mitohifi_mito") {
+            return "mito"
+        }
+        if (stage == "mitohifi_plastid") {
+            return "plastid"
+        }
+    }
+    else if (spec.assembler == "mitohifi_mito") {
         return ""
-    } else if (spec.assembler == "oatk") {
+    }
+    else if (spec.assembler == "oatk") {
         return ""
     }
 }

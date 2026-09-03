@@ -1,11 +1,11 @@
-include { GENOME_STATISTICS } from '../../../subworkflows/sanger-tol/genome_statistics'
-include { HIFIASM_ASSEMBLY  } from '../../../subworkflows/local/hifiasm_assembly'
-include { MITOHIFI_ASSEMBLY } from '../../../subworkflows/local/mitohifi_assembly'
-include { PURGING           } from '../../../subworkflows/local/purging'
-include { POLISHING         } from '../../../subworkflows/local/polishing'
-include { SCAFFOLDING       } from '../../../subworkflows/local/scaffolding'
+include { GENOME_STATISTICS                           } from '../../../subworkflows/sanger-tol/genome_statistics'
+include { HIFIASM_ASSEMBLY                            } from '../../../subworkflows/local/hifiasm_assembly'
+include { MITOHIFI_ASSEMBLY                           } from '../../../subworkflows/local/mitohifi_assembly'
+include { PURGING                                     } from '../../../subworkflows/local/purging'
+include { POLISHING                                   } from '../../../subworkflows/local/polishing'
+include { SCAFFOLDING                                 } from '../../../subworkflows/local/scaffolding'
 
-include { setupStage        } from '../../../functions/local/assembly_stages'
+include { setupStage                                  } from '../../../functions/local/assembly_stages'
 
 include { GENERATE_SPECIFICATION_INDEX as INDEX_STAGE } from '../../../modules/local/generate_specification_index/main.nf'
 include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC  } from '../../../modules/local/generate_specification_index/main.nf'
@@ -32,16 +32,18 @@ workflow NUCLEAR_ASSEMBLY {
     //
     // Logic: Set up and deduplicate input stages
     //
-    ch_stages = ch_specs.flatMap { spec ->
-        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
-    }.unique()
+    ch_stages = ch_specs
+        .flatMap { spec ->
+            spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
+        }
+        .unique()
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     HIFIASM_ASSEMBLY(
-        ch_stages.filter { stage -> stage.stage == "base" },
-        ch_stages.filter { stage -> stage.stage == "hifiasm_assembly" }
+        ch_stages.filter { stage -> stage.stage == "hifiasm_base" },
+        ch_stages.filter { stage -> stage.stage == "hifiasm" },
     )
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
 
@@ -51,7 +53,7 @@ workflow NUCLEAR_ASSEMBLY {
     PURGING(
         ch_stages.filter { stage -> stage.stage == "purging" },
         ch_assemblies,
-        val_fastx_reads_per_chunk
+        val_fastx_reads_per_chunk,
     )
     ch_assemblies = ch_assemblies.mix(PURGING.out.purged_assemblies)
 
@@ -62,7 +64,7 @@ workflow NUCLEAR_ASSEMBLY {
         ch_stages.filter { stage -> stage.stage == "polishing" },
         ch_assemblies,
         val_polishing_container_provided,
-        val_sequences_per_polishing_chunk
+        val_sequences_per_polishing_chunk,
     )
     ch_assemblies = ch_assemblies.mix(POLISHING.out.polished_assemblies)
 
@@ -84,34 +86,24 @@ workflow NUCLEAR_ASSEMBLY {
     //
     // Subworkflow: calculate genome statistcs
     //
-    ch_genome_statistics_inputs = ch_assemblies
-        .multiMap { spec, hap1, hap2 ->
-            assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
-            fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
-            busco_lineage: [spec, val_busco_lineage]
-        }
+    ch_genome_statistics_inputs = ch_assemblies.multiMap { spec, hap1, hap2 ->
+        assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
+        fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
+        busco_lineage: [spec, val_busco_lineage]
+    }
 
     GENOME_STATISTICS(
         ch_genome_statistics_inputs.assemblies,
         ch_genome_statistics_inputs.fastk,
         ch_genome_statistics_inputs.busco_lineage,
-        val_busco_lineage_directory
+        val_busco_lineage_directory,
     )
 
     ch_statistics = GENOME_STATISTICS.out.stats
         .join(GENOME_STATISTICS.out.busco, remainder: true)
         .join(GENOME_STATISTICS.out.merqury, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
-                hap: spec._hap,
-                output: [
-                    statistics: [
-                        stats: stats,
-                        busco: busco,
-                        merqury: merqury
-                    ]
-                ]
-            ]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [hap: spec._hap, output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
         }
 
     //
@@ -136,12 +128,12 @@ workflow NUCLEAR_ASSEMBLY {
 
     INDEX_STAGE(
         ch_stages.filter { stage -> stage.stage != "base" },
-        ch_versions_to_index
+        ch_versions_to_index,
     )
 
     INDEX_SPEC(
         ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
-        ch_versions_to_index
+        ch_versions_to_index,
     )
 
     //

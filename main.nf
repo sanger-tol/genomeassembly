@@ -181,10 +181,10 @@ output {
     }
     hifiasm {
         path { spec ->
-            spec.output.hifiasm.fasta >> "${spec.name}/raw/"
-            spec.output.hifiasm.graphs >> "${spec.name}/raw/"
-            spec.output.hifiasm.bed >> "${spec.name}/raw/"
-            spec.output.hifiasm.log >> "${spec.name}/raw/"
+            spec.output.hifiasm.fasta >> "${spec.name}/hifiasm/"
+            spec.output.hifiasm.graphs >> "${spec.name}/hifiasm/"
+            spec.output.hifiasm.bed >> "${spec.name}/hifiasm/"
+            spec.output.hifiasm.log >> "${spec.name}/hifiasm/"
         }
     }
     purging {

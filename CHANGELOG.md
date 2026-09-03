@@ -10,6 +10,7 @@ This is a minor fix that slightly updates the format of the `index.json` files p
 ### Added
 
 - [#176](https://github.com/sanger-tol/genomeassembly/issues/176) `index.json` files now contain two extra fields: a `genomeassembly_version` field which captures the version of the pipeline used to generate the assembly, and a `genomeassembly_stage` field which captures the name of the assembly stage. The whole-pipeline index file sets this stage field to `pipeline`. (by @prototaxites)
+- [#176](https://github.com/sanger-tol/genomeassembly/issues/176) the `raw/` output directory has been renamed `hifiasm/`.
 
 ## v1.0.0 - Crimson Goregutter - [2026-08-17]
 
