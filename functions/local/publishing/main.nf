@@ -69,7 +69,5 @@ def specToAssemblyDir(spec) {
     else if (spec.assembler == "oatk") {
         return ""
     }
-    else {
-        error("Unexpected stage/assembler combination while constructing output directory names!")
-    }
+    error("Unexpected assembler/stage combination (${spec.assembler}/${spec.stage}) while constructing output directory names!")
 }

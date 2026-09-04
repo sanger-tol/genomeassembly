@@ -35,15 +35,18 @@
  */
 def validateReadFiles(meta, reads) {
     // Check that all files have the same extension
-    def extensions = reads.collect { file ->
-        if(file.getExtension() == "gz") {
-            return file.getName().tokenize(".").takeRight(2).join('.')
-        } else {
-            return file.getExtension()
+    def extensions = reads
+        .collect { file ->
+            if (file.getExtension() == "gz") {
+                return file.getName().tokenize(".").takeRight(2).join('.')
+            }
+            else {
+                return file.getExtension()
+            }
         }
-    }.unique()
+        .unique()
 
-    if(extensions.size() > 1) {
+    if (extensions.size() > 1) {
         error("Dataset validation error [${meta.id}:${meta.platform}]: Not all files are of the same type!")
     }
 
@@ -56,7 +59,7 @@ def validateReadFiles(meta, reads) {
     ].find { platform, _regex -> platform == meta.platform }
 
     // Validate that the correct extension is present for each platform
-    if(!(extensions[0] =~ platform_ext_map[1])) {
+    if (!(extensions[0] =~ platform_ext_map[1])) {
         error("Dataset validation error [${meta.id}:${meta.platform}]: File extension ${extensions[0]} does not match the expected input ${platform_ext_map[1]}.")
     }
 }
@@ -88,11 +91,11 @@ def checkDataExists(spec, datasets) {
         [name: 'hic_dataset', platform: spec.hic_platform],
         [name: 'polishing_dataset', platform: spec.polishing_platform],
         [name: 'maternal_dataset', platform: spec.maternal_platform],
-        [name: 'paternal_dataset', platform: spec.paternal_platform]
+        [name: 'paternal_dataset', platform: spec.paternal_platform],
     ].findAll { dataKey -> spec[dataKey.name] }
 
     platform_key.each { platform ->
-        if(spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform } ) {
+        if (spec[platform.name] && !datasets.find { data -> data.id == spec[platform.name] && data.platform == platform.platform }) {
             error("Assembly specification error [${spec.id}]: There is no ${platform.platform} dataset called '${spec[platform.name]}'!")
         }
     }

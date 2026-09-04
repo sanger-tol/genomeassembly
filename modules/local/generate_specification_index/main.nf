@@ -15,9 +15,13 @@ process GENERATE_SPECIFICATION_INDEX {
     // Define output JSON file
     def json_file = file("${task.workDir}/${prefix}.json")
 
-    // Extract the data we want from the map and clean it up
-    def genomeassembly_stage = spec.stage ?: "pipeline"
-    def json_spec = [genomeassembly_version: workflow.manifest.version, genomeassembly_stage: genomeassembly_stage] + spec.subMap(["data", "params", "tools"])
+    // Build base output
+    def pipeline_description = [
+        pipeline: "sanger-tol/genomeassembly",
+        pipeline_version: workflow.manifest.version,
+        pipeline_stage: spec.stage ?: "pipeline",
+    ]
+    def json_spec = pipeline_description + spec.subMap(["data", "params", "tools"])
 
     // Replace tools list with tools map
     json_spec.tools = json_spec.tools.collectEntries { stage, tools ->
