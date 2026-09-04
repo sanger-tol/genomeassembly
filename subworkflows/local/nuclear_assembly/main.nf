@@ -127,7 +127,7 @@ workflow NUCLEAR_ASSEMBLY {
         .reduce { a, b -> a + b }
 
     INDEX_STAGE(
-        ch_stages.filter { stage -> stage.stage != "base" },
+        ch_stages.filter { stage -> stage.stage != "hifiasm_base" },
         ch_versions_to_index,
     )
 

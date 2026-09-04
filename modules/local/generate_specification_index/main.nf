@@ -7,7 +7,7 @@ process GENERATE_SPECIFICATION_INDEX {
     val versions
 
     output:
-    val (out_spec), emit: spec
+    val out_spec, emit: spec
 
     exec:
     def prefix = task.ext.prefix ?: "${spec.id}"
