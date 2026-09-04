@@ -249,7 +249,7 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
                 data.maternal_platform == spec.maternal_platform,
                 data.paternal_dataset == spec.paternal_dataset,
                 data.paternal_platform == spec.paternal_platform,
-            ].all()
+            ].every()
         }
 
         outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs.mat_haptab]
