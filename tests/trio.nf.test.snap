@@ -1,7 +1,7 @@
 {
     "aBomVar4 - test trio assembly, mitohifi reads": {
         "content": [
-            78,
+            77,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",

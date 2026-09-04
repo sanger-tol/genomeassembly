@@ -1,7 +1,7 @@
 {
     "dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search": {
         "content": [
-            157,
+            155,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
