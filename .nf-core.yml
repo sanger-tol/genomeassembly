@@ -52,4 +52,4 @@ template:
     - multiqc
     - fastqc
   is_nfcore: false
-  version: 1.0.0
+  version: 1.0.1

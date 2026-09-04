@@ -123,6 +123,10 @@
                     "default": 10,
                     "description": "Minimum MapQ score for a Hi-C read to be retained for scaffolding."
                 },
+                "save_hic_bam_files": {
+                    "type": "boolean",
+                    "description": "Save Hi-C mapped BAM files to the output directory."
+                },
                 "build_pretext_map": {
                     "type": "boolean",
                     "default": true,
