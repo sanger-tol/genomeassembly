@@ -63,7 +63,7 @@ def specToAssemblyDir(spec) {
             return "plastid"
         }
     }
-    else if (spec.assembler == "mitohifi_mito") {
+    else if (spec.assembler == "mitohifi") {
         return ""
     }
     else if (spec.assembler == "oatk") {
