@@ -438,8 +438,6 @@
                 "dhQueRobu3.ul/hifiasm/merqury.ccs/asm.ccs.spectra-cn.ln.png",
                 "dhQueRobu3.ul/hifiasm/merqury.ccs/asm.ccs.spectra-cn.st.png",
                 "dhQueRobu3.ul/index.json",
-                "dhQueRobu3.ul/null",
-                "dhQueRobu3.ul/null/index.json",
                 "dhQueRobu3.ul/plastid",
                 "dhQueRobu3.ul/plastid/contigs_annotations.png",
                 "dhQueRobu3.ul/plastid/contigs_circularization",
@@ -707,7 +705,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,a1d9fb5c9495434c2f5946fa5447d083"
             ]
         ],
-        "timestamp": "2026-09-03T14:55:06.39768943",
+        "timestamp": "2026-09-07T09:59:19.633200293",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
