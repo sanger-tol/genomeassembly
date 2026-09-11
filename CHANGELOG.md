@@ -3,13 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.1 - Crimson Goregutter (patch 1) - [2026-08-17]
+## v1.0.1 - Crimson Goregutter (patch 1) - [2026-09-11]
 
-This is a minor fix that slightly modifies the format of the `index.json` files produced by the pipeline, and changes a couple of the pipeline outputs.
+This is a minor fix that slightly modifies the format of the `index.json` files produced by the pipeline, and makes a small set of changes to the pipeline outputs.
 
 ### Added
 
-- [#176](https://github.com/sanger-tol/genomeassembly/issues/176) `index.json` files now contain two extra fields: a `genomeassembly_version` field which captures the version of the pipeline used to generate the assembly, and a `genomeassembly_stage` field which captures the name of the assembly stage. The whole-pipeline index file sets this stage field to `pipeline`. (by @prototaxites)
+- [#176](https://github.com/sanger-tol/genomeassembly/issues/176) `index.json` files now contain three extra fields describing the pipeline (by @prototaxites):
+  - `pipeline_name`: fixed to "sanger-tol/genomeassembly"
+  - `pipeline_version`: the version of the pipeline used to generate the assembly
+  - `pipeline_stage`: the name of the assembly stage, or "pipeline" for the whole-assembly index file.
 - [#176](https://github.com/sanger-tol/genomeassembly/issues/176) the `raw/` output directory has been renamed `hifiasm/`.
 - [#176](https://github.com/sanger-tol/genomeassembly/issues/176) add a parameter `--save_hic_bam_files` to control whether the mapped Hi-C bam files are written to the output directory (disabled by default).
 
