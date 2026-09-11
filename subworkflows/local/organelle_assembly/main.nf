@@ -1,7 +1,7 @@
-include { OATK_ASSEMBLY     } from '../../../subworkflows/local/oatk_assembly'
-include { MITOHIFI_ASSEMBLY } from '../../../subworkflows/local/mitohifi_assembly'
+include { OATK_ASSEMBLY                              } from '../../../subworkflows/local/oatk_assembly'
+include { MITOHIFI_ASSEMBLY                          } from '../../../subworkflows/local/mitohifi_assembly'
 
-include { setupStage        } from '../../../functions/local/assembly_stages'
+include { setupStage                                 } from '../../../functions/local/assembly_stages'
 
 include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC } from '../../../modules/local/generate_specification_index'
 
@@ -13,9 +13,11 @@ workflow ORGANELLE_ASSEMBLY {
     //
     // Logic: Set up and deduplicate input stages
     //
-    ch_stages = ch_specs.flatMap { spec ->
-        spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
-    }.unique()
+    ch_stages = ch_specs
+        .flatMap { spec ->
+            spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
+        }
+        .unique()
 
     //
     // Subworkflow: assemble organelles with Oatk
@@ -28,7 +30,7 @@ workflow ORGANELLE_ASSEMBLY {
     // Subworkflow: assemble organelles with Mitohifi
     //
     MITOHIFI_ASSEMBLY(
-        ch_stages.filter { stage -> stage.stage == "mitohifi" },
+        ch_stages.filter { stage -> stage.stage == "mitohifi_mito" },
         channel.empty(),
     )
 
@@ -46,7 +48,7 @@ workflow ORGANELLE_ASSEMBLY {
 
     INDEX_SPEC(
         ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
-        ch_versions_to_index
+        ch_versions_to_index,
     )
 
     //
