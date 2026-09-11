@@ -39,7 +39,7 @@ For full details describing hifiasm outputs, please refer to the hifiasm documen
 <details markdown="1">
 <summary>Output files</summary>
 
-- `{asm.id}/raw/`
+- `{asm.id}/hifiasm/`
   - `*.fa.gz`: Assembly FASTA files (bgzip compressed). Includes primary (`p_ctg`), alternate (`a_ctg`), and/or haplotype-resolved (`hap1.p_ctg`, `hap2.p_ctg`) assemblies depending on the assembly mode.
   - `*.gfa.gz`: Assembly graphs in GFA format (bgzip compressed). Includes raw unitig graphs (`r_utg`), processed unitig graphs (`p_utg`), and primary contig graphs.
   - `*.bed.gz`: BED files with assembly information (bgzip compressed).

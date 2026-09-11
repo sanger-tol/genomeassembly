@@ -85,7 +85,9 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
     // Otherwise the unique stage hash is calculated using the data, parameters, and if
     // applicable the previous stage's hash.
     paramsConfig.each { stageName, config ->
-        if(!config.enabled) return
+        if (!config.enabled) {
+            return null
+        }
 
         // First, set the stage depenendencies as the previous stage processed.
         //
@@ -96,7 +98,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         def dependParams = prevParams
         def dependTools = prevTools
         if (config.depends) {
-            if(!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
+            if (!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
                 error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
             }
             dependHash = hashesByStage[config.depends]
@@ -111,17 +113,16 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         def stageTools = dependTools + [(stageName): config.tools]
 
         // If provided, append the extraParams to the spec
-        if(config.extraParams) {
+        if (config.extraParams) {
             stageParams = stageParams + config.extraParams
         }
 
         // Concatenate the data and params values to hash and generate it
         def hashContent = [
-            [spec.assembler] +
-            stageData.collect { type -> "${dataMap[type].id}" } +
-            stageParams.collect { k, v -> "${k}=${v}" }
-        ].join("&")
-
+            spec.assembler,
+            stageData.collect { type -> "${dataMap[type].id}" },
+            stageParams.collect { k, v -> "${k}=${v}" },
+        ].flatten().join("&")
         def stageHash = (dependHash + hashContent).md5()
 
         // Save the hash, params and tools in the
@@ -137,7 +138,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
             prevID: dependHash,
             dataList: stageData,
             params: stageParams,
-            tools: stageTools
+            tools: stageTools,
         ]
 
         // Add the stage to the stages list
@@ -149,7 +150,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 
         // Finally, store the hash for the next iteration but only
         // if we didn't depend on a specific step
-        if(!config.depends) {
+        if (!config.depends) {
             prevData = stageData
             prevHash = stageHash
             prevParams = stageParams
@@ -164,7 +165,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         data: dataMap,
         params: allParams,
         stages: allStages,
-        tools: allTools
+        tools: allTools,
     ]
 }
 
@@ -206,12 +207,21 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 def generateDataMap(spec, dataList, merquryHaptabs) {
 
     // Define an empty dataset specification
-    def emptyDataset = [id: null, platform: null, reads: [], fk_hist: [], fk_ktab: [], yak: [], haptab: []]
+    def emptyDataset = [
+        id: null,
+        platform: null,
+        reads: [],
+        fk_hist: [],
+        fk_ktab: [],
+        yak: [],
+        haptab: [],
+    ]
     def allDataTypes = ["long_read", "ultralong", "hic", "polishing", "maternal", "paternal"]
     def outputDataMap = allDataTypes.collectEntries { type -> [(type): emptyDataset.clone()] }
 
     // Get the data types used
-    def usedDataTypes = spec.keySet()
+    def usedDataTypes = spec
+        .keySet()
         .findAll { k -> k.endsWith("dataset") && spec[k] }
         .collect { type -> type - ~/_dataset/ }
 
@@ -230,14 +240,16 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
     }
 
     // Add maternal and paternal haptabs to the dataset
-    if(merquryHaptabs && usedDataTypes.containsAll(["maternal", "paternal"])) {
+    if (merquryHaptabs && usedDataTypes.containsAll(["maternal", "paternal"])) {
         def haptabs = merquryHaptabs.find { data ->
-            data.long_read_dataset == spec.long_read_dataset &&
-            data.long_read_platform == spec.long_read_platform &&
-            data.maternal_dataset == spec.maternal_dataset &&
-            data.maternal_platform == spec.maternal_platform &&
-            data.paternal_dataset == spec.paternal_dataset &&
-            data.paternal_platform == spec.paternal_platform
+            [
+                data.long_read_dataset == spec.long_read_dataset,
+                data.long_read_platform == spec.long_read_platform,
+                data.maternal_dataset == spec.maternal_dataset,
+                data.maternal_platform == spec.maternal_platform,
+                data.paternal_dataset == spec.paternal_dataset,
+                data.paternal_platform == spec.paternal_platform,
+            ].every()
         }
 
         outputDataMap["maternal"] = outputDataMap["maternal"] + [haptab: haptabs.mat_haptab]
@@ -274,26 +286,26 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
  */
 def stageHifiasmSpec(spec, dataList, haptabList) {
     def STAGE_CONFIG = [
-        base: [
+        hifiasm_base: [
             data: ["long_read"],
             params: ["assembler", "hifiasm_bin_arguments", "coverage"],
             enabled: true,
             depends: null,
             extraParams: null,
-            tools: []
+            tools: [],
         ],
-        hifiasm_assembly: [
+        hifiasm: [
             data: [
                 "ultralong",
                 "hic",
                 "maternal",
-                "paternal"
+                "paternal",
             ],
             params: ["phased_assembly", "trio_assembly", "hifiasm_arguments"],
             enabled: true,
             depends: null,
             extraParams: null,
-            tools: ["HIFIASM"]
+            tools: ["HIFIASM"],
         ],
         purging: [
             data: [],
@@ -301,7 +313,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.purge,
             depends: null,
             extraParams: null,
-            tools: ["FASTXALIGN_MINIMAP2ALIGN", "PURGEDUPS_PURGEDUPS"]
+            tools: ["FASTXALIGN_MINIMAP2ALIGN", "PURGEDUPS_PURGEDUPS"],
         ],
         polishing: [
             data: ["polishing"],
@@ -309,7 +321,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.polish,
             depends: null,
             extraParams: null,
-            tools: ["LONGRANGER_ALIGN", "FREEBAYES"]
+            tools: ["LONGRANGER_ALIGN", "FREEBAYES"],
         ],
         scaffolding: [
             data: [],
@@ -317,7 +329,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
             enabled: spec.scaffold,
             depends: null,
             extraParams: null,
-            tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"]
+            tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"],
         ],
         mitohifi_mito: [
             data: [],
@@ -327,12 +339,12 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "mitohifi_mito_reference_fa",
                 "mitohifi_mito_reference_gb",
                 "mitohifi_mito_genetic_code",
-                "mitohifi_arguments"
+                "mitohifi_arguments",
             ],
             enabled: spec.find_mito,
-            depends: "hifiasm_assembly",
+            depends: "hifiasm",
             extraParams: [mode: "contigs", organelle: "mito"],
-            tools: ["MITOHIFI_MITOHIFI"]
+            tools: ["MITOHIFI_MITOHIFI"],
         ],
         mitohifi_plastid: [
             data: [],
@@ -342,13 +354,13 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "mitohifi_plastid_reference_fa",
                 "mitohifi_plastid_reference_gb",
                 "mitohifi_plastid_genetic_code",
-                "mitohifi_arguments"
+                "mitohifi_arguments",
             ],
             enabled: spec.find_plastid,
-            depends: "hifiasm_assembly",
+            depends: "hifiasm",
             extraParams: [mode: "contigs", organelle: "plastid"],
-            tools: ["MITOHIFI_MITOHIFI"]
-        ]
+            tools: ["MITOHIFI_MITOHIFI"],
+        ],
     ]
 
     return stageSpec(spec, STAGE_CONFIG, dataList, haptabList)
@@ -373,24 +385,21 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
  *         as returned by stageSpec()
  */
 def stageOatkSpec(spec, dataList, haptabList) {
-    def OATK_CONFIG = [
-        oatk: [
-            data: ["long_read"],
-            params: [
-                "coverage",
-                "oatk_kmer_size",
-                "oatk_coverage_cutoff",
-                "oatk_arguments",
-                "oatk_mito_hmm",
-                "oatk_plastid_hmm",
-            ],
-            enabled: true,
-            depends: null,
-            extraParams: null,
-            tools: ["OATK"]
-        ]
-
-    ]
+    def OATK_CONFIG = [oatk: [
+        data: ["long_read"],
+        params: [
+            "coverage",
+            "oatk_kmer_size",
+            "oatk_coverage_cutoff",
+            "oatk_arguments",
+            "oatk_mito_hmm",
+            "oatk_plastid_hmm",
+        ],
+        enabled: true,
+        depends: null,
+        extraParams: null,
+        tools: ["OATK"],
+    ]]
 
     stageSpec(spec, OATK_CONFIG, dataList, haptabList)
 }
@@ -413,23 +422,21 @@ def stageOatkSpec(spec, dataList, haptabList) {
  *         as returned by stageSpec()
  */
 def stageMitohifiSpec(spec, dataList, haptabList) {
-    def MITOHIFI_CONFIG = [
-        mitohifi: [
-            data: ["long_read"],
-            params: [
-                "download_mito_reference",
-                "mitohifi_reference_species",
-                "mitohifi_mito_reference_fa",
-                "mitohifi_mito_reference_gb",
-                "mitohifi_mito_genetic_code",
-                "mitohifi_arguments"
-            ],
-            enabled: true,
-            depends: null,
-            extraParams: [mode: "reads", organelle: "mito"],
-            tools: ["MITOHIFI_MITOHIFI"]
-        ]
-    ]
+    def MITOHIFI_CONFIG = [mitohifi_mito: [
+        data: ["long_read"],
+        params: [
+            "download_mito_reference",
+            "mitohifi_reference_species",
+            "mitohifi_mito_reference_fa",
+            "mitohifi_mito_reference_gb",
+            "mitohifi_mito_genetic_code",
+            "mitohifi_arguments",
+        ],
+        enabled: true,
+        depends: null,
+        extraParams: [mode: "reads", organelle: "mito"],
+        tools: ["MITOHIFI_MITOHIFI"],
+    ]]
 
     return stageSpec(spec, MITOHIFI_CONFIG, dataList, haptabList)
 }
