@@ -77,6 +77,7 @@ nextflow_workflow {
                     workflow.out.scaffolds_fasta,
                     workflow.out.scaffolds_agp,
                     workflow.out.scaffolds_pairs,
+                    workflow.out.scaffolds_chromsizes,
                     workflow.out.yahs_bin,
                     workflow.out.yahs_inital,
                     workflow.out.yahs_intermediate

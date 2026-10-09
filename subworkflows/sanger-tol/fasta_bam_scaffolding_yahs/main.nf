@@ -55,11 +55,12 @@ workflow FASTA_BAM_SCAFFOLDING_YAHS {
     YAHS_MAKEPAIRSFILE(ch_pairs_input)
 
     emit:
-    scaffolds_fasta   = YAHS.out.scaffolds_fasta
-    scaffolds_agp     = YAHS.out.scaffolds_agp
-    scaffolds_pairs   = YAHS_MAKEPAIRSFILE.out.pairs
-    yahs_bin          = YAHS.out.binary
-    yahs_inital       = YAHS.out.initial_break_agp
-    yahs_intermediate = YAHS.out.round_agp
-    yahs_log          = YAHS.out.log
+    scaffolds_fasta      = YAHS.out.scaffolds_fasta
+    scaffolds_agp        = YAHS.out.scaffolds_agp
+    scaffolds_pairs      = YAHS_MAKEPAIRSFILE.out.pairs
+    scaffolds_chromsizes = SAMTOOLS_FAIDX_SCAFFOLDS.out.sizes
+    yahs_bin             = YAHS.out.binary
+    yahs_inital          = YAHS.out.initial_break_agp
+    yahs_intermediate    = YAHS.out.round_agp
+    yahs_log             = YAHS.out.log
 }

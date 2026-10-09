@@ -350,7 +350,7 @@
                     },
                     "fasta_bam_scaffolding_yahs": {
                         "branch": "main",
-                        "git_sha": "7e749084c4eb31698391200ff96f31eb893f512f",
+                        "git_sha": "7487a9bff7d0af9d09ef29097e268e6ad5af1c0f",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_purge_retained_haplotype": {

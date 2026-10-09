@@ -47,6 +47,12 @@ output:
         Pairs file describing Hi-C contacts between scaffolds, translated from the contigs pairs file
         Structure: [ val(meta), path(pairs) ]
       pattern: "*.pairs.gz"
+  - scaffolds_chromsizes:
+      type: file
+      description: |
+        Chromsizes file for the scaffolds. A headerless TSV of format <contigname>\t<size>
+        Structure: [ val(meta), path(chromsizes) ]
+      pattern: "*.sizes"
   - yahs_bin:
       type: file
       description: |

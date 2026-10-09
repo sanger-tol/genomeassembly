@@ -30,6 +30,14 @@
                     {
                         "id": "test"
                     },
+                    "test_scaffolds_final.fa.sizes:md5,e3063bfb08e2b8b817bfc026b23cccec"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
                     "test.bin:md5,00812a61ba6f5829bbf9ec32ec08c986"
                 ]
             ],
@@ -45,7 +53,7 @@
                 
             ]
         ],
-        "timestamp": "2026-10-09T09:55:02.220969",
+        "timestamp": "2026-10-09T11:59:11.817427",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
