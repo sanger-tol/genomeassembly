@@ -22,6 +22,14 @@
                     {
                         "id": "test"
                     },
+                    "test.pairs.gz:md5,1aac716e8c0e5e902d25e0302fb9492f"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
                     "test.bin:md5,00812a61ba6f5829bbf9ec32ec08c986"
                 ]
             ],
@@ -34,17 +42,13 @@
                 ]
             ],
             [
-
-            ],
-            "test.pretext",
-            "test_FullMap.png",
-            "test.mcool",
-            "test.hic"
+                
+            ]
         ],
+        "timestamp": "2026-10-09T09:55:02.220969",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-10T16:39:56.166521"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

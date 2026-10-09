@@ -1,8 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "fasta_bam_scaffolding_yahs"
 description: |
-  Scaffold an assembly FASTA file using Hi-C contacts with YaHS, and build
-  contact maps for output visualisation.
+  Scaffold an assembly FASTA file using Hi-C contacts with YaHS.
 keywords:
   - scaffolding
   - hic
@@ -29,21 +28,6 @@ input:
         Channel containing BAM files of Hi-C reads mapped to each assembly.
         Structure: [ val(meta), path(bam) ]
       pattern: "*.{bam/cram/sam}"
-  - val_build_pretext:
-      type: boolean
-      description: Build a PretextMap contact map
-  - val_create_pretext_snapshot:
-      type: boolean
-      description: Create a snapshot of the PretextMap contact map
-  - val_build_cooler:
-      type: boolean
-      description: Build a Cooler contact map
-  - val_build_juicer:
-      type: boolean
-      description: Build a Juicer contact map
-  - val_cool_bin:
-      type: integer
-      description: Bin size for cooler
 output:
   - scaffolds_fasta:
       type: file
@@ -57,6 +41,12 @@ output:
         AGP describing how contigs are transformed into final scaffolds
         Structure: [ val(meta), path(agp) ]
       pattern: "*.agp"
+  - scaffolds_pairs:
+      type: file
+      description: |
+        Pairs file describing Hi-C contacts between scaffolds, translated from the contigs pairs file
+        Structure: [ val(meta), path(pairs) ]
+      pattern: "*.pairs.gz"
   - yahs_bin:
       type: file
       description: |
@@ -81,30 +71,6 @@ output:
         YaHS log file
         Structure: [ val(meta), path(log) ]
       pattern: "*.log"
-  - pretext:
-      type: file
-      description: |
-        Contact map in PretextMap format.
-        Structure: [ val(meta), path(pretext) ]
-      pattern: "*.pretext"
-  - pretext_png:
-      type: file
-      description: |
-        PNG visualisation of the Pretext contact map.
-        Structure: [ val(meta), path(png) ]
-      pattern: "*.png"
-  - cool:
-      type: file
-      description: |
-        Contact map in mCooler format
-        Structure: [ val(meta), path(mcool) ]
-      pattern: "*.mcool"
-  - hic:
-      type: file
-      description: |
-        Contact map in Juicer format
-        Structure: [ val(meta), path(hic) ]
-      pattern: "*.hic"
 authors:
   - "@prototaxites"
 maintainers:

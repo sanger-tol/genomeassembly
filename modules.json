@@ -82,7 +82,7 @@
                     },
                     "gawk": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "7844e96252d0693fb2331969a1c9790eb831b0f6",
                         "installed_by": ["pairs_create_contact_maps"]
                     },
                     "genomescope2": {
@@ -102,7 +102,7 @@
                     },
                     "juicertools/pre": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "7844e96252d0693fb2331969a1c9790eb831b0f6",
                         "installed_by": ["pairs_create_contact_maps"]
                     },
                     "merquryfk/hapmaker": {
@@ -350,7 +350,7 @@
                     },
                     "fasta_bam_scaffolding_yahs": {
                         "branch": "main",
-                        "git_sha": "897dce85419fc4852ac366deeccdf923248e2b3f",
+                        "git_sha": "7e749084c4eb31698391200ff96f31eb893f512f",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_purge_retained_haplotype": {
@@ -370,8 +370,8 @@
                     },
                     "pairs_create_contact_maps": {
                         "branch": "main",
-                        "git_sha": "304455b447d7768cfc22181542f1e5b1b4fe2d8b",
-                        "installed_by": ["fasta_bam_scaffolding_yahs"]
+                        "git_sha": "7e749084c4eb31698391200ff96f31eb893f512f",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }
