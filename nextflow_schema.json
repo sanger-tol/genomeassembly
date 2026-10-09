@@ -134,7 +134,7 @@
                 },
                 "build_juicer_map": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Build a Hi-C contact map for visualisation with Juicer."
                 },
                 "build_cooler_map": {

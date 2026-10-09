@@ -4,7 +4,7 @@
             11,
             {
                 "Workflow": {
-                    "sanger-tol/genomeassembly": "v1.0.1"
+                    "sanger-tol/genomeassembly": "v1.1.0dev"
                 }
             },
             [
