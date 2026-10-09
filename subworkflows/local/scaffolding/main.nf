@@ -46,19 +46,29 @@ workflow SCAFFOLDING {
     )
 
     //
-    // Subworkflow: Calculate stats for Hi-C mapping
+    // Logic: Once Hi-C mapping has run, combine everything with the scaffolding specifications
+    // so we can attach the scaffolding parameters, and make joining below cleaner by doing this
+    // once.
     //
-    ch_hic_mapping_stats_input = CRAM_MAP_ILLUMINA_HIC.out.bam
+    ch_post_hic_inputs = CRAM_MAP_ILLUMINA_HIC.out.bam
         .combine(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
         .combine(ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2), by: 0)
-        .multiMap { meta, bam, bai, asm ->
-            bam: [meta, bam, bai]
-            asm: [meta, asm, []]
+        .combine(ch_scaffolding_specs)
+        .filter { input_spec, _bam, _csi, hap, scaf_spec -> input_spec.id == scaf_spec.prevID }
+        .multiMap { input_spec, bam, csi, hap, spec ->
+            def out_spec = spec + input_spec.subMap("_hap")
+            asm: [out_spec, hap]
+            asm_fai: [out_spec, hap, []]
+            bam: [out_spec, bam]
+            bam_csi: [out_spec, bam, csi]
         }
 
+    //
+    // Subworkflow: Calculate stats for Hi-C mapping
+    //
     BAM_STATS_SAMTOOLS(
-        ch_hic_mapping_stats_input.bam,
-        ch_hic_mapping_stats_input.asm,
+        ch_post_hic_inputs.bam_csi,
+        ch_post_hic_inputs.asm_fai
     )
 
     //
@@ -67,19 +77,9 @@ workflow SCAFFOLDING {
     // Here we take the Hi-C mapping outputs and replace the spec to
     // attach the scaffolding parameters.
     //
-    ch_scaffolding_inputs = ch_hic_mapping_inputs.hap1
-        .mix(ch_hic_mapping_inputs.hap2)
-        .combine(CRAM_MAP_ILLUMINA_HIC.out.bam, by: 0)
-        .combine(ch_scaffolding_specs)
-        .filter { input_spec, _hap, _bam, spec -> input_spec.id == spec.prevID }
-        .multiMap { input_spec, hap, bam, spec ->
-            assemblies: [spec + input_spec.subMap("hap"), hap]
-            bam: [spec + input_spec.subMap("hap"), bam]
-        }
-
     FASTA_BAM_SCAFFOLDING_YAHS(
-        ch_scaffolding_inputs.assemblies,
-        ch_scaffolding_inputs.bam,
+        ch_post_hic_inputs.asm,
+        ch_post_hic_inputs.bam
     )
 
     //
@@ -127,8 +127,7 @@ workflow SCAFFOLDING {
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
     //
     ch_scaffolding_output = BGZIP_SCAFFOLDED.out.output
-        .join(CRAM_MAP_ILLUMINA_HIC.out.bam, by: 0)
-        .join(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
+        .join(ch_post_hic_inputs.bam_csi, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.stats, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.flagstat, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.idxstats, by: 0)

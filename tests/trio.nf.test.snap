@@ -1,7 +1,7 @@
 {
     "aBomVar4 - test trio assembly, mitohifi reads": {
         "content": [
-            77,
+            73,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -44,9 +44,6 @@
                 "FASTK_HISTEX": {
                     "fastk": 1.2
                 },
-                "GAWK_PROCESS_PAIRS_FILE": {
-                    "gawk": "5.3.1"
-                },
                 "GENOMESCOPE2": {
                     "genomescope2": 2.0
                 },
@@ -60,9 +57,6 @@
                 "HIFIASM_BIN": {
                     "hifiasm": "0.25.0-r726",
                     "samtools": 1.23
-                },
-                "JUICERTOOLS_PRE": {
-                    "juicer_tools": "2.20.00"
                 },
                 "MERQURYFK_HAPMAKER": {
                     "fastk": 1.2,
@@ -290,11 +284,9 @@
                 "aBomVar4.trio/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.json",
                 "aBomVar4.trio/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.txt",
                 "aBomVar4.trio/scaffolding/contact_maps",
-                "aBomVar4.trio/scaffolding/contact_maps/asm_hap1.hic",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap1.mcool",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap1.pretext",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap1.pretext.FullMap.png",
-                "aBomVar4.trio/scaffolding/contact_maps/asm_hap2.hic",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap2.mcool",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap2.pretext",
                 "aBomVar4.trio/scaffolding/contact_maps/asm_hap2.pretext.FullMap.png",
@@ -391,8 +383,6 @@
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
-                "asm_hap1.hic:md5,79cda3d934c9861cb73513b5d9c9c846",
-                "asm_hap2.hic:md5,1a32773bc1d24951284a45f95031e20c",
                 "asm_hap1.flagstat:md5,37e9172a8a3a0235b46145e29eecb680",
                 "asm_hap1.idxstats:md5,77841ad8d7a159ced33aea4469aae1f0",
                 "asm_hap1.stats:md5,b13efaaae5980ea6d3ace7fc4ba8227e",
@@ -407,10 +397,10 @@
                 "asm_hap2_scaffolds_final.agp:md5,ff4dfc15b164603e6916f7375d9b5b72"
             ]
         ],
-        "timestamp": "2026-09-03T15:01:26.978512425",
+        "timestamp": "2026-10-09T15:42:54.195969286",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     }
 }

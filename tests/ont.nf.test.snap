@@ -1,7 +1,7 @@
 {
     "dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search": {
         "content": [
-            155,
+            147,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -47,9 +47,6 @@
                 "FASTK_HISTEX": {
                     "fastk": 1.2
                 },
-                "GAWK_PROCESS_PAIRS_FILE": {
-                    "gawk": "5.3.1"
-                },
                 "GENOMESCOPE2": {
                     "genomescope2": 2.0
                 },
@@ -63,9 +60,6 @@
                 "HIFIASM_BIN": {
                     "hifiasm": "0.25.0-r726",
                     "samtools": 1.23
-                },
-                "JUICERTOOLS_PRE": {
-                    "juicer_tools": "2.20.00"
                 },
                 "MERQURYFK_MERQURYFK": {
                     "R": "4.3.3",
@@ -294,11 +288,9 @@
                 "dhQueRobu3.ont/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.json",
                 "dhQueRobu3.ont/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.txt",
                 "dhQueRobu3.ont/scaffolding/contact_maps",
-                "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap1.hic",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap1.mcool",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap1.pretext",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap1.pretext.FullMap.png",
-                "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap2.hic",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap2.mcool",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap2.pretext",
                 "dhQueRobu3.ont/scaffolding/contact_maps/asm_hap2.pretext.FullMap.png",
@@ -514,11 +506,9 @@
                 "dhQueRobu3.ul/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.json",
                 "dhQueRobu3.ul/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.txt",
                 "dhQueRobu3.ul/scaffolding/contact_maps",
-                "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap1.hic",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap1.mcool",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap1.pretext",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap1.pretext.FullMap.png",
-                "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap2.hic",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap2.mcool",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap2.pretext",
                 "dhQueRobu3.ul/scaffolding/contact_maps/asm_hap2.pretext.FullMap.png",
@@ -614,8 +604,6 @@
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
-                "asm_hap1.hic:md5,1cd69967fb2233483cfb252120c70ebd",
-                "asm_hap2.hic:md5,df0cc542eef75b00855f178b93c5983d",
                 "asm_hap1.flagstat:md5,7abd8c2ab9fe01b6a768e3800172a7fa",
                 "asm_hap1.idxstats:md5,43b526c64d3ffd29ac48e8f8fbac327d",
                 "asm_hap1.stats:md5,9356e6875687a0423b4576eef672cf8c",
@@ -684,8 +672,6 @@
                 "311633at2759.gff:md5,e2b58763f3d33fd3190a1e88c5e9a702",
                 "full_table.tsv:md5,3a0ebfa7e087638751c7386297962038",
                 "missing_busco_list.tsv:md5,70005460c898339c24f5d570df17c12c",
-                "asm_hap1.hic:md5,106c3d21dd432fb0dc9cc29bb5db14b5",
-                "asm_hap2.hic:md5,6cfc6d90ebfe3ca32ce4a6cad6ce1c9d",
                 "asm_hap1.flagstat:md5,5fc8993f04544c56944f2c656d9606fa",
                 "asm_hap1.idxstats:md5,9587b84a3a28c5f8e8baf797a8291b02",
                 "asm_hap1.stats:md5,8ff3e568f6b4a1e90da89c842aa53f6e",
@@ -705,10 +691,10 @@
                 "asm_hap2_scaffolds_final.agp:md5,a1d9fb5c9495434c2f5946fa5447d083"
             ]
         ],
-        "timestamp": "2026-09-07T09:59:19.633200293",
+        "timestamp": "2026-10-09T15:35:55.11211016",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     }
 }
