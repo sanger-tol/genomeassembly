@@ -1,7 +1,7 @@
 {
     "icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only": {
         "content": [
-            170,
+            162,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -64,9 +64,6 @@
                 "FASTXALIGN_PYFASTXINDEX": {
                     "slice_fasta.py": "1.0.0"
                 },
-                "GAWK_PROCESS_PAIRS_FILE": {
-                    "gawk": "5.3.1"
-                },
                 "GENOMESCOPE2": {
                     "genomescope2": 2.0
                 },
@@ -80,9 +77,6 @@
                 "HIFIASM_BIN": {
                     "hifiasm": "0.25.0-r726",
                     "samtools": 1.23
-                },
-                "JUICERTOOLS_PRE": {
-                    "juicer_tools": "2.20.00"
                 },
                 "MERQURYFK_MERQURYFK": {
                     "R": "4.3.3",
@@ -154,7 +148,7 @@
                     "samtools": 1.24
                 },
                 "Workflow": {
-                    "sanger-tol/genomeassembly": "v1.0.1"
+                    "sanger-tol/genomeassembly": "v1.1.0dev"
                 },
                 "YAHS": {
                     "yahs": "1.2.2"
@@ -355,11 +349,9 @@
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.json",
                 "icAdaBipu1.phased/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.txt",
                 "icAdaBipu1.phased/scaffolding/contact_maps",
-                "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap1.hic",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap1.mcool",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap1.pretext",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap1.pretext.FullMap.png",
-                "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap2.hic",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap2.mcool",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap2.pretext",
                 "icAdaBipu1.phased/scaffolding/contact_maps/asm_hap2.pretext.FullMap.png",
@@ -647,11 +639,9 @@
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.json",
                 "icAdaBipu1.pri/scaffolding/busco.eukaryota_odb12/short_summary.specific.eukaryota_odb12.asm_hap2_scaffolds_final.fa.txt",
                 "icAdaBipu1.pri/scaffolding/contact_maps",
-                "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap1.hic",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap1.mcool",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap1.pretext",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap1.pretext.FullMap.png",
-                "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap2.hic",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap2.mcool",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap2.pretext",
                 "icAdaBipu1.pri/scaffolding/contact_maps/asm_hap2.pretext.FullMap.png",
@@ -754,8 +744,6 @@
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
-                "asm_hap1.hic:md5,183093e06305b4497a64a6e61d06b96b",
-                "asm_hap2.hic:md5,e43e437eaa3ddc80f8eaece11b984262",
                 "asm_hap1.flagstat:md5,35b38248e17520143bd8f375565bdaf1",
                 "asm_hap1.idxstats:md5,00eb7b34fa91ca264ecffe0db010e8d9",
                 "asm_hap1.stats:md5,05cdd347af6046d6490af55dcf38c671",
@@ -829,8 +817,6 @@
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
-                "asm_hap1.hic:md5,dea918fd8273c97f2b8adfd5f8576f98",
-                "asm_hap2.hic:md5,06fb543ad9a602ea813f29c4517187b0",
                 "asm_hap1.flagstat:md5,3bc3ff9ae08e2651ad01c7411ae43ece",
                 "asm_hap1.idxstats:md5,291ddbd9a1bfe3a2746be043123572c4",
                 "asm_hap1.stats:md5,7dca8d8413befa131bdae697c90e81e6",
@@ -848,10 +834,10 @@
                 "asm_hap2_scaffolds_final.agp:md5,71e9ff335b18274c12ea970407a87c1a"
             ]
         ],
-        "timestamp": "2026-09-07T09:28:11.975185826",
+        "timestamp": "2026-10-09T15:00:16.961763149",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     }
 }

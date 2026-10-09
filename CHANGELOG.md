@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0dev - unnamed - [TBD]
+
+### Added
+
+- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) Hi-C is now mapped to assemblies bearing their input stage specification rather than their scaffolding specification. This makes changes to scaffolding parameters not require re-mapping the same Hi-C to the same assembly.
+
+### Fixed
+
+- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) When running Hi-C mapping, the Hi-C mapped BAMs are now tied to their input stage specification rather than their scaffolding stage specification. This means that changing `yahs_arguments` does not result in re-mapping of Hi-C to the same base assembly, and Hi-C BAMs are now re-used across scaffolding.
+- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
+
+### Dependencies
+
+| Module | Tool | Old version | New version |
+| ------ | ---- | ----------- | ----------- |
+
 ## v1.0.1 - Crimson Goregutter (patch 1) - [2026-09-11]
 
 This is a minor fix that slightly modifies the format of the `index.json` files produced by the pipeline, and makes a small set of changes to the pipeline outputs.
@@ -64,43 +80,42 @@ The full changelog is as follows:
 
 ### Dependencies
 
-| Module                  | Tool            | Old version | New version       |
-| ----------------------- | --------------- | ----------- | ----------------- |
-| bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
-| bcftools/consensus      | bcftools        | 1.21        | 1.23.1            |
-| bcftools/index          | bcftools        | 1.21        | 1.23.1            |
-| bcftools/norm           | bcftools        | 1.21        | 1.23.1            |
-| bcftools/sort           | bcftools        | 1.21        | 1.23.1            |
-| bcftools/view           | bcftools        | 1.21        | 1.23.1            |
-| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
-| busco/busco             | busco           | 6.0.0       | 6.1.0             |
-| fastk/fastk             | fastk           | 1.1.0       | 1.2               |
-| fastk/histex            | fastk           | 1.1.0       | 1.2               |
-| freebayes               | freebayes       | 1.3.6       | 1.3.10            |
-| gawk                    | gawk            | 5.3.0       | 5.3.1             |
-| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
-| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
-| gfastats                | gfastats        | 1.3.10      | 1.3.11            |
-| htslib/bgziptabix       | bgzip           | -           | 1.24              |
-| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
-| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
-| pretextmap              | samtools        | 1.17        | 1.23              |
-| pretextmap              | pretextmap      | 0.1.9       | 0.2.3             |
-| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5             |
-| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
-| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
-| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
-| samtools/faidx          | samtools        | 1.22.1      | 1.24              |
-| samtools/flagstat       | samtools        | 1.22.1      | 1.24              |
-| samtools/idxstats       | samtools        | 1.22.1      | 1.24              |
-| samtools/index          | samtools        | 1.22.1      | 1.24              |
-| samtools/merge          | samtools        | 1.22.1      | 1.24              |
-| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1            |
-| samtools/splitheader    | samtools        | 1.22.1      | 1.24              |
-| samtools/stats          | samtools        | 1.22.1      | 1.24              |
-| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0            |
-| tabix/bgzip             | bgzip           | 1.21.0      | -                 |
-| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
+| Module                  | Tool            | Old version | New version |
+| ----------------------- | --------------- | ----------- | ----------- |
+| bcftools/consensus      | bcftools        | 1.21        | 1.23.1      |
+| bcftools/index          | bcftools        | 1.21        | 1.23.1      |
+| bcftools/norm           | bcftools        | 1.21        | 1.23.1      |
+| bcftools/sort           | bcftools        | 1.21        | 1.23.1      |
+| bcftools/view           | bcftools        | 1.21        | 1.23.1      |
+| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23        |
+| busco/busco             | busco           | 6.0.0       | 6.1.0       |
+| fastk/fastk             | fastk           | 1.1.0       | 1.2         |
+| fastk/histex            | fastk           | 1.1.0       | 1.2         |
+| freebayes               | freebayes       | 1.3.6       | 1.3.10      |
+| gawk                    | gawk            | 5.3.0       | 5.3.1       |
+| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0     |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0       |
+| gfastats                | gfastats        | 1.3.10      | 1.3.11      |
+| htslib/bgziptabix       | bgzip           | -           | 1.24        |
+| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2         |
+| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2         |
+| pretextmap              | samtools        | 1.17        | 1.23        |
+| pretextmap              | pretextmap      | 0.1.9       | 0.2.3       |
+| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5       |
+| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0       |
+| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0       |
+| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23        |
+| samtools/faidx          | samtools        | 1.22.1      | 1.24        |
+| samtools/flagstat       | samtools        | 1.22.1      | 1.24        |
+| samtools/idxstats       | samtools        | 1.22.1      | 1.24        |
+| samtools/index          | samtools        | 1.22.1      | 1.24        |
+| samtools/merge          | samtools        | 1.22.1      | 1.24        |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1      |
+| samtools/splitheader    | samtools        | 1.22.1      | 1.24        |
+| samtools/stats          | samtools        | 1.22.1      | 1.24        |
+| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0      |
+| tabix/bgzip             | bgzip           | 1.21.0      | -           |
+| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23        |
 
 ### Deprecated
 
