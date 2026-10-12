@@ -127,11 +127,11 @@ These options can be used if the `assembly_type` field is set to "nuclear".
 
 > **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 
-The initial Hifiasm assembly stage can be skipped by providing a list of assemblies to the `assemblies` field of the assembly specification file. In this case, only stages downstream of Hifiasm assembly (purging, polishing, and scaffolding) will run as otherwise specified in the specification. The assemblies must be provided in haplotype order - that is, the first assemblyt must be haplotype 1, the second haplotype 2, etc.. Currently only two assemblies are able to be provided - any additional assemblies are skipped with a warning. This will be changed in a future release.
+The initial Hifiasm assembly stage can be skipped by providing a list of assemblies to the `assemblies` field of the assembly specification file. In this case, only stages downstream of Hifiasm assembly (purging, polishing, and scaffolding) will run as otherwise specified in the specification. The assemblies must be provided in haplotype order - that is, the first assembly must be haplotype 1, the second haplotype 2, etc.. Currently only two assemblies are able to be provided - any additional assemblies are skipped with a warning. This will be changed in a future release.
 
 #### Organellar assembly options
 
-The following options can be used when `assembly_type` is "organellar". Currently, this requires that `long_read_platform` is "pacbio_hifi". When creating an organellar assembly, the `organelle_assembler` field is also required, and the value of this field ("oatk" or "mitohifi") determines the available parameters:
+The following options can be used when `assembly_type` is "organellar". Currently, organelle assembly is only compatible with PacBio Hifi data - this requires that `long_read_platform` is "pacbio_hifi". When creating an organellar assembly, the `organelle_assembler` field is also required, and the value of this field ("oatk" or "mitohifi") determines the available parameters:
 
 ##### MitoHiFi options
 
@@ -149,7 +149,7 @@ These parameters are available when `organelle_assembler` is "mitohifi".
 
 ##### Oatk options
 
-The following options can be used when `organelle_assembler` is "oatk". Currently, this requires that `long_read_platform` is "pacbio_hifi". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required - these should be paths to the `.fam` file created by [OatkDB](https://github.com/c-zhou/OatkDB), with the rest of the `.h3f`, `.h3i`, and `.h3m` and `.h3p` files present in the same location.
+The following options can be used when `organelle_assembler` is "oatk". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required - these should be paths to the `.fam` file created by [OatkDB](https://github.com/c-zhou/OatkDB), with the rest of the `.h3f`, `.h3i`, and `.h3m` and `.h3p` files present in the same location.
 
 | Parameter              | Default | Description                                                                    |
 | ---------------------- | ------- | ------------------------------------------------------------------------------ |
@@ -188,7 +188,8 @@ The following options can be used when `organelle_assembler` is "oatk". Currentl
   scaffold: true
   find_mito: false
 - id: daBelPere1.mitohifi
-  assembler: "mitohifi"
+  assembly_type: organellar
+  organelle_assembler: "mitohifi"
   long_read_dataset: daBelPere1
   long_read_platform: pacbio_hifi
   mitohifi_reference_species: Bellis perennis

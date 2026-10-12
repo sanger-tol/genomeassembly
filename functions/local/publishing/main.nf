@@ -64,12 +64,7 @@ def specToAssemblyDir(spec) {
         }
     }
     else if (spec.assembly_type == "organellar") {
-        if (spec.organelle_assembler == "mitohifi") {
-            return ""
-        }
-        else if (spec.organelle_assembler == "oatk") {
-            return ""
-        }
+        return ""
     }
     error("Unexpected assembler/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
 }
