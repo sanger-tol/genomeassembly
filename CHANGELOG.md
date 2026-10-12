@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) When running Hi-C mapping, the Hi-C mapped BAMs are now tied to their input stage specification rather than their scaffolding stage specification. This means that changing `yahs_arguments` does not result in re-mapping of Hi-C to the same base assembly, and Hi-C BAMs are now re-used across scaffolding.
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
 
