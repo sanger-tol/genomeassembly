@@ -39,6 +39,13 @@ workflow NUCLEAR_ASSEMBLY {
         .unique()
 
     //
+    // Logic: Deploy pre-computed assemblies into the assemblies channel.
+    //
+    ch_assemblies = ch_assemblies.mix(
+        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.assemblies[0], stage.assemblies[1]] }
+    )
+
+    //
     // Subworkflow: raw assembly of long reads using hifiasm
     //
     HIFIASM_ASSEMBLY(
@@ -127,19 +134,19 @@ workflow NUCLEAR_ASSEMBLY {
         .reduce { a, b -> a + b }
 
     INDEX_STAGE(
-        ch_stages.filter { stage -> stage.stage != "hifiasm_base" },
+        ch_stages.filter { stage -> !(stage.stage in ["precomputed", "hifiasm_base"]) },
         ch_versions_to_index,
     )
 
     INDEX_SPEC(
-        ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
+        ch_specs.map { spec -> spec.subMap(["name", "assembly_type", "data", "params", "tools"]) },
         ch_versions_to_index,
     )
 
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
-    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembly_type"]) }.unique()
 
     ch_hifiasm_out = ch_output_specs
         .combine(HIFIASM_ASSEMBLY.out.hifiasm_output)

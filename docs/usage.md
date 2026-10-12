@@ -31,9 +31,7 @@ The filetype of the input reads depends on the sequencing platform:
 | `illumina_10x`    | `.fq`, `.fastq` (optionally gzipped)                          |
 | `illumina`        | `.cram`                                                       |
 
-It is also possible to provide pre-computed FastK databases if desired, to skip computation by the pipeline. These databases are only used
-for the long read platforms, `pacbio_hifi` or `oxford_nanopore`. To include them, the `fastk` field should be specificed with
-all the following sub-fields:
+It is also possible to provide pre-computed FastK databases if desired, to skip computation by the pipeline. These databases are only used for the long read platforms, `pacbio_hifi` or `oxford_nanopore`. To include them, the `fastk` field should be specificed with all the following sub-fields:
 
 | Field       | Description                                                |
 | ----------- | ---------------------------------------------------------- |
@@ -80,27 +78,22 @@ all the following sub-fields:
 
 ### Assembly specification input
 
-The assembly specifications file defines what assemblies to produce, including the required datasets,
-options to enable or disable specific pipeline stages, and parameters to tune the various pipeline tools. It
-can be in either YAML or JSON format. The following fields are mandatory for all specifications:
+The assembly specifications file defines what assemblies to produce, including the required datasets, options to enable or disable specific pipeline stages, and parameters to tune the various pipeline tools. It can be in either YAML or JSON format. The following fields are mandatory for all specifications:
 
 | Parameter            | Description                                                  |
 | -------------------- | ------------------------------------------------------------ |
 | `id`                 | Unique identifier for the assembly.                          |
-| `assembler`          | Which assembler to use: `hifiasm`, `mitohifi`, or `oatk`     |
+| `assembly_type`      | Which type of assembly: `nuclear` or `organellar`            |
 | `long_read_dataset`  | Dataset name from the genomic data file supplying long reads |
 | `long_read_platform` | Platform for long reads: `pacbio_hifi` or `oxford_nanopore`  |
 
-Additionally, there are a number of steps in the pipeline which require knowledge of the genome coverage in
-a dataset in order to correctly set default parameters. The genome coverage is by default automatically estimated
-using GenomeScope2, but if you know the coverage in your sample, you can override this estimation by including the
-`long_read_1n_coverage` field.
+Additionally, there are a number of steps in the pipeline which require knowledge of the genome coverage in a dataset in order to correctly set default parameters. The genome coverage is by default automatically estimated using GenomeScope2, but if you know the coverage in your sample, you can override this estimation by including the `long_read_1n_coverage` field.
 
 #### Hifiasm assembly options
 
-These options can be used if the `assembler` field is set to "hifiasm".
+These options can be used if the `assembly_type` field is set to "nuclear".
 
-| Parameter                       |         | Description                                                                                                                              |
+| Parameter                       | Default | Description                                                                                                                              |
 | ------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `ultralong_dataset`             | -       | Sample identifier from which to find ultra-long reads for Hifiasm assembly. Must have an `oxford_nanopore` platform entry.               |
 | `hic_dataset`                   | -       | Sample identifier from which to find Hi-C reads for phased Hifiasm assembly and scaffolding. Must have an `illumina_hic` platform entry. |
@@ -130,12 +123,19 @@ These options can be used if the `assembler` field is set to "hifiasm".
 | `mitohifi_plastid_reference_gb` | -       | Reference GenBank file to use for reference-based plastid genome assembly with MitoHifi.                                                 |
 | `mitohifi_plastid_genetic_code` | 11      | Plastid genetic code for gene prediction.                                                                                                |
 | `mitohifi_arguments`            | -       | Extra arguments for MitoHiFi in contigs mode.                                                                                            |
+| `assemblies`                    | -       | A list of pre-coomputed assemblies to use in place of running Hifiasm, specified in haplotype order.                                     |
 
 > **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 
-#### MitoHiFi options
+The initial Hifiasm assembly stage can be skipped by providing a list of assemblies to the `assemblies` field of the assembly specification file. In this case, only stages downstream of Hifiasm assembly (purging, polishing, and scaffolding) will run as otherwise specified in the specification. The assemblies must be provided in haplotype order - that is, the first assemblyt must be haplotype 1, the second haplotype 2, etc.. Currently only two assemblies are able to be provided - any additional assemblies are skipped with a warning. This will be changed in a future release.
 
-The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi".
+#### Organellar assembly options
+
+The following options can be used when `assembly_type` is "organellar". Currently, this requires that `long_read_platform` is "pacbio_hifi". When creating an organellar assembly, the `organelle_assembler` field is also required, and the value of this field ("oatk" or "mitohifi") determines the available parameters:
+
+##### MitoHiFi options
+
+These parameters are available when `organelle_assembler` is "mitohifi".
 
 | Parameter                    | Default | Description                                                                                    |
 | ---------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
@@ -147,9 +147,9 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
 
 > **Note:** To run reference-based mitochondrial genome assembly with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_mito_reference_{fa,gb}` must be specified along with `mitohifi_mito_genetic_code`.
 
-#### Oatk options
+##### Oatk options
 
-The following options can be used when `assembler` is "mitohifi". Currently, this requires that `long_read_platform` is "pacbio_hifi". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required - these should be paths to the `.fam` file created by [OatkDB](https://github.com/c-zhou/OatkDB), with the rest of the `.h3f`, `.h3i`, and `.h3m` and `.h3p` files present in the same location.
+The following options can be used when `organelle_assembler` is "oatk". Currently, this requires that `long_read_platform` is "pacbio_hifi". One or both of `oatk_mito_hmm` or `oatk_plastid_hmm` is required - these should be paths to the `.fam` file created by [OatkDB](https://github.com/c-zhou/OatkDB), with the rest of the `.h3f`, `.h3i`, and `.h3m` and `.h3p` files present in the same location.
 
 | Parameter              | Default | Description                                                                    |
 | ---------------------- | ------- | ------------------------------------------------------------------------------ |
@@ -163,7 +163,7 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
 
 ```yaml
 - id: daBelPere1.hifiasm.phased
-  assembler: hifiasm
+  assembly_type: nuclear
   long_read_dataset: daBelPere1
   long_read_platform: pacbio_hifi
   hic_dataset: daBelPere1
@@ -176,7 +176,7 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
   mitohifi_mito_genetic_code: 1
   busco_lineage: eudicots_odb10
 - id: daBelPere1.hifiasm.trio
-  assembler: hifiasm
+  assembly_type: nuclear
   long_read_dataset: daBelPere1
   long_read_platform: pacbio_hifi
   hic_dataset: daBelPere1
@@ -194,7 +194,8 @@ The following options can be used when `assembler` is "mitohifi". Currently, thi
   mitohifi_reference_species: Bellis perennis
   mitohifi_mito_genetic_code: 1
 - id: daBelPere1.oatk
-  assembler: oatk
+  assembly_type: organellar
+  organelle_assembler: oatk
   long_read_dataset: daBelPere1
   long_read_platform: pacbio_hifi
   oatk_mito_hmm: /path/to/mito.fam
@@ -213,13 +214,11 @@ samtools import -@8 -r ID:{prefix} -r CN:{hic-kit} -r PU:{prefix} -r SM:{sample_
 
 ### Longranger (polishing)
 
-Longranger is a proprietary software product from 10X Genomics.
-Its terms and conditions state that we _cannot_ redistribute the copy we use in the Tree of Life department.
+Longranger is a proprietary software product from 10X Genomics. Its terms and conditions state that we _cannot_ redistribute the copy we use in the Tree of Life department.
 
 To run the polishing subroutine of this pipeline, you will have to install longranger yourself.
 
-Go to <https://support.10xgenomics.com/genome-exome/software/downloads/latest>,
-read their End User Software License Agreement, and you'll be able to download the software if you accept it.
+Go to <https://support.10xgenomics.com/genome-exome/software/downloads/latest>, read their End User Software License Agreement, and you'll be able to download the software if you accept it.
 
 To make a Docker (or Singularity) container out of it, use the following Dockerfile.
 
@@ -231,15 +230,11 @@ ADD ./longranger-2.2.2.tar.gz $DEST
 RUN ln -s $DEST/longranger-2.2.2/longranger /usr/local/bin/
 ```
 
-Then, to use the container in the pipeline, pass the path or name of the container to the
-`--polishing_longranger_container_path` parameter when running the pipeline.
+Then, to use the container in the pipeline, pass the path or name of the container to the `--polishing_longranger_container_path` parameter when running the pipeline.
 
 ### NCBI API Key
 
-Running Mitohifi for organelle assembly requires access to the NCBI API. Although this
-is possible without configuration, it is possible to specify an NCBI API key, if you have
-one. To do this, configure the [Nextflow secret](https://www.nextflow.io/docs/latest/secrets.html)
-NCBI_API_KEY as follows:
+Running Mitohifi for organelle assembly requires access to the NCBI API. Although this is possible without configuration, it is possible to specify an NCBI API key, if you have one. To do this, configure the [Nextflow secret](https://www.nextflow.io/docs/latest/secrets.html) NCBI_API_KEY as follows:
 
 ```bash
   nextflow secrets set NCBI_API_KEY '[API key]'

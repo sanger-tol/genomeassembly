@@ -43,7 +43,7 @@ def getPlatformShortName(platform) {
 def specToAssemblyDir(spec) {
     def stage = spec.stage
 
-    if (spec.assembler == "hifiasm") {
+    if (spec.assembly_type == "nuclear") {
         if (stage == "hifiasm") {
             return "hifiasm"
         }
@@ -63,11 +63,13 @@ def specToAssemblyDir(spec) {
             return "plastid"
         }
     }
-    else if (spec.assembler == "mitohifi") {
-        return ""
+    else if (spec.assembly_type == "organellar") {
+        if (spec.organelle_assembler == "mitohifi") {
+            return ""
+        }
+        else if (spec.organelle_assembler == "oatk") {
+            return ""
+        }
     }
-    else if (spec.assembler == "oatk") {
-        return ""
-    }
-    error("Unexpected assembler/stage combination (${spec.assembler}/${spec.stage}) while constructing output directory names!")
+    error("Unexpected assembler/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
 }

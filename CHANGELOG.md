@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) Hi-C is now mapped to assemblies bearing their input stage specification rather than their scaffolding specification. This makes changes to scaffolding parameters not require re-mapping the same Hi-C to the same assembly.
+- [])() Nuclear assemblies can now be "resumed" - pre-computed assemblies can be provided to the `assemblies` field of the assembly specification, which will skip the Hifiasm assembly stage and use the provided assemblies downstream.
+- The `assembler` field of the assembly specification has been split into two fields - `assembly_type`, which controls whether a nuclear or organellar assembly is being performed, and `organelle_assembler`, which controls which organellar assembler to use for organellar assemblies.
 
 ### Fixed
 
