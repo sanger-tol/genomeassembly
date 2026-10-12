@@ -1,7 +1,7 @@
 {
     "aBomVar4 - test trio assembly, mitohifi reads": {
         "content": [
-            73,
+            76,
             {
                 "ASMSTATS": {
                     "asmstats": "1.0.0",
@@ -67,6 +67,12 @@
                     "fastk": 1.2,
                     "merquryfk": 1.2
                 },
+                "MITOHIFI_FINDMITOREFERENCE": {
+                    "mitohifi": "3.2.3"
+                },
+                "MITOHIFI_MITOHIFI": {
+                    "mitohifi": "3.2.3"
+                },
                 "PRETEXTMAP": {
                     "PretextMap": "0.2.4",
                     "samtools": 1.23
@@ -117,6 +123,25 @@
                 }
             },
             [
+                "aBomVar4.mitohifi",
+                "aBomVar4.mitohifi/all_potential_contigs.fa",
+                "aBomVar4.mitohifi/contigs_annotations.png",
+                "aBomVar4.mitohifi/contigs_circularization",
+                "aBomVar4.mitohifi/contigs_filtering",
+                "aBomVar4.mitohifi/contigs_stats.tsv",
+                "aBomVar4.mitohifi/coverage_mapping",
+                "aBomVar4.mitohifi/coverage_plot.png",
+                "aBomVar4.mitohifi/final_mitogenome.annotation.png",
+                "aBomVar4.mitohifi/final_mitogenome.coverage.png",
+                "aBomVar4.mitohifi/final_mitogenome.fasta",
+                "aBomVar4.mitohifi/final_mitogenome.gb",
+                "aBomVar4.mitohifi/final_mitogenome_choice",
+                "aBomVar4.mitohifi/index.json",
+                "aBomVar4.mitohifi/mitohifi.log",
+                "aBomVar4.mitohifi/potential_contigs",
+                "aBomVar4.mitohifi/reads_mapping_and_assembly",
+                "aBomVar4.mitohifi/ref",
+                "aBomVar4.mitohifi/shared_genes.tsv",
                 "aBomVar4.trio",
                 "aBomVar4.trio/hifiasm",
                 "aBomVar4.trio/hifiasm/asm.dip.hap1.p_ctg.fa.assembly_summary",
@@ -294,9 +319,13 @@
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap1.flagstat",
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap1.idxstats",
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap1.stats",
+                "aBomVar4.trio/scaffolding/hic_aln/asm_hap1_merged.bam",
+                "aBomVar4.trio/scaffolding/hic_aln/asm_hap1_merged.bam.csi",
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap2.flagstat",
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap2.idxstats",
                 "aBomVar4.trio/scaffolding/hic_aln/asm_hap2.stats",
+                "aBomVar4.trio/scaffolding/hic_aln/asm_hap2_merged.bam",
+                "aBomVar4.trio/scaffolding/hic_aln/asm_hap2_merged.bam.csi",
                 "aBomVar4.trio/scaffolding/index.json",
                 "aBomVar4.trio/scaffolding/merqury.ccs",
                 "aBomVar4.trio/scaffolding/merqury.ccs/asm.ccs.asm_hap1_scaffolds_final.aBomVar1.illumina.k31.spectra-cn.fl.png",
@@ -397,7 +426,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,ff4dfc15b164603e6916f7375d9b5b72"
             ]
         ],
-        "timestamp": "2026-10-09T15:42:54.195969286",
+        "timestamp": "2026-10-12T15:24:19.712626776",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

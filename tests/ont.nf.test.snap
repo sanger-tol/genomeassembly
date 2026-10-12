@@ -298,9 +298,13 @@
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap1.flagstat",
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap1.idxstats",
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap1.stats",
+                "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap1_merged.bam",
+                "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap1_merged.bam.csi",
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap2.flagstat",
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap2.idxstats",
                 "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap2.stats",
+                "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap2_merged.bam",
+                "dhQueRobu3.ont/scaffolding/hic_aln/asm_hap2_merged.bam.csi",
                 "dhQueRobu3.ont/scaffolding/index.json",
                 "dhQueRobu3.ont/scaffolding/merqury.ont",
                 "dhQueRobu3.ont/scaffolding/merqury.ont/asm.ont.asm_hap1_scaffolds_final.spectra-cn.fl.png",
@@ -516,9 +520,13 @@
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap1.flagstat",
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap1.idxstats",
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap1.stats",
+                "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap1_merged.bam",
+                "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap1_merged.bam.csi",
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap2.flagstat",
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap2.idxstats",
                 "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap2.stats",
+                "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap2_merged.bam",
+                "dhQueRobu3.ul/scaffolding/hic_aln/asm_hap2_merged.bam.csi",
                 "dhQueRobu3.ul/scaffolding/index.json",
                 "dhQueRobu3.ul/scaffolding/merqury.ccs",
                 "dhQueRobu3.ul/scaffolding/merqury.ccs/asm.ccs.asm_hap1_scaffolds_final.spectra-cn.fl.png",
@@ -691,7 +699,7 @@
                 "asm_hap2_scaffolds_final.agp:md5,a1d9fb5c9495434c2f5946fa5447d083"
             ]
         ],
-        "timestamp": "2026-10-09T15:35:55.11211016",
+        "timestamp": "2026-10-12T15:16:21.800122928",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
