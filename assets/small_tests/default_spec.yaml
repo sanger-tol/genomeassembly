@@ -9,7 +9,7 @@
   find_mito: true
   find_plastid: false
   hifiasm_bin_arguments: -f0
-  hifiasm_arguments: primary
+  hifiasm_arguments: --primary
   mitohifi_mito_reference_fa: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.fasta
   mitohifi_mito_reference_gb: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.gb
   mitohifi_mito_genetic_code: 5
