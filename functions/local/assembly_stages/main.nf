@@ -97,14 +97,18 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         def dependData = prevData
         def dependParams = prevParams
         def dependTools = prevTools
+
         if (config.depends) {
-            if (!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
-                error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
+            def depend = config.depends.find { stage ->
+                hashesByStage.containsKey(stage) && paramsByStage.containsKey(stage) && toolsByStage.containsKey(stage)
             }
-            dependHash = hashesByStage[config.depends]
-            dependData = dataByStage[config.depends]
-            dependParams = paramsByStage[config.depends]
-            dependTools = toolsByStage.subMap(config.depends)
+            if (!depend) {
+                error("Error processing spec [${spec.id}]: No stages in {${config.depends.join(",")}} have been generated.")
+            }
+            dependHash = hashesByStage[depend]
+            dependData = dataByStage[depend]
+            dependParams = paramsByStage[depend]
+            dependTools = toolsByStage.subMap(depend)
         }
 
         // Extract data and params into submaps
@@ -358,7 +362,7 @@ def stageNuclearSpec(spec, dataList, haptabList) {
                 "mitohifi_arguments",
             ],
             enabled: spec.find_mito,
-            depends: "hifiasm",
+            depends: ["precomputed", "hifiasm"],
             extraParams: [mode: "contigs", organelle: "mito"],
             tools: ["MITOHIFI_MITOHIFI"],
         ],
@@ -373,7 +377,7 @@ def stageNuclearSpec(spec, dataList, haptabList) {
                 "mitohifi_arguments",
             ],
             enabled: spec.find_plastid,
-            depends: "hifiasm",
+            depends: ["precomputed", "hifiasm"],
             extraParams: [mode: "contigs", organelle: "plastid"],
             tools: ["MITOHIFI_MITOHIFI"],
         ],

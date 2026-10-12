@@ -1,0 +1,19 @@
+- id: icAdaBipu1.pri.resume
+  assembly_type: nuclear
+  long_read_dataset: icAdaBipu1
+  long_read_platform: pacbio_hifi
+  hic_dataset: icAdaBipu1
+  polishing_dataset: icAdaBipu1
+  purge: true
+  polish: false
+  scaffold: true
+  find_mito: true
+  find_plastid: false
+  hifiasm_bin_arguments: -f0
+  hifiasm_arguments: primary
+  mitohifi_mito_reference_fa: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.fasta
+  mitohifi_mito_reference_gb: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/PQ668616.1.subset.gb
+  mitohifi_mito_genetic_code: 5
+  assemblies:
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/assembly/draft/contigs/asm.hic.hap1.p_ctg.fa.gz
+    - https://tolit.cog.sanger.ac.uk/test-data/Adalia_bipunctata/assembly/draft/contigs/asm.hic.hap2.p_ctg.fa.gz

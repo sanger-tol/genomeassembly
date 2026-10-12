@@ -42,7 +42,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Logic: Deploy pre-computed assemblies into the assemblies channel.
     //
     ch_assemblies = ch_assemblies.mix(
-        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.assemblies[0], stage.assemblies[1]] }
+        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.params.assemblies[0], stage.params.assemblies[1]] }
     )
 
     //

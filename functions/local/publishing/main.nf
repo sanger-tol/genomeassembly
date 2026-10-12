@@ -66,5 +66,5 @@ def specToAssemblyDir(spec) {
     else if (spec.assembly_type == "organellar") {
         return ""
     }
-    error("Unexpected assembler/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
+    error("Unexpected assembly type/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
 }
