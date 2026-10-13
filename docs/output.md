@@ -195,6 +195,10 @@ outputs appear in the `mito/` or `plastid/` subdirectory.
 
 </details>
 
+### Pre-computed assemblies
+
+If pre-computed assemblies are provided, the calculated statistics for these assemblies are placed in the `input` directory. In a future release, the assembly FASTA files themselves will also be copied to this directory.
+
 ## Organelle Assembly
 
 Assembly of organelle genomes is accomplished with [MitoHiFi](https://github.com/marcelauliano/MitoHiFi) and [oatk](https://github.com/c-zhou/oatk).
