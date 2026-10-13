@@ -15,7 +15,7 @@
 def getPlatformShortName(platform) {
     def shortname = ""
     if (platform == "pacbio_hifi") {
-        shortname = "ccs"
+        shortname = "pb"
     }
     else if (platform == "oxford_nanopore") {
         shortname = "ont"
@@ -44,6 +44,9 @@ def specToAssemblyDir(spec) {
     def stage = spec.stage
 
     if (spec.assembly_type == "nuclear") {
+        if (stage == "precomputed") {
+            return "input"
+        }
         if (stage == "hifiasm") {
             return "hifiasm"
         }
