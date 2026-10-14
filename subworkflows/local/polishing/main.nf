@@ -69,7 +69,18 @@ workflow POLISHING {
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf, by: 0)
             .join(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.merged_vcf_tbi, by: 0)
             .map { spec, fasta, lr_bam, lr_bai, lr_csv, vcf, tbi ->
-                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [polishing: [fasta: fasta, longranger_bam: lr_bam, longranger_bai: lr_bai, longranger_csv: lr_csv, merged_vcf: vcf, merged_vcf_tbi: tbi]]]
+                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                    output: [
+                        polishing: [
+                            fasta: fasta,
+                            longranger_bam: lr_bam,
+                            longranger_bai: lr_bai,
+                            longranger_csv: lr_csv,
+                            merged_vcf: vcf,
+                            merged_vcf_tbi: tbi,
+                        ]
+                    ]
+                ]
             }
     }
 
