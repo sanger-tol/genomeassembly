@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The polishing workflow now correctly outputs the polished assemblies downstream to the scaffolding stage.
 
 ### Dependencies
 
