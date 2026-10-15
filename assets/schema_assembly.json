@@ -14,11 +14,11 @@
                 "pattern": "^\\S+$",
                 "meta": "id"
             },
-            "assembler": {
+            "assembly_type": {
                 "type": "string",
-                "description": "Which assembler to use - one of hifiasm, mitohifi or oatk",
-                "enum": ["hifiasm", "mitohifi", "oatk"],
-                "meta": "assembler"
+                "description": "Which type of genome to assemble - nuclear or organellar",
+                "enum": ["nuclear", "organellar"],
+                "meta": "assembly_type"
             },
             "long_read_dataset": {
                 "type": "string",
@@ -179,6 +179,12 @@
                 "meta": "yahs_arguments",
                 "default": ""
             },
+            "organelle_assembler": {
+                "type": "string",
+                "description": "Which assembler to use for organellar assembly - one of mitohifi or oatk.",
+                "enum": ["mitohifi", "oatk"],
+                "meta": "organelle_assembler"
+            },
             "mitohifi_reference_species": {
                 "type": "string",
                 "description": "Binomial name of a taxon to use to find a reference mitochondrial genome.",
@@ -253,13 +259,24 @@
                 "pattern": "^\\S+\\.fam$",
                 "exists": true,
                 "meta": "oatk_plastid_hmm"
+            },
+            "assemblies": {
+                "type": "array",
+                "description": "List of pre-computed assemblies to enter the pipeline with, skipping the assembly step. Assemblies must be listed in haplotype order, with hap1 first.",
+                "items": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(fa|fna|fasta)(\\.gz)?$",
+                    "exists": true
+                },
+                "meta": "assemblies"
             }
         },
-        "required": ["id", "assembler", "long_read_dataset", "long_read_platform"],
+        "required": ["id", "assembly_type", "long_read_dataset", "long_read_platform"],
         "dependentSchemas": {
-            "hifiasm": {
+            "nuclear": {
                 "if": {
-                    "properties": { "assembler": { "const": "hifiasm" } }
+                    "properties": { "assembly_type": { "const": "nuclear" } }
                 },
                 "then": {
                     "dependentSchemas": {
@@ -311,23 +328,50 @@
                     }
                 }
             },
-            "mitohifi": {
+            "organellar": {
                 "if": {
-                    "properties": { "assembler": { "const": "mitohifi" } }
+                    "properties": { "assembly_type": { "const": "organellar" } }
                 },
                 "then": {
-                    "oneOf": [
-                        {
-                            "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                    "dependentRequired": {
+                        "assembly_type": ["organelle_assembler"]
+                    },
+                    "dependentSchemas": {
+                        "mitohifi": {
+                            "if": {
+                                "properties": { "organelle_assembler": { "const": "mitohifi" } }
+                            },
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["mitohifi_reference_species", "mitohifi_mito_genetic_code"]
+                                    },
+                                    {
+                                        "required": [
+                                            "mitohifi_mito_reference_fa",
+                                            "mitohifi_mito_reference_gb",
+                                            "mitohifi_mito_genetic_code"
+                                        ]
+                                    }
+                                ]
+                            }
                         },
-                        {
-                            "required": [
-                                "mitohifi_mito_reference_fa",
-                                "mitohifi_mito_reference_gb",
-                                "mitohifi_mito_genetic_code"
-                            ]
+                        "oatk": {
+                            "if": {
+                                "properties": { "organelle_assembler": { "const": "oatk" } }
+                            },
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["oatk_mito_hmm"]
+                                    },
+                                    {
+                                        "required": ["oatk_plastid_hmm"]
+                                    }
+                                ]
+                            }
                         }
-                    ]
+                    }
                 }
             }
         }

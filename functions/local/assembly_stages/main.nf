@@ -19,7 +19,7 @@
  * the hash of a preceding stage. This hash-based approach enables dependency tracking
  * throughout the assembly pipeline.
  *
- * @param spec A flat map containing the assembly specification with id, assembler,
+ * @param spec A flat map containing the assembly specification with id, asssembly_type,
  *             dataset references, and parameter values
  * @param paramsConfig Configuration map defining each assembly stage. Keys are stage names,
  *     values are configuration maps with the following structure:
@@ -38,7 +38,7 @@
  * @return A nested map containing the processed assembly specification:
  *     [
  *       id: <original assembly id from spec>
- *       assembler: <assembler name from spec>
+ *       assembly_type: <assembly_type from spec>
  *       hashes: <map of stageName to its MD5 hash string>
  *       data: <consolidated map of all data locations keyed by type>
  *       params: <list of all params used by the spec>
@@ -97,14 +97,18 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         def dependData = prevData
         def dependParams = prevParams
         def dependTools = prevTools
+
         if (config.depends) {
-            if (!hashesByStage[config.depends] && !paramsByStage[config.depends] && !toolsByStage[config.depends]) {
-                error("Error processing spec [${spec.id}]: No stage named ${config.depends} has been generated.")
+            def depend = config.depends.find { stage ->
+                hashesByStage.containsKey(stage) && paramsByStage.containsKey(stage) && toolsByStage.containsKey(stage)
             }
-            dependHash = hashesByStage[config.depends]
-            dependData = dataByStage[config.depends]
-            dependParams = paramsByStage[config.depends]
-            dependTools = toolsByStage.subMap(config.depends)
+            if (!depend) {
+                error("Error processing spec [${spec.id}]: No stages in {${config.depends.join(",")}} have been generated.")
+            }
+            dependHash = hashesByStage[depend]
+            dependData = dataByStage[depend]
+            dependParams = paramsByStage[depend]
+            dependTools = toolsByStage.subMap(depend)
         }
 
         // Extract data and params into submaps
@@ -119,10 +123,11 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 
         // Concatenate the data and params values to hash and generate it
         def hashContent = [
-            spec.assembler,
+            spec.assembly_type,
+            spec.organelle_assembler,
             stageData.collect { type -> "${dataMap[type].id}" },
             stageParams.collect { k, v -> "${k}=${v}" },
-        ].flatten().join("&")
+        ].findAll().flatten().join("&")
         def stageHash = (dependHash + hashContent).md5()
 
         // Save the hash, params and tools in the
@@ -160,7 +165,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
 
     return [
         name: spec.id,
-        assembler: spec.assembler,
+        assembly_type: spec.assembly_type,
         hashes: hashesByStage,
         data: dataMap,
         params: allParams,
@@ -268,8 +273,9 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
  * stages with their dependencies and enablement conditions.
  *
  * Assembly stages (in typical execution order):
- * 1. bin_assembly: Constructs the overlap graph from long reads
- * 2. assembly: Produces the genome assembly (optionally phased or trio-based)
+ * 1. precomputed: Uses pre-computed assemblies if they are provided, skipping hifiasm.
+ * 1. hifiasm_base: Constructs the overlap graph from long reads
+ * 2. hifiasm: Produces the genome assembly (optionally phased or trio-based)
  * 3. purging: Removes duplicates and haplotigs (conditional on spec.purge)
  * 4. polishing: Polishes the assembly with additional reads (conditional on spec.polish)
  * 5. scaffolding: Scaffolds contigs using Hi-C data (conditional on spec.scaffold)
@@ -284,12 +290,26 @@ def generateDataMap(spec, dataList, merquryHaptabs) {
  * @return A nested assembly specification with stage configurations and hashes,
  *         as returned by stageSpec()
  */
-def stageHifiasmSpec(spec, dataList, haptabList) {
+def stageNuclearSpec(spec, dataList, haptabList) {
     def STAGE_CONFIG = [
+        precomputed: [
+            data: [
+                "long_read",
+                "ultralong",
+                "hic",
+                "maternal",
+                "paternal",
+            ],
+            params: ["assemblies"],
+            enabled: spec.assemblies,
+            depends: null,
+            extraParams: null,
+            tools: [],
+        ],
         hifiasm_base: [
             data: ["long_read"],
-            params: ["assembler", "hifiasm_bin_arguments", "coverage"],
-            enabled: true,
+            params: ["hifiasm_bin_arguments", "coverage"],
+            enabled: !spec.assemblies,
             depends: null,
             extraParams: null,
             tools: [],
@@ -302,7 +322,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "paternal",
             ],
             params: ["phased_assembly", "trio_assembly", "hifiasm_arguments"],
-            enabled: true,
+            enabled: !spec.assemblies,
             depends: null,
             extraParams: null,
             tools: ["HIFIASM"],
@@ -342,7 +362,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "mitohifi_arguments",
             ],
             enabled: spec.find_mito,
-            depends: "hifiasm",
+            depends: ["precomputed", "hifiasm"],
             extraParams: [mode: "contigs", organelle: "mito"],
             tools: ["MITOHIFI_MITOHIFI"],
         ],
@@ -357,7 +377,7 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
                 "mitohifi_arguments",
             ],
             enabled: spec.find_plastid,
-            depends: "hifiasm",
+            depends: ["precomputed", "hifiasm"],
             extraParams: [mode: "contigs", organelle: "plastid"],
             tools: ["MITOHIFI_MITOHIFI"],
         ],
@@ -367,16 +387,16 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
 }
 
 /**
- * Configures and stages an assembly specification for the Oatk assembler workflow.
+ * Configures and stages an assembly specification for the organellar assembly workflow.
  *
  * This function defines a simplified single-stage pipeline for organelle assembly with oatk.
  *
- * Assembly stage:
- * - oatk: Performs organelle assembly from long reads.
+ * Assembly stages:
+ * - oatk: Performs organelle assembly from long reads using oatk.
+ * - mitohifi_mito: Performs mitochondrion assembly from long reads using mitohifi
  *
- * @param spec The flat assembly specification containing Oatk parameters, dataset
- *             references, and configuration values for k-mer size, coverage cutoffs,
- *             and organelle HMM profiles
+ * @param spec The flat assembly specification containing parameters, dataset
+ *             references, and configuration values.
  * @param dataList List of available dataset objects to resolve data references
  * @param haptabList List of available haplotype table objects (not used by Oatk but
  *                   required for stageSpec interface compatibility)
@@ -384,61 +404,43 @@ def stageHifiasmSpec(spec, dataList, haptabList) {
  * @return A nested assembly specification with stage configurations and hashes,
  *         as returned by stageSpec()
  */
-def stageOatkSpec(spec, dataList, haptabList) {
-    def OATK_CONFIG = [oatk: [
-        data: ["long_read"],
-        params: [
-            "coverage",
-            "oatk_kmer_size",
-            "oatk_coverage_cutoff",
-            "oatk_arguments",
-            "oatk_mito_hmm",
-            "oatk_plastid_hmm",
+def stageOrganellarSpec(spec, dataList, haptabList) {
+    def ORGANELLAR_CONFIG = [
+        oatk: [
+            data: ["long_read"],
+            params: [
+                "organelle_assembler",
+                "coverage",
+                "oatk_kmer_size",
+                "oatk_coverage_cutoff",
+                "oatk_arguments",
+                "oatk_mito_hmm",
+                "oatk_plastid_hmm",
+            ],
+            enabled: spec.organelle_assembler == "oatk",
+            depends: null,
+            extraParams: null,
+            tools: ["OATK"],
         ],
-        enabled: true,
-        depends: null,
-        extraParams: null,
-        tools: ["OATK"],
-    ]]
-
-    stageSpec(spec, OATK_CONFIG, dataList, haptabList)
-}
-
-/**
- * Configures and stages an assembly specification for the MitoHiFi organelle assembler workflow.
- *
- * This function defines a single-stage pipeline for MitoHiFi-based mitochondrial genome assembly.
- *
- * Assembly stage:
- * - mitohifi: Assembles mitochondrial genome directly from long reads
- *
- * @param spec The flat assembly specification containing MitoHiFi parameters, dataset
- *             references, reference species name, and mitochondrial genetic code
- * @param dataList List of available dataset objects to resolve data references
- * @param haptabList List of available haplotype table objects (not used by MitoHiFi but
- *                   required for stageSpec interface compatibility)
- *
- * @return A nested assembly specification with stage configurations and hashes,
- *         as returned by stageSpec()
- */
-def stageMitohifiSpec(spec, dataList, haptabList) {
-    def MITOHIFI_CONFIG = [mitohifi_mito: [
-        data: ["long_read"],
-        params: [
-            "download_mito_reference",
-            "mitohifi_reference_species",
-            "mitohifi_mito_reference_fa",
-            "mitohifi_mito_reference_gb",
-            "mitohifi_mito_genetic_code",
-            "mitohifi_arguments",
+        mitohifi_mito: [
+            data: ["long_read"],
+            params: [
+                "organelle_assembler",
+                "download_mito_reference",
+                "mitohifi_reference_species",
+                "mitohifi_mito_reference_fa",
+                "mitohifi_mito_reference_gb",
+                "mitohifi_mito_genetic_code",
+                "mitohifi_arguments",
+            ],
+            enabled: spec.organelle_assembler == "mitohifi",
+            depends: null,
+            extraParams: [mode: "reads", organelle: "mito"],
+            tools: ["MITOHIFI_MITOHIFI"],
         ],
-        enabled: true,
-        depends: null,
-        extraParams: [mode: "reads", organelle: "mito"],
-        tools: ["MITOHIFI_MITOHIFI"],
-    ]]
+    ]
 
-    return stageSpec(spec, MITOHIFI_CONFIG, dataList, haptabList)
+    return stageSpec(spec, ORGANELLAR_CONFIG, dataList, haptabList)
 }
 
 /**
@@ -472,5 +474,5 @@ def setupStage(spec, stage) {
 
     def stageData = spec.data.subMap(spec.stages[stage].dataList)
 
-    return spec.stages[stage] + [data: stageData, assembler: spec.assembler]
+    return spec.stages[stage] + [data: stageData, assembly_type: spec.assembly_type]
 }
