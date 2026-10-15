@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) When running Hi-C mapping, the Hi-C mapped BAMs are now tied to their input stage specification rather than their scaffolding stage specification. This means that changing `yahs_arguments` does not result in re-mapping of Hi-C to the same base assembly, and Hi-C BAMs are now re-used across scaffolding.
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
+- [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
 
 ### Dependencies
 
