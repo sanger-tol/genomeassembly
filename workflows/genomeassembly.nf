@@ -54,7 +54,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: perform assembly of nuclear genome
     //
     NUCLEAR_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["hifiasm"] },
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembly_type == "nuclear" },
         val_fastx_reads_per_chunk,
         val_polishing_container_provided,
         val_sequences_per_polishing_chunk,
@@ -73,7 +73,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: assemble organellar genomes
     //
     ORGANELLE_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi_mito"] }
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembly_type == "organellar" }
     )
 
     //

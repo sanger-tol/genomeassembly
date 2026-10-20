@@ -54,7 +54,7 @@ workflow SCAFFOLDING {
         .combine(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
         .combine(ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2), by: 0)
         .combine(ch_scaffolding_specs)
-        .filter { input_spec, _bam, _csi, hap, scaf_spec -> input_spec.id == scaf_spec.prevID }
+        .filter { input_spec, _bam, _csi, _hap, scaf_spec -> input_spec.id == scaf_spec.prevID }
         .multiMap { input_spec, bam, csi, hap, spec ->
             def out_spec = spec + input_spec.subMap("_hap")
             asm: [out_spec, hap]
@@ -68,7 +68,7 @@ workflow SCAFFOLDING {
     //
     BAM_STATS_SAMTOOLS(
         ch_post_hic_inputs.bam_csi,
-        ch_post_hic_inputs.asm_fai
+        ch_post_hic_inputs.asm_fai,
     )
 
     //
@@ -79,7 +79,7 @@ workflow SCAFFOLDING {
     //
     FASTA_BAM_SCAFFOLDING_YAHS(
         ch_post_hic_inputs.asm,
-        ch_post_hic_inputs.bam
+        ch_post_hic_inputs.bam,
     )
 
     //

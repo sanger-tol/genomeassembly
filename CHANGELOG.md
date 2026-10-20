@@ -8,17 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) Hi-C is now mapped to assemblies bearing their input stage specification rather than their scaffolding specification. This makes changes to scaffolding parameters not require re-mapping the same Hi-C to the same assembly.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) Nuclear assemblies can now be "resumed" - pre-computed assemblies can be provided to the `assemblies` field of the assembly specification, which will skip the Hifiasm assembly stage and use the provided assemblies downstream.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `assembler` field of the assembly specification has been split into two fields - `assembly_type`, which controls whether a nuclear or organellar assembly is being performed, and `organelle_assembler`, which controls which organellar assembler to use for organellar assemblies.
 
 ### Fixed
 
-- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) When running Hi-C mapping, the Hi-C mapped BAMs are now tied to their input stage specification rather than their scaffolding stage specification. This means that changing `yahs_arguments` does not result in re-mapping of Hi-C to the same base assembly, and Hi-C BAMs are now re-used across scaffolding.
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The polishing workflow now correctly outputs the polished assemblies downstream to the scaffolding stage.
 - [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
 
 ### Dependencies
 
 | Module | Tool | Old version | New version |
 | ------ | ---- | ----------- | ----------- |
+| gunzip | gzip | -           | 1.13        |
 
 ## v1.0.1 - Crimson Goregutter (patch 1) - [2026-09-11]
 
