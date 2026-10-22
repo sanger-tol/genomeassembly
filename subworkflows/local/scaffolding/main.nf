@@ -81,14 +81,14 @@ workflow SCAFFOLDING {
     //
     ch_fasta_bam_scaffolding_yahs_inputs = ch_post_hic_inputs
         .filter { spec, _hap, _bam, _csi ->
-            spec.params.scaffolding.method == "yahs" || [
-                spec.params.scaffolding.method == "ragtag_yahs",
+            spec.params.scaffolding_mode == "yahs" || [
+                spec.params.scaffolding_mode == "ragtag_yahs",
                 spec._hap == "hap1",
                 !spec.params.ratag_reference,
             ].every()
         }
-        .multiMap { spec, bam, asm ->
-            asm: [spec, asm]
+        .multiMap { spec, hap, bam, _csi ->
+            asm: [spec, hap]
             bam: [spec, bam]
         }
 
@@ -98,28 +98,34 @@ workflow SCAFFOLDING {
     )
 
     //
-    // Subworkflow: scaffold assemblies using ragtag and yahs.
+    // Logic: identify the RagTag reference. One of the two of these MUST always exist:
+    //     - a pre-provided reference in spec.params.ratag_reference
+    //     - the YaHS-scaffolded hap1 assembly from the previous step
     //
-    // We pass in all assemblies to be scaffolded in "ragtag_yahs" mode, and provide as
-    // a reference either the pre-provided reference or the YaHS-scaffolded
-    // hap1 assembly if no reference is provided.
+    // So mixing the two will always produce a channel of 1 for each assembly specification.
     //
     ch_ragtag_reference = ch_post_hic_inputs
         .filter { spec, _hap, _bam, _csi ->
-            spec.params.scaffolding.method == "ragtag_yahs" && spec._hap == "hap1" && spec.params.ratag_reference
+            spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && spec.params.ratag_reference
         }
         .map { spec, _hap, _bam, _csi -> [spec - spec.subMap("_hap"), spec.params.ratag_reference] }
         .mix(
             FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { spec, _fasta ->
-                spec.params.scaffolding.method == "ragtag_yahs" && spec._hap == "hap1" && !spec.params.ratag_reference
+                spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && !spec.params.ratag_reference
             }.map { spec, fasta -> [spec - spec.subMap("_hap"), fasta] }
         )
 
-
+    //
+    // Subworkflow: scaffold assemblies using ragtag and yahs.
+    //
+    // Generate inputs by combining the assemblies with the RagTag reference.
+    // We have to be careful to filter out the hap1 assembly if it was already
+    // scaffolded with YaHS.
+    //
     ch_fasta_bam_scaffolding_ragtag_yahs_inputs = ch_post_hic_inputs
         .filter { spec, _hap, _bam, _csi ->
             [
-                spec.params.scaffolding.method == "ragtag_yahs",
+                spec.params.scaffolding_mode == "ragtag_yahs",
                 spec.params.ratag_reference ? true : spec._hap != "hap1",
             ].every()
         }
@@ -134,7 +140,7 @@ workflow SCAFFOLDING {
     FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS(
         ch_fasta_bam_scaffolding_ragtag_yahs_inputs.asm,
         ch_fasta_bam_scaffolding_ragtag_yahs_inputs.bam,
-        ch_fasta_bam_scaffolding_ragtag_yahs_inputs.reference,
+        ch_fasta_bam_scaffolding_ragtag_yahs_inputs.ref,
     )
 
     //
@@ -149,7 +155,6 @@ workflow SCAFFOLDING {
     ch_yahs_inital = FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_inital.mix(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.yahs_inital)
     ch_yahs_intermediate = FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_intermediate.mix(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.yahs_intermediate)
     ch_yahs_log = FASTA_BAM_SCAFFOLDING_YAHS.out.yahs_log.mix(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.yahs_log)
-
 
     //
     // Subworkflow: create contact maps
@@ -196,7 +201,7 @@ workflow SCAFFOLDING {
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
     //
     ch_scaffolding_output = BGZIP_SCAFFOLDED.out.output
-        .join(ch_post_hic_inputs.bam_csi, by: 0)
+        .join(ch_bam_stats_samtools_input.bam_csi, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.stats, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.flagstat, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.idxstats, by: 0)
@@ -228,12 +233,12 @@ workflow SCAFFOLDING {
                 yahs_initial: yahs_initial,
                 yahs_intermeriate: yahs_intermed,
                 yahs_log: yahs_log,
-                ratag_scaffolds: rt_scaf,
-                ratag_agp: rt_agp,
-                ratag_stats: rt_stats,
-                ratag_paf: rt_paf,
-                ratag_delta: rt_delta,
-                ratag_confidence: rt_conf,
+                ragtag_scaffolds: rt_scaf,
+                ragtag_agp: rt_agp,
+                ragtag_stats: rt_stats,
+                ragtag_paf: rt_paf,
+                ragtag_delta: rt_delta,
+                ragtag_confidence: rt_conf,
                 pretext: pretext,
                 pretext_png: png,
                 cool: cool,

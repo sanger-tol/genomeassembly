@@ -143,7 +143,6 @@
                 "enum": ["yahs", "ragtag_yahs"],
                 "meta": "scaffolding_mode"
             },
-
             "find_mito": {
                 "type": "boolean",
                 "description": "Enable mitochondrial genome assembly/search.",

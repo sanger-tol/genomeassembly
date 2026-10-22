@@ -20,6 +20,8 @@
   phased_assembly: false
   find_mito: false
   find_plastid: false
+  scaffolding_mode: ragtag_yahs
+  ragtag_reference: https://tolit.cog.sanger.ac.uk/test-data/resources/Quercus_robur/assembly/draft/scaffolds/asm_hap1_scaffolds_final.fa.gz
   hifiasm_bin_arguments: -f0
 - id: dhQueRobu3.oatk
   assembly_type: organellar

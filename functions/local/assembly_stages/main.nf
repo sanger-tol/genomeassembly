@@ -345,7 +345,7 @@ def stageNuclearSpec(spec, dataList, haptabList) {
         ],
         scaffolding_yahs: [
             data: [],
-            params: ["yahs_arguments"],
+            params: ["yahs_arguments", "scaffolding_mode"],
             enabled: spec.scaffold && spec.scaffolding_mode == "yahs",
             depends: null,
             extraParams: null,
@@ -353,7 +353,7 @@ def stageNuclearSpec(spec, dataList, haptabList) {
         ],
         scaffolding_ragtag_yahs: [
             data: [],
-            params: ["yahs_arguments", "ragtag_arguments", "ragtag_reference"],
+            params: ["yahs_arguments", "ragtag_arguments", "ragtag_reference", "scaffolding_mode"],
             enabled: spec.scaffold && spec.scaffolding_mode == "ragtag_yahs",
             depends: null,
             extraParams: null,
