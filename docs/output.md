@@ -32,7 +32,7 @@ The following sections describe the contents of nuclear assembly directories.
 
 ### Hifiasm Raw Assembly
 
-The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly of the long reads are located in the `raw/` subdirectory of each assembly directory. For full details describing hifiasm outputs, please refer to the hifiasm documentation: [https://hifiasm.readthedocs.io/en/latest/interpreting-output.html](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly of the long reads are located in the `hifiasm/` subdirectory of each assembly directory. For full details describing hifiasm outputs, please refer to the hifiasm documentation: [https://hifiasm.readthedocs.io/en/latest/interpreting-output.html](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
 
 <details markdown="1">
 <summary>Output files</summary>
