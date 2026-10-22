@@ -1,0 +1,8 @@
+- id: gfLaeSulp1
+  platform: pacbio_hifi
+  reads:
+    - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/pacbio/fasta/m64229e_210602_121910.ccs.bc1020_BAK8B_OA--bc1020_BAK8B_OA.trim.fasta.gz
+- id: gfLaeSulp1
+  platform: illumina_hic
+  reads:
+    - /lustre/scratch122/tol/data/f/8/4/d/4/6/Laetiporus_sulphureus/genomic_data/gfLaeSulp1/hic-arima2/40063_3#5.cram

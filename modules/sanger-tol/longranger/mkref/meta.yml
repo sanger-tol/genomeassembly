@@ -1,0 +1,66 @@
+name: longranger_mkref
+description: Creates indices of a fasta file required for alignment step
+keywords:
+  - longranger
+  - mkref
+  - 10X
+  - reference
+tools:
+  - longranger:
+      description: Long Ranger is a set of analysis pipelines that processes
+        Chromium sequencing output to align reads and call and phase SNPs, indels,
+        and structural variants.
+      homepage: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
+      documentation: https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger
+      tool_dev_url: https://github.com/10XGenomics/longranger
+      doi: no DOI available
+      licence:
+        - "https://support.10xgenomics.com/genome-exome/software/downloads/latest"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'pEimTen1' ]
+    - assembly:
+        type: file
+        description: Genome reference
+        pattern: "*.{fa,fasta}"
+        ontologies: []
+output:
+  reference:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - refdata-*:
+          type: file
+          description: BAM file of mapped Hi-C sequences
+          pattern: "refdata-*"
+          ontologies: []
+  versions_longranger:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - longranger:
+          type: string
+          description: The name of the tool
+      - longranger align --version | sed '1!d;s/.*(\(.*\)).*/\1/':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - longranger:
+          type: string
+          description: The name of the tool
+      - longranger align --version | sed '1!d;s/.*(\(.*\)).*/\1/':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@ksenia-krasheninnikova"
+  - "@prototaxites"

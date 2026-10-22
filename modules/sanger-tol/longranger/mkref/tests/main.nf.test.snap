@@ -1,0 +1,172 @@
+{
+    "undibacterium unclassified": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,e5c01369a8bb02740acc39734d6abfcd",
+                                "genome.fa.amb:md5,37f8bdd8b35c5dcae03bd83e9e2490e2",
+                                "genome.fa.ann:md5,d686edce9d3d907f226fe73f895e161b",
+                                "genome.fa.bwt:md5,0572f320ccc9fbc68edcffb3ef162b0e",
+                                "genome.fa.fai:md5,feb391acd125f11289949368f10f7f79",
+                                "genome.fa.flat:md5,2837f7616db364201c813d503ea9c230",
+                                "genome.fa.gdx:md5,058439320db484c083c23d5dbf1c5c95",
+                                "genome.fa.pac:md5,25ac263cd40c04a89ed1192187d1adbd",
+                                "genome.fa.sa:md5,09a1677f1a75c3ea611fd80d8927b89b"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,920cfb4f613de6917b8562878b7ed08b",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
+                ],
+                "reference": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,e5c01369a8bb02740acc39734d6abfcd",
+                                "genome.fa.amb:md5,37f8bdd8b35c5dcae03bd83e9e2490e2",
+                                "genome.fa.ann:md5,d686edce9d3d907f226fe73f895e161b",
+                                "genome.fa.bwt:md5,0572f320ccc9fbc68edcffb3ef162b0e",
+                                "genome.fa.fai:md5,feb391acd125f11289949368f10f7f79",
+                                "genome.fa.flat:md5,2837f7616db364201c813d503ea9c230",
+                                "genome.fa.gdx:md5,058439320db484c083c23d5dbf1c5c95",
+                                "genome.fa.pac:md5,25ac263cd40c04a89ed1192187d1adbd",
+                                "genome.fa.sa:md5,09a1677f1a75c3ea611fd80d8927b89b"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,920cfb4f613de6917b8562878b7ed08b",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-02-11T14:58:45.856250008"
+    },
+    "undibacterium unclassified - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.flat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.gdx:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.pac:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.sa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
+                ],
+                "reference": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "genome.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.flat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.gdx:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.pac:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "genome.fa.sa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            [
+                                
+                            ],
+                            "genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            [
+                                
+                            ],
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "versions_longranger": [
+                    [
+                        "LONGRANGER_MKREF",
+                        "longranger",
+                        "2.2.2"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-02-11T14:58:59.958299122"
+    }
+}

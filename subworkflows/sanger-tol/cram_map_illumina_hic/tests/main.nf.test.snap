@@ -1,0 +1,240 @@
+{
+    "meles meles - multiple read groups - minimap2": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 26,
+                    "meanReadLength": 144,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 44,
+                    "readCount": 6659,
+                    "duplicateReadCount": 0,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,7038a36e37a5b93331ffe618fe771795"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:43:38.748216",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "meles meles - bwamem2": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 7,
+                    "readCount": 3802,
+                    "duplicateReadCount": 54,
+                    "sorted": true
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,51755ba7077cd444be19d1fd07569cb6"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:39:34.946622",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "meles meles - minimap2": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 25,
+                    "meanReadLength": 147,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 9,
+                    "readCount": 1856,
+                    "duplicateReadCount": 33,
+                    "sorted": true
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,bc737c10e07175ea468040b952538e50"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:42:47.872589",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "meles meles - zymo - bwamem2 - multiple samples - double files": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 7,
+                    "readCount": 3802,
+                    "duplicateReadCount": 53,
+                    "sorted": true
+                },
+                {
+                    "maxReadLength": 150,
+                    "minReadLength": 150,
+                    "meanReadLength": 150,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 54,
+                    "readCount": 543925,
+                    "duplicateReadCount": 533,
+                    "sorted": false
+                }
+            ],
+            [
+                "test2.bam.csi",
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test2"
+                    },
+                    "test2.metrics:md5,9576c2cd924a502933e631d457d034b6"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,75db11ef6694d30a041ce3ef5325dd19"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:41:09.214803",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "meles meles - multiple read groups - bwamem2": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 38,
+                    "readCount": 7849,
+                    "duplicateReadCount": 25,
+                    "sorted": false
+                }
+            ],
+            [
+                "test.bam.csi"
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,93c67967f457e5689c86e071339e9514"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:45:13.292929",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "meles meles - bwamem2 - multiple samples - meta mismatch": {
+        "content": [
+            [
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 7,
+                    "readCount": 3802,
+                    "duplicateReadCount": 54,
+                    "sorted": true
+                },
+                {
+                    "maxReadLength": 151,
+                    "minReadLength": 151,
+                    "meanReadLength": 151,
+                    "maxQuality": 60,
+                    "minQuality": 0,
+                    "meanQuality": 7,
+                    "readCount": 3802,
+                    "duplicateReadCount": 54,
+                    "sorted": true
+                }
+            ],
+            [
+                "test2.bam.csi",
+                "test.bam.csi"
+            ],
+            [
+                "test2: SM:test2",
+                "test: SM:SAMEA5962964"
+            ],
+            [
+                [
+                    {
+                        "id": "test2"
+                    },
+                    "test2.metrics:md5,8548346e3c8f9e913c37a9cd790e77e9"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.metrics:md5,51755ba7077cd444be19d1fd07569cb6"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-10T10:42:06.647189",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    }
+}

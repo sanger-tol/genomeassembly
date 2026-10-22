@@ -1,0 +1,73 @@
+/**
+ * Output Publishing Functions
+ *
+ * Transforms internal naming conventions to output-ready formats: platform names
+ * to abbreviations and assembly stages to output directory structures.
+ */
+
+/**
+ * Converts sequencing platform names to short abbreviations for file naming.
+ *
+ * @param platform Full platform name (pacbio_hifi, oxford_nanopore, illumina_10x, illumina_hic, illumina)
+ *
+ * @return Short platform abbreviation (ccs, ont, 10x, illumina) or empty string if unknown
+ */
+def getPlatformShortName(platform) {
+    def shortname = ""
+    if (platform == "pacbio_hifi") {
+        shortname = "pb"
+    }
+    else if (platform == "oxford_nanopore") {
+        shortname = "ont"
+    }
+    else if (platform == "illumina_10x") {
+        shortname = "10x"
+    }
+    else if (platform == "illumina_hic") {
+        shortname == "illumina"
+    }
+    else if (platform == "illumina") {
+        shortname == "illumina"
+    }
+
+    return shortname
+}
+
+/**
+ * Maps internal assembly stage names to their corresponding output directory names.
+ *
+ * @param stage Internal stage name (assembly, purging, polishing, scaffolding)
+ *
+ * @return Output directory name (raw, purging, polishing, scaffolding) or null if unknown
+ */
+def specToAssemblyDir(spec) {
+    def stage = spec.stage
+
+    if (spec.assembly_type == "nuclear") {
+        if (stage == "precomputed") {
+            return "input"
+        }
+        if (stage == "hifiasm") {
+            return "hifiasm"
+        }
+        if (stage == "purging") {
+            return "purging"
+        }
+        if (stage == "polishing") {
+            return "polishing"
+        }
+        if (stage == "scaffolding") {
+            return "scaffolding"
+        }
+        if (stage == "mitohifi_mito") {
+            return "mito"
+        }
+        if (stage == "mitohifi_plastid") {
+            return "plastid"
+        }
+    }
+    else if (spec.assembly_type == "organellar") {
+        return ""
+    }
+    error("Unexpected assembly type/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
+}

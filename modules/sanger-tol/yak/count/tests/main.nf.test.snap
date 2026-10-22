@@ -1,0 +1,125 @@
+{
+    "Meles meles - Illumina 10X - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,c4b89eb8e82ea8c56354fc029ceb580f"
+                    ]
+                ],
+                "1": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "versions_yak": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "yak": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,c4b89eb8e82ea8c56354fc029ceb580f"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-09T14:40:14.997056"
+    },
+    "Meles meles - Illumina - Hi-C - CRAM": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,72480c98818d5660d57352a427bbad8a"
+                    ]
+                ],
+                "1": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "versions_yak": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "yak": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,72480c98818d5660d57352a427bbad8a"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-09T14:40:00.2391"
+    },
+    "Meles meles - Illumina - Hi-C - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "versions_yak": [
+                    [
+                        "YAK_COUNT",
+                        "yak",
+                        "0.1-r69-dirty"
+                    ]
+                ],
+                "yak": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.yak:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-09T14:40:33.102458"
+    }
+}

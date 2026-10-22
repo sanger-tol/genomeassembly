@@ -1,0 +1,16 @@
+- id: aBomVar4
+  platform: pacbio_hifi
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Bombina_variegata/genomic_data/aBomVar4/pacbio/aBomVar4.m84098_230615_153738_s2.ccs.bc2008.trim.subsampled.fasta.gz
+- id: aBomVar4
+  platform: illumina_hic
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Bombina_variegata/genomic_data/aBomVar4/hic-arima2/mMelMel3.47666_4_4.subsampled.cram
+- id: aBomVar1
+  platform: illumina
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Bombina_variegata/genomic_data/aBomVar1/illumina/aBomVar1.47685_3_1.subsampled.cram
+- id: aBomVar2
+  platform: illumina
+  reads:
+    - https://tolit.cog.sanger.ac.uk/test-data/Bombina_variegata/genomic_data/aBomVar2/illumina/aBomVar2.47685_3_2.subsampled.cram
