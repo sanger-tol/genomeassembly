@@ -12,8 +12,7 @@ For each assembly, index JSON files are also created that describe the data and 
 
 ## FastK Databases
 
-If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases for long read data typesare provided,
-the pipeline will generate them. These databases are organized by sample ID, platform, and kmer size.
+If no pre-computed [FastK](https://github.com/thegenemyers/FASTK) databases for long read data typesare provided, the pipeline will generate them. These databases are organized by sample ID, platform, and kmer size.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -33,8 +32,7 @@ The following sections describe the contents of nuclear assembly directories.
 
 ### Hifiasm Raw Assembly
 
-The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly of the long reads are located in the `raw/` subdirectory of each assembly directory.
-For full details describing hifiasm outputs, please refer to the hifiasm documentation: [https://hifiasm.readthedocs.io/en/latest/interpreting-output.html](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
+The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly of the long reads are located in the `raw/` subdirectory of each assembly directory. For full details describing hifiasm outputs, please refer to the hifiasm documentation: [https://hifiasm.readthedocs.io/en/latest/interpreting-output.html](https://hifiasm.readthedocs.io/en/latest/interpreting-output.html)
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -50,8 +48,7 @@ For full details describing hifiasm outputs, please refer to the hifiasm documen
 
 ### Purging
 
-After raw assembly with hifiasm, an assembly can optionally be purged of retained haplotype using [purge_dups](https://github.com/dfguan/purge_dups). If purge_dups is run,
-the purged assemblies and other associated output will be available in the `purging/` directory within an assembly directory.
+After raw assembly with hifiasm, an assembly can optionally be purged of retained haplotype using [purge_dups](https://github.com/dfguan/purge_dups). If purge_dups is run, the purged assemblies and other associated output will be available in the `purging/` directory within an assembly directory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -76,8 +73,7 @@ the purged assemblies and other associated output will be available in the `purg
 
 ### Polishing
 
-Prior to scaffolding, an assembly can be polished using Illumina 10X reads. If purging is run, the purged assembly is polished, otherwise the raw hifiasm assembly
-is polished. [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes)
+Prior to scaffolding, an assembly can be polished using Illumina 10X reads. If purging is run, the purged assembly is polished, otherwise the raw hifiasm assembly is polished. [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes)
 are used to polish the assemblies.
 
 > **Note:** Polishing requires a Longranger container to be provided via `--polishing_longranger_container_path`.
@@ -100,13 +96,11 @@ are used to polish the assemblies.
 
 ### Scaffolding
 
-Scaffolding is performed using the long-range information from the Hi-C alignments using [YaHS](https://github.com/c-zhou/yahs).
-Hi-C reads are mapped to each assembly using either [bwa-mem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/).
-The mapping is performed in chunks to parallelise the process, and the chunked BAM files are sorted by coordinate, merged, and duplicates are marked with [samtools](https://www.htslib.org/) markdup.
-Mapping statistics are calculated using samtools flagstat, idxstats, and stats.
+Scaffolding is performed using the long-range information from the Hi-C alignments. If the scaffolding mode is `yahs`, [YaHS](https://github.com/c-zhou/yahs) is used to scaffold the assembly. If the scaffolding mode is `ragtag_yahs`, then reference-based scaffolding is first performed with [RagTag](https://github.com/malonge/RagTag). The reference can be provided by the user, but if not, the first haplotype is scaffolded with YaHS, and then this scaffold set is used as a reference for all other haplotypes. All RagTag scaffolds are then passed for a second round of scaffolding with YaHS for error correction using Hi-C.
 
-Following scaffolding, Hi-C contact maps in [Pretext](https://github.com/sanger-tol/PretextMap), [Juicer](https://github.com/aidenlab/juicer),
-and [Cooler](https://github.com/open2c/cooler) formats are generated for visualisation.
+Hi-C reads are mapped to each assembly using either [bwa-mem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/). The mapping is performed in chunks to parallelise the process, and the chunked BAM files are sorted by coordinate, merged, and duplicates are marked with [samtools](https://www.htslib.org/) markdup. Mapping statistics are calculated using samtools flagstat, idxstats, and stats.
+
+Following scaffolding, Hi-C contact maps in [Pretext](https://github.com/sanger-tol/PretextMap), [Juicer](https://github.com/aidenlab/juicer), and [Cooler](https://github.com/open2c/cooler) formats are generated for visualisation.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -125,6 +119,13 @@ and [Cooler](https://github.com/open2c/cooler) formats are generated for visuali
   - `*_inital.*`: Initial YaHS scaffolding outputs (if available).
   - `*_intermediate.*`: Intermediate YaHS scaffolding outputs (if available).
   - `*.log`: YaHS log file.
+- `{asm.id}/ragtag/`: (only with `scaffolding_mode: ragtag_yahs`)
+  - `*.fa.gz` - RagTag corrected assembly FASTA files (bgzip compressed).
+  - `*.agp` - RagTag AGP files translating input contigs to scaffolds.
+  - `*.stats` - RagTag output statistics.
+  - `*.paf` - Alignment of assembly to reference in PAF format.
+  - `*.confidence.txt` - RagTag scaffolding confidence scores.
+  - `*.stats` - RagTag output statistics.
 - `{asm.id}/scaffolding/contact_maps/`
   - `*.pretext`: Hi-C contact map in Pretext format.
   - `*FullMap.png`: PNG image of the Pretext contact map for quick visualisation.
@@ -136,10 +137,8 @@ and [Cooler](https://github.com/open2c/cooler) formats are generated for visuali
 
 ### Genome Statistics
 
-Accompanying every genome assembly FASTA file are a range of genome metrics to assess the
-contiguity, quality and completeness of the genome assembly. The statistics generated are: basic assembly
-statistics with [asmstats](https://github.com/sanger-tol/asmstats) and [gfastats](https://github.com/vgl-hub/gfastats), ortholog completeness scoring with [BUSCO](https://busco.ezlab.org/), and QV, kmer completeness and graphical visualisations
-with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
+Accompanying every genome assembly FASTA file are a range of genome metrics to assess the contiguity, quality and completeness of the genome assembly. The statistics generated are: basic assembly
+statistics with [asmstats](https://github.com/sanger-tol/asmstats) and [gfastats](https://github.com/vgl-hub/gfastats), ortholog completeness scoring with [BUSCO](https://busco.ezlab.org/), and QV, kmer completeness and graphical visualisations with [MerquryFK](https://github.com/thegenemyers/MERQURY.FK).
 
 Statistics are generated at each assembly stage (raw, purging, polishing, scaffolding) and organized in subdirectories accordingly.
 
@@ -165,9 +164,7 @@ Statistics are generated at each assembly stage (raw, purging, polishing, scaffo
 
 ### MitoHiFi
 
-MitoHiFi uses a reference-based approach, downloading a reference mitochondrial (or plastid) genome for a closely-related species and
-identifying organellar contigs from an existing hifiasm assembly. When run in contigs mode as part of a nuclear assembly pipeline,
-outputs appear in the `mito/` or `plastid/` subdirectory.
+MitoHiFi uses a reference-based approach, downloading a reference mitochondrial (or plastid) genome for a closely-related species and identifying organellar contigs from an existing hifiasm assembly. When run in contigs mode as part of a nuclear assembly pipeline, outputs appear in the `mito/` or `plastid/` subdirectory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -205,8 +202,7 @@ Assembly of organelle genomes is accomplished with [MitoHiFi](https://github.com
 
 ### MitoHiFi
 
-When MitoHiFi is run in reads mode, reads are matched to the downloaded reference assembly and assembled. The
-outputs are largely the same as when MitoHifi is run on assembled contigs.
+When MitoHiFi is run in reads mode, reads are matched to the downloaded reference assembly and assembled. The outputs are largely the same as when MitoHifi is run on assembled contigs.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -236,8 +232,7 @@ outputs are largely the same as when MitoHifi is run on assembled contigs.
 
 ### Oatk
 
-[Oatk](https://github.com/c-zhou/oatk) is a de-novo assembler that can assemble both mitochondrial and plastid genomes,
-using the presence of genes to pick a path through the assembly graph.
+[Oatk](https://github.com/c-zhou/oatk) is a de-novo assembler that can assemble both mitochondrial and plastid genomes, using the presence of genes to pick a path through the assembly graph.
 
 <details markdown="1">
 <summary>Output files</summary>

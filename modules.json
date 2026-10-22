@@ -185,12 +185,18 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fasta_purge_retained_haplotype"]
                     },
+                    "ragtag/scaffold": {
+                        "branch": "master",
+                        "git_sha": "82513832e72b92a435eeed53097674286b558915",
+                        "installed_by": ["fasta_bam_scaffolding_ragtag_yahs"]
+                    },
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
                         "installed_by": [
                             "bam_samtools_merge_markdup",
                             "fasta_10x_polishing_longranger_freebayes",
+                            "fasta_bam_scaffolding_ragtag_yahs",
                             "fasta_bam_scaffolding_yahs"
                         ]
                     },
@@ -232,7 +238,7 @@
                     "yahs": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
-                        "installed_by": ["fasta_bam_scaffolding_yahs"]
+                        "installed_by": ["fasta_bam_scaffolding_ragtag_yahs", "fasta_bam_scaffolding_yahs"]
                     }
                 }
             },
@@ -277,7 +283,7 @@
                     "bedtools/bamtobedsort": {
                         "branch": "main",
                         "git_sha": "2e28234fb0e2970767dab28310c7eb553ad40081",
-                        "installed_by": ["fasta_bam_scaffolding_yahs"]
+                        "installed_by": ["fasta_bam_scaffolding_ragtag_yahs", "fasta_bam_scaffolding_yahs"]
                     },
                     "cramalign/bwamem2alignhic": {
                         "branch": "main",
@@ -327,7 +333,7 @@
                     "yahs/makepairsfile": {
                         "branch": "main",
                         "git_sha": "2e28234fb0e2970767dab28310c7eb553ad40081",
-                        "installed_by": ["fasta_bam_scaffolding_yahs"]
+                        "installed_by": ["fasta_bam_scaffolding_ragtag_yahs", "fasta_bam_scaffolding_yahs"]
                     },
                     "yak/count": {
                         "branch": "main",
@@ -351,6 +357,11 @@
                     "fasta_10x_polishing_longranger_freebayes": {
                         "branch": "main",
                         "git_sha": "5fd3ae09298962a83f5883d582ba206d4504c648",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fasta_bam_scaffolding_ragtag_yahs": {
+                        "branch": "main",
+                        "git_sha": "73aa773e105efaa81472f545352d094d14b713fc",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_bam_scaffolding_yahs": {

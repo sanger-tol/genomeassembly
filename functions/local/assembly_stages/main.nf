@@ -343,13 +343,21 @@ def stageNuclearSpec(spec, dataList, haptabList) {
             extraParams: null,
             tools: ["LONGRANGER_ALIGN", "FREEBAYES"],
         ],
-        scaffolding: [
+        scaffolding_yahs: [
             data: [],
             params: ["yahs_arguments"],
-            enabled: spec.scaffold,
+            enabled: spec.scaffold && spec.scaffolding_mode == "yahs",
             depends: null,
             extraParams: null,
             tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS"],
+        ],
+        scaffolding_ragtag_yahs: [
+            data: [],
+            params: ["yahs_arguments", "ragtag_arguments", "ragtag_reference"],
+            enabled: spec.scaffold && spec.scaffolding_mode == "ragtag_yahs",
+            depends: null,
+            extraParams: null,
+            tools: ["CRAMALIGN_BWAMEM2ALIGNHIC", "CRAMALIGN_MINIMAP2ALIGNHIC", "YAHS", "RAGTAG_SCAFFOLD"],
         ],
         mitohifi_mito: [
             data: [],

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The polishing workflow now correctly outputs the polished assemblies downstream to the scaffolding stage.
 - [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
+- [](<>) Default `oatk_kmer_size` increased from 1000 to 1001.
 
 ### Dependencies
 

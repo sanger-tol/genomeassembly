@@ -136,6 +136,14 @@
                 "default": true,
                 "meta": "scaffold"
             },
+            "scaffolding_mode": {
+                "type": "string",
+                "description": "Which approach to use for scaffolding - YaHS only, or YaHS + RagTag",
+                "default": "yahs",
+                "enum": ["yahs", "ragtag_yahs"],
+                "meta": "scaffolding_mode"
+            },
+
             "find_mito": {
                 "type": "boolean",
                 "description": "Enable mitochondrial genome assembly/search.",
@@ -178,6 +186,17 @@
                 "description": "Additional command-line arguments to pass to YaHS",
                 "meta": "yahs_arguments",
                 "default": ""
+            },
+            "ragtag_reference": {
+                "type": "string",
+                "description": "When scaffolding using RagTag, an optional FASTA to use as the reference for RagTag scaffolding. If not provided, the first haplotype will be scaffolded with YaHS and used as the reference for the other haplotypes.",
+                "meta": "ragtag_reference"
+            },
+            "ragtag_arguments": {
+                "type": "string",
+                "description": "Additional command-line arguments to pass to RagTag when scaffolding with RagTag.",
+                "default": "",
+                "meta": "ragtag_arguments"
             },
             "organelle_assembler": {
                 "type": "string",
@@ -230,7 +249,7 @@
             "oatk_kmer_size": {
                 "type": "integer",
                 "description": "Kmer size for oatk.",
-                "default": 1000,
+                "default": 1001,
                 "meta": "oatk_kmer_size"
             },
             "oatk_coverage_cutoff": {
@@ -280,6 +299,16 @@
                 },
                 "then": {
                     "dependentSchemas": {
+                        "scaffolding": {
+                            "if": {
+                                "properties": { "scaffold": { "const": true } }
+                            },
+                            "then": {
+                                "dependentRequired": {
+                                    "scaffold": ["scaffolding_mode"]
+                                }
+                            }
+                        },
                         "find_mito": {
                             "if": {
                                 "properties": { "find_mito": { "const": true } }
