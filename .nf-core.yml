@@ -28,6 +28,7 @@ lint:
     - LICENSE
     - .gitattributes
     - .github/ISSUE_TEMPLATE/config.yml
+  included_configs: false
   multiqc_config: false
   nextflow_config:
     - manifest.name
@@ -37,8 +38,7 @@ lint:
     - validation.summary.beforeText
     - validation.summary.afterText
     - params.input
-  included_configs: false
-nf_core_version: 4.1.0
+nf_core_version: 4.2.0
 repository_type: pipeline
 template:
   org: sanger-tol
