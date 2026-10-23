@@ -8,6 +8,7 @@
   phased_assembly: true
   find_mito: false
   find_plastid: true
+  scaffolding_mode: ragtag_yahs
   mitohifi_plastid_reference_fa: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/NC_046388.1.subset.fasta
   mitohifi_plastid_reference_gb: https://tolit.cog.sanger.ac.uk/test-data/resources/genomeassembly/mitohifi/NC_046388.1.subset.gb
   hifiasm_bin_arguments: -f0
@@ -19,6 +20,8 @@
   phased_assembly: false
   find_mito: false
   find_plastid: false
+  scaffolding_mode: ragtag_yahs
+  ragtag_reference: https://tolit.cog.sanger.ac.uk/test-data/resources/Quercus_robur/assembly/draft/scaffolds/asm_hap1_scaffolds_final.fa.gz
   hifiasm_bin_arguments: -f0
 - id: dhQueRobu3.oatk
   assembly_type: organellar

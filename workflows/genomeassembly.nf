@@ -116,7 +116,7 @@ workflow GENOMEASSEMBLY {
     statistics       = NUCLEAR_ASSEMBLY.out.statistics
     oatk             = ORGANELLE_ASSEMBLY.out.oatk
     reads_mitohifi   = ORGANELLE_ASSEMBLY.out.reads_mitohifi
-    stage_indexes    = NUCLEAR_ASSEMBLY.out.stage_indexes
-    spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes.mix(ORGANELLE_ASSEMBLY.out.spec_indexes)
+    stage_indexes    = NUCLEAR_ASSEMBLY.out.stage_indexes.mix(ORGANELLE_ASSEMBLY.out.stage_indexes)
+    spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes
     versions         = ch_collated_versions // channel: [ path(versions.yml) ]
 }

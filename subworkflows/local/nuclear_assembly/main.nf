@@ -79,7 +79,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: run hic-mapping and scaffolding
     //
     SCAFFOLDING(
-        ch_stages.filter { stage -> stage.stage == "scaffolding" },
+        ch_stages.filter { stage -> stage.stage in ["scaffolding_yahs", "scaffolding_ragtag_yahs"] },
         ch_assemblies,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
