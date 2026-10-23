@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#181](https://github.com/sanger-tol/genomeassembly/pull/181) Hi-C is now mapped to assemblies bearing their input stage specification rather than their scaffolding specification. This makes changes to scaffolding parameters not require re-mapping the same Hi-C to the same assembly.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) Nuclear assemblies can now be "resumed" - pre-computed assemblies can be provided to the `assemblies` field of the assembly specification, which will skip the Hifiasm assembly stage and use the provided assemblies downstream.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `assembler` field of the assembly specification has been split into two fields - `assembly_type`, which controls whether a nuclear or organellar assembly is being performed, and `organelle_assembler`, which controls which organellar assembler to use for organellar assemblies.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Added scaffolding with RagTag. This adds a new assembly specification parameter, `scaffolding_mode`, with values `yahs` or `ragtag_yahs`.
+  - In `ragtag_yahs` mode, a reference genome for scaffolding can be provided in the spec (via `ragtag_reference`), or if not, the first haplotype is scaffolded with YaHS and used as a reference for all other haplotypes.
+  - Also adds a `ragtag_arguments` key to control RagTag scaffolding.
 
 ### Fixed
 
@@ -17,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
 - [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The polishing workflow now correctly outputs the polished assemblies downstream to the scaffolding stage.
 - [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
-- [](<>) Default `oatk_kmer_size` increased from 1000 to 1001.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Default `oatk_kmer_size` increased from 1000 to 1001.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Organellar index files now correctly contain the stage name.
 
 ### Dependencies
 
