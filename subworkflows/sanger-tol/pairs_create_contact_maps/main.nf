@@ -1,0 +1,106 @@
+include { COOLER_CLOAD                    } from '../../../modules/nf-core/cooler/cload/main.nf'
+include { COOLER_ZOOMIFY                  } from '../../../modules/nf-core/cooler/zoomify/main.nf'
+include { GAWK as GAWK_PROCESS_PAIRS_FILE } from '../../../modules/nf-core/gawk/main.nf'
+include { JUICERTOOLS_PRE                 } from '../../../modules/nf-core/juicertools/pre/main'
+include { PRETEXTMAP                      } from '../../../modules/nf-core/pretextmap/main.nf'
+include { PRETEXTSNAPSHOT                 } from '../../../modules/nf-core/pretextsnapshot/main.nf'
+
+workflow PAIRS_CREATE_CONTACT_MAPS {
+    take:
+    ch_pairs // [meta, pairs]
+    ch_chrom_sizes // [meta, sizes]
+    ch_pretext_snapshot_order_file // [meta, order]
+    val_build_pretext // bool: build pretext map
+    val_create_pretext_snapshot // bool: build snapshot
+    val_build_cooler // bool: build cooler
+    val_build_juicer // bool: build juicer
+    val_cool_bin // val: cooler cload parameter
+
+    main:
+    //
+    // Module: Build PretextMap
+    //
+    PRETEXTMAP(
+        ch_pairs.filter { val_build_pretext },
+        [[], [], []],
+    )
+
+    //
+    // Module: Make a PNG of the PretextMap for fast viz
+    //
+    ch_snapshot_input = PRETEXTMAP.out.pretext
+        .join(ch_pretext_snapshot_order_file, remainder: true, by: 0)
+        .map { meta, pretext, order ->
+            tuple(meta, pretext, order ?: [])
+        }
+        .filter { _meta, pretext, _order -> val_create_pretext_snapshot && pretext }
+
+
+    PRETEXTSNAPSHOT(
+        ch_snapshot_input
+    )
+
+    //
+    // Module: Generate a multi-resolution cooler file by coarsening
+    //
+    ch_cooler_input = ch_pairs
+        .filter { val_build_cooler }
+        .combine(ch_chrom_sizes, by: 0)
+        .multiMap { meta, pairs, sizes ->
+            pairs: [meta, pairs, []]
+            sizes: [meta, sizes]
+        }
+
+    COOLER_CLOAD(
+        ch_cooler_input.pairs,
+        ch_cooler_input.sizes,
+        "pairs",
+        val_cool_bin,
+    )
+
+    //
+    // Module: Zoom cool to mcool
+    //
+    COOLER_ZOOMIFY(COOLER_CLOAD.out.cool)
+
+    //
+    // Module: process .pairs file to remove the chromsize lines as juicer_pre
+    // does not like them
+    //
+    ch_pairs_remove_chromsizes_awk = channel.of(
+            '''\
+        BEGIN { FS = OFS = "\\t" }
+        !/^#chromsize/ {
+            print $0
+        }'''.stripIndent()
+        )
+        .collectFile(name: "pairs_remove_chromsizes.awk", cache: true)
+        .collect()
+
+    GAWK_PROCESS_PAIRS_FILE(
+        ch_pairs.map { meta, pairs -> [meta, pairs, "pairs.gz"] }.filter { val_build_juicer },
+        ch_pairs_remove_chromsizes_awk,
+        false,
+    )
+
+    //
+    // Module: Generate juicer .hic map
+    //
+    ch_juicertools_pre_input = GAWK_PROCESS_PAIRS_FILE.out.output
+        .combine(ch_chrom_sizes, by: 0)
+        .multiMap { meta, pairs, sizes ->
+            pairs: [meta, pairs]
+            sizes: [meta, [], sizes]
+        }
+
+    JUICERTOOLS_PRE(
+        ch_juicertools_pre_input.pairs,
+        ch_juicertools_pre_input.sizes,
+    )
+
+    emit:
+    pretext     = PRETEXTMAP.out.pretext
+    pretext_png = PRETEXTSNAPSHOT.out.image
+    cool        = COOLER_ZOOMIFY.out.mcool
+    hic         = JUICERTOOLS_PRE.out.hic
+}

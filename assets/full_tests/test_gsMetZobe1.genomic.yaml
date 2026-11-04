@@ -1,0 +1,8 @@
+- id: gsMetZobe1
+  platform: pacbio_hifi
+  reads:
+    - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/pacbio/fasta/m64125_200823_145825.ccs.bc1019_BAK8B_OA--bc1019_BAK8B_OA.trim.fasta.gz
+- id: gsMetZobe1
+  platform: illumina_hic
+  reads:
+    - /lustre/scratch122/tol/data/a/a/d/6/5/b/Metschnikowia_zobellii/genomic_data/gsMetZobe1/hic-arima2/35528_4#7.cram

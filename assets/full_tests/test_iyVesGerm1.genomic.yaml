@@ -1,0 +1,7 @@
+- id: iyVesGerm1
+  platform: pacbio_hifi
+  reads:
+    - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/pacbio/fasta/m64094_200217_145414.ccs.bc1011_BAK8A_OA--bc1011_BAK8A_OA.trim.fasta.gz
+- id: iyVesGerm1
+  reads:
+    - /lustre/scratch122/tol/data/7/5/e/f/1/0/Vespula_germanica/genomic_data/iyVesGerm1/hic-arima2/34957_3#2.cram

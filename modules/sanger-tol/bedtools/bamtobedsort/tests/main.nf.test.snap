@@ -1,0 +1,112 @@
+{
+    "Undibacterium unclassified - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,b1d75156ef3b2e07828f56f3f94c767c"
+                    ]
+                ],
+                "1": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "bedtools",
+                        "2.31.1"
+                    ]
+                ],
+                "2": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "samtools",
+                        "1.23"
+                    ]
+                ],
+                "sorted_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,b1d75156ef3b2e07828f56f3f94c767c"
+                    ]
+                ],
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "bedtools",
+                        "2.31.1"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:34:09.819862"
+    },
+    "Undibacterium unclassified - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "bedtools",
+                        "2.31.1"
+                    ]
+                ],
+                "2": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "samtools",
+                        "1.23"
+                    ]
+                ],
+                "sorted_bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "bedtools",
+                        "2.31.1"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BEDTOOLS_BAMTOBEDSORT",
+                        "samtools",
+                        "1.23"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:34:13.585273"
+    }
+}

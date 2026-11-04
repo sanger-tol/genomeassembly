@@ -1,0 +1,88 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTA_BAM_SCAFFOLDING_YAHS"
+    script "../main.nf"
+    workflow "FASTA_BAM_SCAFFOLDING_YAHS"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/fasta_bam_scaffolding_yahs"
+
+    tag "bedtools/bamtobedsort"
+    tag "yahs/makepairsfile"
+    tag "modules/nf-core/samtools/view"
+    tag "subworkflows/../../modules/nf-core/yahs"
+    tag "subworkflows/../../modules/nf-core/samtools/faidx"
+
+    config "./nextflow.config"
+
+    setup {
+        nfcoreInitialise("${launchDir}/library/")
+        nfcoreInstall(
+            "${launchDir}/library/",
+            [
+                "samtools/faidx",
+                "samtools/view",
+                "yahs"
+            ]
+        )
+        nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+
+        run("SAMTOOLS_VIEW") {
+            script "../../../../modules/nf-core/samtools/view/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Meles_meles/analysis/mMelMel3.2_paternal_haplotype/read_mapping/hic/GCA_922984935.2.subset.unmasked.hic.mMelMel3.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'Meles_meles/analysis/mMelMel3.2_paternal_haplotype/read_mapping/hic/GCA_922984935.2.subset.unmasked.hic.mMelMel3.cram.crai', checkIfExists: true),
+                ]
+                input[1] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true),
+                    []
+                ]
+                input[2] = [[],[]]
+                input[3] = [[],[]]
+                input[4] = []
+                """
+            }
+        }
+    }
+
+    test("Meles meles - bam - paternal") {
+
+        when {
+
+            params {
+                bamtobedsort_view_args = "-u"
+                bamtobedsort_sort_args = "-k4,4"
+                samtools_view_args     = "--output-fmt bam"
+            }
+
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + 'Meles_meles/assembly/release/mMelMel3.1_paternal_haplotype/GCA_922984935.2.subset.fasta.gz', checkIfExists: true)
+                ])
+                input[1] = SAMTOOLS_VIEW.out.bam
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out.scaffolds_fasta,
+                    workflow.out.scaffolds_agp,
+                    workflow.out.scaffolds_pairs,
+                    workflow.out.scaffolds_chromsizes,
+                    workflow.out.yahs_bin,
+                    workflow.out.yahs_inital,
+                    workflow.out.yahs_intermediate
+                ).match() }
+            )
+        }
+    }
+}
