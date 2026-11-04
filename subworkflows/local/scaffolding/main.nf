@@ -221,29 +221,34 @@ workflow SCAFFOLDING {
         .join(PAIRS_CREATE_CONTACT_MAPS.out.cool, by: 0, remainder: true)
         .join(PAIRS_CREATE_CONTACT_MAPS.out.hic, by: 0, remainder: true)
         .map { spec, fasta, bam, bai, stats, flagstats, idxstats, yahs_agp, yahs_bin, yahs_initial, yahs_intermed, yahs_log, rt_scaf, rt_agp, rt_stats, rt_paf, rt_delta, rt_conf, pretext, png, cool, hic ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [hap: spec._hap, output: [scaffolding: [
-                fasta: fasta,
-                bam: bam,
-                bai: bai,
-                stats: stats,
-                flagstats: flagstats,
-                idxstats: idxstats,
-                yahs_agp: yahs_agp,
-                yahs_bin: yahs_bin,
-                yahs_initial: yahs_initial,
-                yahs_intermeriate: yahs_intermed,
-                yahs_log: yahs_log,
-                ragtag_scaffolds: rt_scaf,
-                ragtag_agp: rt_agp,
-                ragtag_stats: rt_stats,
-                ragtag_paf: rt_paf,
-                ragtag_delta: rt_delta,
-                ragtag_confidence: rt_conf,
-                pretext: pretext,
-                pretext_png: png,
-                cool: cool,
-                hic: hic,
-            ]]]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
+                output: [
+                    scaffolding: [
+                        fasta: fasta,
+                        bam: bam,
+                        bai: bai,
+                        stats: stats,
+                        flagstats: flagstats,
+                        idxstats: idxstats,
+                        yahs_agp: yahs_agp,
+                        yahs_bin: yahs_bin,
+                        yahs_initial: yahs_initial,
+                        yahs_intermeriate: yahs_intermed,
+                        yahs_log: yahs_log,
+                        ragtag_scaffolds: rt_scaf,
+                        ragtag_agp: rt_agp,
+                        ragtag_stats: rt_stats,
+                        ragtag_paf: rt_paf,
+                        ragtag_delta: rt_delta,
+                        ragtag_confidence: rt_conf,
+                        pretext: pretext,
+                        pretext_png: png,
+                        cool: cool,
+                        hic: hic,
+                    ],
+                ],
+            ]
         }
 
     emit:
