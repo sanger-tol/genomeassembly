@@ -38,7 +38,7 @@ lint:
     - validation.summary.beforeText
     - validation.summary.afterText
     - params.input
-nf_core_version: 4.2.0
+nf_core_version: 4.2.1
 repository_type: pipeline
 template:
   org: sanger-tol
