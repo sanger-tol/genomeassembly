@@ -56,7 +56,10 @@ def specToAssemblyDir(spec) {
         if (stage == "polishing") {
             return "polishing"
         }
-        if (stage == "scaffolding") {
+        if (stage == "scaffolding_yahs") {
+            return "scaffolding"
+        }
+        if (stage == "scaffolding_ragtag_yahs") {
             return "scaffolding"
         }
         if (stage == "mitohifi_mito") {

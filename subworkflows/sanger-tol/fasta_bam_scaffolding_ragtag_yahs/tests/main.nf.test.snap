@@ -1,0 +1,239 @@
+{
+    "Undibacterium_unclassified - bam - nucmer": {
+        "content": [
+            {
+                "confidence_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.confidence.txt:md5,be5cb18b0f73117050c9e5da5d940edf"
+                    ]
+                ],
+                "ragtag_agp": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.agp:md5,b13ea75cccabd3fe3f4cddbb1414c97e"
+                    ]
+                ],
+                "ragtag_delta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.asm.delta.gz"
+                    ]
+                ],
+                "ragtag_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.asm.paf.gz:md5,d818134f40119f3be301101b305304e2"
+                    ]
+                ],
+                "ragtag_scaffolds": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta.gz:md5,9e8dc03287de6f86ecf5618d4262803b"
+                    ]
+                ],
+                "ragtag_stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,bc713262ee0e1519155e196852fe0207"
+                    ]
+                ],
+                "scaffolds_agp": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.agp:md5,831680b731bb36172403d9cd20cbd101"
+                    ]
+                ],
+                "scaffolds_chromsizes": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.fa.sizes:md5,c0b96ad6055c6a4a59b8505137273e2b"
+                    ]
+                ],
+                "scaffolds_fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.fa:md5,4d88d1357044b03a0bb70e7a1769bc54"
+                    ]
+                ],
+                "scaffolds_pairs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pairs.gz:md5,a56899cf33fa224b33c8ef78889a476c"
+                    ]
+                ],
+                "yahs_bin": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bin:md5,a7a1c5a6f6e0b9cba6d5ac2512710f59"
+                    ]
+                ],
+                "yahs_inital": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test_inital_break_01.agp:md5,424b56dafdf7889b3476fd808af0fde5",
+                            "test_inital_break_02.agp:md5,424b56dafdf7889b3476fd808af0fde5"
+                        ]
+                    ]
+                ],
+                "yahs_intermediate": [
+                    
+                ],
+                "yahs_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-20T12:54:07.309886",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Undibacterium_unclassified - bam - minimap2": {
+        "content": [
+            {
+                "confidence_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.confidence.txt:md5,be5cb18b0f73117050c9e5da5d940edf"
+                    ]
+                ],
+                "ragtag_agp": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.agp:md5,b13ea75cccabd3fe3f4cddbb1414c97e"
+                    ]
+                ],
+                "ragtag_delta": [
+                    
+                ],
+                "ragtag_paf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.asm.paf.gz:md5,9a3c3795a6ed5de4b56a9e2bd1492f8e"
+                    ]
+                ],
+                "ragtag_scaffolds": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta.gz:md5,9e8dc03287de6f86ecf5618d4262803b"
+                    ]
+                ],
+                "ragtag_stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,bc713262ee0e1519155e196852fe0207"
+                    ]
+                ],
+                "scaffolds_agp": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.agp:md5,831680b731bb36172403d9cd20cbd101"
+                    ]
+                ],
+                "scaffolds_chromsizes": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.fa.sizes:md5,c0b96ad6055c6a4a59b8505137273e2b"
+                    ]
+                ],
+                "scaffolds_fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_scaffolds_final.fa:md5,4d88d1357044b03a0bb70e7a1769bc54"
+                    ]
+                ],
+                "scaffolds_pairs": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.pairs.gz:md5,a56899cf33fa224b33c8ef78889a476c"
+                    ]
+                ],
+                "yahs_bin": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bin:md5,a7a1c5a6f6e0b9cba6d5ac2512710f59"
+                    ]
+                ],
+                "yahs_inital": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test_inital_break_01.agp:md5,424b56dafdf7889b3476fd808af0fde5",
+                            "test_inital_break_02.agp:md5,424b56dafdf7889b3476fd808af0fde5"
+                        ]
+                    ]
+                ],
+                "yahs_intermediate": [
+                    
+                ],
+                "yahs_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-20T12:49:42.090427",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}
