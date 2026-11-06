@@ -1,16 +1,16 @@
-include { MITOHIFI_FINDMITOREFERENCE        } from '../../../modules/nf-core/mitohifi/findmitoreference'
-include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mitohifi/mitohifi'
+include { MITOHIFI_FINDMITOREFERENCE } from '../../../modules/nf-core/mitohifi/findmitoreference'
+include { MITOHIFI_MITOHIFI          } from '../../../modules/nf-core/mitohifi/mitohifi'
 
 workflow MITOHIFI_ASSEMBLY {
     take:
-    ch_mitohifi_specs  // channel: spec
-    ch_assemblies      // channel: [spec, [haps]]
+    ch_mitohifi_specs // channel: spec
+    ch_assemblies // channel: [spec, [haps]]
 
     main:
     //
     // Logic: Mitohifi does not support Conda
     //
-    if(workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() == 0) {
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() == 0) {
         //
         // Logic: set up the inputs to mitohifi findMitoReference script to download
         // reference mito and plastid genomes for reference-based organelle assembly
@@ -33,11 +33,10 @@ workflow MITOHIFI_ASSEMBLY {
         // Logic: Separate out the two types of mitohifi input to allow safe joining
         // without worrying about empty channels.
         //
-        ch_mitohifi_specs_split = ch_mitohifi_specs
-            .branch { spec ->
-                reads_input: spec.params.mode == "reads"
-                assembly_input: spec.params.mode == "contigs"
-            }
+        ch_mitohifi_specs_split = ch_mitohifi_specs.branch { spec ->
+            reads_input: spec.params.mode == "reads"
+            assembly_input: spec.params.mode == "contigs"
+        }
 
         //
         // Logic: Stage the mitohifi assembly input. For contigs mode, we need to match
@@ -50,8 +49,7 @@ workflow MITOHIFI_ASSEMBLY {
             .filter { spec, asm_meta, _haps -> spec.prevID == asm_meta.id }
             .map { spec, _asm_meta, haps -> [spec, haps] }
 
-        ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input
-            .map { spec -> [spec, spec.data.long_read.reads] }
+        ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input.map { spec -> [spec, spec.data.long_read.reads] }
 
         //
         // Logic: Set up the reference files for mitohifi. Combine with a collected list of
@@ -60,7 +58,8 @@ workflow MITOHIFI_ASSEMBLY {
         //
         // Also drops the original keys and replaces them with a more generic keyset.
         //
-        ch_mitohifi_input = ch_mitohifi_asm_input.mix(ch_mitohifi_reads_input)
+        ch_mitohifi_input = ch_mitohifi_asm_input
+            .mix(ch_mitohifi_reads_input)
             .combine(ch_mitohifi_references.collect().map { refs -> [refs] })
             .map { spec, input, references ->
                 def organelle = spec.params.organelle
@@ -73,12 +72,7 @@ workflow MITOHIFI_ASSEMBLY {
                 def ref_gb = spec.params["mitohifi_${organelle}_reference_gb"] ?: required_reference.ref_gb
 
                 // remove old keys
-                def keysToRemove = [
-                    "mitohifi_mito_reference_fa",
-                    "mitohifi_mito_reference_gb",
-                    "mitohifi_plastid_reference_fa",
-                    "mitohifi_plastid_reference_gb"
-                ]
+                def keysToRemove = ["mitohifi_mito_reference_fa", "mitohifi_mito_reference_gb", "mitohifi_plastid_reference_fa", "mitohifi_plastid_reference_gb"]
 
                 def params_out = (spec.params - spec.params.subMap(keysToRemove)) + [
                     mitohifi_reference_fa: ref_fa,
@@ -91,7 +85,6 @@ workflow MITOHIFI_ASSEMBLY {
                 def genetic_code = spec.params.organelle == "mito"
                     ? spec.params.mitohifi_mito_genetic_code
                     : spec.params.mitohifi_plastid_genetic_code
-
                 input: [spec, input]
                 reference: [spec, ref_fa, ref_gb]
                 method: spec.params.mode
@@ -105,42 +98,34 @@ workflow MITOHIFI_ASSEMBLY {
             ch_mitohifi_input.input,
             ch_mitohifi_input.reference,
             ch_mitohifi_input.method,
-            ch_mitohifi_input.code
+            ch_mitohifi_input.code,
         )
 
         //
         // Logic: Prepare all outputs from Mitohifi for emission
         //        Do it this way as we will move to a channel publishing structure in future
         //
-        ch_mitohifi_output = MITOHIFI_MITOHIFI.out.all_files
-            .map { spec, mitohifi_files ->
-                def downloaded_reference = spec.params.download_mito_reference || spec.params.download_plastid_reference
+        ch_mitohifi_output = MITOHIFI_MITOHIFI.out.all_files.map { spec, mitohifi_files ->
+            def downloaded_reference = spec.params.download_mito_reference || spec.params.download_plastid_reference
 
-                // The potential contigs directory contains symlinks which cannot be published.
-                // Loop through all contents and discard these.
-                def valid_publish_files = []
-                mitohifi_files.each { mitohifi_file ->
-                    if(mitohifi_file.isDirectory()) {
-                        mitohifi_file.eachFileRecurse { contents ->
-                            if(!contents.isLink() && !contents.isDirectory()) {
-                                valid_publish_files << contents
-                            }
+            // The potential contigs directory contains symlinks which cannot be published.
+            // Loop through all contents and discard these.
+            def valid_publish_files = []
+            mitohifi_files.each { mitohifi_file ->
+                if (mitohifi_file.isDirectory()) {
+                    mitohifi_file.eachFileRecurse { contents ->
+                        if (!contents.isLink() && !contents.isDirectory()) {
+                            valid_publish_files << contents
                         }
-                    } else if(!mitohifi_file.isLink()) {
-                        valid_publish_files << mitohifi_file
                     }
                 }
-
-                return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
-                    output: [
-                        mitohifi: [
-                            mitohifi_reference_fa: downloaded_reference ? spec.params.mitohifi_reference_fa : null,
-                            mitohifi_reference_gb: downloaded_reference ? spec.params.mitohifi_reference_gb : null,
-                            mitohifi_files: valid_publish_files
-                        ]
-                    ]
-                ]
+                else if (!mitohifi_file.isLink()) {
+                    valid_publish_files << mitohifi_file
+                }
             }
+
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [mitohifi: [mitohifi_reference_fa: downloaded_reference ? spec.params.mitohifi_reference_fa : null, mitohifi_reference_gb: downloaded_reference ? spec.params.mitohifi_reference_gb : null, mitohifi_files: valid_publish_files]]]
+        }
     }
 
     emit:

@@ -114,21 +114,13 @@ workflow NUCLEAR_ASSEMBLY {
             return [key, files]
         }
         .groupTuple(by: 0)
-        .map { meta, files -> [meta.getGroupTarget(), files.flatten().sort { it.getName() } ] }
+        .map { meta, files -> [meta.getGroupTarget(), files.flatten().sort { it -> it.getName() }] }
 
     ch_statistics = GENOME_STATISTICS.out.stats
         .join(GENOME_STATISTICS.out.busco, remainder: true)
         .join(ch_merqury_to_join, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
-                output: [
-                    statistics: [
-                        stats: stats,
-                        busco: busco,
-                        merqury: merqury
-                    ],
-                ],
-            ]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
         }
 
     //

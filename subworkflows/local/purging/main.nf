@@ -5,7 +5,7 @@ include { HTSLIB_BGZIPTABIX as BGZIP_PURGED } from '../../../modules/nf-core/hts
 workflow PURGING {
     take:
     ch_purging_specs // channel: spec
-    ch_assemblies    // channel: [spec, [haps]]
+    ch_assemblies // channel: [spec, [haps]]
     val_fastx_reads_per_chunk // int
 
     main:
@@ -16,7 +16,7 @@ workflow PURGING {
     //
     ch_purging_input = ch_assemblies
         .combine(ch_purging_specs)
-        .filter { asm_meta, asms, spec -> asm_meta.id == spec.prevID }
+        .filter { asm_meta, _asms, spec -> asm_meta.id == spec.prevID }
         .multiMap { _asm_meta, asms, spec ->
             assemblies: [spec, asms]
             long_reads: [spec, spec.data.long_read.reads]
@@ -28,7 +28,7 @@ workflow PURGING {
     FASTA_PURGE_RETAINED_HAPLOTYPE(
         ch_purging_input.assemblies,
         ch_purging_input.long_reads,
-        val_fastx_reads_per_chunk
+        val_fastx_reads_per_chunk,
     )
 
     //
@@ -39,7 +39,7 @@ workflow PURGING {
         .map { meta, asms, haps -> [meta, asms + [haps]] }
         .map { meta, fasta ->
             def key = groupKey(meta, fasta.size())
-            [ key, fasta ]
+            [key, fasta]
         }
         .transpose()
         .map { meta, fasta -> [meta, fasta, [], []] }
@@ -48,7 +48,7 @@ workflow PURGING {
         ch_bgzip_input,
         "compress",
         false,
-        "fa"
+        "fa",
     )
 
     //
@@ -68,26 +68,10 @@ workflow PURGING {
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.purgedups_log, by: 0)
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.primary_reads_paf, by: 0)
         .map { spec, fasta, split_fa, splitfa_paf, pbcstat_hist, pbcstat_basecov, calcuts_cutoffs, calcuts_log, histplot, bed, log, reads_paf ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
-                output: [
-                    purging: [
-                        fasta: fasta,
-                        split_fa: split_fa,
-                        split_paf: splitfa_paf,
-                        pbcstat_hist: pbcstat_hist,
-                        pbcstat_basecov: pbcstat_basecov,
-                        calcuts_cutoffs: calcuts_cutoffs,
-                        calcuts_log: calcuts_log,
-                        histplot: histplot,
-                        bed: bed,
-                        log: log,
-                        reads_paf: reads_paf
-                    ]
-                ]
-            ]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [purging: [fasta: fasta, split_fa: split_fa, split_paf: splitfa_paf, pbcstat_hist: pbcstat_hist, pbcstat_basecov: pbcstat_basecov, calcuts_cutoffs: calcuts_cutoffs, calcuts_log: calcuts_log, histplot: histplot, bed: bed, log: log, reads_paf: reads_paf]]]
         }
 
     emit:
     purged_assemblies = FASTA_PURGE_RETAINED_HAPLOTYPE.out.purged_assemblies
-    purging_output = ch_purging_output
+    purging_output    = ch_purging_output
 }

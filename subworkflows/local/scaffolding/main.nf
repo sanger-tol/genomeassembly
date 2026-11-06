@@ -27,11 +27,13 @@ workflow SCAFFOLDING {
     //
     ch_hic_mapping_inputs = ch_assemblies
         .combine(ch_scaffolding_specs)
-        .filter { input_spec, haps, spec -> input_spec.id == spec.prevID }
+        .filter { input_spec, _haps, spec -> input_spec.id == spec.prevID }
         .flatMap { input_spec, haps, spec ->
-            haps.withIndex().collect { asm, idx ->
-                [input_spec + [_hap: "hap${idx+1}", _nhaps: haps.size()], asm, spec.data.hic.reads]
-            }
+            haps
+                .withIndex()
+                .collect { asm, idx ->
+                    [input_spec + [_hap: "hap${idx + 1}", _nhaps: haps.size()], asm, spec.data.hic.reads]
+                }
         }
         .unique()
         .multiMap { spec, asm, hic_reads ->
