@@ -48,25 +48,9 @@ nextflow_process {
 
         then {
 
-            def bin_files = process.out.bin_files.get(0).get(1).collect { bin -> file(bin).name }
-            def expected_bin_files = [
-                "test.ec.bin",
-                "test.ovlp.reverse.bin",
-                "test.ovlp.source.bin"
-            ]
-
             assertAll(
                 { assert process.success },
-                { assertContainsInAnyOrder(bin_files, expected_bin_files) },
-                { assert file(process.out.log.get(0).get(1)).exists() },
-                { assert snapshot(
-                    process.out.assembly_graphs,
-                    process.out.assembly_fasta,
-                    process.out.corrected_reads,
-                    process.out.read_overlaps,
-                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.findAll { key, val -> key.startsWith("versions") }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
             )
         }
 
@@ -136,18 +120,9 @@ nextflow_process {
         }
 
         then {
-
             assertAll(
                 { assert process.success },
-                { assert file(process.out.log.get(0).get(1)).exists() },
-                { assert snapshot(
-                    process.out.assembly_graphs,
-                    process.out.assembly_fasta,
-                    process.out.corrected_reads,
-                    process.out.read_overlaps,
-                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.findAll { key, val -> key.startsWith("versions") }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
             )
         }
     }
@@ -216,28 +191,9 @@ nextflow_process {
         }
 
         then {
-
-            def bin_files = process.out.bin_files.get(0).get(1).collect { bin -> file(bin).name }
-            def expected_bin_files = [
-                "test.ec.bin",
-                "test.ovlp.reverse.bin",
-                "test.ovlp.source.bin",
-                "test.hap1.phase.bin",
-                "test.hap2.phase.bin"
-            ]
-
             assertAll(
                 { assert process.success },
-                { assertContainsInAnyOrder(bin_files, expected_bin_files) },
-                { assert file(process.out.log.get(0).get(1)).exists() },
-                { assert snapshot(
-                    process.out.assembly_graphs,
-                    process.out.assembly_fasta,
-                    process.out.corrected_reads,
-                    process.out.read_overlaps,
-                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.findAll { key, val -> key.startsWith("versions") }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
             )
         }
 
@@ -281,27 +237,55 @@ nextflow_process {
             }
         }
         then {
-            def bin_files = process.out.bin_files.get(0).get(1).collect { bin -> file(bin).name }
-            def expected_bin_files = [
-                "test.ec.bin",
-                "test.ovlp.reverse.bin",
-                "test.ovlp.source.bin",
-                "test.hic.lk.bin",
-                "test.hic.tlb.bin"
-            ]
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+    }
+
+    test("Undibacterium_unclassified - hi-c cram - n haps") {
+        when {
+            params {
+                hifiasm_args = "--n-hap 4"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id : 'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram', checkIfExists: true),
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = [
+                    [:],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+        then {
+            def hap3_fasta = path(process.out.assembly_fasta.get(0).get(1).find { f -> file(f).name == "test.hic.hap3.p_ctg.fa" }).fasta
+            def hap4_fasta = path(process.out.assembly_fasta.get(0).get(1).find { f -> file(f).name == "test.hic.hap4.p_ctg.fa" }).fasta
 
             assertAll(
                 { assert process.success },
-                { assertContainsInAnyOrder(bin_files, expected_bin_files) },
-                { assert file(process.out.log.get(0).get(1)).exists() },
-                { assert snapshot(
-                    process.out.assembly_graphs,
-                    process.out.assembly_fasta,
-                    process.out.corrected_reads,
-                    process.out.read_overlaps,
-                    process.out.bed.get(0).get(1).collect { bed -> file(bed).getName() },
-                    process.out.findAll { key, val -> key.startsWith("versions") }
-                ).match() }
+                { assert "h3tg000001l" in hap3_fasta },
+                { assert "h4tg000001l" in hap4_fasta },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
             )
         }
     }
@@ -346,7 +330,7 @@ nextflow_process {
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
 
         }

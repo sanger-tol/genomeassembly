@@ -94,7 +94,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        null
+        null,
     )
 
     //
@@ -179,7 +179,7 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [download_mito_reference: true]
             }
 
-            if (spec.organelle_assembler == "mitohifi" && spec.mitohifi_reference_species && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
+            if (spec.organelle_assembler == "mitohifi" && spec.mitohifi_reference_species && !(spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb)) {
                 spec = spec + [download_mito_reference: true]
             }
 
@@ -194,11 +194,6 @@ workflow PIPELINE_INITIALISATION {
                 def plastid_hmm_list = spec.oatk_plastid_hmm ? createHmmFilesList(spec.oatk_plastid_hmm) : []
 
                 spec = spec + [oatk_mito_hmm: mito_hmm_list, oatk_plastid_hmm: plastid_hmm_list]
-            }
-
-            // Warn if providing more than 2 pre-computed assemblies
-            if (spec.assemblies && spec.assemblies.size() > 2) {
-                log.warn("Assembly specification warning [${spec.id}]: More than 2 pre-computed assemblies were provided. Only the first 2 will be used for downstream analysis. This will be fixed in a future release.")
             }
 
             return spec

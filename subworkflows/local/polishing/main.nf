@@ -5,7 +5,7 @@ include { HTSLIB_BGZIPTABIX as BGZIP_POLISHED      } from '../../../modules/nf-c
 workflow POLISHING {
     take:
     ch_polishing_specs // channel: spec
-    ch_assemblies // channel: [spec, hap1, hap2]
+    ch_assemblies // channel: [spec, [haps]]
     val_polishing_container_provided
     val_sequences_per_polishing_chunk
 
@@ -23,9 +23,9 @@ workflow POLISHING {
         //
         ch_polishing_input = ch_assemblies
             .combine(ch_polishing_specs)
-            .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
-            .multiMap { _asm_meta, asm1, asm2, spec ->
-                assemblies: [spec, [asm1, asm2]]
+            .filter { asm_meta, _haps, spec -> asm_meta.id == spec.prevID }
+            .multiMap { _asm_meta, haps, spec ->
+                assemblies: [spec, haps]
                 polishing_reads: [spec, spec.data.polishing.reads]
             }
 
@@ -78,8 +78,8 @@ workflow POLISHING {
                             longranger_csv: lr_csv,
                             merged_vcf: vcf,
                             merged_vcf_tbi: tbi,
-                        ]
-                    ]
+                        ],
+                    ],
                 ]
             }
     }

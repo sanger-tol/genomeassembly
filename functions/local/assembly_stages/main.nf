@@ -108,7 +108,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
             dependHash = hashesByStage[depend]
             dependData = dataByStage[depend]
             dependParams = paramsByStage[depend]
-            dependTools = toolsByStage.subMap(depend)
+            dependTools = toolsByStage.subMap([depend])
         }
 
         // Extract data and params into submaps
@@ -125,7 +125,7 @@ def stageSpec(spec, paramsConfig, dataList, haptabList) {
         def hashContent = [
             spec.assembly_type,
             spec.organelle_assembler,
-            stageData.collect { type -> "${dataMap[type].id}" },
+            stageData.collect { type -> "${dataMap[type].id}-${dataMap[type].platform}" },
             stageParams.collect { k, v -> "${k}=${v}" },
         ].findAll().flatten().join("&")
         def stageHash = (dependHash + hashContent).md5()

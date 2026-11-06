@@ -128,8 +128,8 @@ workflow PREPARE_INPUTS {
         .mix(ch_specs_precomputed_assemblies_to_prepare.skip)
         .map { spec, asm ->
             def out_spec = spec - spec.subMap(["_hap", "n_asm"])
-            def groupKey = groupKey(out_spec, spec.n_asm)
-            [groupKey, [spec, asm]]
+            def key = groupKey(out_spec, spec.n_asm)
+            return [key, [spec, asm]]
         }
         .groupTuple(by: 0)
         .map { key, spec_list ->

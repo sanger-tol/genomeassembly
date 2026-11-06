@@ -1,8 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
 name: "fasta_purge_retained_haplotype"
 description: |
-  Purge retained haplotypic duplications from an assembly using purge_dups. If an alternate assembly
-  is provided, the purged haplotypic sequence will be concatenated to the alt.
+  Purge retained haplotypic duplications from an assembly using purge_dups.
+
+  If alternate assembly or alternate assemblies are provided, these will all be
+  concatenated with the purged haplotigs.
 keywords:
   - fasta
   - purging
@@ -31,10 +33,11 @@ input:
   - ch_assemblies:
       type: file
       description: |
-        Input assemblies for purging in FASTA format. The second FASTA may be an empty list.
+        Input assemblies for purging in FASTA format. Should be a list with the primary haplotype
+        in the first position. The list can be of length 1 if there are no alternates.
         Must be uncompressed.
 
-        Structure: [ val(meta), [ path(fasta) , path(fasta) ] ] or [ val(meta), [ path(fasta) , [] ] ] ]
+        Structure: [val(meta), [path(fasta1), path(fasta2), ...]]
       pattern: "*.{fasta,fa}"
   - ch_long_reads:
       type: file

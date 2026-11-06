@@ -119,7 +119,7 @@ output {
             spec.output.hifiasm.fasta >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.graphs >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.bed >> "${spec.name}/hifiasm/"
-            spec.output.hifiasm.log >> "${spec.name}/hifiasm/"
+            spec.output.hifiasm.hifiasm_log >> "${spec.name}/hifiasm/"
         }
     }
     purging {
@@ -133,7 +133,7 @@ output {
             spec.output.purging.calcuts_log >> "${spec.name}/purging/coverage/"
             spec.output.purging.histplot >> "${spec.name}/purging/coverage/"
             spec.output.purging.bed >> "${spec.name}/purging/purge_dups/"
-            spec.output.purging.log >> "${spec.name}/purging/purge_dups/"
+            spec.output.purging.purge_dups_log >> "${spec.name}/purging/purge_dups/"
         }
     }
     polishing {
@@ -157,7 +157,7 @@ output {
             spec.output.scaffolding.yahs_agp >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_bin >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_initial >> "${spec.name}/scaffolding/yahs/"
-            spec.output.scaffolding.yahs_intermeriate >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_intermediate >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_log >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.ragtag_scaffolds >> "${spec.name}/scaffolding/ragtag/"
             spec.output.scaffolding.ragtag_agp >> "${spec.name}/scaffolding/ragtag/"

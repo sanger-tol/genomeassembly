@@ -4,7 +4,7 @@ keywords:
   - longranger
   - mkref
   - 10X
-  - reference
+  - fasta
 tools:
   - longranger:
       description: Long Ranger is a set of analysis pipelines that processes

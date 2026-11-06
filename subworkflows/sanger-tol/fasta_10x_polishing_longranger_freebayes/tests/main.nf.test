@@ -75,14 +75,14 @@ nextflow_workflow {
             assert workflow.success
             assertAll(
                 { assert snapshot(
-				    workflow.out.polished_assemblies,
-					workflow.out.assembly_consensus,
-				    workflow.out.longranger_bam.collect { ch -> bam(ch.get(1)).getStatistics() },
-				    workflow.out.longranger_bai.collect { ch -> file(ch.get(1)).name },
-					workflow.out.longranger_summary,
-					workflow.out.merged_vcf.collect { ch -> path(ch.get(1)).vcf.summary },
-					workflow.out.merged_vcf_tbi.collect { ch -> file(ch.get(1)).name }
-				).match() }
+                    workflow.out.polished_assemblies,
+                    workflow.out.assembly_consensus,
+                    workflow.out.longranger_bam.collect { ch -> bam(ch.get(1)).getStatistics() },
+                    workflow.out.longranger_bai.collect { ch -> file(ch.get(1)).name },
+                    workflow.out.longranger_summary,
+                    workflow.out.merged_vcf.collect { ch -> path(ch.get(1)).vcf.summary },
+                    workflow.out.merged_vcf_tbi.collect { ch -> file(ch.get(1)).name }
+                ).match() }
             )
         }
     }

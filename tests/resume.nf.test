@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
+    profile "test_resume"
 
     test("icAdaBipu1 - test resume from hap1/hap2 assembly only") {
 
@@ -13,11 +14,7 @@ nextflow_pipeline {
 
         when {
             params {
-                genomic_data = "${projectDir}/assets/small_tests/icAdaBipu1_genomic.yaml"
-                assembly_specs = "${projectDir}/assets/small_tests/resume_spec.yaml"
                 outdir = "$outputDir"
-				save_fastk_databases = true
-				save_genomescope2_outputs = true
 				busco_lineage_directory = "${launchDir}/busco/"
             }
        }

@@ -9,7 +9,7 @@ include { HTSLIB_BGZIPTABIX as BGZIP_SCAFFOLDED } from '../../../modules/nf-core
 workflow SCAFFOLDING {
     take:
     ch_scaffolding_specs // spec
-    ch_assemblies // [meta, hap1, hap2]
+    ch_assemblies // [meta, [haps]]
     val_hic_aligner // "bwamem2" or "minimap2"
     val_hic_mapping_cram_chunk_size // int > 1
     val_cool_bin // int > 1
@@ -27,21 +27,26 @@ workflow SCAFFOLDING {
     //
     ch_hic_mapping_inputs = ch_assemblies
         .combine(ch_scaffolding_specs)
-        .filter { input_spec, _asm1, _asm2, spec -> input_spec.id == spec.prevID }
-        .multiMap { input_spec, asm1, asm2, spec ->
-            def spec_hap1 = input_spec + [_hap: "hap1"]
-            def spec_hap2 = input_spec + [_hap: "hap2"]
-            hap1: [spec_hap1, asm1]
-            hap2: [spec_hap2, asm2]
-            hic_reads: [[spec_hap1, spec_hap2], spec.data.hic.reads]
+        .filter { input_spec, _haps, spec -> input_spec.id == spec.prevID }
+        .flatMap { input_spec, haps, spec ->
+            haps
+                .withIndex()
+                .collect { asm, idx ->
+                    [input_spec + [_hap: "hap${idx + 1}", _nhaps: haps.size()], asm, spec.data.hic.reads]
+                }
+        }
+        .unique()
+        .multiMap { spec, asm, hic_reads ->
+            haps: [spec, asm]
+            hic_reads: [spec, hic_reads]
         }
 
     //
     // Subworkflow: Map Hi-C data to each assembly
     //
     CRAM_MAP_ILLUMINA_HIC(
-        ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2),
-        ch_hic_mapping_inputs.hic_reads.transpose(by: 0),
+        ch_hic_mapping_inputs.haps,
+        ch_hic_mapping_inputs.hic_reads,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
     )
@@ -53,11 +58,11 @@ workflow SCAFFOLDING {
     //
     ch_post_hic_inputs = CRAM_MAP_ILLUMINA_HIC.out.bam
         .combine(CRAM_MAP_ILLUMINA_HIC.out.bam_index.filter { _meta, idx -> idx.getExtension() == "csi" }, by: 0)
-        .combine(ch_hic_mapping_inputs.hap1.mix(ch_hic_mapping_inputs.hap2), by: 0)
+        .combine(ch_hic_mapping_inputs.haps, by: 0)
         .combine(ch_scaffolding_specs)
         .filter { input_spec, _bam, _csi, _hap, scaf_spec -> input_spec.id == scaf_spec.prevID }
         .map { input_spec, bam, csi, hap, scaf_spec ->
-            [scaf_spec + input_spec.subMap("_hap"), hap, bam, csi]
+            [scaf_spec + input_spec.subMap(["_hap", "_nhaps"]), hap, bam, csi]
         }
 
     //
@@ -67,6 +72,7 @@ workflow SCAFFOLDING {
         bam_csi: [spec, bam, csi]
         asm_fai: [spec, hap, []]
     }
+
     BAM_STATS_SAMTOOLS(
         ch_bam_stats_samtools_input.bam_csi,
         ch_bam_stats_samtools_input.asm_fai,
@@ -84,7 +90,7 @@ workflow SCAFFOLDING {
             spec.params.scaffolding_mode == "yahs" || [
                 spec.params.scaffolding_mode == "ragtag_yahs",
                 spec._hap == "hap1",
-                !spec.params.ratag_reference,
+                !spec.params.ragtag_reference,
             ].every()
         }
         .multiMap { spec, hap, bam, _csi ->
@@ -99,19 +105,19 @@ workflow SCAFFOLDING {
 
     //
     // Logic: identify the RagTag reference. One of the two of these MUST always exist:
-    //     - a pre-provided reference in spec.params.ratag_reference
+    //     - a pre-provided reference in spec.params.ragtag_reference
     //     - the YaHS-scaffolded hap1 assembly from the previous step
     //
     // So mixing the two will always produce a channel of 1 for each assembly specification.
     //
     ch_ragtag_reference = ch_post_hic_inputs
         .filter { spec, _hap, _bam, _csi ->
-            spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && spec.params.ratag_reference
+            spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && spec.params.ragtag_reference
         }
-        .map { spec, _hap, _bam, _csi -> [spec - spec.subMap("_hap"), spec.params.ratag_reference] }
+        .map { spec, _hap, _bam, _csi -> [spec - spec.subMap("_hap"), spec.params.ragtag_reference] }
         .mix(
             FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { spec, _fasta ->
-                spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && !spec.params.ratag_reference
+                spec.params.scaffolding_mode == "ragtag_yahs" && spec._hap == "hap1" && !spec.params.ragtag_reference
             }.map { spec, fasta -> [spec - spec.subMap("_hap"), fasta] }
         )
 
@@ -126,7 +132,7 @@ workflow SCAFFOLDING {
         .filter { spec, _hap, _bam, _csi ->
             [
                 spec.params.scaffolding_mode == "ragtag_yahs",
-                spec.params.ratag_reference ? true : spec._hap != "hap1",
+                spec.params.ragtag_reference ? true : spec._hap != "hap1",
             ].every()
         }
         .combine(ch_ragtag_reference)
@@ -191,11 +197,16 @@ workflow SCAFFOLDING {
     // Logic: re-join pairs of assemblies from scaffolding to pass for genome statistics
     //
     ch_assemblies_scaffolded = ch_yahs_scaffolds
-        .filter { meta, _scaffolds -> meta._hap == "hap1" }
-        .mix(FASTA_BAM_SCAFFOLDING_YAHS.out.scaffolds_fasta.filter { meta, _scaffolds -> meta._hap == "hap2" })
-        .map { meta, asm -> [meta - meta.subMap("_hap"), asm] }
-        .groupTuple(size: 2)
-        .map { meta, asms -> [meta, asms[0], asms[1]] }
+        .map { spec, asm ->
+            def out_spec = spec - spec.subMap(["_hap", "_nhaps"])
+            def groupKey = groupKey(out_spec, spec._nhaps)
+            [groupKey, [spec, asm]]
+        }
+        .groupTuple(by: 0)
+        .map { key, spec_asm_list ->
+            def out_assemblies = spec_asm_list.sort { a, b -> a[0]._hap <=> b[0]._hap }.collect { _spec, asm -> asm }
+            return [key.getGroupTarget(), out_assemblies]
+        }
 
     //
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
@@ -234,7 +245,7 @@ workflow SCAFFOLDING {
                         yahs_agp: yahs_agp,
                         yahs_bin: yahs_bin,
                         yahs_initial: yahs_initial,
-                        yahs_intermeriate: yahs_intermed,
+                        yahs_intermediate: yahs_intermed,
                         yahs_log: yahs_log,
                         ragtag_scaffolds: rt_scaf,
                         ragtag_agp: rt_agp,

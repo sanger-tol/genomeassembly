@@ -21,7 +21,7 @@
                     [
                         "BEDTOOLS_BAMTOBEDSORT",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "sorted_bed": [
@@ -43,16 +43,16 @@
                     [
                         "BEDTOOLS_BAMTOBEDSORT",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         },
-        "timestamp": "2026-02-10T16:34:09.819862"
+        "timestamp": "2026-10-09T11:01:34.964466718"
     },
     "Undibacterium unclassified - bam - stub": {
         "content": [
@@ -76,7 +76,7 @@
                     [
                         "BEDTOOLS_BAMTOBEDSORT",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ],
                 "sorted_bed": [
@@ -98,15 +98,15 @@
                     [
                         "BEDTOOLS_BAMTOBEDSORT",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         },
-        "timestamp": "2026-02-10T16:34:13.585273"
+        "timestamp": "2026-10-09T11:01:41.153174412"
     }
 }

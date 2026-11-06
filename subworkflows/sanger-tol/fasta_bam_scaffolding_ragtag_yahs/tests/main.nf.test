@@ -12,9 +12,9 @@ nextflow_workflow {
     tag "bedtools/bamtobedsort"
     tag "yahs/makepairsfile"
     tag "modules/nf-core/samtools/view"
-    tag "subworkflows/../../modules/nf-core/yahs"
-    tag "subworkflows/../../modules/nf-core/samtools/faidx"
-    tag "subworkflows/../../modules/nf-core/ragtag/scaffold"
+    tag "subworkflows/../modules/nf-core/yahs"
+    tag "subworkflows/../modules/nf-core/samtools/faidx"
+    tag "subworkflows/../modules/nf-core/ragtag/scaffold"
 
     config "./nextflow.config"
 

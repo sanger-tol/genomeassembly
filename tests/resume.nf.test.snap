@@ -9,7 +9,7 @@
                 },
                 "BEDTOOLS_BAMTOBEDSORT": {
                     "bedtools": "2.31.1",
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "BGZIP_PURGED": {
                     "htslib": 1.24,
@@ -106,31 +106,31 @@
                     "purge_dups": "1.2.6"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FAIDX_CONTIGS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FAIDX_SCAFFOLDS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_MERGEDUP": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SPLITHEADER": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "Workflow": {
                     "sanger-tol/genomeassembly": "v1.1.0dev"
@@ -145,31 +145,6 @@
                 }
             },
             [
-                "fastk",
-                "fastk/icAdaBipu1",
-                "fastk/icAdaBipu1/illumina_10x",
-                "fastk/icAdaBipu1/illumina_10x/k31",
-                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.1",
-                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.2",
-                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.3",
-                "fastk/icAdaBipu1/illumina_10x/k31/.icAdaBipu1.illumina_10x.k31.ktab.4",
-                "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.hist",
-                "fastk/icAdaBipu1/illumina_10x/k31/icAdaBipu1.illumina_10x.k31.ktab",
-                "fastk/icAdaBipu1/pacbio_hifi",
-                "fastk/icAdaBipu1/pacbio_hifi/k31",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.1",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.2",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.3",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/.icAdaBipu1.pacbio_hifi.k31.ktab.4",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.hist",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31.ktab",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_linear_plot.png",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_log_plot.png",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_model.txt",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_report.json",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_summary.txt",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_linear_plot.png",
-                "fastk/icAdaBipu1/pacbio_hifi/k31/icAdaBipu1.pacbio_hifi.k31_transformed_log_plot.png",
                 "icAdaBipu1.pri.resume",
                 "icAdaBipu1.pri.resume/index.json",
                 "icAdaBipu1.pri.resume/input",
@@ -446,18 +421,6 @@
                 "pipeline_info/genomeassembly_software_versions.yml"
             ],
             [
-                ".icAdaBipu1.illumina_10x.k31.ktab.1:md5,66e731259e52b68c3c7f06f9c4031c3d",
-                ".icAdaBipu1.illumina_10x.k31.ktab.2:md5,ab315cb5a8e32927c8c206844b6b171b",
-                ".icAdaBipu1.illumina_10x.k31.ktab.3:md5,9a998013378ac4a5946f8110d8e30f86",
-                ".icAdaBipu1.illumina_10x.k31.ktab.4:md5,24ab5876a4a301cd7c682ad8377511a1",
-                "icAdaBipu1.illumina_10x.k31.hist:md5,5cb17394d63e062f004d6220e07a7506",
-                "icAdaBipu1.illumina_10x.k31.ktab:md5,520961969164ca32746e04a623efc8a0",
-                ".icAdaBipu1.pacbio_hifi.k31.ktab.1:md5,57e324160514ee2703c8b97e6f19f85a",
-                ".icAdaBipu1.pacbio_hifi.k31.ktab.2:md5,5cfc60d2017c5a17f1dd8e00da607b26",
-                ".icAdaBipu1.pacbio_hifi.k31.ktab.3:md5,45218a16c3bf76cf761dda725fb0d4c6",
-                ".icAdaBipu1.pacbio_hifi.k31.ktab.4:md5,172ee53d8cb63175b4f047892aa40e21",
-                "icAdaBipu1.pacbio_hifi.k31.hist:md5,18065e7ade2c21abf14db6619b2be29e",
-                "icAdaBipu1.pacbio_hifi.k31.ktab:md5,30c1fe5554d83df56a7a4972efb6a329",
                 "asm.hic.hap1.p_ctg.fa.assembly_summary:md5,653ab2ee07ca3ac4fcda381840676fc3",
                 "asm.hic.hap1.p_ctg.fa.stats:md5,b9f84387d4535f510c3b85d069ac461c",
                 "asm.hic.hap2.p_ctg.fa.assembly_summary:md5,7ff7976f2c7a4c2f272241fa1215d6ca",
@@ -483,40 +446,40 @@
                 "asm.dups.bed.gz:md5,0c75073e5090f2f5a4bea16110590537",
                 "asm.self_aln.paf:md5,06a96ffbc20da590355664b867d0845f",
                 "asm.self_aln.split.fasta.gz:md5,85f893ea679c0870d7722239c3306cad",
-                "asm_hap1_scaffolds_final.fa.assembly_summary:md5,2a257006e348d0ed06eed8f4f4f01854",
-                "asm_hap1_scaffolds_final.fa.gz:md5,6c59e9780406c12e7b7d0b7e67b74648",
-                "asm_hap1_scaffolds_final.fa.stats:md5,11605fdd4609f6733713a215e63f66e4",
-                "asm_hap2_scaffolds_final.fa.assembly_summary:md5,f996b9e861bfed37fd03965de0a5c1b7",
-                "asm_hap2_scaffolds_final.fa.gz:md5,1b01deb9acb139fae091078e4c34b5ee",
-                "asm_hap2_scaffolds_final.fa.stats:md5,66c1e619be98c788e6ba8241b7534344",
+                "asm_hap1_scaffolds_final.fa.assembly_summary:md5,69c64c76001b854842a467b17d47e8c8",
+                "asm_hap1_scaffolds_final.fa.gz:md5,00b9a64515a127fe9038214d6d291a9a",
+                "asm_hap1_scaffolds_final.fa.stats:md5,4beddfdf5d8b7e27f25c5404f139d579",
+                "asm_hap2_scaffolds_final.fa.assembly_summary:md5,8fbde69d5cac568cce58f307e9347743",
+                "asm_hap2_scaffolds_final.fa.gz:md5,bb605ca7dc3b14e46df706969e10b46f",
+                "asm_hap2_scaffolds_final.fa.stats:md5,37a45e2b671eb6887cd065ec20a438ab",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "full_table.tsv:md5,d398ef56e3f90391b9a9a8d72f889b92",
                 "missing_busco_list.tsv:md5,cd9b172c572448e1e3c75bcd0862f09e",
                 "asm_hap1.flagstat:md5,bf61f1c53c7a62f31d89913f592775bd",
                 "asm_hap1.idxstats:md5,53e0347a5e0781720769ea1f24988b25",
-                "asm_hap1.stats:md5,55d2c666f148e484926c5d57d74e96e6",
+                "asm_hap1.stats:md5,913e3f657b066cb7c83d08136bc96d9a",
                 "asm_hap2.flagstat:md5,a871525094589386748c46f3548234e2",
                 "asm_hap2.idxstats:md5,e40aa280baa512a63abf984801a39092",
-                "asm_hap2.stats:md5,0da4cd363e836860f87be0bbbea060fb",
-                "asm_hap1.bin:md5,e1b7fd742d7e84c6f41a2bbb3a8ab01e",
-                "asm_hap1_inital_break_01.agp:md5,b3d66419d8fd92e60d8fee4b2ec5de7d",
-                "asm_hap1_inital_break_02.agp:md5,b3d66419d8fd92e60d8fee4b2ec5de7d",
-                "asm_hap1_r01_break.agp:md5,d48072d91781fc19817b20791548a847",
-                "asm_hap1_r02_break.agp:md5,cc6955f2a7579b553d85110381d6ad06",
-                "asm_hap1_scaffolds_final.agp:md5,9870ecae2a1993c39ffdc93ea4edf9c3",
-                "asm_hap2.bin:md5,ef4d771842611d7e0ad556b00ad02ecf",
-                "asm_hap2_inital_break_01.agp:md5,407a7cc70ae430779b2dc33a41ddf35f",
-                "asm_hap2_inital_break_02.agp:md5,407a7cc70ae430779b2dc33a41ddf35f",
-                "asm_hap2_r01_break.agp:md5,586404a637819632a0cf0d90efbf9863",
-                "asm_hap2_r02_break.agp:md5,9831ae6346a407307257118b481aa04c",
-                "asm_hap2_scaffolds_final.agp:md5,9873d0fd09d64d66fe03f18992a844ba"
+                "asm_hap2.stats:md5,9529a5a11e49010b5890b7d9d7218449",
+                "asm_hap1.bin:md5,5ef9ea84f116be529c64cc8a6b74c924",
+                "asm_hap1_inital_break_01.agp:md5,c48f8dcfcf9d6e0f8d54f8595e5ff60b",
+                "asm_hap1_inital_break_02.agp:md5,c48f8dcfcf9d6e0f8d54f8595e5ff60b",
+                "asm_hap1_r01_break.agp:md5,2467aa6df3c0ea587f53289669776c38",
+                "asm_hap1_r02_break.agp:md5,ef25d5de8b0385e1fa9d594671e258f1",
+                "asm_hap1_scaffolds_final.agp:md5,ffd200eb12222ee65c7ac229eee04f97",
+                "asm_hap2.bin:md5,0d1e5a1c764edebafd8a570b59ecac9d",
+                "asm_hap2_inital_break_01.agp:md5,c2310be33dd9795bc6d860b1e7d58505",
+                "asm_hap2_inital_break_02.agp:md5,c2310be33dd9795bc6d860b1e7d58505",
+                "asm_hap2_r01_break.agp:md5,6d6894a15c506b9c0744f01553aafbd3",
+                "asm_hap2_r02_break.agp:md5,443f28f1a70861805b1175b06c632a92",
+                "asm_hap2_scaffolds_final.agp:md5,e54162eefe3becad1a827fb4697c2124"
             ]
         ],
-        "timestamp": "2026-10-23T12:48:42.10509737",
+        "timestamp": "2026-11-06T12:20:35.982444779",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     }
 }

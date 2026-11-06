@@ -10,7 +10,6 @@ keywords:
 components:
   - bedtools/bamtobedsort
   - yahs/makepairsfile
-  - pairs_create_contact_maps
   - samtools/faidx:
       git_remote: https://github.com/nf-core/modules.git
   - yahs:
