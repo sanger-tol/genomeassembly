@@ -78,8 +78,17 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.assembly_graphs, by: 0)
         .join(HIFIASM.out.bed, by: 0)
         .join(HIFIASM.out.log, by: 0)
-        .map { spec, fasta, graphs, bed, log ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [hifiasm: [fasta: fasta, graphs: graphs, bed: bed, log: log]]]
+        .map { spec, fasta, graphs, bed, hifiasm_log ->
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    hifiasm: [
+                        fasta: fasta,
+                        graphs: graphs,
+                        bed: bed,
+                        hifiasm_log: hifiasm_log,
+                    ],
+                ],
+            ]
         }
 
     //

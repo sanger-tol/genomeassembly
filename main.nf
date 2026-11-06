@@ -119,7 +119,7 @@ output {
             spec.output.hifiasm.fasta >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.graphs >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.bed >> "${spec.name}/hifiasm/"
-            spec.output.hifiasm.log >> "${spec.name}/hifiasm/"
+            spec.output.hifiasm.hifiasm_log >> "${spec.name}/hifiasm/"
         }
     }
     purging {
