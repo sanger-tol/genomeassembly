@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Organellar index files now correctly contain the stage name.
 - [#190](https://github.com/sanger-tol/genomeassembly/pull/190) RagTag scaffolding reference is now correctly applied.
 - [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix a bug where assemblies for Hi-C mapping could be mapped twice, leading to a pipeline failure.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Correctly determine whether to download MitoHiFi references by checking for provided mito reference files rather than plastid reference files.
 
 ### Dependencies
 

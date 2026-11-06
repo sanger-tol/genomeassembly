@@ -26,7 +26,6 @@ workflow NUCLEAR_ASSEMBLY {
     val_build_cooler_map
 
     main:
-    ch_versions = channel.empty()
     ch_assemblies = channel.empty()
 
     //
@@ -202,5 +201,4 @@ workflow NUCLEAR_ASSEMBLY {
     statistics    = ch_statistics_out
     stage_indexes = ch_stage_indexes
     spec_indexes  = INDEX_SPEC.out.spec
-    versions      = ch_versions
 }

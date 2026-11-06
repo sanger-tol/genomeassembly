@@ -24,10 +24,10 @@ def getPlatformShortName(platform) {
         shortname = "10x"
     }
     else if (platform == "illumina_hic") {
-        shortname == "illumina"
+        shortname = "illumina"
     }
     else if (platform == "illumina") {
-        shortname == "illumina"
+        shortname = "illumina"
     }
 
     return shortname

@@ -94,7 +94,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        null
+        null,
     )
 
     //
@@ -179,7 +179,7 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [download_mito_reference: true]
             }
 
-            if (spec.organelle_assembler == "mitohifi" && spec.mitohifi_reference_species && !(spec.mitohifi_plastid_reference_fa && spec.mitohifi_plastid_reference_gb)) {
+            if (spec.organelle_assembler == "mitohifi" && spec.mitohifi_reference_species && !(spec.mitohifi_mito_reference_fa && spec.mitohifi_mito_reference_gb)) {
                 spec = spec + [download_mito_reference: true]
             }
 

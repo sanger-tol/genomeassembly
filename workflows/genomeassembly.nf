@@ -38,8 +38,6 @@ workflow GENOMEASSEMBLY {
     outdir
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Subworkflow: build kmer databases for input data if required
     // and then pre-process the specifications for downstream consumption
@@ -67,7 +65,6 @@ workflow GENOMEASSEMBLY {
         val_build_juicer_map,
         val_build_cooler_map,
     )
-    ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
 
     //
     // Subworkflow: assemble organellar genomes
@@ -96,7 +93,7 @@ workflow GENOMEASSEMBLY {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
             storeDir: "${outdir}/pipeline_info",
