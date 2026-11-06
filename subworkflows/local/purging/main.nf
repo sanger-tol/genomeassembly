@@ -67,8 +67,24 @@ workflow PURGING {
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.purgedups_bed, by: 0)
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.purgedups_log, by: 0)
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.primary_reads_paf, by: 0)
-        .map { spec, fasta, split_fa, splitfa_paf, pbcstat_hist, pbcstat_basecov, calcuts_cutoffs, calcuts_log, histplot, bed, log, reads_paf ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [purging: [fasta: fasta, split_fa: split_fa, split_paf: splitfa_paf, pbcstat_hist: pbcstat_hist, pbcstat_basecov: pbcstat_basecov, calcuts_cutoffs: calcuts_cutoffs, calcuts_log: calcuts_log, histplot: histplot, bed: bed, log: log, reads_paf: reads_paf]]]
+        .map { spec, fasta, split_fa, splitfa_paf, pbcstat_hist, pbcstat_basecov, calcuts_cutoffs, calcuts_log, histplot, bed, purge_dups_log, reads_paf ->
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    purging: [
+                        fasta: fasta,
+                        split_fa: split_fa,
+                        split_paf: splitfa_paf,
+                        pbcstat_hist: pbcstat_hist,
+                        pbcstat_basecov: pbcstat_basecov,
+                        calcuts_cutoffs: calcuts_cutoffs,
+                        calcuts_log: calcuts_log,
+                        histplot: histplot,
+                        bed: bed,
+                        purge_dups_log: purge_dups_log,
+                        reads_paf: reads_paf,
+                    ],
+                ],
+            ]
         }
 
     emit:

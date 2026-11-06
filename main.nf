@@ -133,7 +133,7 @@ output {
             spec.output.purging.calcuts_log >> "${spec.name}/purging/coverage/"
             spec.output.purging.histplot >> "${spec.name}/purging/coverage/"
             spec.output.purging.bed >> "${spec.name}/purging/purge_dups/"
-            spec.output.purging.log >> "${spec.name}/purging/purge_dups/"
+            spec.output.purging.purge_dups_log >> "${spec.name}/purging/purge_dups/"
         }
     }
     polishing {

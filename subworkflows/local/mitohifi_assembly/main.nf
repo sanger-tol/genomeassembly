@@ -124,7 +124,15 @@ workflow MITOHIFI_ASSEMBLY {
                 }
             }
 
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [mitohifi: [mitohifi_reference_fa: downloaded_reference ? spec.params.mitohifi_reference_fa : null, mitohifi_reference_gb: downloaded_reference ? spec.params.mitohifi_reference_gb : null, mitohifi_files: valid_publish_files]]]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    mitohifi: [
+                        mitohifi_reference_fa: downloaded_reference ? spec.params.mitohifi_reference_fa : null,
+                        mitohifi_reference_gb: downloaded_reference ? spec.params.mitohifi_reference_gb : null,
+                        mitohifi_files: valid_publish_files,
+                    ],
+                ],
+            ]
         }
     }
 
