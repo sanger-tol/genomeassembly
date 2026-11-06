@@ -196,11 +196,6 @@ workflow PIPELINE_INITIALISATION {
                 spec = spec + [oatk_mito_hmm: mito_hmm_list, oatk_plastid_hmm: plastid_hmm_list]
             }
 
-            // Warn if providing more than 2 pre-computed assemblies
-            if (spec.assemblies && spec.assemblies.size() > 2) {
-                log.warn("Assembly specification warning [${spec.id}]: More than 2 pre-computed assemblies were provided. Only the first 2 will be used for downstream analysis. This will be fixed in a future release.")
-            }
-
             return spec
         }
 

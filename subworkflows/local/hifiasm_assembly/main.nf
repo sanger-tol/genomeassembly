@@ -93,24 +93,36 @@ workflow HIFIASM_ASSEMBLY {
         }
 
     //
-    // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
+    // Logic: Split out the correct assemblies in sorted order for each Hifiasm run.
+    //
+    // We prefer hap1/hap2/.../hap_n assemblies if they exist, otherwise we take
+    // p_ctg as the primary and a_ctg as the alternative.
     //
     ch_assemblies_fasta = HIFIASM.out.assembly_fasta
-        .flatMap { spec, asms ->
-            def pri = /hap1.p_ctg.fa$/
-            def alt = /hap2.p_ctg.fa$/
+        .map { spec, asms ->
+            def validHaps = asms.findAll { asm -> asm =~ /(hap\d+\.p_ctg\.fa$|^.+\.p_ctg\.fa$|^.+\.a_ctg\.fa$)/ }
 
-            // If hifiasm is run with `--primary` or `-l0`, we do not get
-            // hap1/hap2 files - instead we get only p_ctg and a_ctg files, if
-            // we don't run in phased or trio mode.
-            if(!(asms.find { asm -> asm.name =~ pri } && asms.find { asm -> asm.name =~ alt })) {
-                pri = /^.+\.p_ctg\.fa$/
-                alt = /^.+\.a_ctg\.fa$/
+            // Retain only haplotype assemblies if they exist, otherwise keep all assemblies
+            if (validHaps.any { asm -> asm =~ /hap\d+\.p_ctg\.fa$/ }) {
+                validHaps = validHaps.findAll { asm -> asm =~ /hap\d+\.p_ctg\.fa$/ }
             }
 
-            return [
-                [spec, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt }]
-            ]
+            def sortedHaps = validHaps.sort { a, b ->
+                def extractHapNum = { name ->
+                    def matcher = name =~ /hap(\d+)\.p_ctg\.fa$/
+                    matcher.find() ? matcher.group(1).toInteger() : 999999
+                }
+                def getTigPriority = { name -> name.contains("p_ctg") ? 0 : (name.contains("a_ctg") ? 1 : 2) }
+
+                def numA = extractHapNum.call(a.name)
+                def numB = extractHapNum.call(b.name)
+                def prioA = getTigPriority.call(a.name)
+                def prioB = getTigPriority.call(b.name)
+
+                numA <=> numB ?: prioA <=> prioB ?: a.name <=> b.name
+            }
+
+            [spec, sortedHaps]
         }
 
     emit:

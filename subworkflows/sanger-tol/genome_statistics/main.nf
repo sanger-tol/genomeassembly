@@ -4,11 +4,10 @@ include { GFASTATS            } from '../../../modules/nf-core/gfastats/main'
 include { MERQURYFK_MERQURYFK } from '../../../modules/nf-core/merquryfk/merquryfk/main'
 
 workflow GENOME_STATISTICS {
-
     take:
-    ch_assemblies               // channel: [ val(meta), asm1, asm2 ] - asm2 can be empty
-    ch_fastk                    // channel: [ val(meta), fastk_hist, [fastk ktabs], [mat_fastk_ktabs], [pat_fastk_ktabs] ]
-    ch_busco_lineage            // channel: [ val(meta), string: busco_lineage ]
+    ch_assemblies // channel: [ val(meta), [asm1, asm2, ..., asmn] ]
+    ch_fastk // channel: [ val(meta), fastk_hist, [fastk ktabs], [mat_fastk_ktabs], [pat_fastk_ktabs] ]
+    ch_busco_lineage // channel: [ val(meta), string: busco_lineage ]
     val_busco_lineage_directory // path: path to local busco lineages directory - optional
 
     main:
@@ -17,21 +16,23 @@ workflow GENOME_STATISTICS {
     //
     def val_asm_meta_list = Collections.synchronizedSet(new HashSet())
 
-    ch_assemblies
-        .subscribe { meta, _asm1, _asm2 ->
-            if (!val_asm_meta_list.add(meta)) {
-                error("Error: Duplicate meta object found in `ch_assemblies` in GENOME_STATISTICS: ${meta}")
-            }
+    ch_assemblies.subscribe { meta, _asms ->
+        if (!val_asm_meta_list.add(meta)) {
+            error("Error: Duplicate meta object found in `ch_assemblies` in GENOME_STATISTICS: ${meta}")
         }
+    }
 
     //
-    // Logic: split hap1/hap2 into independent channels
+    // Logic: haplotypes into independent channels
     //
     ch_assemblies_split = ch_assemblies
-        .flatMap { meta, asm1, asm2 ->
-            def meta_asm1 = meta + [_hap: "hap1"]
-            def meta_asm2 = meta + [_hap: "hap2"]
-            return [ [meta_asm1, asm1], [meta_asm2, asm2] ]
+        .flatMap { meta, asms ->
+            asms
+                .withIndex()
+                .collect { asm, idx ->
+                    def meta_new = meta + [_hap: "hap${idx + 1}"]
+                    return [meta_new, asm]
+                }
         }
         .filter { _meta, asm -> asm }
 
@@ -48,20 +49,20 @@ workflow GENOME_STATISTICS {
         "fasta",             // out_fmt
         "",                  // genome size
         "",                  // target
-        [[],[]],             // agp file
-        [[],[]],             // include bed
-        [[],[]],             // exclude bed
-        [[],[]]              // instructions
+        [[], []],             // agp file
+        [[], []],             // include bed
+        [[], []],             // exclude bed
+        [[], []]              // instructions
     )
 
     //
     // Module: Assess assembly using BUSCO.
     //
     ch_assemblies_for_busco = ch_assemblies
-        .map { meta, hap1, hap2 -> [ meta, [hap1, hap2].findAll() ] }
-        .join(ch_busco_lineage, by: 0)
+        .join(ch_busco_lineage, by: 0, remainder: true)
+        .filter { _meta, _asms, lineage -> lineage }
         .multiMap { meta, asms, lineage ->
-            asms: [ meta, asms ]
+            asms: [meta, asms]
             lineage: lineage
         }
 
@@ -75,12 +76,24 @@ workflow GENOME_STATISTICS {
     )
 
     //
-    // Module: assess kmer completeness/QV using MerquryFK
+    // Module: assess kmer completeness/QV using MerquryFK.
     //
     ch_merquryfk_asm_input = ch_assemblies
         .combine(ch_fastk, by: 0)
-        .multiMap { meta, hap1, hap2, fk_hist, fk_ktabs, mat_ktabs, pat_ktabs ->
-            asms: [meta, fk_hist, fk_ktabs, hap1, hap2]
+        .flatMap { meta, asms, fk_hist, fk_ktabs, mat_ktabs, pat_ktabs ->
+            if (asms.size() <= 2) {
+                [[meta + [_hap: "hap1"], asms[0], asms.drop(1), fk_hist, fk_ktabs, mat_ktabs, pat_ktabs]]
+            }
+            else {
+                asms
+                    .withIndex()
+                    .collect { asm, idx ->
+                        [meta + [_hap: "hap${idx + 1}"], asm, asms - [asm], fk_hist, fk_ktabs, mat_ktabs, pat_ktabs]
+                    }
+            }
+        }
+        .multiMap { meta, pri, alt, fk_hist, fk_ktabs, mat_ktabs, pat_ktabs ->
+            asms: [meta, fk_hist, fk_ktabs, pri, alt]
             mat: [meta, mat_ktabs]
             pat: [meta, pat_ktabs]
         }
@@ -88,7 +101,7 @@ workflow GENOME_STATISTICS {
     MERQURYFK_MERQURYFK(
         ch_merquryfk_asm_input.asms,
         ch_merquryfk_asm_input.mat,
-        ch_merquryfk_asm_input.pat
+        ch_merquryfk_asm_input.pat,
     )
 
     //
@@ -98,7 +111,7 @@ workflow GENOME_STATISTICS {
     ch_statistics_output = ASMSTATS.out.stats
         .mix(GFASTATS.out.assembly_summary)
         .map { meta, stats -> [meta - meta.subMap("_hap"), stats] }
-        .groupTuple(size: 4)
+        .groupTuple()
         .map { meta, out -> [meta, out.flatten().sort { f -> f.getName() }] }
 
     ch_busco_output = BUSCO_BUSCO.out.batch_summary
@@ -117,18 +130,18 @@ workflow GENOME_STATISTICS {
         .map { meta, out -> [meta, out.flatten().sort { f -> f.getName() }] }
 
     emit:
-    stats                    = ch_statistics_output
-    asmstats                 = ASMSTATS.out.stats
-    gfastats                 = GFASTATS.out.assembly_summary
-    busco                    = ch_busco_output
-    busco_batch_summary      = BUSCO_BUSCO.out.batch_summary
-    busco_summary_txt        = BUSCO_BUSCO.out.short_summaries_txt
-    busco_summary_json       = BUSCO_BUSCO.out.short_summaries_json
-    busco_log                = BUSCO_BUSCO.out.log
-    busco_directory          = BUSCO_BUSCO.out.busco_dir
-    merqury                  = ch_merqury_output
-    merqury_qv               = MERQURYFK_MERQURYFK.out.qv
-    merqury_completeness     = MERQURYFK_MERQURYFK.out.stats
-    merqury_phased_stats     = MERQURYFK_MERQURYFK.out.phased_block_stats
-    merqury_images           = MERQURYFK_MERQURYFK.out.images
+    stats                = ch_statistics_output
+    asmstats             = ASMSTATS.out.stats
+    gfastats             = GFASTATS.out.assembly_summary
+    busco                = ch_busco_output
+    busco_batch_summary  = BUSCO_BUSCO.out.batch_summary
+    busco_summary_txt    = BUSCO_BUSCO.out.short_summaries_txt
+    busco_summary_json   = BUSCO_BUSCO.out.short_summaries_json
+    busco_log            = BUSCO_BUSCO.out.log
+    busco_directory      = BUSCO_BUSCO.out.busco_dir
+    merqury              = ch_merqury_output
+    merqury_qv           = MERQURYFK_MERQURYFK.out.qv
+    merqury_completeness = MERQURYFK_MERQURYFK.out.stats
+    merqury_phased_stats = MERQURYFK_MERQURYFK.out.phased_block_stats
+    merqury_images       = MERQURYFK_MERQURYFK.out.images
 }

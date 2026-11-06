@@ -15,31 +15,28 @@ include { PURGEDUPS_SPLITFA                          } from '../../../modules/nf
 include { FASTX_MAP_LONG_READS                       } from '../fastx_map_long_reads/main'
 
 workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
-
     take:
-    ch_assemblies             // [meta, hap1, hap2]
-    ch_long_reads             // [meta, [reads]]
+    ch_assemblies // [meta, [hap1, hap2], ..., hap_n]
+    ch_long_reads // [meta, [reads]]
     val_fastx_reads_per_chunk // integer: number of reads per chunk to map
 
     main:
     //
     // Logic: validate that input assemblies are unzipped
     //
-    ch_assemblies
-        .subscribe { _meta, hap1, hap2 ->
-            if (hap1.getExtension() == "gz" || (hap2 && hap2.getExtension() == "gz")) {
-                error("Error: Input assemblies to FASTA_PURGE_RETAINED_HAPLOTYPE must be unzipped!")
-            }
+    ch_assemblies.subscribe { _meta, haps ->
+        if (haps.collect { hap -> hap.getExtension() == "gz" }.any()) {
+            error("Error: Input assemblies to FASTA_PURGE_RETAINED_HAPLOTYPE must be unzipped!")
         }
+    }
 
     //
     // Logic: split assemblies into primary and alternate
     //
-    ch_assemblies_split = ch_assemblies
-        .multiMap { meta, hap1, hap2 ->
-            primary:  [meta, hap1]
-            alternate:[meta, hap2]
-        }
+    ch_assemblies_split = ch_assemblies.multiMap { meta, haps ->
+        primary: [meta, haps[0]]
+        alternate: [meta, haps.drop(1)]
+    }
 
     //
     // Subworkflow: Map HiFi reads to primary contigs
@@ -49,7 +46,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
         ch_long_reads,
         val_fastx_reads_per_chunk,
         false,
-        channel.empty()
+        channel.empty(),
     )
 
     //
@@ -65,8 +62,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //
     // Module: Plot purge_dups histogram with cutoffs
     //
-    ch_purgedups_histplot_input = PURGEDUPS_PBCSTAT.out.stat
-        .combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
+    ch_purgedups_histplot_input = PURGEDUPS_PBCSTAT.out.stat.combine(PURGEDUPS_CALCUTS.out.cutoff, by: 0)
 
     PURGEDUPS_HISTPLOT(ch_purgedups_histplot_input)
 
@@ -78,7 +74,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //
     // MODULE: PEFORM SELF ALIGNMENT
     //
-    MINIMAP2_ALIGN_ASSEMBLY (
+    MINIMAP2_ALIGN_ASSEMBLY(
         PURGEDUPS_SPLITFA.out.split_fasta,
         [[:], []], // Trigger read to read alignment
         false,     // bam output
@@ -99,8 +95,7 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //
     // Module: Generate the primary and alternative contigs
     //
-    ch_getseqs_input = ch_assemblies_split.primary
-        .combine(PURGEDUPS_PURGEDUPS.out.bed, by: 0)
+    ch_getseqs_input = ch_assemblies_split.primary.combine(PURGEDUPS_PURGEDUPS.out.bed, by: 0)
 
     PURGEDUPS_GETSEQS(ch_getseqs_input)
 
@@ -109,15 +104,11 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //         and prepare those that have both for concatenation
     //
     ch_alt_split = ch_assemblies_split.alternate
-        .combine(PURGEDUPS_GETSEQS.out.haplotigs, by: 0)
-        .branch { meta, haps, alt ->
-            def alt_exists  = !!alt
-            def haps_exists = haps.size() > 0
-
-            concatenate: alt_exists && haps_exists
-                return [ meta, [ alt, haps ] ]
+        .join(PURGEDUPS_GETSEQS.out.haplotigs, by: 0, remainder: true)
+        .map { meta, input_alts, purged_haplotigs -> [meta, (input_alts << purged_haplotigs).findAll { it -> it.size() > 0 }] }
+        .branch { _meta, alts ->
+            concatenate: alts.size() > 1
             asis: true
-                return [ meta, alt_exists ? alt : haps ]
         }
 
     //
@@ -131,8 +122,17 @@ workflow FASTA_PURGE_RETAINED_HAPLOTYPE {
     //
     ch_alts = ch_alt_split.asis.mix(CONCATENATE_HAPLOTYPES.out.file_out)
 
+    //
+    // Logic: combine the purged primary and alternate assemblies into a single output channel
+    //
+    ch_purged_assembly_set = PURGEDUPS_GETSEQS.out.purged
+        .join(ch_alts, by: 0, remainder: true)
+        .map { meta, purged, alts ->
+            [meta, [purged, alts].flatten().findAll { it -> it.size() > 0 }]
+        }
+
     emit:
-    purged_assemblies          = PURGEDUPS_GETSEQS.out.purged.combine(ch_alts, by: 0)
+    purged_assemblies          = ch_purged_assembly_set
     purged_haplotigs           = PURGEDUPS_GETSEQS.out.haplotigs
     purgedups_splitfa          = PURGEDUPS_SPLITFA.out.split_fasta
     purgedups_splitfa_self_paf = MINIMAP2_ALIGN_ASSEMBLY.out.paf

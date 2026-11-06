@@ -157,7 +157,7 @@ output {
             spec.output.scaffolding.yahs_agp >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_bin >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_initial >> "${spec.name}/scaffolding/yahs/"
-            spec.output.scaffolding.yahs_intermeriate >> "${spec.name}/scaffolding/yahs/"
+            spec.output.scaffolding.yahs_intermediate >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.yahs_log >> "${spec.name}/scaffolding/yahs/"
             spec.output.scaffolding.ragtag_scaffolds >> "${spec.name}/scaffolding/ragtag/"
             spec.output.scaffolding.ragtag_agp >> "${spec.name}/scaffolding/ragtag/"

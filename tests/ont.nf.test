@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
+    profile "test_ont"
 
     test("dhQueRobu3 - test PacBio + UL ONT, ONT-only assembly, mitohifi plastid search") {
 
@@ -13,8 +14,6 @@ nextflow_pipeline {
 
         when {
             params {
-                genomic_data = "${projectDir}/assets/small_tests/dhQueRobu3_genomic.yaml"
-                assembly_specs = "${projectDir}/assets/small_tests/ont_spec.yaml"
                 outdir = "$outputDir"
                 busco_lineage_directory = "${launchDir}/busco/"
             }

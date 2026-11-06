@@ -42,7 +42,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Logic: Deploy pre-computed assemblies into the assemblies channel.
     //
     ch_assemblies = ch_assemblies.mix(
-        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.params.assemblies[0], stage.params.assemblies[1]] }
+        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.params.assemblies] }
     )
 
     //
@@ -93,10 +93,11 @@ workflow NUCLEAR_ASSEMBLY {
     //
     // Subworkflow: calculate genome statistcs
     //
-    ch_genome_statistics_inputs = ch_assemblies.multiMap { spec, hap1, hap2 ->
-        assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
-        fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
-        busco_lineage: [spec, val_busco_lineage]
+    ch_genome_statistics_inputs = ch_assemblies.multiMap { spec, haps ->
+        def out_spec = spec + [_n_haps: haps.size()]
+        assemblies: [out_spec, haps]
+        fastk: [out_spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
+        busco_lineage: [out_spec, val_busco_lineage]
     }
 
     GENOME_STATISTICS(
@@ -106,11 +107,28 @@ workflow NUCLEAR_ASSEMBLY {
         val_busco_lineage_directory,
     )
 
+    ch_merqury_to_join = GENOME_STATISTICS.out.merqury
+        .map { meta, files ->
+            // If we have <=2 haps, MerquryFK runs only once so we need to fix the key size to 1
+            def key = groupKey(meta - meta.subMap("_hap"), meta._n_haps > 2 ? meta._n_haps : 1)
+            return [key, files]
+        }
+        .groupTuple(by: 0)
+        .map { meta, files -> [meta.getGroupTarget(), files.flatten().sort { it.getName() } ] }
+
     ch_statistics = GENOME_STATISTICS.out.stats
         .join(GENOME_STATISTICS.out.busco, remainder: true)
-        .join(GENOME_STATISTICS.out.merqury, remainder: true)
+        .join(ch_merqury_to_join, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [hap: spec._hap, output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                output: [
+                    statistics: [
+                        stats: stats,
+                        busco: busco,
+                        merqury: merqury
+                    ],
+                ],
+            ]
         }
 
     //

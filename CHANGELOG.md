@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Added scaffolding with RagTag. This adds a new assembly specification parameter, `scaffolding_mode`, with values `yahs` or `ragtag_yahs`.
   - In `ragtag_yahs` mode, a reference genome for scaffolding can be provided in the spec (via `ragtag_reference`), or if not, the first haplotype is scaffolded with YaHS and used as a reference for all other haplotypes.
   - Also adds a `ragtag_arguments` key to control RagTag scaffolding.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Added limited support for polyploid assembly. For now, this support allows Hifiasm to be run correctly with `--n-hap` to produce > 2 haplotype assemblies during Hi-C phased assembly, or for the user to supply > 2 haplotypes as pre-computed assemblies. The internals of the pipeline now expect an arbitrary number of haplotypes.
+  - When running purging with a polyploid assembly, all the alternate haplotypes (i.e. all haps except hap 1) will be concatenated together with the purged haplotigs. This may be revisited in the future.
 
 ### Fixed
 
@@ -22,12 +24,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
 - [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Default `oatk_kmer_size` increased from 1000 to 1001.
 - [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Organellar index files now correctly contain the stage name.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) RagTag scaffolding reference is now correctly applied.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix a bug where assemblies for Hi-C mapping could be mapped twice, leading to a pipeline failure.
 
 ### Dependencies
 
-| Module | Tool | Old version | New version |
-| ------ | ---- | ----------- | ----------- |
-| gunzip | gzip | -           | 1.13        |
+| Module                | Tool     | Old version | New version |
+| --------------------- | -------- | ----------- | ----------- |
+| bcftools              | bcftools | 1.23.1      | 1.25        |
+| bedtools/bamtobedsort | samtools | 1.23        | 1.23.1      |
+| hifiasm               | samtools | 1.23        | 1.23.1      |
+| hifiasm               | find     | -           | 4.10.0      |
+| gatk/mergevcfs        | gatk4    | 4.6.2.0     | 4.7.0.0     |
+| gunzip                | gzip     | -           | 1.13        |
+| samtools/*            | samtools | 1.24        | 1.25        |
 
 ## v1.0.1 - Crimson Goregutter (patch 1) - [2026-09-11]
 

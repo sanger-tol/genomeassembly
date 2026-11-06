@@ -4,7 +4,7 @@ include { MITOHIFI_MITOHIFI                 } from '../../../modules/nf-core/mit
 workflow MITOHIFI_ASSEMBLY {
     take:
     ch_mitohifi_specs  // channel: spec
-    ch_assemblies      // channel: [spec, hap1, hap2]
+    ch_assemblies      // channel: [spec, [haps]]
 
     main:
     //
@@ -47,8 +47,8 @@ workflow MITOHIFI_ASSEMBLY {
         //
         ch_mitohifi_asm_input = ch_mitohifi_specs_split.assembly_input
             .combine(ch_assemblies)
-            .filter { spec, asm_meta, _asm1, _asm2 -> spec.prevID == asm_meta.id }
-            .map { spec, _asm_meta, asm1, asm2 -> [spec, [asm1, asm2]] }
+            .filter { spec, asm_meta, _haps -> spec.prevID == asm_meta.id }
+            .map { spec, _asm_meta, haps -> [spec, haps] }
 
         ch_mitohifi_reads_input = ch_mitohifi_specs_split.reads_input
             .map { spec -> [spec, spec.data.long_read.reads] }

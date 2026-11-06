@@ -130,7 +130,7 @@ These options can be used if the `assembly_type` field is set to "nuclear".
 
 > **Note:** To run reference-based mitochondrial or plastid genome search with MitoHiFi, either `mitohifi_reference_species` or both of `mitohifi_{organelle}_reference_{fa,gb}` must be specified along with `mitohifi_{organelle}_genetic_code`.
 
-The initial Hifiasm assembly stage can be skipped by providing a list of assemblies to the `assemblies` field of the assembly specification file. In this case, only stages downstream of Hifiasm assembly (purging, polishing, and scaffolding) will run as otherwise specified in the specification. The assemblies must be provided in haplotype order - that is, the first assembly must be haplotype 1, the second haplotype 2, etc.. Currently only two assemblies are able to be provided - any additional assemblies are skipped with a warning. This will be changed in a future release.
+The initial Hifiasm assembly stage can be skipped by providing a list of assemblies to the `assemblies` field of the assembly specification file. In this case, only stages downstream of Hifiasm assembly (purging, polishing, and scaffolding) will run as otherwise specified in the specification. The assemblies must be provided in haplotype order - that is, the first assembly must be haplotype 1, the second haplotype 2, etc..
 
 #### Organellar assembly options
 

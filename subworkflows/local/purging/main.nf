@@ -5,7 +5,7 @@ include { HTSLIB_BGZIPTABIX as BGZIP_PURGED } from '../../../modules/nf-core/hts
 workflow PURGING {
     take:
     ch_purging_specs // channel: spec
-    ch_assemblies    // channel: [spec, hap1, hap2]
+    ch_assemblies    // channel: [spec, [haps]]
     val_fastx_reads_per_chunk // int
 
     main:
@@ -16,10 +16,10 @@ workflow PURGING {
     //
     ch_purging_input = ch_assemblies
         .combine(ch_purging_specs)
-        .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
-        .multiMap { _asm_meta, asm1, asm2, spec ->
-            assemblies: [ spec, asm1, asm2 ]
-            long_reads: [ spec, spec.data.long_read.reads ]
+        .filter { asm_meta, asms, spec -> asm_meta.id == spec.prevID }
+        .multiMap { _asm_meta, asms, spec ->
+            assemblies: [spec, asms]
+            long_reads: [spec, spec.data.long_read.reads]
         }
 
     //
@@ -36,7 +36,7 @@ workflow PURGING {
     //
     ch_bgzip_input = FASTA_PURGE_RETAINED_HAPLOTYPE.out.purged_assemblies
         .join(FASTA_PURGE_RETAINED_HAPLOTYPE.out.purged_haplotigs)
-        .map { meta, asm1, asm2, haps -> [meta, [asm1, asm2, haps]] }
+        .map { meta, asms, haps -> [meta, asms + [haps]] }
         .map { meta, fasta ->
             def key = groupKey(meta, fasta.size())
             [ key, fasta ]

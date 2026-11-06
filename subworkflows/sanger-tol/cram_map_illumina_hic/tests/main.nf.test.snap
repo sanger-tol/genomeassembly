@@ -22,14 +22,14 @@
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,7038a36e37a5b93331ffe618fe771795"
+                    "test.metrics:md5,bf91795ea51ad3cc4b35dfd59c9656f0"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:43:38.748216",
+        "timestamp": "2026-09-15T15:28:03.05178366",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "meles meles - bwamem2": {
@@ -55,14 +55,14 @@
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,51755ba7077cd444be19d1fd07569cb6"
+                    "test.metrics:md5,7c139d1ca851b3cd0ae8a20fccf308ce"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:39:34.946622",
+        "timestamp": "2026-09-15T15:20:59.361827492",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "meles meles - minimap2": {
@@ -88,14 +88,14 @@
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,bc737c10e07175ea468040b952538e50"
+                    "test.metrics:md5,aed51225bc499091ac16519f4b0eac3f"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:42:47.872589",
+        "timestamp": "2026-09-15T15:26:37.26101262",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "meles meles - zymo - bwamem2 - multiple samples - double files": {
@@ -133,20 +133,20 @@
                     {
                         "id": "test2"
                     },
-                    "test2.metrics:md5,9576c2cd924a502933e631d457d034b6"
+                    "test2.metrics:md5,bfc65aecbf8b3f2bd2ef37f70569d296"
                 ],
                 [
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,75db11ef6694d30a041ce3ef5325dd19"
+                    "test.metrics:md5,bc67924bb0eded2bf9b98b0bad311362"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:41:09.214803",
+        "timestamp": "2026-09-15T15:23:02.177308339",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "meles meles - multiple read groups - bwamem2": {
@@ -172,14 +172,14 @@
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,93c67967f457e5689c86e071339e9514"
+                    "test.metrics:md5,e8e52262bf7328366fd48bfffd2ec606"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:45:13.292929",
+        "timestamp": "2026-09-15T15:30:04.908881319",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "meles meles - bwamem2 - multiple samples - meta mismatch": {
@@ -221,20 +221,20 @@
                     {
                         "id": "test2"
                     },
-                    "test2.metrics:md5,8548346e3c8f9e913c37a9cd790e77e9"
+                    "test2.metrics:md5,f9e5ae2fb3dad93efc12834bbea40323"
                 ],
                 [
                     {
                         "id": "test"
                     },
-                    "test.metrics:md5,51755ba7077cd444be19d1fd07569cb6"
+                    "test.metrics:md5,7c139d1ca851b3cd0ae8a20fccf308ce"
                 ]
             ]
         ],
-        "timestamp": "2026-02-10T10:42:06.647189",
+        "timestamp": "2026-09-15T15:24:34.980477409",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     }
 }
