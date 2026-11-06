@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#190](https://github.com/sanger-tol/genomeassembly/pull/190) RagTag scaffolding reference is now correctly applied.
 - [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix a bug where assemblies for Hi-C mapping could be mapped twice, leading to a pipeline failure.
 - [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Correctly determine whether to download MitoHiFi references by checking for provided mito reference files rather than plastid reference files.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix bug where the data platform was not included in the hash, leading to silent hash collisions when assembling data from different platforms (e.g. PacBio vs ONT) with the same sample name.
 
 ### Dependencies
 
