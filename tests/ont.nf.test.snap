@@ -110,7 +110,7 @@
                     "samtools": 1.25
                 },
                 "Workflow": {
-                    "sanger-tol/genomeassembly": "v1.1.0dev"
+                    "sanger-tol/genomeassembly": "v1.1.0"
                 },
                 "YAHS": {
                     "yahs": "1.2.2"
