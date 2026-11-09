@@ -3,6 +3,44 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0 - Slithersong - [2026-11-13]
+
+### Added
+
+- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) Hi-C is now mapped to assemblies bearing their input stage specification rather than their scaffolding specification. This makes changes to scaffolding parameters not require re-mapping the same Hi-C to the same assembly.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) Nuclear assemblies can now be "resumed" - pre-computed assemblies can be provided to the `assemblies` field of the assembly specification, which will skip the Hifiasm assembly stage and use the provided assemblies downstream.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `assembler` field of the assembly specification has been split into two fields - `assembly_type`, which controls whether a nuclear or organellar assembly is being performed, and `organelle_assembler`, which controls which organellar assembler to use for organellar assemblies.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Added scaffolding with RagTag. This adds a new assembly specification parameter, `scaffolding_mode`, with values `yahs` or `ragtag_yahs`.
+  - In `ragtag_yahs` mode, a reference genome for scaffolding can be provided in the spec (via `ragtag_reference`), or if not, the first haplotype is scaffolded with YaHS and used as a reference for all other haplotypes.
+  - Also adds a `ragtag_arguments` key to control RagTag scaffolding.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Added limited support for polyploid assembly. For now, this support allows Hifiasm to be run correctly with `--n-hap` to produce > 2 haplotype assemblies during Hi-C phased assembly, or for the user to supply > 2 haplotypes as pre-computed assemblies. The internals of the pipeline now expect an arbitrary number of haplotypes.
+  - When running purging with a polyploid assembly, all the alternate haplotypes (i.e. all haps except hap 1) will be concatenated together with the purged haplotigs. This may be revisited in the future.
+
+### Fixed
+
+- [#181](https://github.com/sanger-tol/genomeassembly/pull/181) `--build_juicer_map` is now disabled by default.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The `--genomescope_args` parameter has been correctly renamed to `--genomescope2_args`, reflecting the actual tool name.
+- [#182](https://github.com/sanger-tol/genomeassembly/pull/182) The polishing workflow now correctly outputs the polished assemblies downstream to the scaffolding stage.
+- [#184](https://github.com/sanger-tol/genomeassembly/pull/184) Pretext maps are no longer sorted by length, and instead are not sorted.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Default `oatk_kmer_size` increased from 1000 to 1001.
+- [#186](https://github.com/sanger-tol/genomeassembly/pull/186) Organellar index files now correctly contain the stage name.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) RagTag scaffolding reference is now correctly applied.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix a bug where assemblies for Hi-C mapping could be mapped twice, leading to a pipeline failure.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Correctly determine whether to download MitoHiFi references by checking for provided mito reference files rather than plastid reference files.
+- [#190](https://github.com/sanger-tol/genomeassembly/pull/190) Fix bug where the data platform was not included in the hash, leading to silent hash collisions when assembling data from different platforms (e.g. PacBio vs ONT) with the same sample name.
+
+### Dependencies
+
+| Module                | Tool     | Old version | New version |
+| --------------------- | -------- | ----------- | ----------- |
+| bcftools              | bcftools | 1.23.1      | 1.25        |
+| bedtools/bamtobedsort | samtools | 1.23        | 1.23.1      |
+| hifiasm               | samtools | 1.23        | 1.23.1      |
+| hifiasm               | find     | -           | 4.10.0      |
+| gatk/mergevcfs        | gatk4    | 4.6.2.0     | 4.7.0.0     |
+| gunzip                | gzip     | -           | 1.13        |
+| samtools/*            | samtools | 1.24        | 1.25        |
+
 ## v1.0.1 - Crimson Goregutter (patch 1) - [2026-09-11]
 
 This is a minor fix that slightly modifies the format of the `index.json` files produced by the pipeline, and makes a small set of changes to the pipeline outputs.
@@ -64,43 +102,42 @@ The full changelog is as follows:
 
 ### Dependencies
 
-| Module                  | Tool            | Old version | New version       |
-| ----------------------- | --------------- | ----------- | ----------------- |
-| bcftools/concat         | bcftools        | 1.21        | <removed, unused> |
-| bcftools/consensus      | bcftools        | 1.21        | 1.23.1            |
-| bcftools/index          | bcftools        | 1.21        | 1.23.1            |
-| bcftools/norm           | bcftools        | 1.21        | 1.23.1            |
-| bcftools/sort           | bcftools        | 1.21        | 1.23.1            |
-| bcftools/view           | bcftools        | 1.21        | 1.23.1            |
-| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23              |
-| busco/busco             | busco           | 6.0.0       | 6.1.0             |
-| fastk/fastk             | fastk           | 1.1.0       | 1.2               |
-| fastk/histex            | fastk           | 1.1.0       | 1.2               |
-| freebayes               | freebayes       | 1.3.6       | 1.3.10            |
-| gawk                    | gawk            | 5.3.0       | 5.3.1             |
-| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0           |
-| genomescope2            | genomescope2    | 2.0         | 2.1.0             |
-| gfastats                | gfastats        | 1.3.10      | 1.3.11            |
-| htslib/bgziptabix       | bgzip           | -           | 1.24              |
-| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2               |
-| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2               |
-| pretextmap              | samtools        | 1.17        | 1.23              |
-| pretextmap              | pretextmap      | 0.1.9       | 0.2.3             |
-| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5             |
-| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0             |
-| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0             |
-| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23              |
-| samtools/faidx          | samtools        | 1.22.1      | 1.24              |
-| samtools/flagstat       | samtools        | 1.22.1      | 1.24              |
-| samtools/idxstats       | samtools        | 1.22.1      | 1.24              |
-| samtools/index          | samtools        | 1.22.1      | 1.24              |
-| samtools/merge          | samtools        | 1.22.1      | 1.24              |
-| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1            |
-| samtools/splitheader    | samtools        | 1.22.1      | 1.24              |
-| samtools/stats          | samtools        | 1.22.1      | 1.24              |
-| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0            |
-| tabix/bgzip             | bgzip           | 1.21.0      | -                 |
-| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23              |
+| Module                  | Tool            | Old version | New version |
+| ----------------------- | --------------- | ----------- | ----------- |
+| bcftools/consensus      | bcftools        | 1.21        | 1.23.1      |
+| bcftools/index          | bcftools        | 1.21        | 1.23.1      |
+| bcftools/norm           | bcftools        | 1.21        | 1.23.1      |
+| bcftools/sort           | bcftools        | 1.21        | 1.23.1      |
+| bcftools/view           | bcftools        | 1.21        | 1.23.1      |
+| bedtools/bamtobedsort   | samtools        | 1.22.1      | 1.23        |
+| busco/busco             | busco           | 6.0.0       | 6.1.0       |
+| fastk/fastk             | fastk           | 1.1.0       | 1.2         |
+| fastk/histex            | fastk           | 1.1.0       | 1.2         |
+| freebayes               | freebayes       | 1.3.6       | 1.3.10      |
+| gawk                    | gawk            | 5.3.0       | 5.3.1       |
+| gatk4/mergevcfs         | gatk4           | 4.6.1.0     | 4.6.2.0     |
+| genomescope2            | genomescope2    | 2.0         | 2.1.0       |
+| gfastats                | gfastats        | 1.3.10      | 1.3.11      |
+| htslib/bgziptabix       | bgzip           | -           | 1.24        |
+| merquryfk/hapmaker      | merquryfk       | 1.1.1       | 1.2         |
+| merquryfk/merquryfk     | merquryfk       | 1.1.1       | 1.2         |
+| pretextmap              | samtools        | 1.17        | 1.23        |
+| pretextmap              | pretextmap      | 0.1.9       | 0.2.3       |
+| pretextsnapshot         | pretextsnapshot | 0.0.4       | 0.0.5       |
+| fastxalign/pyfastxindex | pyfastx         | 2.2.0       | 2.3.0       |
+| fastxalign/fastxalign   | pyfastx         | 2.2.0       | 2.3.0       |
+| fastxalign/fastxalign   | samtools        | 1.22.1      | 1.23        |
+| samtools/faidx          | samtools        | 1.22.1      | 1.24        |
+| samtools/flagstat       | samtools        | 1.22.1      | 1.24        |
+| samtools/idxstats       | samtools        | 1.22.1      | 1.24        |
+| samtools/index          | samtools        | 1.22.1      | 1.24        |
+| samtools/merge          | samtools        | 1.22.1      | 1.24        |
+| samtools/mergedup       | samtools        | 1.22.1      | 1.23.1      |
+| samtools/splitheader    | samtools        | 1.22.1      | 1.24        |
+| samtools/stats          | samtools        | 1.22.1      | 1.24        |
+| seqkit/grep             | seqkit          | 2.9.0       | 2.13.0      |
+| tabix/bgzip             | bgzip           | 1.21.0      | -           |
+| yahs/makepairsfile      | samtools        | 1.22.1      | 1.23        |
 
 ### Deprecated
 

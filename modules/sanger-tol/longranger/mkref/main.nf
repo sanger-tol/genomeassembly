@@ -11,7 +11,7 @@ process LONGRANGER_MKREF {
 
     output:
     tuple val(meta), path("refdata-*"), emit: reference
-	tuple val("${task.process}"), val('longranger'), eval("longranger align --version | sed '1!d;s/.*(\\(.*\\)).*/\\1/'"), emit: versions_longranger, topic: versions
+    tuple val("${task.process}"), val('longranger'), eval("longranger align --version | sed '1!d;s/.*(\\(.*\\)).*/\\1/'"), emit: versions_longranger, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

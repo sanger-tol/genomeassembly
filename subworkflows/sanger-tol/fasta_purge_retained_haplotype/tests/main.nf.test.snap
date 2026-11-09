@@ -21,8 +21,10 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
-                        "test.fa:md5,107b9c11bc4ac1f2e5c70dfe735944fd"
+                        [
+                            "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                            "test.fa:md5,107b9c11bc4ac1f2e5c70dfe735944fd"
+                        ]
                     ]
                 ],
                 "purged_haplotigs": [
@@ -107,11 +109,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-13T12:37:01.232936",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-23T11:05:43.177431863"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "Undibacterium unclassified - hap1 only - hifi": {
         "content": [
@@ -135,8 +137,10 @@
                         {
                             "id": "test"
                         },
-                        "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
-                        "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
+                        [
+                            "test.purged.fa:md5,3468a73b6b13c05965c10b7eefc7654f",
+                            "test.hap.fa:md5,3ff71e486f5c982b01ce2276916d5259"
+                        ]
                     ]
                 ],
                 "purged_haplotigs": [
@@ -221,10 +225,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-13T12:37:48.747508",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-23T11:08:00.854164486"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

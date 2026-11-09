@@ -100,6 +100,10 @@
 
   > Guan D, McCarthy SA, Wood J, Howe K, Wang Y, Durbin R. Identifying and removing haplotypic duplication in primary genome assemblies. Bioinformatics. 2020 May 1;36(9):2896-2898. doi: https://doi.org/10.1093/bioinformatics/btaa025. PMID: 31971576; PMCID: PMC7203741.
 
+- [RagTag](https://github.com/malonge/ragtag)
+
+  > Alonge, M., Lebeigle, L., Kirsche, M. et al. Automated assembly scaffolding using RagTag elevates a new tomato system for high-throughput genome editing. Genome Biol 23, 258 (2022). https://doi.org/10.1186/s13059-022-02823-7
+
 - [Samtools](https://pubmed.ncbi.nlm.nih.gov/33590861/)
 
   > Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: https://doi.org/10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.
