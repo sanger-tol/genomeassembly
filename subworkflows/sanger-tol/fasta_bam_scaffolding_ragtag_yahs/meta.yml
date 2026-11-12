@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
+name: "fasta_bam_scaffolding_ragtag_yahs"
+description: |
+  Scaffold a set of assemblies using RagTag and YaHS. First, each assembly is scaffolded with RagTag against
+  the provided reference. Then, the RagTag scaffolds are re-scaffolded using YaHS with the provided Hi-C BAM
+  to correct errors.
+keywords:
+  - scaffolding
+  - hic
+  - contact map
+  - assembly
+  - reference-based scaffolding
+components:
+  - bedtools/bamtobedsort
+  - yahs/makepairsfile
+  - ragtag/scaffold:
+      git_remote: https://github.com/nf-core/modules.git
+  - samtools/faidx:
+      git_remote: https://github.com/nf-core/modules.git
+  - yahs:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_fasta:
+      type: file
+      description: |
+        Channel containing assemblies for scaffolding.
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{bam/cram/sam}"
+  - ch_hic_bam:
+      type: file
+      description: |
+        Channel containing BAM files of Hi-C reads mapped to each assembly.
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bam/cram/sam}"
+  - ch_ragtag_reference:
+      type: file
+      description: |
+        Channel containing a reference assembly to scaffold each assembly against.
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bam/cram/sam}"
+output:
+  - scaffolds_fasta:
+      type: file
+      description: |
+        Final scaffolds from YaHS in FASTA format
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.fasta"
+  - scaffolds_agp:
+      type: file
+      description: |
+        AGP describing how contigs are transformed into final scaffolds
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - scaffolds_pairs:
+      type: file
+      description: |
+        Pairs file describing Hi-C contacts between scaffolds, translated from the contigs pairs file
+        Structure: [ val(meta), path(pairs) ]
+      pattern: "*.pairs.gz"
+  - scaffolds_chromsizes:
+      type: file
+      description: |
+        Chromsizes file for the scaffolds. A headerless TSV of format <contigname>\t<size>
+        Structure: [ val(meta), path(chromsizes) ]
+      pattern: "*.sizes"
+  - ragtag_scaffolds:
+      type: file
+      description: |
+        FASTA file of scaffolds output by RagTag
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.fasta.gz"
+  - ragtag_agp:
+      type: file
+      description: |
+        AGP file describing how contigs are transformed into scaffolds by RagTag
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - ragtag_stats:
+      type: file
+      description: |
+        Numerical genome statistics of RagTag scaffolds
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.stats"
+  - ragtag_paf:
+      type: file
+      description: |
+        PAF file describing alignments of contigs to the reference assembly by RagTag
+        Structure: [ val(meta), path(paf) ]
+      pattern: "*.paf.gz"
+  - ragtag_delta:
+      type: file
+      description: |
+        Nucmer DELTA file of alignments of contigs to the reference assembly by RagTag if using Nucmer aligner
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.delta.gz"
+  - confidence_txt:
+      type: file
+      description: |
+        Confidence scores used in scaffolding by RagTag
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*.confidence.txt"
+  - yahs_bin:
+      type: file
+      description: |
+        YaHS binary file describing Hi-C contacts
+        Structure: [ val(meta), path(bin) ]
+      pattern: "*.bin"
+  - yahs_initial:
+      type: file
+      description: |
+        AGP files describing inital breaks by YaHS
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - yahs_intermediate:
+      type: file
+      description: |
+        AGP files describing each scaffolding round by YaHS
+        Structure: [ val(meta), path(agp) ]
+      pattern: "*.agp"
+  - yahs_log:
+      type: file
+      description: |
+        YaHS log file
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

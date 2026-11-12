@@ -26,8 +26,8 @@
                     "@SQ\tSN:h1tg000009l\tLN:148002",
                     "@SQ\tSN:h1tg000010l\tLN:23205",
                     "@PG\tID:samtools\tPN:samtools\tVN:1.21\tCL:samtools view -F 0x200 -o filtered.cram input.cram",
-                    "@PG\tID:minimap2\tPN:minimap2\tVN:2.30-r1287\tCL:minimap2 -t2 -x map-hifi -a baUndUnlc1.hic.hap1.p_ctg.fa.gz -\tPP:samtools",
-                    "@PG\tID:samtools.1\tPN:samtools\tPP:minimap2\tVN:1.23.1\tCL:samtools sort -@ 1 -o HiFi.reads.fasta.0.test.bam -T HiFi.reads.fasta.0.test_sort_tmp --write-index -l1 -"
+                    "@PG\tID:minimap2\tPN:minimap2\tVN:2.30-r1287\tCL:minimap2 -t4 -x map-hifi -a baUndUnlc1.hic.hap1.p_ctg.fa.gz -\tPP:samtools",
+                    "@PG\tID:samtools.1\tPN:samtools\tPP:minimap2\tVN:1.23.1\tCL:samtools sort -@ 3 -o HiFi.reads.fasta.0.test.bam -T HiFi.reads.fasta.0.test_sort_tmp --write-index -l1 -"
                 ]
             },
             {
@@ -54,10 +54,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-07-24T10:53:13.136276794",
+        "timestamp": "2026-10-08T12:10:51.112735614",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.0"
         }
     },
     "Undibacterium_unclassified - fasta - bam out - filter": {

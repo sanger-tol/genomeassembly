@@ -38,8 +38,6 @@ workflow GENOMEASSEMBLY {
     outdir
 
     main:
-    ch_versions = channel.empty()
-
     //
     // Subworkflow: build kmer databases for input data if required
     // and then pre-process the specifications for downstream consumption
@@ -54,7 +52,7 @@ workflow GENOMEASSEMBLY {
     // Subworkflow: perform assembly of nuclear genome
     //
     NUCLEAR_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["hifiasm"] },
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembly_type == "nuclear" },
         val_fastx_reads_per_chunk,
         val_polishing_container_provided,
         val_sequences_per_polishing_chunk,
@@ -67,13 +65,12 @@ workflow GENOMEASSEMBLY {
         val_build_juicer_map,
         val_build_cooler_map,
     )
-    ch_versions = ch_versions.mix(NUCLEAR_ASSEMBLY.out.versions)
 
     //
     // Subworkflow: assemble organellar genomes
     //
     ORGANELLE_ASSEMBLY(
-        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembler in ["oatk", "mitohifi_mito"] }
+        PREPARE_INPUTS.out.specs.filter { spec -> spec.assembly_type == "organellar" }
     )
 
     //
@@ -96,7 +93,7 @@ workflow GENOMEASSEMBLY {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
             storeDir: "${outdir}/pipeline_info",
@@ -116,7 +113,7 @@ workflow GENOMEASSEMBLY {
     statistics       = NUCLEAR_ASSEMBLY.out.statistics
     oatk             = ORGANELLE_ASSEMBLY.out.oatk
     reads_mitohifi   = ORGANELLE_ASSEMBLY.out.reads_mitohifi
-    stage_indexes    = NUCLEAR_ASSEMBLY.out.stage_indexes
-    spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes.mix(ORGANELLE_ASSEMBLY.out.spec_indexes)
+    stage_indexes    = NUCLEAR_ASSEMBLY.out.stage_indexes.mix(ORGANELLE_ASSEMBLY.out.stage_indexes)
+    spec_indexes     = NUCLEAR_ASSEMBLY.out.spec_indexes
     versions         = ch_collated_versions // channel: [ path(versions.yml) ]
 }

@@ -5,17 +5,17 @@ include { HTSLIB_BGZIPTABIX as BGZIP_POLISHED      } from '../../../modules/nf-c
 workflow POLISHING {
     take:
     ch_polishing_specs // channel: spec
-    ch_assemblies      // channel: [spec, hap1, hap2]
+    ch_assemblies // channel: [spec, [haps]]
     val_polishing_container_provided
     val_sequences_per_polishing_chunk
 
     main:
-    ch_assemblies_polished_split = channel.empty()
+    ch_polished_assemblies = channel.empty()
     ch_polishing_output = channel.empty()
 
     // Exclude polishing from the CLI output if not enabled to clean
     // up onscreen output
-    if(val_polishing_container_provided) {
+    if (val_polishing_container_provided) {
         //
         // Logic: join all the assemblies with the purging specifications and
         // data, filter for those assemblies which are to be purged, then
@@ -23,9 +23,9 @@ workflow POLISHING {
         //
         ch_polishing_input = ch_assemblies
             .combine(ch_polishing_specs)
-            .filter { asm_meta, _asm1, _asm2, spec -> asm_meta.id == spec.prevID }
-            .multiMap { _asm_meta, asm1, asm2, spec ->
-                assemblies: [spec, [asm1, asm2]]
+            .filter { asm_meta, _haps, spec -> asm_meta.id == spec.prevID }
+            .multiMap { _asm_meta, haps, spec ->
+                assemblies: [spec, haps]
                 polishing_reads: [spec, spec.data.polishing.reads]
             }
 
@@ -35,8 +35,9 @@ workflow POLISHING {
         FASTA_10X_POLISHING_LONGRANGER_FREEBAYES(
             ch_polishing_input.assemblies,
             ch_polishing_input.polishing_reads,
-            val_sequences_per_polishing_chunk
+            val_sequences_per_polishing_chunk,
         )
+        ch_polished_assemblies = ch_polished_assemblies.mix(FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.polished_assemblies)
 
         //
         // Module: bgzip all polished assembly fasta
@@ -44,16 +45,16 @@ workflow POLISHING {
         ch_bgzip_input = FASTA_10X_POLISHING_LONGRANGER_FREEBAYES.out.polished_assemblies
             .map { meta, fasta ->
                 def key = groupKey(meta, fasta.size())
-                [ key, fasta ]
+                [key, fasta]
             }
             .transpose()
-            .map { meta, fasta -> [ meta, fasta, [], [] ] }
+            .map { meta, fasta -> [meta, fasta, [], []] }
 
         BGZIP_POLISHED(
             ch_bgzip_input,
             "compress",
             false,
-            "fa"
+            "fa",
         )
 
         //
@@ -76,14 +77,14 @@ workflow POLISHING {
                             longranger_bai: lr_bai,
                             longranger_csv: lr_csv,
                             merged_vcf: vcf,
-                            merged_vcf_tbi: tbi
-                        ]
-                    ]
+                            merged_vcf_tbi: tbi,
+                        ],
+                    ],
                 ]
             }
     }
 
     emit:
-    polished_assemblies = ch_assemblies_polished_split
-    polishing_output = ch_polishing_output
+    polished_assemblies = ch_polished_assemblies
+    polishing_output    = ch_polishing_output
 }

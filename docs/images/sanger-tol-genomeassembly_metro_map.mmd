@@ -14,7 +14,7 @@
 %%metro grid: genome_statistics | 4, 0, 4
 %%metro grid: organellar_assembly | 1, 4, 2
 %%metro line_order: span
-%%metro compact_offsets: true
+%%metro compact_offsets: false
 %%metro legend: bl
 %%metro logo: sanger-tol-genomeassembly_logo_light.png
 %%metro legend: br
@@ -54,12 +54,16 @@ graph LR
         %%metro exit: right | assemblies
         scaffolding_bwamem2[bwa-mem2]
         scaffolding_minimap2[minimap2]
+        ragtag[RagTag]
         yahs[YaHS]
         pretextmap[PretextMap]
         juicer[Juicer]
         cooler[Cooler]
         scaffolding_bwamem2 -->|assemblies,hic_reads| yahs
+        scaffolding_bwamem2 -->|assemblies| ragtag
         scaffolding_minimap2 -->|assemblies,hic_reads| yahs
+        scaffolding_minimap2 -->|assemblies| ragtag
+        ragtag -->|assemblies| yahs
         yahs -->|assemblies,hic_reads| pretextmap
         yahs -->|assemblies,hic_reads| juicer
         yahs -->|assemblies,hic_reads| cooler
@@ -67,13 +71,16 @@ graph LR
 
     subgraph genome_statistics [Genome QC]
         %%metro entry: left | assemblies
+        _hidden_stats_input [ ]
         asmstats[asmstats]
         gfastats[GFAStats]
         busco[BUSCO]
         merquryfk[MerquryFK]
-        asmstats -->|assemblies| gfastats
-        asmstats -->|assemblies| busco
-        asmstats -->|assemblies| merquryfk
+
+        _hidden_stats_input -->|assemblies| asmstats
+        _hidden_stats_input -->|assemblies| gfastats
+        _hidden_stats_input -->|assemblies| busco
+        _hidden_stats_input -->|assemblies| merquryfk
     end
 
     subgraph organellar_assembly [Organellar assembly]
@@ -97,10 +104,10 @@ graph LR
     purge_dups -->|assemblies| scaffolding_minimap2
     freebayes -->|assemblies| scaffolding_bwamem2
     freebayes -->|assemblies| scaffolding_minimap2
-    hifiasm -->|assemblies| asmstats
-    purge_dups -->|assemblies| asmstats
-    freebayes -->|assemblies| asmstats
-    yahs -->|assemblies| asmstats
+    hifiasm -->|assemblies| _hidden_stats_input
+    purge_dups -->|assemblies| _hidden_stats_input
+    freebayes -->|assemblies| _hidden_stats_input
+    yahs -->|assemblies| _hidden_stats_input
     hifiasm -->|assemblies| mitohifi
     input_long_reads --> |long_reads| mitohifi
     input_long_reads --> |long_reads| oatk

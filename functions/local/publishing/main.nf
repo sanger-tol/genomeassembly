@@ -15,7 +15,7 @@
 def getPlatformShortName(platform) {
     def shortname = ""
     if (platform == "pacbio_hifi") {
-        shortname = "ccs"
+        shortname = "pb"
     }
     else if (platform == "oxford_nanopore") {
         shortname = "ont"
@@ -24,10 +24,10 @@ def getPlatformShortName(platform) {
         shortname = "10x"
     }
     else if (platform == "illumina_hic") {
-        shortname == "illumina"
+        shortname = "illumina"
     }
     else if (platform == "illumina") {
-        shortname == "illumina"
+        shortname = "illumina"
     }
 
     return shortname
@@ -43,7 +43,10 @@ def getPlatformShortName(platform) {
 def specToAssemblyDir(spec) {
     def stage = spec.stage
 
-    if (spec.assembler == "hifiasm") {
+    if (spec.assembly_type == "nuclear") {
+        if (stage == "precomputed") {
+            return "input"
+        }
         if (stage == "hifiasm") {
             return "hifiasm"
         }
@@ -53,7 +56,10 @@ def specToAssemblyDir(spec) {
         if (stage == "polishing") {
             return "polishing"
         }
-        if (stage == "scaffolding") {
+        if (stage == "scaffolding_yahs") {
+            return "scaffolding"
+        }
+        if (stage == "scaffolding_ragtag_yahs") {
             return "scaffolding"
         }
         if (stage == "mitohifi_mito") {
@@ -63,11 +69,8 @@ def specToAssemblyDir(spec) {
             return "plastid"
         }
     }
-    else if (spec.assembler == "mitohifi") {
+    else if (spec.assembly_type == "organellar") {
         return ""
     }
-    else if (spec.assembler == "oatk") {
-        return ""
-    }
-    error("Unexpected assembler/stage combination (${spec.assembler}/${spec.stage}) while constructing output directory names!")
+    error("Unexpected assembly type/stage combination (${spec.assembly_type}/${spec.stage}) while constructing output directory names!")
 }

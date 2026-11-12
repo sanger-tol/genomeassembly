@@ -5,23 +5,22 @@ include { HTSLIB_BGZIPTABIX as BGZIP_HIFIASM } from '../../../modules/nf-core/ht
 workflow HIFIASM_ASSEMBLY {
     take:
     ch_bin_assembly_specs // channel: spec
-    ch_assembly_specs     // channel: spec
+    ch_assembly_specs // channel: spec
 
     main:
     //
     // Module: Run Hifiasm but only generate the .bin files
     //
-    ch_hifiasm_bin_input = ch_bin_assembly_specs
-        .map { spec ->
-            [ spec, spec.data.long_read.reads, [] ]
-        }
+    ch_hifiasm_bin_input = ch_bin_assembly_specs.map { spec ->
+        [spec, spec.data.long_read.reads, []]
+    }
 
     HIFIASM_BIN(
         ch_hifiasm_bin_input,
         [[:], []],
         [[:], [], []],
         [[:], []],
-        [[:], []]
+        [[:], []],
     )
 
     //
@@ -49,7 +48,7 @@ workflow HIFIASM_ASSEMBLY {
         ch_hifiasm_input.hic,
         ch_hifiasm_input.trio,
         ch_hifiasm_input.bin,
-        ch_hifiasm_input.log
+        ch_hifiasm_input.log,
     )
 
     //
@@ -67,7 +66,7 @@ workflow HIFIASM_ASSEMBLY {
         ch_bgzip_input,
         "compress",
         false,
-        "fa"
+        "fa",
     )
 
     //
@@ -79,41 +78,52 @@ workflow HIFIASM_ASSEMBLY {
         .join(HIFIASM.out.assembly_graphs, by: 0)
         .join(HIFIASM.out.bed, by: 0)
         .join(HIFIASM.out.log, by: 0)
-        .map { spec, fasta, graphs, bed, log ->
+        .map { spec, fasta, graphs, bed, hifiasm_log ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 output: [
                     hifiasm: [
                         fasta: fasta,
                         graphs: graphs,
                         bed: bed,
-                        log: log
-                    ]
-                ]
+                        hifiasm_log: hifiasm_log,
+                    ],
+                ],
             ]
         }
 
     //
-    // Logic: Split out the correct pri/alt/hap1/hap2 assembly per assembly
+    // Logic: Split out the correct assemblies in sorted order for each Hifiasm run.
     //
-    ch_assemblies_fasta = HIFIASM.out.assembly_fasta
-        .flatMap { spec, asms ->
-            def pri = /hap1.p_ctg.fa$/
-            def alt = /hap2.p_ctg.fa$/
+    // We prefer hap1/hap2/.../hap_n assemblies if they exist, otherwise we take
+    // p_ctg as the primary and a_ctg as the alternative.
+    //
+    ch_assemblies_fasta = HIFIASM.out.assembly_fasta.map { spec, asms ->
+        def validHaps = asms.findAll { asm -> asm =~ /(hap\d+\.p_ctg\.fa$|^.+\.p_ctg\.fa$|^.+\.a_ctg\.fa$)/ }
 
-            // If hifiasm is run with `--primary` or `-l0`, we do not get
-            // hap1/hap2 files - instead we get only p_ctg and a_ctg files, if
-            // we don't run in phased or trio mode.
-            if(!(asms.find { asm -> asm.name =~ pri } && asms.find { asm -> asm.name =~ alt })) {
-                pri = /^.+\.p_ctg\.fa$/
-                alt = /^.+\.a_ctg\.fa$/
+        // Retain only haplotype assemblies if they exist, otherwise keep all assemblies
+        if (validHaps.any { asm -> asm =~ /hap\d+\.p_ctg\.fa$/ }) {
+            validHaps = validHaps.findAll { asm -> asm =~ /hap\d+\.p_ctg\.fa$/ }
+        }
+
+        def sortedHaps = validHaps.sort { a, b ->
+            def extractHapNum = { name ->
+                def matcher = name =~ /hap(\d+)\.p_ctg\.fa$/
+                matcher.find() ? matcher.group(1).toInteger() : 999999
             }
+            def getTigPriority = { name -> name.contains("p_ctg") ? 0 : (name.contains("a_ctg") ? 1 : 2) }
 
-            return [
-                [spec, asms.find { asm -> asm.name =~ pri }, asms.find { asm -> asm.name =~ alt }]
-            ]
+            def numA = extractHapNum.call(a.name)
+            def numB = extractHapNum.call(b.name)
+            def prioA = getTigPriority.call(a.name)
+            def prioB = getTigPriority.call(b.name)
+
+            numA <=> numB ?: prioA <=> prioB ?: a.name <=> b.name
         }
+
+        [spec, sortedHaps]
+    }
 
     emit:
     hifiasm_assemblies = ch_assemblies_fasta
-    hifiasm_output = ch_hifiasm_output
+    hifiasm_output     = ch_hifiasm_output
 }

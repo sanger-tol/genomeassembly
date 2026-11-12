@@ -11,7 +11,7 @@
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.2.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.2.1)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -34,9 +34,9 @@ The pipeline is designed to be very flexible and nearly all stages of the pipeli
 2. Assembles the provided long reads using [hifiasm](https://hifiasm.readthedocs.io), optionally producing hic-phased or trio-binned assemblies. ONT reads are supported for both primary assembly and as ultra-long reads.
 3. (optional) Purges retained haplotigs from the assembly using [purge_dups](https://github.com/dfguan/purge_dups).
 4. (optional) Polishes the combined assembly using Illumina 10X reads with [Longranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) and [Freebayes](https://github.com/freebayes/freebayes). This feature is retained for re-production of old ToL assemblies and is not well-tested.
-5. (optional) Maps Hi-C reads to each assembly using [bwamem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/), and scaffolds them using these long-range Hi-C interactions with [YaHS](https://github.com/c-zhou/yahs).
+5. (optional) Maps Hi-C reads to each assembly using [bwamem2](https://github.com/bwa-mem2/bwa-mem2) or [minimap2](https://github.com/lh3/minimap2/), and uses these long-range Hi-C interactions for scaffolding with [YaHS](https://github.com/c-zhou/yahs). Alternatively, scaffolds the assemblies with a reference using [RagTag](https://github.com/malonge/ragtag) before corrrecting these scaffolds using YaHS.
 6. Produces numerical statistics for each assembly at each stage of the pipeline using [GFASTATS](https://github.com/vgl-hub/gfastats) (assembly statiscics), [BUSCO](https://busco.ezlab.org/) (single-copy ortholog statistics), and [MERQURY.FK](https://github.com/thegenemyers/MERQURY.FK) (QV and kmer-completeness).
-7. (optional) Assembles organellar genomes (mitochondrion and chloroplast) using the de-novo assembler [oatk](https://github.com/c-zhou/oatk), and the reference-based assembler [MitoHiFi](https://github.com/marcelauliano/MitoHiFi).
+7. (optional) Assembles organellar genomes (mitochondrion and chloroplast) using the de-novo assembler [oatk](https://github.com/c-zhou/oatk), or the reference-based assembler [MitoHiFi](https://github.com/marcelauliano/MitoHiFi).
 
 ## Usage
 

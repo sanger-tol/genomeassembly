@@ -26,7 +26,6 @@ workflow NUCLEAR_ASSEMBLY {
     val_build_cooler_map
 
     main:
-    ch_versions = channel.empty()
     ch_assemblies = channel.empty()
 
     //
@@ -37,6 +36,13 @@ workflow NUCLEAR_ASSEMBLY {
             spec.stages.collect { stageName, _stageData -> setupStage(spec, stageName) }
         }
         .unique()
+
+    //
+    // Logic: Deploy pre-computed assemblies into the assemblies channel.
+    //
+    ch_assemblies = ch_assemblies.mix(
+        ch_stages.filter { stage -> stage.stage == "precomputed" }.map { stage -> [stage, stage.params.assemblies] }
+    )
 
     //
     // Subworkflow: raw assembly of long reads using hifiasm
@@ -72,7 +78,7 @@ workflow NUCLEAR_ASSEMBLY {
     // Subworkflow: run hic-mapping and scaffolding
     //
     SCAFFOLDING(
-        ch_stages.filter { stage -> stage.stage == "scaffolding" },
+        ch_stages.filter { stage -> stage.stage in ["scaffolding_yahs", "scaffolding_ragtag_yahs"] },
         ch_assemblies,
         val_hic_aligner,
         val_hic_mapping_cram_chunk_size,
@@ -86,10 +92,11 @@ workflow NUCLEAR_ASSEMBLY {
     //
     // Subworkflow: calculate genome statistcs
     //
-    ch_genome_statistics_inputs = ch_assemblies.multiMap { spec, hap1, hap2 ->
-        assemblies: [spec, hap1, hap2.size() > 0 ? hap2 : []]
-        fastk: [spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
-        busco_lineage: [spec, val_busco_lineage]
+    ch_genome_statistics_inputs = ch_assemblies.multiMap { spec, haps ->
+        def out_spec = spec + [_n_haps: haps.size()]
+        assemblies: [out_spec, haps]
+        fastk: [out_spec, spec.data.long_read.fk_hist, spec.data.long_read.fk_ktab, spec.data.maternal.haptab, spec.data.paternal.haptab]
+        busco_lineage: [out_spec, val_busco_lineage]
     }
 
     GENOME_STATISTICS(
@@ -99,11 +106,20 @@ workflow NUCLEAR_ASSEMBLY {
         val_busco_lineage_directory,
     )
 
+    ch_merqury_to_join = GENOME_STATISTICS.out.merqury
+        .map { meta, files ->
+            // If we have <=2 haps, MerquryFK runs only once so we need to fix the key size to 1
+            def key = groupKey(meta - meta.subMap("_hap"), meta._n_haps > 2 ? meta._n_haps : 1)
+            return [key, files]
+        }
+        .groupTuple(by: 0)
+        .map { meta, files -> [meta.getGroupTarget(), files.flatten().sort { it -> it.getName() }] }
+
     ch_statistics = GENOME_STATISTICS.out.stats
         .join(GENOME_STATISTICS.out.busco, remainder: true)
-        .join(GENOME_STATISTICS.out.merqury, remainder: true)
+        .join(ch_merqury_to_join, remainder: true)
         .map { spec, stats, busco, merqury ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [hap: spec._hap, output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
         }
 
     //
@@ -127,19 +143,19 @@ workflow NUCLEAR_ASSEMBLY {
         .reduce { a, b -> a + b }
 
     INDEX_STAGE(
-        ch_stages.filter { stage -> stage.stage != "hifiasm_base" },
+        ch_stages.filter { stage -> !(stage.stage in ["precomputed", "hifiasm_base"]) },
         ch_versions_to_index,
     )
 
     INDEX_SPEC(
-        ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
+        ch_specs.map { spec -> spec.subMap(["name", "assembly_type", "data", "params", "tools"]) },
         ch_versions_to_index,
     )
 
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
-    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembly_type"]) }.unique()
 
     ch_hifiasm_out = ch_output_specs
         .combine(HIFIASM_ASSEMBLY.out.hifiasm_output)
@@ -185,5 +201,4 @@ workflow NUCLEAR_ASSEMBLY {
     statistics    = ch_statistics_out
     stage_indexes = ch_stage_indexes
     spec_indexes  = INDEX_SPEC.out.spec
-    versions      = ch_versions
 }

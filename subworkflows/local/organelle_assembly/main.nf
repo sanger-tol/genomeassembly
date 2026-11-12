@@ -1,9 +1,9 @@
-include { OATK_ASSEMBLY                              } from '../../../subworkflows/local/oatk_assembly'
-include { MITOHIFI_ASSEMBLY                          } from '../../../subworkflows/local/mitohifi_assembly'
+include { OATK_ASSEMBLY                               } from '../../../subworkflows/local/oatk_assembly'
+include { MITOHIFI_ASSEMBLY                           } from '../../../subworkflows/local/mitohifi_assembly'
 
-include { setupStage                                 } from '../../../functions/local/assembly_stages'
+include { setupStage                                  } from '../../../functions/local/assembly_stages'
 
-include { GENERATE_SPECIFICATION_INDEX as INDEX_SPEC } from '../../../modules/local/generate_specification_index'
+include { GENERATE_SPECIFICATION_INDEX as INDEX_STAGE } from '../../../modules/local/generate_specification_index'
 
 workflow ORGANELLE_ASSEMBLY {
     take:
@@ -46,15 +46,15 @@ workflow ORGANELLE_ASSEMBLY {
         }
         .reduce { a, b -> a + b }
 
-    INDEX_SPEC(
-        ch_specs.map { spec -> spec.subMap(["name", "assembler", "data", "params", "tools"]) },
+    INDEX_STAGE(
+        ch_stages,
         ch_versions_to_index,
     )
 
     //
     // Logic: Re-join stages to their input specifications for publishing
     //
-    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembler"]) }.unique()
+    ch_output_specs = ch_specs.map { spec -> spec.subMap(["name", "hashes", "assembly_type"]) }.unique()
 
     ch_oatk_output = ch_output_specs
         .combine(OATK_ASSEMBLY.out.oatk_output)
@@ -66,8 +66,13 @@ workflow ORGANELLE_ASSEMBLY {
         .filter { spec, mitohifi -> mitohifi.id in spec.hashes.values() }
         .map { spec, mitohifi -> spec + mitohifi }
 
+    ch_stage_indexes = ch_output_specs
+        .combine(INDEX_STAGE.out.spec)
+        .filter { spec, index -> index.id in spec.hashes.values() }
+        .map { spec, index -> spec + index }
+
     emit:
     oatk           = ch_oatk_output
     reads_mitohifi = ch_mitohifi_output
-    spec_indexes   = INDEX_SPEC.out.spec
+    stage_indexes  = ch_stage_indexes
 }

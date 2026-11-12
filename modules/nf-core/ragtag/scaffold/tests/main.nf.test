@@ -1,0 +1,127 @@
+nextflow_process {
+
+    name "Test Process RAGTAG_SCAFFOLD"
+    script "../main.nf"
+    process "RAGTAG_SCAFFOLD"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ragtag"
+    tag "ragtag/scaffold"
+    config "./nextflow.config"
+
+    test("sarscov2 test data - ragtag - minimap2 - scaffold") {
+
+        when {
+            params {
+                ragtag_args = "-u --aligner minimap2"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[1] = [
+                    [], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[2] = [
+                    [],
+                    []
+                ]
+                input[3]  = [
+                    [],
+                    [],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["ragtag_paf_log", "ragtag_delta", "ragtag_delta_log"])).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 test data - ragtag - nucmer - scaffold") {
+
+        when {
+            params {
+                ragtag_args = "-u --aligner nucmer"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[1] = [
+                    [], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[2] = [
+                    [],
+                    []
+                ]
+                input[3]  = [
+                    [],
+                    [],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["ragtag_paf_log", "ragtag_delta", "ragtag_delta_log"])).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 test data - ragtag - scaffold - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                ragtag_args = "-u"
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[2] = [
+                     [],
+                     []
+                ]
+                input[3]  = [
+                    [],
+                    [],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+}

@@ -20,10 +20,10 @@ input:
   - ch_assemblies:
       type: file
       description: |
-        The input channel containing a pair of assemblies for QC (hap1/hap2).
-        Hap2 can optionally be an empty list if there is no second hap.
+        The input channel containing a list of assemblies for QC. The assemblies
+        should be a list of haplotypes from the same genome.
 
-        Structure: [ val(meta), path(asm1), path(asm2) ]
+        Structure: [ val(meta), [path(asm1), path(asm2), ..., path(asm_n)] ]
       pattern: "*.{fa,fa.gz}"
   - ch_fastk:
       type: file
