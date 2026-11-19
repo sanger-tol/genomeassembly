@@ -268,27 +268,38 @@ workflow SCAFFOLDING {
             ]
         }
 
-    ch_contact_maps_output = BGZIP_SCAFFOLDED.out.output
-        .join(PAIRS_CREATE_CONTACT_MAPS.out.pretext, by: 0, remainder: true)
+    ch_pretext_output = PAIRS_CREATE_CONTACT_MAPS.out.pretext
         .join(PAIRS_CREATE_CONTACT_MAPS.out.pretext_png, by: 0, remainder: true)
-        .join(PAIRS_CREATE_CONTACT_MAPS.out.cool, by: 0, remainder: true)
-        .join(PAIRS_CREATE_CONTACT_MAPS.out.hic, by: 0, remainder: true)
-        .map { spec, _fasta, pretext, pretext_png, cool, hic ->
+        .map { spec, pretext, pretext_png ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 hap: spec._hap,
                 output: [scaffolding: [
                     pretext: pretext,
                     pretext_png: pretext_png,
-                    cool: cool,
-                    hic: hic,
                 ]],
             ]
         }
+    ch_cooler_output = PAIRS_CREATE_CONTACT_MAPS.out.cool.map { spec, cool ->
+        return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+            hap: spec._hap,
+            output: [scaffolding: [cool: cool]],
+        ]
+    }
+
+    ch_juicer_output = PAIRS_CREATE_CONTACT_MAPS.out.hic.map { spec, hic ->
+        return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+            hap: spec._hap,
+            output: [scaffolding: [hic: hic]],
+        ]
+    }
+
 
     ch_scaffolding_output = ch_hic_mapping_output
         .mix(ch_ragtag_output)
         .mix(ch_yahs_output)
-        .mix(ch_contact_maps_output)
+        .mix(ch_pretext_output)
+        .mix(ch_cooler_output)
+        .mix(ch_juicer_output)
 
     emit:
     scaffolded_assemblies = ch_assemblies_scaffolded
