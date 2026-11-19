@@ -259,7 +259,7 @@ workflow SCAFFOLDING {
                 hap: spec._hap,
                 output: [scaffolding: [
                     fasta: fasta,
-                    agp: agp,
+                    yahs_agp: agp,
                     yahs_bin: bin,
                     yahs_initial: initial,
                     yahs_intermediate: intermediate,
