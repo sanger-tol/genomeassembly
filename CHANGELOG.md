@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.2.0dev - unnamed - [unreleased]
 
+### Added
+
+### Fixed
+
+- [#197](https://github.com/sanger-tol/genomeassembly/pull/181) Improved publishing speed by not forcing joins of fast-running and slow-running processes.
+
+### Dependencies
+
 ## v1.1.0 - Slithersong - [2026-11-12]
 
 ### Added
