@@ -211,56 +211,84 @@ workflow SCAFFOLDING {
     //
     // Logic: combine all scaffolding outputs into a single map for ease of publishing
     //
-    ch_scaffolding_output = BGZIP_SCAFFOLDED.out.output
-        .join(ch_bam_stats_samtools_input.bam_csi, by: 0)
+    ch_hic_mapping_output = ch_bam_stats_samtools_input.bam_csi
         .join(BAM_STATS_SAMTOOLS.out.stats, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.flagstat, by: 0)
         .join(BAM_STATS_SAMTOOLS.out.idxstats, by: 0)
-        .join(ch_yahs_scaffolds_agp, by: 0)
-        .join(ch_yahs_bin, by: 0)
-        .join(ch_yahs_inital, by: 0, remainder: true)
-        .join(ch_yahs_intermediate, by: 0, remainder: true)
-        .join(ch_yahs_log, by: 0)
-        .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_scaffolds, by: 0, remainder: true)
+        .map { spec, bam, csi, stats, flagstats, idxstats ->
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
+                output: [scaffolding: [
+                    bam: bam,
+                    bai: csi,
+                    stats: stats,
+                    flagstats: flagstats,
+                    idxstats: idxstats,
+                ]],
+            ]
+        }
+
+    ch_ragtag_output = FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_scaffolds
         .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_agp, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_stats, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_paf, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.ragtag_delta, by: 0, remainder: true)
         .join(FASTA_BAM_SCAFFOLDING_RAGTAG_YAHS.out.confidence_txt, by: 0, remainder: true)
+        .map { spec, scaf, agp, stats, paf, delta, conf ->
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
+                output: [scaffolding: [
+                    ragtag_scaffolds: scaf,
+                    ragtag_agp: agp,
+                    ragtag_stats: stats,
+                    ragtag_paf: paf,
+                    ragtag_delta: delta,
+                    ragtag_confidence: conf,
+                ]],
+            ]
+        }
+
+    ch_yahs_output = BGZIP_SCAFFOLDED.out.output
+        .join(ch_yahs_scaffolds_agp, by: 0)
+        .join(ch_yahs_bin, by: 0)
+        .join(ch_yahs_inital, by: 0, remainder: true)
+        .join(ch_yahs_intermediate, by: 0, remainder: true)
+        .join(ch_yahs_log, by: 0)
+        .map { spec, fasta, agp, bin, initial, intermediate, yahs_log ->
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
+                hap: spec._hap,
+                output: [scaffolding: [
+                    fasta: fasta,
+                    agp: agp,
+                    yahs_bin: bin,
+                    yahs_initial: initial,
+                    yahs_intermediate: intermediate,
+                    yahs_log: yahs_log,
+                ]],
+            ]
+        }
+
+    ch_contact_maps_output = BGZIP_SCAFFOLDED.out.output
         .join(PAIRS_CREATE_CONTACT_MAPS.out.pretext, by: 0, remainder: true)
         .join(PAIRS_CREATE_CONTACT_MAPS.out.pretext_png, by: 0, remainder: true)
         .join(PAIRS_CREATE_CONTACT_MAPS.out.cool, by: 0, remainder: true)
         .join(PAIRS_CREATE_CONTACT_MAPS.out.hic, by: 0, remainder: true)
-        .map { spec, fasta, bam, bai, stats, flagstats, idxstats, yahs_agp, yahs_bin, yahs_initial, yahs_intermed, yahs_log, rt_scaf, rt_agp, rt_stats, rt_paf, rt_delta, rt_conf, pretext, png, cool, hic ->
+        .map { spec, _fasta, pretext, pretext_png, cool, hic ->
             return spec.subMap(["id", "stage", "data", "params", "tools"]) + [
                 hap: spec._hap,
-                output: [
-                    scaffolding: [
-                        fasta: fasta,
-                        bam: bam,
-                        bai: bai,
-                        stats: stats,
-                        flagstats: flagstats,
-                        idxstats: idxstats,
-                        yahs_agp: yahs_agp,
-                        yahs_bin: yahs_bin,
-                        yahs_initial: yahs_initial,
-                        yahs_intermediate: yahs_intermed,
-                        yahs_log: yahs_log,
-                        ragtag_scaffolds: rt_scaf,
-                        ragtag_agp: rt_agp,
-                        ragtag_stats: rt_stats,
-                        ragtag_paf: rt_paf,
-                        ragtag_delta: rt_delta,
-                        ragtag_confidence: rt_conf,
-                        pretext: pretext,
-                        pretext_png: png,
-                        cool: cool,
-                        hic: hic,
-                    ],
-                ],
+                output: [scaffolding: [
+                    pretext: pretext,
+                    pretext_png: pretext_png,
+                    cool: cool,
+                    hic: hic,
+                ]],
             ]
         }
+
+    ch_scaffolding_output = ch_hic_mapping_output
+        .mix(ch_ragtag_output)
+        .mix(ch_yahs_output)
+        .mix(ch_contact_maps_output)
 
     emit:
     scaffolded_assemblies = ch_assemblies_scaffolded
