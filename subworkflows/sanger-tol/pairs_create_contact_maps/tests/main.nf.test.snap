@@ -1,0 +1,71 @@
+{
+    "Undibacterium_unclassified - pairs - hap2 - no snapshot": {
+        "content": [
+            "test.pretext"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2026-02-13T15:40:52.094181633"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - all maps": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool",
+            "test.hic"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:43:13.29248"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - custom ordered snapshot": {
+        "content": [
+            "test.pretext",
+            "test_CustomOrder.png"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-17T13:45:48.8264169"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no pretext": {
+        "content": [
+            "test.mcool",
+            "test.hic"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:43:52.435679"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no juicer": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.mcool"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:50:23.905964"
+    },
+    "Undibacterium_unclassified - pairs - hap2 - no cooler": {
+        "content": [
+            "test.pretext",
+            "test_FullMap.png",
+            "test.hic"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-10T16:47:07.02674"
+    }
+}

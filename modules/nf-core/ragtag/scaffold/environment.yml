@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::ragtag=2.1.0
+  - conda-forge::gzip=1.14

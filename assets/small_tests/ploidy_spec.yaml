@@ -1,0 +1,24 @@
+- id: icAdaBipu1.pri.tetraploid.purge
+  assembly_type: nuclear
+  long_read_dataset: icAdaBipu1
+  long_read_platform: pacbio_hifi
+  hic_dataset: icAdaBipu1
+  phased_assembly: true
+  purge: true
+  polish: false
+  find_mito: false
+  find_plastid: false
+  hifiasm_bin_arguments: -f0
+  hifiasm_arguments: --n-hap 4
+- id: icAdaBipu1.pri.tetraploid.nopurge
+  assembly_type: nuclear
+  long_read_dataset: icAdaBipu1
+  long_read_platform: pacbio_hifi
+  hic_dataset: icAdaBipu1
+  phased_assembly: true
+  purge: false
+  polish: false
+  find_mito: false
+  find_plastid: false
+  hifiasm_bin_arguments: -f0
+  hifiasm_arguments: --n-hap 4

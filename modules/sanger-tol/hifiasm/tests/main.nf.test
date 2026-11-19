@@ -1,0 +1,339 @@
+nextflow_process {
+
+    name "Test Process Hifiasm"
+    script "../main.nf"
+    process "HIFIASM"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_sangertol"
+    tag "hifiasm"
+    tag "nf-core/yak/count"
+
+    test("Undibacterium_unclassified - long reads only") {
+
+        when {
+
+            params {
+                hifiasm_args = "--write-ec --write-paf"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [:],
+                    []
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = [
+                    [:],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+
+    }
+
+    test("Undibacterium_unclassified - pacbio hifi - bin files") {
+
+        setup {
+
+            run("HIFIASM", alias: "HIFIASM_INITIAL") {
+                script "../main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id : 'test'],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                        []
+                    ]
+                    input[1] = [
+                        [:],
+                        []
+                    ]
+                    input[2] = [
+                        [:],
+                        [],
+                        []
+                    ]
+                    input[3] = [
+                        [:],
+                        []
+                    ]
+                    input[4] = [
+                        [:],
+                        []
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+
+            params {
+                hifiasm_args = ""
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [:],
+                    []
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = HIFIASM_INITIAL.out.bin_files
+                input[4] = HIFIASM_INITIAL.out.log
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+    }
+
+    test("Undibacterium_unclassified - trio") {
+
+        setup {
+
+            nfcoreInitialise("${launchDir}/library/")
+            nfcoreInstall("${launchDir}/library/", ["yak/count"])
+            nfcoreLink("${launchDir}/library/", "${baseDir}/modules/")
+
+            run("YAK_COUNT", alias: "YAK_COUNT_1") {
+                script "../../../nf-core/yak/count/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: "test1" ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R1_001.fastq.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+
+            run("YAK_COUNT", alias: "YAK_COUNT_2") {
+                script "../../../nf-core/yak/count/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: "test2" ],
+                        file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/10x/baUndUnlc1_S12_L002_R2_001.fastq.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+
+            params {
+                hifiasm_args = ""
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [:],
+                    []
+                ]
+                input[2] = YAK_COUNT_1.out.yak.combine(YAK_COUNT_2.out.yak).map { meta, yak, meta2, yak2 -> [meta, yak, yak2] }
+                input[3] = [
+                    [:],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+
+        cleanup {
+            nfcoreUnlink("${launchDir}/library/", "${baseDir}/modules/")
+        }
+
+    }
+
+    test("Undibacterium_unclassified - hi-c cram") {
+        when {
+            params {
+                hifiasm_args = ""
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id : 'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram', checkIfExists: true),
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = [
+                    [:],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+    }
+
+    test("Undibacterium_unclassified - hi-c cram - n haps") {
+        when {
+            params {
+                hifiasm_args = "--n-hap 4"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id : 'test' ],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/hic-arima2/41741_2%237.sub.cram', checkIfExists: true),
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = [
+                    [:],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+        then {
+            def hap3_fasta = path(process.out.assembly_fasta.get(0).get(1).find { f -> file(f).name == "test.hic.hap3.p_ctg.fa" }).fasta
+            def hap4_fasta = path(process.out.assembly_fasta.get(0).get(1).find { f -> file(f).name == "test.hic.hap4.p_ctg.fa" }).fasta
+
+            assertAll(
+                { assert process.success },
+                { assert "h3tg000001l" in hap3_fasta },
+                { assert "h4tg000001l" in hap4_fasta },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bed", "log", "bin_files"])).match() }
+            )
+        }
+    }
+
+    test("Undibacterium_unclassified - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                hifiasm_args = "--write-ec --write-paf"
+            }
+
+            process {
+                """
+                input[0] = [
+                    [ id : 'test'],
+                    file(params.modules_testdata_base_path + 'Undibacterium_unclassified/genomic_data/baUndUnlc1/pacbio/fasta/HiFi.reads.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [:],
+                    [],
+                ]
+                input[2] = [
+                    [:],
+                    [],
+                    []
+                ]
+                input[3] = [
+                    [],
+                    []
+                ]
+                input[4] = [
+                    [:],
+                    []
+                ]
+                """
+            }
+        }
+        then {
+
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+
+        }
+    }
+
+}

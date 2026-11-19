@@ -1,0 +1,90 @@
+{
+    "homo sapiens - fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.1.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "1": [
+                    [
+                        "BEDCHUNKS_CREATE",
+                        "gawk",
+                        "5.3.0"
+                    ]
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.1.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "BEDCHUNKS_CREATE",
+                        "gawk",
+                        "5.3.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-05T15:56:43.715601"
+    },
+    "homo sapiens - fai - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.1.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.2.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "BEDCHUNKS_CREATE",
+                        "gawk",
+                        "5.3.0"
+                    ]
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.1.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.2.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "BEDCHUNKS_CREATE",
+                        "gawk",
+                        "5.3.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-05T15:56:46.756804"
+    }
+}

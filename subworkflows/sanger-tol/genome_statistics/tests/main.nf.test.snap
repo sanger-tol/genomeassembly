@@ -1,0 +1,1728 @@
+{
+    "meles meles - no trio - no fastk": {
+        "content": [
+            {
+                "asmstats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "busco": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt",
+                            [
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                "9782003at2.faa",
+                                                "9782003at2.fna"
+                                            ],
+                                            [
+                                                "9802309at2.faa",
+                                                "9802309at2.fna",
+                                                "9811804at2.faa",
+                                                "9811804at2.fna"
+                                            ],
+                                            [
+                                                "5293449at2.faa",
+                                                "5293449at2.fna",
+                                                "9799262at2.faa",
+                                                "9799262at2.fna",
+                                                "9800719at2.faa",
+                                                "9800719at2.fna",
+                                                "9801213at2.faa",
+                                                "9801213at2.fna",
+                                                "9802065at2.faa",
+                                                "9802065at2.fna",
+                                                "9802304at2.faa",
+                                                "9802304at2.fna",
+                                                "9804305at2.faa",
+                                                "9804305at2.fna",
+                                                "9804478at2.faa",
+                                                "9804478at2.fna",
+                                                "9805455at2.faa",
+                                                "9805455at2.fna",
+                                                "9806014at2.faa",
+                                                "9806014at2.fna",
+                                                "9806651at2.faa",
+                                                "9806651at2.fna",
+                                                "9807233at2.faa",
+                                                "9807233at2.fna",
+                                                "9808773at2.faa",
+                                                "9808773at2.fna",
+                                                "9808966at2.faa",
+                                                "9808966at2.fna",
+                                                "9809356at2.faa",
+                                                "9809356at2.fna",
+                                                "9810191at2.faa",
+                                                "9810191at2.fna",
+                                                "9812769at2.faa",
+                                                "9812769at2.fna"
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                "batch_summary.txt",
+                                [
+                                    
+                                ]
+                            ],
+                            "test-bacteria_odb12-busco.batch_summary.txt",
+                            "test-bacteria_odb12-busco.log"
+                        ]
+                    ]
+                ],
+                "busco_batch_summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.batch_summary.txt"
+                    ]
+                ],
+                "busco_directory": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            "9782003at2.faa",
+                                            "9782003at2.fna"
+                                        ],
+                                        [
+                                            "9802309at2.faa",
+                                            "9802309at2.fna",
+                                            "9811804at2.faa",
+                                            "9811804at2.fna"
+                                        ],
+                                        [
+                                            "5293449at2.faa",
+                                            "5293449at2.fna",
+                                            "9799262at2.faa",
+                                            "9799262at2.fna",
+                                            "9800719at2.faa",
+                                            "9800719at2.fna",
+                                            "9801213at2.faa",
+                                            "9801213at2.fna",
+                                            "9802065at2.faa",
+                                            "9802065at2.fna",
+                                            "9802304at2.faa",
+                                            "9802304at2.fna",
+                                            "9804305at2.faa",
+                                            "9804305at2.fna",
+                                            "9804478at2.faa",
+                                            "9804478at2.fna",
+                                            "9805455at2.faa",
+                                            "9805455at2.fna",
+                                            "9806014at2.faa",
+                                            "9806014at2.fna",
+                                            "9806651at2.faa",
+                                            "9806651at2.fna",
+                                            "9807233at2.faa",
+                                            "9807233at2.fna",
+                                            "9808773at2.faa",
+                                            "9808773at2.fna",
+                                            "9808966at2.faa",
+                                            "9808966at2.fna",
+                                            "9809356at2.faa",
+                                            "9809356at2.fna",
+                                            "9810191at2.faa",
+                                            "9810191at2.fna",
+                                            "9812769at2.faa",
+                                            "9812769at2.fna"
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            "batch_summary.txt",
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "busco_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.log"
+                    ]
+                ],
+                "busco_summary_json": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json"
+                        ]
+                    ]
+                ],
+                "busco_summary_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt"
+                        ]
+                    ]
+                ],
+                "gfastats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "merqury": [
+                    
+                ],
+                "merqury_completeness": [
+                    
+                ],
+                "merqury_images": [
+                    
+                ],
+                "merqury_phased_stats": [
+                    
+                ],
+                "merqury_qv": [
+                    
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-19T08:24:55.376968",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "meles meles - no trio - fastk": {
+        "content": [
+            {
+                "asmstats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "busco": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt",
+                            [
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                "9782003at2.faa",
+                                                "9782003at2.fna"
+                                            ],
+                                            [
+                                                "9802309at2.faa",
+                                                "9802309at2.fna",
+                                                "9811804at2.faa",
+                                                "9811804at2.fna"
+                                            ],
+                                            [
+                                                "5293449at2.faa",
+                                                "5293449at2.fna",
+                                                "9799262at2.faa",
+                                                "9799262at2.fna",
+                                                "9800719at2.faa",
+                                                "9800719at2.fna",
+                                                "9801213at2.faa",
+                                                "9801213at2.fna",
+                                                "9802065at2.faa",
+                                                "9802065at2.fna",
+                                                "9802304at2.faa",
+                                                "9802304at2.fna",
+                                                "9804305at2.faa",
+                                                "9804305at2.fna",
+                                                "9804478at2.faa",
+                                                "9804478at2.fna",
+                                                "9805455at2.faa",
+                                                "9805455at2.fna",
+                                                "9806014at2.faa",
+                                                "9806014at2.fna",
+                                                "9806651at2.faa",
+                                                "9806651at2.fna",
+                                                "9807233at2.faa",
+                                                "9807233at2.fna",
+                                                "9808773at2.faa",
+                                                "9808773at2.fna",
+                                                "9808966at2.faa",
+                                                "9808966at2.fna",
+                                                "9809356at2.faa",
+                                                "9809356at2.fna",
+                                                "9810191at2.faa",
+                                                "9810191at2.fna",
+                                                "9812769at2.faa",
+                                                "9812769at2.fna"
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                "batch_summary.txt",
+                                [
+                                    
+                                ]
+                            ],
+                            "test-bacteria_odb12-busco.batch_summary.txt",
+                            "test-bacteria_odb12-busco.log"
+                        ]
+                    ]
+                ],
+                "busco_batch_summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.batch_summary.txt"
+                    ]
+                ],
+                "busco_directory": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            "9782003at2.faa",
+                                            "9782003at2.fna"
+                                        ],
+                                        [
+                                            "9802309at2.faa",
+                                            "9802309at2.fna",
+                                            "9811804at2.faa",
+                                            "9811804at2.fna"
+                                        ],
+                                        [
+                                            "5293449at2.faa",
+                                            "5293449at2.fna",
+                                            "9799262at2.faa",
+                                            "9799262at2.fna",
+                                            "9800719at2.faa",
+                                            "9800719at2.fna",
+                                            "9801213at2.faa",
+                                            "9801213at2.fna",
+                                            "9802065at2.faa",
+                                            "9802065at2.fna",
+                                            "9802304at2.faa",
+                                            "9802304at2.fna",
+                                            "9804305at2.faa",
+                                            "9804305at2.fna",
+                                            "9804478at2.faa",
+                                            "9804478at2.fna",
+                                            "9805455at2.faa",
+                                            "9805455at2.fna",
+                                            "9806014at2.faa",
+                                            "9806014at2.fna",
+                                            "9806651at2.faa",
+                                            "9806651at2.fna",
+                                            "9807233at2.faa",
+                                            "9807233at2.fna",
+                                            "9808773at2.faa",
+                                            "9808773at2.fna",
+                                            "9808966at2.faa",
+                                            "9808966at2.fna",
+                                            "9809356at2.faa",
+                                            "9809356at2.fna",
+                                            "9810191at2.faa",
+                                            "9810191at2.fna",
+                                            "9812769at2.faa",
+                                            "9812769at2.fna"
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            "batch_summary.txt",
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "busco_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.log"
+                    ]
+                ],
+                "busco_summary_json": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json"
+                        ]
+                    ]
+                ],
+                "busco_summary_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt"
+                        ]
+                    ]
+                ],
+                "gfastats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "merqury": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.st.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.st.png",
+                            "test.completeness.stats",
+                            "test.qv",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png"
+                        ]
+                    ]
+                ],
+                "merqury_completeness": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "test.completeness.stats:md5,ed7048b3f686740b48d701baa24be7dd"
+                    ]
+                ],
+                "merqury_images": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.st.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.st.png",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png"
+                        ]
+                    ]
+                ],
+                "merqury_phased_stats": [
+                    
+                ],
+                "merqury_qv": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "test.qv:md5,5754802f3d1e6e84365dcf8bbf549343"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-10T09:42:45.725876",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "meles meles - no trio - fastk - multiple haps": {
+        "content": [
+            {
+                "asmstats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        "GCA_922984935.2.subset.fasta.gz.stats:md5,4f692268fb5b50290af7454a32744055"
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        "GCA_965654295.1.fa.gz.stats:md5,2172e78b0325ee1688af53df8ad16e1e"
+                    ]
+                ],
+                "busco": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.GCA_922984935.2.subset.fasta.json",
+                            "short_summary.specific.bacteria_odb12.GCA_922984935.2.subset.fasta.txt",
+                            "short_summary.specific.bacteria_odb12.GCA_965654295.1.fa.json",
+                            "short_summary.specific.bacteria_odb12.GCA_965654295.1.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt",
+                            [
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                "9781053at2.faa",
+                                                "9781053at2.fna",
+                                                "9788336at2.faa",
+                                                "9788336at2.fna",
+                                                "9802219at2.faa",
+                                                "9802219at2.fna",
+                                                "9802589at2.faa",
+                                                "9802589at2.fna",
+                                                "9803017at2.faa",
+                                                "9803017at2.fna",
+                                                "9804243at2.faa",
+                                                "9804243at2.fna",
+                                                "9804305at2.faa",
+                                                "9804305at2.fna",
+                                                "9805026at2.faa",
+                                                "9805026at2.fna",
+                                                "9807553at2.faa",
+                                                "9807553at2.fna",
+                                                "9808150at2.faa",
+                                                "9808150at2.fna",
+                                                "9812769at2.faa",
+                                                "9812769at2.fna"
+                                            ],
+                                            [
+                                                
+                                            ],
+                                            [
+                                                "9804716at2.faa",
+                                                "9804716at2.fna",
+                                                "9809356at2.faa",
+                                                "9809356at2.fna",
+                                                "9813334at2.faa",
+                                                "9813334at2.fna"
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                "9782003at2.faa",
+                                                "9782003at2.fna"
+                                            ],
+                                            [
+                                                "9802309at2.faa",
+                                                "9802309at2.fna",
+                                                "9811804at2.faa",
+                                                "9811804at2.fna"
+                                            ],
+                                            [
+                                                "5293449at2.faa",
+                                                "5293449at2.fna",
+                                                "9799262at2.faa",
+                                                "9799262at2.fna",
+                                                "9800719at2.faa",
+                                                "9800719at2.fna",
+                                                "9801213at2.faa",
+                                                "9801213at2.fna",
+                                                "9802065at2.faa",
+                                                "9802065at2.fna",
+                                                "9802304at2.faa",
+                                                "9802304at2.fna",
+                                                "9804305at2.faa",
+                                                "9804305at2.fna",
+                                                "9804478at2.faa",
+                                                "9804478at2.fna",
+                                                "9805455at2.faa",
+                                                "9805455at2.fna",
+                                                "9806014at2.faa",
+                                                "9806014at2.fna",
+                                                "9806651at2.faa",
+                                                "9806651at2.fna",
+                                                "9807233at2.faa",
+                                                "9807233at2.fna",
+                                                "9808773at2.faa",
+                                                "9808773at2.fna",
+                                                "9808966at2.faa",
+                                                "9808966at2.fna",
+                                                "9809356at2.faa",
+                                                "9809356at2.fna",
+                                                "9810191at2.faa",
+                                                "9810191at2.fna",
+                                                "9812769at2.faa",
+                                                "9812769at2.fna"
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        "bbtools_err.log",
+                                        "bbtools_out.log",
+                                        "hmmsearch_err.log",
+                                        "hmmsearch_out.log",
+                                        "prodigal_err.log",
+                                        "prodigal_out.log"
+                                    ],
+                                    [
+                                        ".checkpoint",
+                                        [
+                                            "predicted.faa",
+                                            "predicted.fna"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ],
+                                            [
+                                                
+                                            ]
+                                        ],
+                                        "full_table.tsv",
+                                        "missing_busco_list.tsv",
+                                        "short_summary.json",
+                                        "short_summary.txt"
+                                    ]
+                                ],
+                                "batch_summary.txt",
+                                [
+                                    
+                                ]
+                            ],
+                            "test-bacteria_odb12-busco.batch_summary.txt",
+                            "test-bacteria_odb12-busco.log"
+                        ]
+                    ]
+                ],
+                "busco_batch_summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.batch_summary.txt"
+                    ]
+                ],
+                "busco_directory": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            "9781053at2.faa",
+                                            "9781053at2.fna",
+                                            "9788336at2.faa",
+                                            "9788336at2.fna",
+                                            "9802219at2.faa",
+                                            "9802219at2.fna",
+                                            "9802589at2.faa",
+                                            "9802589at2.fna",
+                                            "9803017at2.faa",
+                                            "9803017at2.fna",
+                                            "9804243at2.faa",
+                                            "9804243at2.fna",
+                                            "9804305at2.faa",
+                                            "9804305at2.fna",
+                                            "9805026at2.faa",
+                                            "9805026at2.fna",
+                                            "9807553at2.faa",
+                                            "9807553at2.fna",
+                                            "9808150at2.faa",
+                                            "9808150at2.fna",
+                                            "9812769at2.faa",
+                                            "9812769at2.fna"
+                                        ],
+                                        [
+                                            
+                                        ],
+                                        [
+                                            "9804716at2.faa",
+                                            "9804716at2.fna",
+                                            "9809356at2.faa",
+                                            "9809356at2.fna",
+                                            "9813334at2.faa",
+                                            "9813334at2.fna"
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            "9782003at2.faa",
+                                            "9782003at2.fna"
+                                        ],
+                                        [
+                                            "9802309at2.faa",
+                                            "9802309at2.fna",
+                                            "9811804at2.faa",
+                                            "9811804at2.fna"
+                                        ],
+                                        [
+                                            "5293449at2.faa",
+                                            "5293449at2.fna",
+                                            "9799262at2.faa",
+                                            "9799262at2.fna",
+                                            "9800719at2.faa",
+                                            "9800719at2.fna",
+                                            "9801213at2.faa",
+                                            "9801213at2.fna",
+                                            "9802065at2.faa",
+                                            "9802065at2.fna",
+                                            "9802304at2.faa",
+                                            "9802304at2.fna",
+                                            "9804305at2.faa",
+                                            "9804305at2.fna",
+                                            "9804478at2.faa",
+                                            "9804478at2.fna",
+                                            "9805455at2.faa",
+                                            "9805455at2.fna",
+                                            "9806014at2.faa",
+                                            "9806014at2.fna",
+                                            "9806651at2.faa",
+                                            "9806651at2.fna",
+                                            "9807233at2.faa",
+                                            "9807233at2.fna",
+                                            "9808773at2.faa",
+                                            "9808773at2.fna",
+                                            "9808966at2.faa",
+                                            "9808966at2.fna",
+                                            "9809356at2.faa",
+                                            "9809356at2.fna",
+                                            "9810191at2.faa",
+                                            "9810191at2.fna",
+                                            "9812769at2.faa",
+                                            "9812769at2.fna"
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            [
+                                [
+                                    "bbtools_err.log",
+                                    "bbtools_out.log",
+                                    "hmmsearch_err.log",
+                                    "hmmsearch_out.log",
+                                    "prodigal_err.log",
+                                    "prodigal_out.log"
+                                ],
+                                [
+                                    ".checkpoint",
+                                    [
+                                        "predicted.faa",
+                                        "predicted.fna"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ],
+                                        [
+                                            
+                                        ]
+                                    ],
+                                    "full_table.tsv",
+                                    "missing_busco_list.tsv",
+                                    "short_summary.json",
+                                    "short_summary.txt"
+                                ]
+                            ],
+                            "batch_summary.txt",
+                            [
+                                
+                            ]
+                        ]
+                    ]
+                ],
+                "busco_log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-bacteria_odb12-busco.log"
+                    ]
+                ],
+                "busco_summary_json": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.GCA_922984935.2.subset.fasta.json",
+                            "short_summary.specific.bacteria_odb12.GCA_965654295.1.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.json",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.json"
+                        ]
+                    ]
+                ],
+                "busco_summary_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "short_summary.specific.bacteria_odb12.GCA_922984935.2.subset.fasta.txt",
+                            "short_summary.specific.bacteria_odb12.GCA_965654295.1.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap1.p_ctg.fa.txt",
+                            "short_summary.specific.bacteria_odb12.baUndUnlc1.hic.hap2.p_ctg.fa.txt"
+                        ]
+                    ]
+                ],
+                "gfastats": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        "GCA_922984935.2.subset.fasta.gz.assembly_summary:md5,d399a2381448be8a15ca0eee133bfe1d"
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        "GCA_965654295.1.fa.gz.assembly_summary:md5,5f23cffaa0f243f55db88fb5bd01d365"
+                    ]
+                ],
+                "merqury": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.st.png",
+                            "test.completeness.stats",
+                            "test.qv",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.st.png",
+                            "test.completeness.stats",
+                            "test.qv",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        [
+                            "test.GCA_922984935.2.subset.spectra-cn.fl.png",
+                            "test.GCA_922984935.2.subset.spectra-cn.ln.png",
+                            "test.GCA_922984935.2.subset.spectra-cn.st.png",
+                            "test.completeness.stats",
+                            "test.qv",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        [
+                            "test.GCA_965654295.1.spectra-cn.fl.png",
+                            "test.GCA_965654295.1.spectra-cn.ln.png",
+                            "test.GCA_965654295.1.spectra-cn.st.png",
+                            "test.completeness.stats",
+                            "test.qv",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ]
+                ],
+                "merqury_completeness": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "test.completeness.stats:md5,05633e9f063234c110df5fa7fbb8e5c2"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "test.completeness.stats:md5,0afa8e685cc9e8c08db9d7ed1c9366cc"
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        "test.completeness.stats:md5,7dc9bd04377e9e5c1f85a15ebae24421"
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        "test.completeness.stats:md5,158e4899a025a978626f4535d6421129"
+                    ]
+                ],
+                "merqury_images": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap1.p_ctg.spectra-cn.st.png",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        [
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.fl.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.ln.png",
+                            "test.baUndUnlc1.hic.hap2.p_ctg.spectra-cn.st.png",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        [
+                            "test.GCA_922984935.2.subset.spectra-cn.fl.png",
+                            "test.GCA_922984935.2.subset.spectra-cn.ln.png",
+                            "test.GCA_922984935.2.subset.spectra-cn.st.png",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        [
+                            "test.GCA_965654295.1.spectra-cn.fl.png",
+                            "test.GCA_965654295.1.spectra-cn.ln.png",
+                            "test.GCA_965654295.1.spectra-cn.st.png",
+                            "test.spectra-asm.fl.png",
+                            "test.spectra-asm.ln.png",
+                            "test.spectra-asm.st.png",
+                            "test.spectra-cn.fl.png",
+                            "test.spectra-cn.ln.png",
+                            "test.spectra-cn.st.png",
+                            "test.temp.spectra-cn.fl.png",
+                            "test.temp.spectra-cn.ln.png",
+                            "test.temp.spectra-cn.st.png"
+                        ]
+                    ]
+                ],
+                "merqury_phased_stats": [
+                    
+                ],
+                "merqury_qv": [
+                    [
+                        {
+                            "_hap": "hap1",
+                            "id": "test"
+                        },
+                        "test.qv:md5,d23c07da79afae1f35707e60e5d0afc2"
+                    ],
+                    [
+                        {
+                            "_hap": "hap2",
+                            "id": "test"
+                        },
+                        "test.qv:md5,b7916ca46b21648109e1658b105fafbb"
+                    ],
+                    [
+                        {
+                            "_hap": "hap3",
+                            "id": "test"
+                        },
+                        "test.qv:md5,bc580ccf53c6e93e23e2a3fd89b7d82b"
+                    ],
+                    [
+                        {
+                            "_hap": "hap4",
+                            "id": "test"
+                        },
+                        "test.qv:md5,36c9ac35716604f245ad097504f0fe00"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "GCA_922984935.2.subset.fasta.gz.assembly_summary:md5,d399a2381448be8a15ca0eee133bfe1d",
+                            "GCA_922984935.2.subset.fasta.gz.stats:md5,4f692268fb5b50290af7454a32744055",
+                            "GCA_965654295.1.fa.gz.assembly_summary:md5,5f23cffaa0f243f55db88fb5bd01d365",
+                            "GCA_965654295.1.fa.gz.stats:md5,2172e78b0325ee1688af53df8ad16e1e",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-10T10:34:50.673956",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "meles meles - no trio - no busco - no fastk": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "asmstats": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                    ]
+                ],
+                "busco": [
+                    
+                ],
+                "busco_batch_summary": [
+                    
+                ],
+                "busco_directory": [
+                    
+                ],
+                "busco_log": [
+                    
+                ],
+                "busco_summary_json": [
+                    
+                ],
+                "busco_summary_txt": [
+                    
+                ],
+                "gfastats": [
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap1"
+                        },
+                        "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96"
+                    ],
+                    [
+                        {
+                            "id": "test",
+                            "_hap": "hap2"
+                        },
+                        "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437"
+                    ]
+                ],
+                "merqury": [
+                    
+                ],
+                "merqury_completeness": [
+                    
+                ],
+                "merqury_images": [
+                    
+                ],
+                "merqury_phased_stats": [
+                    
+                ],
+                "merqury_qv": [
+                    
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.assembly_summary:md5,1a9954f4d2d0347a04e0e115c0556d96",
+                            "baUndUnlc1.hic.hap1.p_ctg.fa.gz.stats:md5,2ed748b50332840fdbba4e472681f6e7",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.assembly_summary:md5,08214ac5e67c7ebf49104c2212936437",
+                            "baUndUnlc1.hic.hap2.p_ctg.fa.gz.stats:md5,cb3b18c6cdca1d3df3565d4c5b842d86"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-19T08:23:29.760478",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}
