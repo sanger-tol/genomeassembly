@@ -106,21 +106,27 @@ workflow NUCLEAR_ASSEMBLY {
         val_busco_lineage_directory,
     )
 
-    ch_merqury_to_join = GENOME_STATISTICS.out.merqury
+    ch_statistics_stats = GENOME_STATISTICS.out.stats.map { spec, stats ->
+        return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [stats: stats]]]
+    }
+
+    ch_merqury = GENOME_STATISTICS.out.merqury
         .map { meta, files ->
             // If we have <=2 haps, MerquryFK runs only once so we need to fix the key size to 1
             def key = groupKey(meta - meta.subMap("_hap"), meta._n_haps > 2 ? meta._n_haps : 1)
             return [key, files]
         }
         .groupTuple(by: 0)
-        .map { meta, files -> [meta.getGroupTarget(), files.flatten().sort { it -> it.getName() }] }
-
-    ch_statistics = GENOME_STATISTICS.out.stats
-        .join(GENOME_STATISTICS.out.busco, remainder: true)
-        .join(ch_merqury_to_join, remainder: true)
-        .map { spec, stats, busco, merqury ->
-            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [stats: stats, busco: busco, merqury: merqury]]]
+        .map { meta, files ->
+            def spec = meta.getGroupTarget()
+            return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [merqury: files.flatten().sort { it -> it.getName() }]]]
         }
+
+    ch_busco = GENOME_STATISTICS.out.busco.map { spec, busco ->
+        return spec.subMap(["id", "stage", "data", "params", "tools"]) + [output: [statistics: [busco: busco]]]
+    }
+
+    ch_statistics = ch_statistics_stats.mix(ch_merqury).mix(ch_busco)
 
     //
     // Subworkflow: Find organellar genomes using mitohifi
