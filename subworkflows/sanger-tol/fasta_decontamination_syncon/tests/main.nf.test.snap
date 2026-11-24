@@ -1,0 +1,35 @@
+{
+    "icAdaBipu1 - contigs": {
+        "content": [
+            {
+                "assemblies": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test_1.fa:md5,a8406f1b96ae1eb594458d85ceacd277",
+                            "test_2.fa:md5,e695920a76b9236bd24f795d7d7f9f8f"
+                        ]
+                    ]
+                ],
+                "decon_txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test_1.decon.txt:md5,136a48bf5589e99f504c085b45823bbc",
+                            "test_2.decon.txt:md5,3d9dbfde6a337bde0770f0d021b29198"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-11-23T13:56:06.817701",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.6"
+        }
+    }
+}

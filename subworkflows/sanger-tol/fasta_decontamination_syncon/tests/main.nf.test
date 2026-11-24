@@ -1,0 +1,64 @@
+// nf-core subworkflows test fasta_decontamination_syncon
+nextflow_workflow {
+
+    name "Test Subworkflow FASTA_DECONTAMINATION_SYNCON"
+    script "../main.nf"
+    workflow "FASTA_DECONTAMINATION_SYNCON"
+
+    tag "subworkflows"
+    tag "subworkflows_sangertol"
+    tag "subworkflows/fasta_decontamination_syncon"
+    tag "syncon"
+    tag "subworkflows/../../modules/nf-core/syncon/build"
+    tag "subworkflows/../../modules/nf-core/syncon/fetch"
+    tag "subworkflows/../../modules/nf-core/syncon/decon"
+
+    config "./nextflow.config"
+
+    setup {
+        nfcoreInitialise("${launchDir}/../library/")
+        nfcoreInstall(
+            "${launchDir}/../library/",
+            [
+                "syncon/build",
+                "syncon/decon",
+                "syncon/fetch",
+            ]
+        )
+        nfcoreLink("${launchDir}/../library/", "${baseDir}/modules/")
+    }
+
+    test("icAdaBipu1 - contigs") {
+
+        when {
+            params {
+                syncon_decon_args = "-a5"
+            }
+            workflow {
+                """
+                input[0] = channel.of(
+                    [
+                        [ id: 'test' ], // meta map
+                        [
+                            file(params.modules_testdata_base_path + 'Adalia_bipunctata/assembly/draft/contigs/asm.hic.hap1.p_ctg.fa.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'Adalia_bipunctata/assembly/draft/contigs/asm.hic.hap2.p_ctg.fa.gz', checkIfExists: true)
+                        ]
+                    ]
+                )
+                input[1] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.modules_testdata_base_path + 'Adalia_bipunctata/genomic_data/pacbio/fastq/icAdaBipu1.m64089_201014_162931.ccs.bc1021_BAK8B_OA--bc1021_BAK8B_OA.trim.subsampled.fastq.gz', checkIfExists: true),
+                    ]
+                )
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+}

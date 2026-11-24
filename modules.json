@@ -235,6 +235,21 @@
                         "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
                         "installed_by": ["fasta_10x_polishing_longranger_freebayes"]
                     },
+                    "syncon/build": {
+                        "branch": "master",
+                        "git_sha": "02e51c74857608c8d30af2282e7aa42146a5784f",
+                        "installed_by": ["fasta_decontamination_syncon"]
+                    },
+                    "syncon/decon": {
+                        "branch": "master",
+                        "git_sha": "fd18bd83f6fcddd0b9d81664ad13cef45deba494",
+                        "installed_by": ["fasta_decontamination_syncon"]
+                    },
+                    "syncon/fetch": {
+                        "branch": "master",
+                        "git_sha": "02e51c74857608c8d30af2282e7aa42146a5784f",
+                        "installed_by": ["fasta_decontamination_syncon"]
+                    },
                     "yahs": {
                         "branch": "master",
                         "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
@@ -367,6 +382,11 @@
                     "fasta_bam_scaffolding_yahs": {
                         "branch": "main",
                         "git_sha": "b4f355d97544ff307069daa8e89aa83775c7acc5",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fasta_decontamination_syncon": {
+                        "branch": "main",
+                        "git_sha": "3a25c723488d777b1935241eee3a18eb9406a97c",
                         "installed_by": ["subworkflows"]
                     },
                     "fasta_purge_retained_haplotype": {

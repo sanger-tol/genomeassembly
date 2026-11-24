@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/sanger-tol/nf-core-modules/main/subworkflows/yaml-schema.json
+name: "fasta_decontamination_syncon"
+description: Decontaminate a set of genome assemblies with Syncon (https://github.com/c-zhou/syncon)
+keywords:
+  - fasta
+  - syncmer
+  - decontamination
+components:
+  - syncon/build:
+      git_remote: https://github.com/nf-core/modules.git
+  - syncon/decon:
+      git_remote: https://github.com/nf-core/modules.git
+  - syncon/fetch:
+      git_remote: https://github.com/nf-core/modules.git
+input:
+  - ch_assemblies:
+      type: file
+      description: |
+        Channel containing genome assemblies in FASTA format to be decontaminated.
+        Each assembly in the list is considered as a separate haplotype.
+
+        Structure: [ val(meta), [path(fasta1), path(fasta2), ..., path(fasta_n)] ]
+      pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+  - ch_reads:
+      type: file
+      description: |
+        Channel containing reads to use for decontamination, in FASTX format.
+        All read files provided are used to build a singly syncmer index.
+
+        Structure: [ val(meta), [path(fastx1), path(fastx2), ..., path(fastx_n)] ]
+      pattern: "*.{fa,fasta,fa.gz,fasta.gz,fq,fastq,fq.gz,fastq.gz}"
+output:
+  - assemblies:
+      type: file
+      description: |
+        Decontaminated genome assemblies.
+        Structure: [ val(meta), [path(fasta1), path(fasta2), ..., path(fasta_n)] ]
+      pattern: "*.fa"
+  - decon_txt:
+      type: file
+      description: |
+        Channel containing the contamination reports from syncon/decon.
+        Structure: [ val(meta), [path(txt1), path(txt2), ..., path(txt_n)] ]
+      pattern: "*.decon.txt"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@prototaxites"

@@ -118,6 +118,12 @@
                 "default": false,
                 "meta": "trio_assembly"
             },
+            "decontaminate": {
+                "type": "boolean",
+                "description": "Remove low-coverage contaminant contigs using syncon.",
+                "default": false,
+                "meta": "decontaminate"
+            },
             "purge": {
                 "type": "boolean",
                 "description": "Purge retained haplotype from this assembly using purge_dups.",
@@ -166,6 +172,11 @@
                 "description": "Additional command-line arguments to pass to Hifiasm when processing bin files. The options from hifiasm_bin_arguments are already included at this stage and do not need to be re-specified.",
                 "meta": "hifiasm_arguments",
                 "default": ""
+            },
+            "syncon_cutoff": {
+                "type": "integer",
+                "description": "Average syncmer coverage cutoff to retain contigs when running decontamination with Syncon.",
+                "meta": "syncon_cutoff"
             },
             "purging_cutoffs": {
                 "type": "string",

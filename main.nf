@@ -81,6 +81,7 @@ workflow {
     datasets         = SANGERTOL_GENOMEASSEMBLY.out.datasets.filter { dataset -> dataset.fk_ktab }
     genomescope2     = SANGERTOL_GENOMEASSEMBLY.out.genomescope2
     hifiasm          = SANGERTOL_GENOMEASSEMBLY.out.hifiasm
+    decontamination  = SANGERTOL_GENOMEASSEMBLY.out.decontamination
     purging          = SANGERTOL_GENOMEASSEMBLY.out.purging
     polishing        = SANGERTOL_GENOMEASSEMBLY.out.polishing
     scaffolding      = SANGERTOL_GENOMEASSEMBLY.out.scaffolding
@@ -120,6 +121,12 @@ output {
             spec.output.hifiasm.graphs >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.bed >> "${spec.name}/hifiasm/"
             spec.output.hifiasm.hifiasm_log >> "${spec.name}/hifiasm/"
+        }
+    }
+    decontamination {
+        path { spec ->
+            spec.output.decontamination.fasta >> "${spec.name}/decontamination/"
+            spec.output.decontamination.decon >> "${spec.name}/decontamination/"
         }
     }
     purging {
@@ -272,6 +279,7 @@ workflow SANGERTOL_GENOMEASSEMBLY {
     datasets         = GENOMEASSEMBLY.out.datasets
     genomescope2     = GENOMEASSEMBLY.out.genomescope2
     hifiasm          = GENOMEASSEMBLY.out.hifiasm
+    decontamination  = GENOMEASSEMBLY.out.decontamination
     purging          = GENOMEASSEMBLY.out.purging
     polishing        = GENOMEASSEMBLY.out.polishing
     scaffolding      = GENOMEASSEMBLY.out.scaffolding

@@ -1,4 +1,5 @@
 include { GENOME_STATISTICS                           } from '../../../subworkflows/sanger-tol/genome_statistics'
+include { DECONTAMINATION                             } from '../../../subworkflows/local/decontamination'
 include { HIFIASM_ASSEMBLY                            } from '../../../subworkflows/local/hifiasm_assembly'
 include { MITOHIFI_ASSEMBLY                           } from '../../../subworkflows/local/mitohifi_assembly'
 include { PURGING                                     } from '../../../subworkflows/local/purging'
@@ -52,6 +53,15 @@ workflow NUCLEAR_ASSEMBLY {
         ch_stages.filter { stage -> stage.stage == "hifiasm" },
     )
     ch_assemblies = ch_assemblies.mix(HIFIASM_ASSEMBLY.out.hifiasm_assemblies)
+
+    //
+    // Subworkflow: remove low-coverage contigs with syncon
+    //
+    DECONTAMINATION(
+        ch_stages.filter { stage -> stage.stage == "decontamination" },
+        ch_assemblies,
+    )
+    ch_assemblies = ch_assemblies.mix(DECONTAMINATION.out.decontaminated_assemblies)
 
     //
     // Subworkflow: purge assemblies with purge_dups pipeline
@@ -168,6 +178,11 @@ workflow NUCLEAR_ASSEMBLY {
         .filter { spec, hifiasm -> hifiasm.id in spec.hashes.values() }
         .map { spec, hifiasm -> spec + hifiasm }
 
+    ch_decontamination_out = ch_output_specs
+        .combine(DECONTAMINATION.out.decontamination_output)
+        .filter { spec, decon -> decon.id in spec.hashes.values() }
+        .map { spec, decon -> spec + decon }
+
     ch_purging_out = ch_output_specs
         .combine(PURGING.out.purging_output)
         .filter { spec, purging -> purging.id in spec.hashes.values() }
@@ -199,12 +214,13 @@ workflow NUCLEAR_ASSEMBLY {
         .map { spec, index -> spec + index }
 
     emit:
-    hifiasm       = ch_hifiasm_out
-    purging       = ch_purging_out
-    polishing     = ch_polishing_out
-    scaffolding   = ch_scaffolding_out
-    organelle     = ch_organelle_out
-    statistics    = ch_statistics_out
-    stage_indexes = ch_stage_indexes
-    spec_indexes  = INDEX_SPEC.out.spec
+    hifiasm         = ch_hifiasm_out
+    decontamination = ch_decontamination_out
+    purging         = ch_purging_out
+    polishing       = ch_polishing_out
+    scaffolding     = ch_scaffolding_out
+    organelle       = ch_organelle_out
+    statistics      = ch_statistics_out
+    stage_indexes   = ch_stage_indexes
+    spec_indexes    = INDEX_SPEC.out.spec
 }

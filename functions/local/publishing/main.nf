@@ -50,6 +50,9 @@ def specToAssemblyDir(spec) {
         if (stage == "hifiasm") {
             return "hifiasm"
         }
+        if (stage == "decontamination") {
+            return "decontamination"
+        }
         if (stage == "purging") {
             return "purging"
         }
