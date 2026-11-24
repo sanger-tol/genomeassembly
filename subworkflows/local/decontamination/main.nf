@@ -53,7 +53,7 @@ workflow DECONTAMINATION {
     ch_decon_output = BGZIP_DECONTAMINATED.out.output
         .groupTuple(by: 0)
         .map { key, fasta -> [key.target, fasta] }
-        .join(FASTA_DECONTAMINATION_SYNCON.out.decon)
+        .join(FASTA_DECONTAMINATION_SYNCON.out.decon_txt)
         .map { spec, fasta, decon_txt ->
             return spec + [output: [decontamination: [
                 fasta: fasta,

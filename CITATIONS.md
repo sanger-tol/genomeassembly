@@ -112,9 +112,13 @@
 
   > Shen, W., Sipos, B., Zhao, L., 2024. SeqKit2: A Swiss army knife for sequence and alignment processing. iMeta 3, e191. https://doi.org/10.1002/imt2.191
 
+- [Syncon](https://github.com/c-zhou/syncon)
+
+  > C. Zhou, 2026. c-zhou/syncon. https://github.com/c-zhou/syncon
+
 - [YaHS](https://academic.oup.com/bioinformatics/article/39/1/btac808/6917071)
 
-  > Chenxi Zhou and others, YaHS: yet another Hi-C scaffolding tool, Bioinformatics, Volume 39, Issue 1, January 2023, btac808, doi: https://doi.org/10.1093/bioinformatics/btac808
+  > Chenxi Zhou, Shane A McCarthy, Richard Durbin, YaHS: yet another Hi-C scaffolding tool, Bioinformatics, Volume 39, Issue 1, January 2023, btac808, https://doi.org/10.1093/bioinformatics/btac808
 
 - [Yak](https://github.com/lh3/yak)
 
