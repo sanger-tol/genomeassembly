@@ -105,6 +105,7 @@ These options can be used if the `assembly_type` field is set to "nuclear".
 | `long_read_1n_coverage`         | -       | Haploid/1n coverage of the target genome in the long read dataset.                                                                        |
 | `phased_assembly`               | `false` | Produce a phased Hifiasm assembly with Hi-C data. Requires `hic_dataset`.                                                                 |
 | `trio_assembly`                 | `false` | Produce a trio-binned Hifiasm assembly. Requires `maternal_dataset` and `paternal_dataset`.                                               |
+| `decontaminate`                 | `false` | Remove low-coverage contaminant contigs using syncon                                                                                      |
 | `purge`                         | `false` | Purge retained haplotypic duplications using the purge_dups pipeline.                                                                     |
 | `polish`                        | `false` | Polish the assembly using Illumina 10X data, longranger and FreeBayes.                                                                    |
 | `scaffold`                      | `true`  | Map Hi-C reads and scaffold the assembly.                                                                                                 |
@@ -113,6 +114,7 @@ These options can be used if the `assembly_type` field is set to "nuclear".
 | `find_plastid`                  | `false` | Enable plastid genome assembly/search with Mitohifi.                                                                                      |
 | `hifiasm_bin_arguments`         | -       | Additional command-line arguments for Hifiasm overlap graph generation (e.g., error correction options).                                  |
 | `hifiasm_arguments`             | -       | Additional command-line arguments for Hifiasm to produce an assembly.                                                                     |
+| `syncon_cutoff`                 | -       | Minimum average coverage of a contig required to be retained after decontamination with syncon.                                           |
 | `purging_cutoffs`               | -       | Comma-separated coverage cutoffs for purging (e.g., `"5,20,100"`). Automatically calculated from the coverage if not supplied.            |
 | `purge_middle`                  | `false` | Purge haplotypic duplications from within contigs, not just at the ends.                                                                  |
 | `yahs_arguments`                | -       | Additional command-line arguments for YaHS.                                                                                               |

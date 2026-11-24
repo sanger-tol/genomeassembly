@@ -319,6 +319,16 @@
                                 }
                             }
                         },
+                        "decon": {
+                            "if": {
+                                "properties": { "decontaminate": { "const": true } }
+                            },
+                            "then": {
+                                "dependentRequired": {
+                                    "scaffold": ["syncon_cutoff"]
+                                }
+                            }
+                        },
                         "find_mito": {
                             "if": {
                                 "properties": { "find_mito": { "const": true } }
