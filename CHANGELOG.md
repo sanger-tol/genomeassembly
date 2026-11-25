@@ -7,11 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#200](https://github.com/sanger-tol/genomeassembly/pull/200) Adds a new decontamination stage to the pipeline. This stage removes low-coverage contigs from an assembly using a fast syncmer-based profiling approach from [syncon](https://github.com/c-zhou/syncon). To run it, specify `decontaminate: true` in the assembly specification, and then specify a value for `syncon_cutoff` (the minumum average syncmer coverage of a contig to retain).
+  - Note that this decontamination step is not a substitute for full taxonomy-based decontamination post-assembly. Its intention is to aid in the reduction of contig numbers, which can hinder scaffolding, in cases where there is a clear lower-coverage contaminant in the dataset that is easily separable by coverage.
+  - This method can be quite aggressive if improperly tuned - it is recommended to check MerquryFK kmer spectra and BUSCO scores post-decontamination to ensure that only the expected sequence has been removed.
+
 ### Fixed
 
 - [#197](https://github.com/sanger-tol/genomeassembly/pull/181) Improved publishing speed by not forcing joins of fast-running and slow-running processes.
 
 ### Dependencies
+
+| Module       | Tool   | Old version | New version |
+| ------------ | ------ | ----------- | ----------- |
+| syncon/build | syncon | -           | 1.0         |
+| syncon/decon | syncon | -           | 1.0         |
+| syncon/fetch | syncon | -           | 1.0         |
 
 ## v1.1.0 - Slithersong - [2026-11-12]
 
