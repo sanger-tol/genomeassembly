@@ -178,6 +178,12 @@
                 "description": "Average syncmer coverage cutoff to retain contigs when running decontamination with Syncon.",
                 "meta": "syncon_cutoff"
             },
+            "syncon_decon_arguments": {
+                "type": "integer",
+                "description": "An alternative to syncon_cutoff - specify the full argument string for syncon/decon.",
+                "meta": "syncon_decon_arguments",
+                "default": ""
+            },
             "purging_cutoffs": {
                 "type": "string",
                 "description": "Cutoffs for purging haplotypic duplications. Must be a comma-separated string with three coverage cutoffs - low, medium, and high - for example. \"5,20,100\".",
@@ -319,14 +325,20 @@
                                 }
                             }
                         },
+
                         "decon": {
                             "if": {
                                 "properties": { "decontaminate": { "const": true } }
                             },
                             "then": {
-                                "dependentRequired": {
-                                    "scaffold": ["syncon_cutoff"]
-                                }
+                                "oneOf": [
+                                    {
+                                        "required": ["syncon_decon_arguments"]
+                                    },
+                                    {
+                                        "required": ["syncon_cutoff"]
+                                    }
+                                ]
                             }
                         },
                         "find_mito": {

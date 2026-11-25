@@ -115,6 +115,7 @@ These options can be used if the `assembly_type` field is set to "nuclear".
 | `hifiasm_bin_arguments`         | -       | Additional command-line arguments for Hifiasm overlap graph generation (e.g., error correction options).                                  |
 | `hifiasm_arguments`             | -       | Additional command-line arguments for Hifiasm to produce an assembly.                                                                     |
 | `syncon_cutoff`                 | -       | Minimum average coverage of a contig required to be retained after decontamination with syncon.                                           |
+| `syncon_decon_arguments`        | -       | Alternative to syncon_cutoff - directly specify the arguments string to syncon/decon.                                                     |
 | `purging_cutoffs`               | -       | Comma-separated coverage cutoffs for purging (e.g., `"5,20,100"`). Automatically calculated from the coverage if not supplied.            |
 | `purge_middle`                  | `false` | Purge haplotypic duplications from within contigs, not just at the ends.                                                                  |
 | `yahs_arguments`                | -       | Additional command-line arguments for YaHS.                                                                                               |

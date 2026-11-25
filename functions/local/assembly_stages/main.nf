@@ -329,7 +329,7 @@ def stageNuclearSpec(spec, dataList, haptabList) {
         ],
         decontamination: [
             data: [],
-            params: ["syncon_cutoff"],
+            params: ["syncon_cutoff", "syncon_decon_arguments"],
             enabled: spec.decontaminate,
             depends: null,
             extraParams: null,
