@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     profile "test"
 
-    test("icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, oatk for mito only") {
+    test("icAdaBipu1 - test pri/alt, phased assembly, mitohifi on contigs, syncon, oatk for mito only") {
 
         setup {
             print "\n\n\t"
