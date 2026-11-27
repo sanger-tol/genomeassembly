@@ -327,6 +327,14 @@ def stageNuclearSpec(spec, dataList, haptabList) {
             extraParams: null,
             tools: ["HIFIASM"],
         ],
+        decontamination: [
+            data: [],
+            params: ["syncon_cutoff", "syncon_decon_arguments"],
+            enabled: spec.decontaminate,
+            depends: null,
+            extraParams: null,
+            tools: ["SYNCON_DECON"],
+        ],
         purging: [
             data: [],
             params: ["purging_cutoffs", "purge_middle"],

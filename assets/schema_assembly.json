@@ -118,6 +118,12 @@
                 "default": false,
                 "meta": "trio_assembly"
             },
+            "decontaminate": {
+                "type": "boolean",
+                "description": "Remove low-coverage contaminant contigs using syncon.",
+                "default": false,
+                "meta": "decontaminate"
+            },
             "purge": {
                 "type": "boolean",
                 "description": "Purge retained haplotype from this assembly using purge_dups.",
@@ -165,6 +171,17 @@
                 "type": "string",
                 "description": "Additional command-line arguments to pass to Hifiasm when processing bin files. The options from hifiasm_bin_arguments are already included at this stage and do not need to be re-specified.",
                 "meta": "hifiasm_arguments",
+                "default": ""
+            },
+            "syncon_cutoff": {
+                "type": "integer",
+                "description": "Average syncmer coverage cutoff to retain contigs when running decontamination with Syncon.",
+                "meta": "syncon_cutoff"
+            },
+            "syncon_decon_arguments": {
+                "type": "integer",
+                "description": "An alternative to syncon_cutoff - specify the full argument string for syncon/decon.",
+                "meta": "syncon_decon_arguments",
                 "default": ""
             },
             "purging_cutoffs": {
@@ -306,6 +323,21 @@
                                 "dependentRequired": {
                                     "scaffold": ["scaffolding_mode"]
                                 }
+                            }
+                        },
+                        "decon": {
+                            "if": {
+                                "properties": { "decontaminate": { "const": true } }
+                            },
+                            "then": {
+                                "oneOf": [
+                                    {
+                                        "required": ["syncon_decon_arguments"]
+                                    },
+                                    {
+                                        "required": ["syncon_cutoff"]
+                                    }
+                                ]
                             }
                         },
                         "find_mito": {

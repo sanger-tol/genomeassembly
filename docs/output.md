@@ -46,6 +46,23 @@ The raw outputs of each [hifiasm](https://github.com/chhylp123/hifiasm) assembly
 
 </details>
 
+### Decontamination
+
+After assembly with hifiasm, an assembly can optionally be decontainated with [syncon](https://github.com/c-zhou/syncon). This removes contigs with an average coverage below a given threshold, using a fast syncmer profiling approach.
+
+> [!IMPORTANT]
+> Note that this decontamination step is not a substitute for full taxonomy-based decontamination post-assembly. Its intention is to aid in the reduction of contig numbers, which can hinder scaffolding, in cases where there is a clear lower-coverage contaminant in the dataset that is easily separable by coverage. This method can be quite aggressive if improperly tuned - it is recommended to check MerquryFK kmer spectra and BUSCO scores post-decontamination to ensure that only the expected sequence has been removed.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `{asm.id}/decontamination/`
+  - `*.fa.gz`: Assembly FASTA files (bgzip compressed).
+  - `*.decon.txt`: Output from syncon/decon with information on the coverage of each contig and the decision to keep or drop it from the assembly.
+  - `index.json`: Index file summarizing the data and parameter inputs for the stage, as well as the software versions for all tool used.
+
+</details>
+
 ### Purging
 
 After raw assembly with hifiasm, an assembly can optionally be purged of retained haplotype using [purge_dups](https://github.com/dfguan/purge_dups). If purge_dups is run, the purged assemblies and other associated output will be available in the `purging/` directory within an assembly directory.

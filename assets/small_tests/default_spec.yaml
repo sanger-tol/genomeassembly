@@ -19,6 +19,8 @@
   long_read_platform: pacbio_hifi
   hic_dataset: icAdaBipu1
   phased_assembly: true
+  decontaminate: true
+  syncon_cutoff: 4
   find_mito: false
   find_plastid: false
   hifiasm_bin_arguments: -f0

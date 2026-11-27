@@ -8,10 +8,11 @@
 %%metro file: input_hic_reads | CRAM
 %%metro file: input_10x_reads | FASTQ
 %%metro grid: raw_asm | 0, 0, 2
-%%metro grid: purging | 1, 0, 2
-%%metro grid: polishing | 2, 0, 2
-%%metro grid: scaffolding | 3, 0, 4
-%%metro grid: genome_statistics | 4, 0, 4
+%%metro grid: decon | 1, 0, 2
+%%metro grid: purging | 2, 0, 2
+%%metro grid: polishing | 3, 0, 2
+%%metro grid: scaffolding | 4, 0, 4
+%%metro grid: genome_statistics | 5, 0, 4
 %%metro grid: organellar_assembly | 1, 4, 2
 %%metro line_order: span
 %%metro compact_offsets: false
@@ -38,6 +39,12 @@ graph LR
         purging_minimap2 -->|assemblies,long_reads| purge_dups
     end
 
+    subgraph decon [Decontamination]
+        %%metro entry: left | assemblies,long_reads
+        %%metro exit: right | assemblies
+        syncon[syncon]
+    end
+
     subgraph polishing [Polishing]
         %%metro entry: left | assemblies
         %%metro exit: right | assemblies
@@ -49,8 +56,7 @@ graph LR
     end
 
     subgraph scaffolding [Scaffolding]
-        %%metro entry: left | assemblies
-        %%metro entry: bottom | hic_reads
+        %%metro entry: left | assemblies,hic_reads
         %%metro exit: right | assemblies
         scaffolding_bwamem2[bwa-mem2]
         scaffolding_minimap2[minimap2]
@@ -99,6 +105,8 @@ graph LR
     hifiasm -->|assemblies| longranger
     hifiasm -->|assemblies| scaffolding_bwamem2
     hifiasm -->|assemblies| scaffolding_minimap2
+    hifiasm -->|assemblies,long_reads| syncon
+    syncon --> |assemblies,long_reads| purge_dups
     purge_dups -->|assemblies| longranger
     purge_dups -->|assemblies| scaffolding_bwamem2
     purge_dups -->|assemblies| scaffolding_minimap2
